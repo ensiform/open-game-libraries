@@ -1,0 +1,53 @@
+﻿<UserVariables>
+		<!--
+		Set any desired user variables in this section.
+		These can be output in description text or used in subsequent variable definitions using the
+		%varName% syntax (see below).
+
+		When documenting, each type being documented provides a set of useful variables.
+
+		In addition the following global variables are always available:
+			%user%				get	User's login name (or the overridden name provided in the Atomineer Options)
+			%date%					The current date/time, in the format specified in the Atomineer Options
+			%day%					The current day, e.g. "Tuesday"
+			%dayofmonth%			The current day of the month as a number, e.g. "2"
+			%month%					The current month, e.g. "June"
+			%monthofyear%			The current month as a number, e.g. "6"
+			%year%					The current year, e.g. "2009"
+			%pathname%				Full pathname of the current file
+			%folder%				Leafname of the folder containing the current file
+			%leafname%				Leafname of the current file (not including the file extension)
+			%extension%				File extension of the current file (including the ".", e.g. ".cs")
+			%project%				Name of the Project containing the current file
+			%containingclass%		Name of the class containing the cursor (or the file leafname if intellisense unavailable)
+			%assemblyname%			Assembly name for the Project containing the current file
+			%assemblyversion%		Assembly version
+			%assemblyfileversion%	Assembly file version
+			%assemblytitle%			Assembly title
+			%assemblydesc%			Assembly description
+			%assemblycompany%		Assembly company name
+			%assemblycopyright%		Assembly copyright
+			%assemblytrademark%		Assembly trademark
+
+		Note that if you create a variable with the same name as a global, the global will be replaced
+		by your definition. The type-specific variables (e.g. %retType%) cannot be overridden.
+		-->
+
+		<Variable name="product" ifSet="false" value="The Open Game Libraries" />
+		<Variable name="company" ifSet="false" value="Lusito Software" />
+		<Variable name="copyright" ifSet="false" value="Copyright (C) 2007-%year% %company%" />
+		<Variable name="useremail" ifSet="false" value="%user%@%company%" />
+
+		<!--
+		Special variables
+		For language translations, or simply to adjust the output of AtomineerUtils, fill in the
+		following variables (and check the rules that use them below):
+		-->
+		<Variable name="property-getonly" ifSet="false" value="Get" />
+		<Variable name="property-setonly" ifSet="false" value="Set" />
+		<Variable name="property-getset" ifSet="false" value="Get or set" />
+
+		<Variable name="indexer-getonly" ifSet="false" value="get" />
+		<Variable name="indexer-setonly" ifSet="false" value="set" />
+		<Variable name="indexer-getset" ifSet="false" value="get or set" />
+	</UserVariables>

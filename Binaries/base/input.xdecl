@@ -1,0 +1,61 @@
+Keyboard {
+	Key( id='SPACE', bind='Attack' );
+	Key( id='UP', bind='Accelerate' );
+	Key( id='DOWN', bind='Accelerate', inverse='1' );
+	Key( id='LEFT', bind='Turn', inverse='1' );
+	Key( id='RIGHT', bind='Turn' );
+}
+
+Mouse {
+	Axis( id='0', bind='Turn' );
+	Axis( id='1', bind='Accelerate' );
+	Button( id='0', bind='Attack' );
+}
+
+Device( vendor='Saitek Cyborg Rumble Pad' ) {
+	Axis( id='0', bind='Turn' );
+	Axis( id='1', bind='Accelerate' );
+	Button( id='3', bind='Attack' );
+	
+	// Pov can have 2 ways, either Axis Style:
+	POV( id='0', axes='1' ) {
+		Axis( id='0', bind='Turn' );
+		Axis( id='1', bind='Accelerate' );
+	}
+	/*
+	// Or Button Style:
+	POV( id='0' ) {
+		Button( id='north', bind='moveUp' );
+		Button( id='south', bind='moveDown' );
+		Button( id='east', bind='moveLeft' );
+		Button( id='west', bind='moveRight' );
+		// maybe even mix ? (northeast, southwest, etc)
+	}*/
+}
+
+DeviceMap( vendor='Saitek Cyborg Rumble Pad' ) {
+	Button( id='0', alias='x' );
+	Button( id='1', alias='a' );
+	Button( id='2', alias='b' );
+	Button( id='3', alias='y' );
+
+	Button( id='4', alias='ls' );
+	Button( id='5', alias='rs' );
+
+	Button( id='8', alias='back' );
+	Button( id='9', alias='start' );
+
+	Button( id='10', alias='lt' );
+	Button( id='11', alias='rt' );
+
+	POV( id='0', alias='pov' );
+
+	Axis( id='0', alias='ltx' );
+	Axis( id='1', alias='lty' );
+
+	Axis( id='2', alias='rtx' );
+	Axis( id='3', alias='rty' );
+
+	Axis( id='4', alias='ltr' );
+	Axis( id='5', alias='rtr' );
+}

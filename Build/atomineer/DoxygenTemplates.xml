@@ -1,0 +1,251 @@
+﻿<DoxygenTemplates>
+		<file _separators="false">
+// ==============================================================================
+//! @file
+//! @brief	%fileDescription% 
+//! @author	%user%
+//! @note	%copyright%
+// ==============================================================================
+//
+// %product%.
+// 
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// 
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+// 
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 
+// 3. This notice may not be removed or altered from any source distribution.
+//
+// ==============================================================================
+		</file>
+
+		<file-vb _separators="false">
+			<prototype _punctuate="false">%folder%\%leafname%%extension%</prototype>
+			<_ />
+			<summary />
+		</file-vb>
+
+		<namespace>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+		</namespace>
+
+		<typedef>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</typedef>
+
+		<enum>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</enum>
+
+		<bitfield>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</bitfield>
+
+		<struct>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</struct>
+
+		<class>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</class>
+
+		<interface>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</interface>
+
+		<def>			<!-- C/C++ #define macro -->
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<param />
+		</def>
+
+		<method>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<exception />
+			<_ />
+			<param />
+			<_ />
+			<returns />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</method>
+
+		<property>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<value />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</property>
+
+		<indexer>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<value />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</indexer>
+
+		<delegate>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<exception />
+			<_ />
+			<param />
+			<_ />
+			<returns />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</delegate>
+
+		<constructor>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<exception />
+			<_ />
+			<param />
+		</constructor>
+
+		<destructor>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<exception />
+			<_ />
+			<param />
+		</destructor>
+
+		<finaliser>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<exception />
+			<_ />
+			<param />
+		</finaliser>
+
+		<operator>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<exception />
+			<_ />
+			<param />
+			<_ />
+			<returns />
+		</operator>
+
+		<eventhandler>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<exception />
+			<_ />
+			<param />
+			<_ />
+			<returns />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</eventhandler>
+
+		<eventsender>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<exception />
+			<_ />
+			<param />
+			<_ />
+			<returns />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</eventsender>
+
+		<!-- Templates for methods in abstract classes and interfaces -->
+		<interfacemethod>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<param />
+			<_ />
+			<returns />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</interfacemethod>
+
+		<interfaceproperty>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<value />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</interfaceproperty>
+
+		<interfaceindexer>
+			<prototype _punctuate="false" />
+			<_ />
+			<summary />
+			<_ />
+			<value />
+			<_ />
+			<sa _punctuate="false" _optional="true" />
+		</interfaceindexer>
+	</DoxygenTemplates>

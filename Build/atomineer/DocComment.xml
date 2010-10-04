@@ -1,0 +1,23 @@
+﻿<DocComment>
+  <CommentStyle value="Doxygen" />
+  <Separator value="// ==============================================================================" />
+  <SeparatorB value="// ==============================================================================" />
+  <VBSeparator value="''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''" />
+  <VBSeparatorB value="''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''" />
+  <LineHeader />
+  <LineHeader2 value="//! " />
+  <DateCulture value="" />
+  <StartEntryWithTab value="true" />
+  <SingleLinePrefix value="//!&lt; " />
+  <SingleLineSuffix value="(None)" />
+  <LineCommentOnSameLine value="true" />
+  <WordWrapColumn value="100" />
+  <BlanksAbove value="1" />
+  <BlanksAfterRegion value="1" />
+  <BlanksBelow value="0" />
+  <BlanksBetweenEntries value="true" />
+  <AlignBlockStartColumns value="true" />
+  <WordWrapRelative value="true" />
+  <DateFormat value="d" />
+  <AddDocTableForEnums value="false" />
+</DocComment>

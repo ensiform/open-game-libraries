@@ -1,0 +1,5 @@
+﻿<Doxygen>
+  <CommandPrefix value="@" />
+  <SuppressBriefTags value="true" />
+  <SuppressPrototypes value="true" />
+</Doxygen>
