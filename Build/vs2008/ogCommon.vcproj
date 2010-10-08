@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="ogCommon"
-	ProjectGUID="{CCF579E6-DF36-934C-83A2-1FC78C303584}"
+	ProjectGUID="{3F587580-96AD-8142-94F9-6DB09A06E6F2}"
 	RootNamespace="ogCommon"
 	Keyword="Win32Proj"
 	>

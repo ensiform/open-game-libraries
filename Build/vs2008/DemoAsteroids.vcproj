@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="DemoAsteroids"
-	ProjectGUID="{2543C7B7-740C-4847-AC4E-DCB5BC4C2CCA}"
+	ProjectGUID="{C2F4FA57-04FC-1744-A72F-9007C32FB203}"
 	RootNamespace="DemoAsteroids"
 	Keyword="Win32Proj"
 	>
@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\out\ogCommon.lib ..\out\ogGloot.lib ..\out\ogAudio.lib ..\out\ogImage.lib ..\out\ogFileSystem.lib ..\out\ogFable.lib ..\out\ogFont.lib ..\out\soft_oal.lib ..\out\jpeg.lib ..\out\png.lib ..\out\zLib.lib ogg.lib vorbis.lib opengl32.lib winmm.lib dinput8.lib xinput.lib dxguid.lib"
+				AdditionalDependencies="..\out\ogCommon.lib ..\out\ogGloot.lib ..\out\ogAudio.lib ..\out\ogImage.lib ..\out\ogFileSystem.lib ..\out\ogFable.lib ..\out\ogFont.lib ..\out\soft_oal.lib ..\out\jpeg.lib ..\out\png.lib ..\out\zLib.lib ..\out\ogg.lib ..\out\vorbis.lib opengl32.lib winmm.lib dinput8.lib xinput.lib dxguid.lib"
 				OutputFile="$(OutDir)\DemoAsteroids.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
@@ -147,7 +147,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\out\ogCommon.lib ..\out\ogGloot.lib ..\out\ogAudio.lib ..\out\ogImage.lib ..\out\ogFileSystem.lib ..\out\ogFable.lib ..\out\ogFont.lib ..\out\soft_oal.lib ..\out\jpeg.lib ..\out\png.lib ..\out\zLib.lib ogg.lib vorbis.lib opengl32.lib winmm.lib dinput8.lib xinput.lib dxguid.lib"
+				AdditionalDependencies="..\out\ogCommon.lib ..\out\ogGloot.lib ..\out\ogAudio.lib ..\out\ogImage.lib ..\out\ogFileSystem.lib ..\out\ogFable.lib ..\out\ogFont.lib ..\out\soft_oal.lib ..\out\jpeg.lib ..\out\png.lib ..\out\zLib.lib ..\out\ogg.lib ..\out\vorbis.lib opengl32.lib winmm.lib dinput8.lib xinput.lib dxguid.lib"
 				OutputFile="$(OutDir)\DemoAsteroids.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""

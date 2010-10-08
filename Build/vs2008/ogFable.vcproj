@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="ogFable"
-	ProjectGUID="{6A81CE65-ABB1-8A4E-A25E-B29987ED93EB}"
+	ProjectGUID="{62CDA508-7A9F-8144-9A39-2C90A31D1113}"
 	RootNamespace="ogFable"
 	Keyword="Win32Proj"
 	>

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="ogConsole"
-	ProjectGUID="{9422EC69-B885-F943-A6BC-98CAB44C98ED}"
+	ProjectGUID="{8019B46F-6E9B-AC43-8C0F-366BC62B1239}"
 	RootNamespace="ogConsole"
 	Keyword="Win32Proj"
 	>

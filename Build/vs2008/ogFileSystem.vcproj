@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="ogFileSystem"
-	ProjectGUID="{CBB6430B-B3F3-5E4F-95A0-B3C60B976233}"
+	ProjectGUID="{D0E9A670-1E29-8446-9F86-531EE69E9642}"
 	RootNamespace="ogFileSystem"
 	Keyword="Win32Proj"
 	>

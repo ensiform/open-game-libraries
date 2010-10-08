@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="TestGloot"
-	ProjectGUID="{57DE3711-D4C5-B641-BD60-99ADD818010D}"
+	ProjectGUID="{0A6C6FD3-97EC-4B49-8958-31AF782C07D7}"
 	RootNamespace="TestGloot"
 	Keyword="Win32Proj"
 	>

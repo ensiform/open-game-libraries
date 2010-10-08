@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="ogAudio"
-	ProjectGUID="{6E8EBF84-63FD-CA47-814E-CD60E32B284B}"
+	ProjectGUID="{6AA5A8D8-BCE0-9041-8706-D4886C3395D9}"
 	RootNamespace="ogAudio"
 	Keyword="Win32Proj"
 	>

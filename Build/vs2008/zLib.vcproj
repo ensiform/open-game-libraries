@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="zLib"
-	ProjectGUID="{5044C1FC-F2DF-0945-AADD-CECD18954175}"
+	ProjectGUID="{02FB1266-F6D0-9E40-A46F-EE7595E452DD}"
 	RootNamespace="zLib"
 	Keyword="Win32Proj"
 	>

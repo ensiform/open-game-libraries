@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="ogFont"
-	ProjectGUID="{69A0908D-C8BC-224B-8239-5D35B02FA85A}"
+	ProjectGUID="{3CA644BA-99E4-DC47-B800-13AB49737240}"
 	RootNamespace="ogFont"
 	Keyword="Win32Proj"
 	>

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="ogg_vorbis"
-	ProjectGUID="{3BFDA75A-9A34-0649-BA23-32C5109703FB}"
-	RootNamespace="ogg_vorbis"
+	Name="vorbis"
+	ProjectGUID="{8F9C9FF9-8DA1-1445-9070-698E0B76DAD6}"
+	RootNamespace="vorbis"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -48,7 +48,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				ProgramDataBaseFileName="$(OutDir)\ogg_vorbis.pdb"
+				ProgramDataBaseFileName="$(OutDir)\vorbis.pdb"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\ogg_vorbis.lib"
+				OutputFile="$(OutDir)\vorbis.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -123,7 +123,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				ProgramDataBaseFileName="$(OutDir)\ogg_vorbis.pdb"
+				ProgramDataBaseFileName="$(OutDir)\vorbis.pdb"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -139,7 +139,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\ogg_vorbis.lib"
+				OutputFile="$(OutDir)\vorbis.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -174,27 +174,6 @@
 			Name="Thirdparty"
 			Filter=""
 			>
-			<Filter
-				Name="ogg"
-				Filter=""
-				>
-				<File
-					RelativePath="..\..\Thirdparty\ogg\ogg.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Thirdparty\ogg\os_types.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Thirdparty\ogg\bitwise.c"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Thirdparty\ogg\framing.c"
-					>
-				</File>
-			</Filter>
 			<Filter
 				Name="vorbis"
 				Filter=""

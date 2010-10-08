@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="ogModel"
-	ProjectGUID="{3361EF24-25E4-0E4B-BD83-EFB4B9112897}"
+	ProjectGUID="{7050D2CC-7C8E-894D-95AD-DFD068195DBD}"
 	RootNamespace="ogModel"
 	Keyword="Win32Proj"
 	>

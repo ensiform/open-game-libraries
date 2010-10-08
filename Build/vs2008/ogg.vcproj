@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="ogImage"
-	ProjectGUID="{1DCEA802-9B01-8B46-8F90-53BC18F64E9B}"
-	RootNamespace="ogImage"
+	Name="ogg"
+	ProjectGUID="{7C41CBE5-0DAA-1B40-B4FF-B4F4DE4B8C17}"
+	RootNamespace="ogg"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\out"
-			IntermediateDirectory="..\out\obj\ogImage\Debug"
+			IntermediateDirectory="..\out\obj\ogg\Debug"
 			ConfigurationType="4"
 			CharacterSet="2"
 			>
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\Thirdparty;..\..\Libraries\Include"
+				AdditionalIncludeDirectories="..\..\Thirdparty"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -48,7 +48,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				ProgramDataBaseFileName="$(OutDir)\ogImage.pdb"
+				ProgramDataBaseFileName="$(OutDir)\ogg.pdb"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -57,14 +57,14 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
-				AdditionalIncludeDirectories="..\..\Thirdparty;..\..\Libraries\Include"
+				AdditionalIncludeDirectories="..\..\Thirdparty"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\ogImage.lib"
+				OutputFile="$(OutDir)\ogg.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -94,7 +94,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="..\out"
-			IntermediateDirectory="..\out\obj\ogImage\Release"
+			IntermediateDirectory="..\out\obj\ogg\Release"
 			ConfigurationType="4"
 			CharacterSet="2"
 			>
@@ -116,14 +116,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
-				AdditionalIncludeDirectories="..\..\Thirdparty;..\..\Libraries\Include"
+				AdditionalIncludeDirectories="..\..\Thirdparty"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				ProgramDataBaseFileName="$(OutDir)\ogImage.pdb"
+				ProgramDataBaseFileName="$(OutDir)\ogg.pdb"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -132,14 +132,14 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
-				AdditionalIncludeDirectories="..\..\Thirdparty;..\..\Libraries\Include"
+				AdditionalIncludeDirectories="..\..\Thirdparty"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\ogImage.lib"
+				OutputFile="$(OutDir)\ogg.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -171,62 +171,29 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Libraries"
+			Name="Thirdparty"
 			Filter=""
 			>
 			<Filter
-				Name="Include"
+				Name="ogg"
 				Filter=""
 				>
-				<Filter
-					Name="og"
-					Filter=""
+				<File
+					RelativePath="..\..\Thirdparty\ogg\ogg.h"
 					>
-					<Filter
-						Name="Image"
-						Filter=""
-						>
-						<File
-							RelativePath="..\..\Libraries\Include\og\Image\Image.h"
-							>
-						</File>
-					</Filter>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Source"
-				Filter=""
-				>
-				<Filter
-					Name="og"
-					Filter=""
+				</File>
+				<File
+					RelativePath="..\..\Thirdparty\ogg\os_types.h"
 					>
-					<Filter
-						Name="Image"
-						Filter=""
-						>
-						<File
-							RelativePath="..\..\Libraries\Source\og\Image\ImageDDS.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\Libraries\Source\og\Image\ImageEx.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\Libraries\Source\og\Image\ImageJPG.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\Libraries\Source\og\Image\ImagePNG.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\Libraries\Source\og\Image\ImageTGA.cpp"
-							>
-						</File>
-					</Filter>
-				</Filter>
+				</File>
+				<File
+					RelativePath="..\..\Thirdparty\ogg\bitwise.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Thirdparty\ogg\framing.c"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

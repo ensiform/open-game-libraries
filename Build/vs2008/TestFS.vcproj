@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="TestFS"
-	ProjectGUID="{FB10DA9E-00C2-064D-8611-0A96C7B65C43}"
+	ProjectGUID="{81E27090-9EF9-574C-9744-6C2A47AB3374}"
 	RootNamespace="TestFS"
 	Keyword="Win32Proj"
 	>

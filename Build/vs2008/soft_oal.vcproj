@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="soft_oal"
-	ProjectGUID="{60222485-EB0F-B84E-B8CB-FE50EC65C993}"
+	ProjectGUID="{0968CDDA-5D5A-E74F-838D-A4FDDAA24B05}"
 	RootNamespace="soft_oal"
 	Keyword="Win32Proj"
 	>

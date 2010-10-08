@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="ogGloot"
-	ProjectGUID="{FD3E0813-6178-1641-A6E7-97980C67CA19}"
+	ProjectGUID="{B87DA50A-D68B-054D-9557-E03A8235CEAF}"
 	RootNamespace="ogGloot"
 	Keyword="Win32Proj"
 	>

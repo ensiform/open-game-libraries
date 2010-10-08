@@ -48,7 +48,7 @@ solution "Thirdparty"
 		objdir( objectDir .. "/jpeg" )
 
 	-- ogg Static Library
-	project "ogg_vorbis"
+	project "ogg"
 		kind "StaticLib"
 		language "C"
 		targetdir( libDir )
@@ -57,7 +57,7 @@ solution "Thirdparty"
 		includedirs { thirdPartyPath }
 
 	-- vorbis Static Library
-	project "ogg_vorbis"
+	project "vorbis"
 		kind "StaticLib"
 		language "C"
 		targetdir( libDir )

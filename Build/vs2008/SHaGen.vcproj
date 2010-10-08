@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="SHaGen"
-	ProjectGUID="{318DB4D4-2A69-474A-B59C-BC513F88E42A}"
+	ProjectGUID="{5AB4EE5D-0AF1-CA45-8AA5-ED4F2DD9CCDD}"
 	RootNamespace="SHaGen"
 	Keyword="Win32Proj"
 	>

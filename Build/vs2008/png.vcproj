@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="png"
-	ProjectGUID="{8DDAF9D8-9AFF-B54A-A5E9-9FC05C4076B6}"
+	ProjectGUID="{4B006485-4BE3-874A-9B7C-C7580D2178D3}"
 	RootNamespace="png"
 	Keyword="Win32Proj"
 	>
