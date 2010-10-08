@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="TestFS"
-	ProjectGUID="{C1AA4802-2B28-4D94-8917-5E626908DE87}"
+	ProjectGUID="{FB10DA9E-00C2-064D-8611-0A96C7B65C43}"
 	RootNamespace="TestFS"
-	TargetFrameworkVersion="131072"
+	Keyword="Win32Proj"
 	>
 	<Platforms>
 		<Platform
@@ -17,10 +17,9 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(PlatformName)/$(ConfigurationName)/$(ProjectName)"
-			IntermediateDirectory="$(OutDir)"
+			OutputDirectory="..\..\Binaries"
+			IntermediateDirectory="..\out\obj\Examples\TestFS\Debug"
 			ConfigurationType="1"
-			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
 			>
 			<Tool
@@ -37,28 +36,19 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName="$(IntDir)/$(ProjectName).tlb"
-				HeaderFileName=""
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\Libraries\Include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				PrecompiledHeaderFile="$(IntDir)/$(ProjectName).pch"
-				AssemblerOutput="0"
-				AssemblerListingLocation="$(IntDir)/$(ProjectName)/"
-				ObjectFile="$(IntDir)/$(ProjectName)/"
-				ProgramDataBaseFileName="$(IntDir)/$(ProjectName).pdb"
-				BrowseInformation="0"
-				BrowseInformationFile="$(IntDir)/$(ProjectName)/"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
+				ProgramDataBaseFileName="$(OutDir)\TestFS.pdb"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -66,25 +56,22 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1031"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
+				AdditionalIncludeDirectories="..\..\Libraries\Include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="./Libs/$(ConfigurationName)/ogFileSystem.lib ./Libs/$(ConfigurationName)/ogCommon.lib ./Libs/$(ConfigurationName)/zLib.lib winmm.lib"
-				OutputFile="..\..\Binaries\$(ProjectName).exe"
+				AdditionalDependencies="..\out\ogCommon.lib ..\out\ogFileSystem.lib ..\out\zLib.lib winmm.lib"
+				OutputFile="$(OutDir)\TestFS.exe"
 				LinkIncremental="2"
-				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
-				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/$(ProjectName).pdb"
+				ProgramDataBaseFileName="$(OutDir)\TestFS.pdb"
 				SubSystem="1"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
+				EntryPointSymbol="mainCRTStartup"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -98,8 +85,6 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				SuppressStartupBanner="true"
-				OutputFile="$(IntDir)/$(ProjectName).bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -108,15 +93,17 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(PlatformName)/$(ConfigurationName)/$(ProjectName)"
-			IntermediateDirectory="$(OutDir)"
+			OutputDirectory="..\..\Binaries"
+			IntermediateDirectory="..\out\obj\Examples\TestFS\Release"
 			ConfigurationType="1"
-			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
 			>
 			<Tool
@@ -133,51 +120,42 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName="$(IntDir)/$(ProjectName).tlb"
-				HeaderFileName=""
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				InlineFunctionExpansion="1"
+				Optimization="3"
 				AdditionalIncludeDirectories="..\..\Libraries\Include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile="$(IntDir)/$(ProjectName).pch"
-				AssemblerOutput="0"
-				AssemblerListingLocation="$(IntDir)/$(ProjectName)/"
-				ObjectFile="$(IntDir)/$(ProjectName)/"
-				ProgramDataBaseFileName="$(IntDir)/$(ProjectName).pdb"
-				BrowseInformationFile="$(IntDir)/$(ProjectName)/"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
+				ProgramDataBaseFileName="$(OutDir)\TestFS.pdb"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1031"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
+				AdditionalIncludeDirectories="..\..\Libraries\Include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="./Libs/$(ConfigurationName)/ogFileSystem.lib ./Libs/$(ConfigurationName)/ogCommon.lib ./Libs/$(ConfigurationName)/zLib.lib winmm.lib"
-				OutputFile="..\..\Binaries\$(ProjectName).exe"
+				AdditionalDependencies="..\out\ogCommon.lib ..\out\ogFileSystem.lib ..\out\zLib.lib winmm.lib"
+				OutputFile="$(OutDir)\TestFS.exe"
 				LinkIncremental="1"
-				SuppressStartupBanner="true"
-				IgnoreAllDefaultLibraries="false"
-				ProgramDatabaseFile="$(IntDir)/$(ProjectName).pdb"
+				AdditionalLibraryDirectories=""
+				GenerateDebugInformation="false"
 				SubSystem="1"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				EntryPointSymbol="mainCRTStartup"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -191,14 +169,15 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				SuppressStartupBanner="true"
-				OutputFile="$(IntDir)/$(ProjectName).bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -209,12 +188,18 @@
 	</References>
 	<Files>
 		<Filter
-			Name="source"
+			Name="Examples"
+			Filter=""
 			>
-			<File
-				RelativePath="..\..\Examples\TestFS\main.cpp"
+			<Filter
+				Name="TestFS"
+				Filter=""
 				>
-			</File>
+				<File
+					RelativePath="..\..\Examples\TestFS\main.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

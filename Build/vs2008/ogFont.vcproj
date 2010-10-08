@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
-	Name="ogImage"
-	ProjectGUID="{585F5137-B442-4C7C-A78D-9E3796AB9790}"
-	RootNamespace="ogImage"
+	Version="9.00"
+	Name="ogFont"
+	ProjectGUID="{69A0908D-C8BC-224B-8239-5D35B02FA85A}"
+	RootNamespace="ogFont"
 	Keyword="Win32Proj"
-	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -18,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(PlatformName)/$(ConfigurationName)/$(ProjectName)"
-			IntermediateDirectory="$(OutDir)"
+			OutputDirectory="..\out"
+			IntermediateDirectory="..\out\obj\ogFont\Debug"
 			ConfigurationType="4"
 			CharacterSet="2"
 			>
@@ -41,37 +40,37 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../Libraries/Include;../../Thirdparty"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE"
+				AdditionalIncludeDirectories="..\..\Libraries\Include"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				PrecompiledHeaderFile="$(IntDir)/$(ProjectName).pch"
-				AssemblerListingLocation="$(IntDir)/$(ProjectName)/"
-				ObjectFile="$(IntDir)/$(ProjectName)/"
-				ProgramDataBaseFileName="$(IntDir)/$(ProjectName).pdb"
-				BrowseInformation="0"
-				BrowseInformationFile="$(IntDir)/$(ProjectName)/"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
+				ProgramDataBaseFileName="$(OutDir)\ogFont.pdb"
 				DebugInformationFormat="4"
-				CompileAs="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
+				AdditionalIncludeDirectories="..\..\Libraries\Include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="./Libs/$(ConfigurationName)/$(ProjectName).lib"
+				OutputFile="$(OutDir)\ogFont.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -83,16 +82,21 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(PlatformName)/$(ConfigurationName)/$(ProjectName)"
-			IntermediateDirectory="$(OutDir)"
+			OutputDirectory="..\out"
+			IntermediateDirectory="..\out\obj\ogFont\Release"
 			ConfigurationType="4"
 			CharacterSet="2"
-			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -111,32 +115,37 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../Libraries/Include;../../Thirdparty"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE"
+				Optimization="3"
+				AdditionalIncludeDirectories="..\..\Libraries\Include"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
+				StringPooling="true"
 				RuntimeLibrary="2"
-				PrecompiledHeaderFile="$(IntDir)/$(ProjectName).pch"
-				AssemblerListingLocation="$(IntDir)/$(ProjectName)/"
-				ObjectFile="$(IntDir)/$(ProjectName)/"
-				ProgramDataBaseFileName="$(IntDir)/$(ProjectName).pdb"
-				BrowseInformationFile="$(IntDir)/$(ProjectName)/"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
+				ProgramDataBaseFileName="$(OutDir)\ogFont.pdb"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
+				AdditionalIncludeDirectories="..\..\Libraries\Include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="./Libs/$(ConfigurationName)/$(ProjectName).lib"
+				OutputFile="$(OutDir)\ogFont.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -148,6 +157,12 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -156,40 +171,47 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Include"
+			Name="Libraries"
+			Filter=""
 			>
-			<File
-				RelativePath="..\..\Libraries\Include\og\Image\Image.h"
+			<Filter
+				Name="Include"
+				Filter=""
 				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Source"
-			>
-			<File
-				RelativePath="..\..\Libraries\Source\og\Image\ImageDDS.cpp"
+				<Filter
+					Name="og"
+					Filter=""
+					>
+					<Filter
+						Name="Font"
+						Filter=""
+						>
+						<File
+							RelativePath="..\..\Libraries\Include\og\Font\Font.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Source"
+				Filter=""
 				>
-			</File>
-			<File
-				RelativePath="..\..\Libraries\Source\og\Image\ImageEx.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Libraries\Source\og\Image\ImageEx.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Libraries\Source\og\Image\ImageJPG.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Libraries\Source\og\Image\ImagePNG.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Libraries\Source\og\Image\ImageTGA.cpp"
-				>
-			</File>
+				<Filter
+					Name="og"
+					Filter=""
+					>
+					<Filter
+						Name="Font"
+						Filter=""
+						>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Font\FontEx.cpp"
+							>
+						</File>
+					</Filter>
+				</Filter>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

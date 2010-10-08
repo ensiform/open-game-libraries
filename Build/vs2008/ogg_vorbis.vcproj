@@ -2,11 +2,10 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="oggVorbis"
-	ProjectGUID="{7C023A6A-7489-46B0-8845-D8807C4E438B}"
-	RootNamespace="oggVorbis"
+	Name="ogg_vorbis"
+	ProjectGUID="{3BFDA75A-9A34-0649-BA23-32C5109703FB}"
+	RootNamespace="ogg_vorbis"
 	Keyword="Win32Proj"
-	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -18,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(PlatformName)/$(ConfigurationName)/$(ProjectName)"
-			IntermediateDirectory="$(OutDir)"
+			OutputDirectory="..\out"
+			IntermediateDirectory="..\out\obj\vorbis\Debug"
 			ConfigurationType="4"
 			CharacterSet="2"
 			>
@@ -41,19 +40,15 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../Thirdparty"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE"
+				AdditionalIncludeDirectories="..\..\Thirdparty"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				PrecompiledHeaderFile="$(IntDir)/$(ProjectName).pch"
-				AssemblerListingLocation="$(IntDir)/$(ProjectName)/"
-				ObjectFile="$(IntDir)/$(ProjectName)/"
-				ProgramDataBaseFileName="$(IntDir)/$(ProjectName).pdb"
-				BrowseInformation="0"
-				BrowseInformationFile="$(IntDir)/$(ProjectName)/"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
+				ProgramDataBaseFileName="$(OutDir)\ogg_vorbis.pdb"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -61,16 +56,21 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
+				AdditionalIncludeDirectories="..\..\Thirdparty"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="./Libs/$(ConfigurationName)/$(ProjectName).lib"
+				OutputFile="$(OutDir)\ogg_vorbis.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -82,16 +82,21 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(PlatformName)/$(ConfigurationName)/$(ProjectName)"
-			IntermediateDirectory="$(OutDir)"
+			OutputDirectory="..\out"
+			IntermediateDirectory="..\out\obj\vorbis\Release"
 			ConfigurationType="4"
 			CharacterSet="2"
-			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -110,32 +115,37 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../Thirdparty"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE"
+				Optimization="3"
+				AdditionalIncludeDirectories="..\..\Thirdparty"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
+				StringPooling="true"
 				RuntimeLibrary="2"
-				PrecompiledHeaderFile="$(IntDir)/$(ProjectName).pch"
-				AssemblerListingLocation="$(IntDir)/$(ProjectName)/"
-				ObjectFile="$(IntDir)/$(ProjectName)/"
-				ProgramDataBaseFileName="$(IntDir)/$(ProjectName).pdb"
-				BrowseInformationFile="$(IntDir)/$(ProjectName)/"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
+				ProgramDataBaseFileName="$(OutDir)\ogg_vorbis.pdb"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
+				AdditionalIncludeDirectories="..\..\Thirdparty"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="./Libs/$(ConfigurationName)/$(ProjectName).lib"
+				OutputFile="$(OutDir)\ogg_vorbis.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -147,6 +157,12 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -155,11 +171,21 @@
 	</References>
 	<Files>
 		<Filter
-			Name="libogg"
+			Name="Thirdparty"
+			Filter=""
 			>
 			<Filter
-				Name="Source Files"
+				Name="ogg"
+				Filter=""
 				>
+				<File
+					RelativePath="..\..\Thirdparty\ogg\ogg.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Thirdparty\ogg\os_types.h"
+					>
+				</File>
 				<File
 					RelativePath="..\..\Thirdparty\ogg\bitwise.c"
 					>
@@ -170,24 +196,8 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Header Files"
-				>
-				<File
-					RelativePath="..\..\Thirdparty\ogg\ogg.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Thirdparty\ogg\os_types.h"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
-			Name="libVorbis"
-			>
-			<Filter
-				Name="Header Files"
-				Filter="h;hpp;hxx;hm;inl"
+				Name="vorbis"
+				Filter=""
 				>
 				<File
 					RelativePath="..\..\Thirdparty\vorbis\backends.h"
@@ -277,11 +287,6 @@
 					RelativePath="..\..\Thirdparty\vorbis\window.h"
 					>
 				</File>
-			</Filter>
-			<Filter
-				Name="Source Files"
-				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
-				>
 				<File
 					RelativePath="..\..\Thirdparty\vorbis\analysis.c"
 					>
