@@ -74,7 +74,10 @@ solution "Thirdparty"
 		files { oalPath .. "/**.h", oalPath .. "/**.c" }
 		objdir( objectDir .. "/soft_oal" )
 		includedirs { thirdPartyPath, oalPath .. "/OpenAL32/Include" }
-		if isVisualStudio then
-			links { "winmm" }
-			excludes { oalPath .. "/Alc/alsa.c", oalPath .. "/Alc/oss.c", oalPath .. "/Alc/portaudio.c", oalPath .. "/Alc/pulseaudio.c", oalPath .. "/Alc/solaris.c" }
+		
+		if oal_soft_have["WINMM"] then links { "winmm" } end
+		for k, v in pairs (oal_soft_all_outmodules) do 
+			if not oal_soft_have[k] then
+				excludes { oalPath .. "/Alc/" .. v }
+			end
 		end

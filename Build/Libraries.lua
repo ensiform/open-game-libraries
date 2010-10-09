@@ -75,7 +75,7 @@ solution "Libraries"
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
 		files { librariesPath .. "/Include/og/FileSystem/**.h", librariesPath .. "/Include/og/FileSystem/**.inl", librariesPath .. "/Source/og/FileSystem/**.cpp" }
 		objdir( objectDir .. "/ogFileSystem" )
-		if isVisualStudio then
+		if isWindows then
 			defines { "UNICODE" }
 		end
 
@@ -87,7 +87,7 @@ solution "Libraries"
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
 		files { librariesPath .. "/Include/og/Fable/**.h", librariesPath .. "/Include/og/Fable/**.inl", librariesPath .. "/Source/og/Fable/**.cpp" }
 		objdir( objectDir .. "/ogFable" )
-		if isVisualStudio then
+		if isWindows then
 			defines { "UNICODE" }
 		end
 
@@ -99,7 +99,7 @@ solution "Libraries"
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
 		files { librariesPath .. "/Include/og/Gloot/**.h", librariesPath .. "/Include/og/Gloot/**.inl", librariesPath .. "/Source/og/Gloot/**.cpp" }
 		objdir( objectDir .. "/ogGloot" )
-		if isVisualStudio then
+		if isWindows then
 			defines { "UNICODE" }
 		end
 
@@ -111,6 +111,6 @@ solution "Libraries"
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
 		files { librariesPath .. "/Include/og/Console/**.h", librariesPath .. "/Include/og/Console/**.inl", librariesPath .. "/Source/og/Console/**.cpp" }
 		objdir( objectDir .. "/ogConsole" )
-		if isVisualStudio then
+		if isWindows then
 			defines { "UNICODE" }
 		end
