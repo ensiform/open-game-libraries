@@ -34,6 +34,8 @@
 
 //! Open Game Libraries
 namespace og {
+	extern FileSystemCore *modelFS;
+
 	OG_INLINE void InitIndices( Mesh *mesh, int numIndices ) {
 		mesh->numIndices = numIndices;
 		mesh->indices = new int[numIndices];

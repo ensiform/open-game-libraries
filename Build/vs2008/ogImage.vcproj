@@ -225,6 +225,10 @@
 							RelativePath="..\..\Libraries\Source\og\Image\ImageTGA.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Image\ImageEx.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>

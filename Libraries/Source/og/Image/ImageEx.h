@@ -30,11 +30,12 @@
 #ifndef __OG_IMAGE_EX_H__
 #define __OG_IMAGE_EX_H__
 
-#include <og/Shared.h>
+#include <og/Shared/Shared.h>
 #include <og/Common/Common.h>
-#include <og/FileSystem/FileSystem.h>
 
 namespace og {
+	extern FileSystemCore *imageFS;
+
 	/*
 	==============================================================================
 

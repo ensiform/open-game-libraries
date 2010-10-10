@@ -197,10 +197,10 @@ ImageFileJPG::Open
 ================
 */
 bool ImageFileJPG::Open( const char *filename ) {
-	if ( FS == NULL )
+	if ( imageFS == NULL )
 		return false;
 
-	File *file = FS->OpenFileReadBuffered( filename );
+	File *file = imageFS->OpenRead( filename, true, true );
 	if ( !file )
 		return NULL;
 
@@ -231,7 +231,7 @@ bool ImageFileJPG::Open( const char *filename ) {
 
 		if ( cinfo.out_color_space != JCS_RGB ) {
 			jpeg_destroy_decompress( &cinfo );
-			FS->CloseFile( file );
+			file->Close();
 			User::Error( ERR_BAD_FILE_FORMAT, "JPEG: File is not using RGB colorspace.", filename );
 			return false;
 		}
@@ -259,12 +259,12 @@ bool ImageFileJPG::Open( const char *filename ) {
 		jpeg_finish_decompress( &cinfo );
 		jpeg_destroy_decompress( &cinfo );
 
-		FS->CloseFile( file );
+		file->Close();
 		return true;
 	}
 	catch( FileReadWriteError err ) {
 		jpeg_destroy_decompress(&cinfo);
-		FS->CloseFile( file );
+		file->Close();
 		User::Error( ERR_FILE_CORRUPT, TS("Jpeg: $*" ) << err.ToString(), filename );
 		return false;
 	}
@@ -276,10 +276,10 @@ ImageFileJPG::SaveFile
 ================
 */
 bool ImageFileJPG::SaveFile( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
-	if ( FS == NULL )
+	if ( imageFS == NULL )
 		return false;
 
-	File *file = FS->OpenFileWrite(filename);
+	File *file = imageFS->OpenWrite(filename);
 	if ( !file )
 		return false;
 
@@ -337,11 +337,11 @@ bool ImageFileJPG::SaveFile( const char *filename, byte *data, uInt width, uInt 
 		jpeg_finish_compress(&cinfo);
 		jpeg_destroy_compress(&cinfo);
 
-		FS->CloseFile( file );
+		file->Close();
 		return true;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile( file );
+		file->Close();
 		User::Error( ERR_FILE_WRITEFAIL, TS("Jpeg: $*" ) << err.ToString(), filename );
 		return false;
 	}

@@ -397,7 +397,8 @@ og::User::Main
 ================
 */
 int og::User::Main( int argc, char *argv[] ) {
-	og::Common::Init();
+	if ( !og::Shared::Init() )
+		return 0;
 	Gloot::DisableSystemKeys( true );
 	SimpleWindowClass myWindowA;
 #ifdef DEMO_OPENGL3
@@ -416,8 +417,6 @@ int og::User::Main( int argc, char *argv[] ) {
 		og::Gloot::Sleep(16);
     }
 	Gloot::DisableSystemKeys( false );
-
-	og::Common::Shutdown();
     return 0;
 }
 

@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\out\ogCommon.lib ..\out\ogGloot.lib ..\out\ogModel.lib ..\out\ogImage.lib ..\out\ogFileSystem.lib ..\out\jpeg.lib ..\out\png.lib ..\out\zLib.lib ..\out\ogConsole.lib opengl32.lib winmm.lib"
+				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogGloot.lib ..\out\ogModel.lib ..\out\ogImage.lib ..\out\ogFileSystem.lib ..\out\jpeg.lib ..\out\png.lib ..\out\zLib.lib ..\out\ogConsole.lib opengl32.lib winmm.lib"
 				OutputFile="$(OutDir)\TestModel.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
@@ -147,7 +147,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\out\ogCommon.lib ..\out\ogGloot.lib ..\out\ogModel.lib ..\out\ogImage.lib ..\out\ogFileSystem.lib ..\out\jpeg.lib ..\out\png.lib ..\out\zLib.lib ..\out\ogConsole.lib opengl32.lib winmm.lib"
+				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogGloot.lib ..\out\ogModel.lib ..\out\ogImage.lib ..\out\ogFileSystem.lib ..\out\jpeg.lib ..\out\png.lib ..\out\zLib.lib ..\out\ogConsole.lib opengl32.lib winmm.lib"
 				OutputFile="$(OutDir)\TestModel.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""

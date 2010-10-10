@@ -187,10 +187,6 @@
 						Filter=""
 						>
 						<File
-							RelativePath="..\..\Libraries\Include\og\FileSystem\File.h"
-							>
-						</File>
-						<File
 							RelativePath="..\..\Libraries\Include\og\FileSystem\FileSystem.h"
 							>
 						</File>
@@ -223,6 +219,22 @@
 						</File>
 						<File
 							RelativePath="..\..\Libraries\Source\og\FileSystem\Utilities.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\FileSystem\FileEx.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\FileSystem\FileSystemEx.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\FileSystem\PakFileEx.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\FileSystem\Utilities.h"
 							>
 						</File>
 					</Filter>

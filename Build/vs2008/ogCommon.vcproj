@@ -374,33 +374,12 @@
 								>
 							</File>
 						</Filter>
-						<Filter
-							Name="Thread"
-							Filter=""
-							>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Thread\LockFreeQueue.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Thread\Thread.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Thread\ThreadLocalStorage.h"
-								>
-							</File>
-						</Filter>
 						<File
 							RelativePath="..\..\Libraries\Include\og\Common\Color.h"
 							>
 						</File>
 						<File
 							RelativePath="..\..\Libraries\Include\og\Common\Common.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\Libraries\Include\og\Common\SysInfo.h"
 							>
 						</File>
 						<File
@@ -522,25 +501,12 @@
 								>
 							</File>
 						</Filter>
-						<Filter
-							Name="Thread"
-							Filter=""
-							>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Common\Thread\Thread.cpp"
-								>
-							</File>
-						</Filter>
 						<File
 							RelativePath="..\..\Libraries\Source\og\Common\Color.cpp"
 							>
 						</File>
 						<File
 							RelativePath="..\..\Libraries\Source\og\Common\Common.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\Libraries\Source\og\Common\SysInfo.cpp"
 							>
 						</File>
 					</Filter>

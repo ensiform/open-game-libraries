@@ -42,6 +42,7 @@
 #define __OG_CONSOLE_H__
 
 #include <og/Common/Common.h>
+#include <og/FileSystem/FileSystem.h>
 #include <og/Console/CmdSystem.h>
 #include <og/Console/CVarSystem.h>
 

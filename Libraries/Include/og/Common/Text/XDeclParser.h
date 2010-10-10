@@ -109,8 +109,6 @@ namespace og {
 	// ==============================================================================
 	class XDeclParser {
 	public:
-#ifdef OG_COMMON_USE_FS
-
 		// ==============================================================================
 		//! Loads a file and parses it
 		//!
@@ -130,7 +128,6 @@ namespace og {
 		//! @return	true if it succeeds, false if it fails
 		// ==============================================================================
 		bool		LexFile( const char *filename );
-#endif
 
 		// ==============================================================================
 		//! Lex raw data
@@ -142,8 +139,6 @@ namespace og {
 		//! @return	true if it succeeds, false if it fails
 		// ==============================================================================
 		bool		LexData( const char *dataName, byte *data, int size );
-
-#ifdef OG_COMMON_USE_FS
 
 		// ==============================================================================
 		//! Load from a binary file
@@ -162,7 +157,6 @@ namespace og {
 		//! @return	true if it succeeds, false if it fails
 		// ==============================================================================
 		bool		BinaryFile( File *file );
-#endif
 
 		// ==============================================================================
 		//! Get the first child of this item
@@ -197,7 +191,6 @@ namespace og {
 		//! @param	lexer	The lexer to use
 		// ==============================================================================
 		void		Parse( Lexer &lexer );
-#ifdef OG_COMMON_USE_FS
 
 		// ==============================================================================
 		//! Read a node and its children from a binary file
@@ -214,7 +207,6 @@ namespace og {
 		//! @param	f		The file
 		// ==============================================================================
 		static void	WriteNodeAndChildren( const XDeclNode *node, File *f );
-#endif
 
 		XDeclNode rootNode;				//!< The root node
 		Allocator<XDeclNode> allocator;	//!< An allocator

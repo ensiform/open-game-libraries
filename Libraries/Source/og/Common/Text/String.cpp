@@ -36,6 +36,7 @@ freely, subject to the following restrictions:
 #endif
 
 namespace og {
+const int MAX_TIMESTRING = 256;
 
 const byte	MASKBITS	= 0x3F;
 const byte	MASK1BIT	= 0x80;
@@ -1247,7 +1248,6 @@ void String::SetData( const char *text, int byteLen, int len ) {
 	length = len;
 }
 
-#ifdef OG_COMMON_USE_FS
 /*
 ================
 String::ReadFromFile
@@ -1277,7 +1277,6 @@ void String::WriteToFile( File *f ) const {
 	f->WriteUshort(static_cast<uShort>(length));
 	f->Write( data, byteLen );
 }
-#endif
 
 /*
 ================
@@ -1591,6 +1590,17 @@ void String::FromBitFlags( int flags, const char **flagNames ) {
 		}
 		StripTrailingOnce("|");
 	}
+}
+
+/*
+================
+String::FromDateTime
+================
+*/
+void String::FromDateTime( const char *format, const tm *time ) {
+	char buffer [MAX_TIMESTRING];
+	strftime( buffer, MAX_TIMESTRING, format, time );
+	*this = buffer; //! @todo	may need unicode conversion
 }
 
 }

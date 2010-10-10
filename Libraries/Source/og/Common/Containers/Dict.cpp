@@ -28,7 +28,6 @@ freely, subject to the following restrictions:
 */
 
 #include <og/Common/Common.h>
-#include <og/Common/Thread/Thread.h>
 
 namespace og {
 
@@ -189,7 +188,6 @@ int Dict::MatchPrefix( const char *prefix, int length, int prevMatch ) const {
 	return -1;
 }
 
-#ifdef OG_COMMON_USE_FS
 /*
 ================
 Dict::ReadFromFile
@@ -220,6 +218,5 @@ void Dict::WriteToFile( File *file ) const {
 		entries[i].GetValue().WriteToFile( file );
 	}
 }
-#endif
 
 }

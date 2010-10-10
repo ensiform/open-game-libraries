@@ -221,6 +221,22 @@
 							RelativePath="..\..\Libraries\Source\og\Audio\AudioSystemEx.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Audio\AudioEmitterEx.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Audio\AudioSource.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Audio\AudioStream.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Audio\AudioSystemEx.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>

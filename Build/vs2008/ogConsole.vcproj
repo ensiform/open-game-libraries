@@ -233,6 +233,18 @@
 							RelativePath="..\..\Libraries\Source\og\Console\Win32Console.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Console\CmdSystemEx.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Console\CVarSystemEx.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Console\Win32Console.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>

@@ -30,7 +30,8 @@
 #ifndef __OG_SHARED_H__
 #define __OG_SHARED_H__
 
-#include "Setup.h"
+#include <og/Setup.h>
+#include <og/Shared/SysInfo.h>
 
 //! Open Game
 namespace og {
@@ -136,6 +137,14 @@ namespace og {
 	//! @}
 	}
 
+	//! Shared
+	namespace Shared {
+	//! @addtogroup Shared
+	//! @{
+		OG_INLINE bool	Init( void ) { return SysInfo::Init(); }
+		OG_INLINE void	Shutdown( void );
+	//! @}
+	}
 //! @}
 }
 

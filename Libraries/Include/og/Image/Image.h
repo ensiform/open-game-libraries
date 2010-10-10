@@ -30,7 +30,8 @@
 #ifndef __OG_IMAGE_H__
 #define __OG_IMAGE_H__
 
-#include <og/Shared.h>
+#include <og/Shared/Shared.h>
+#include <og/Shared/FileSystemCore.h>
 
 //! Open Game Libraries
 namespace og {
@@ -57,13 +58,14 @@ namespace og {
 		// ==============================================================================
 		//! Initializes the image library with a default image.
 		//!
-		//! @param	defaultFilename			The image to use when the wanted one does not exist
+		//! @param	fileSystem						The FileSystem object
+		//! @param	defaultFilename					The image to use when the wanted one does not exist
 		//! @param	user_glCompressedTexImage2DARB	Pass the glCompressedTexImage2DARB function ptr
 		//!											if you want to be able to load DDS files. 
 		//!
 		//! @return	true if the default image was loaded, otherwise false.
 		// ==============================================================================
-		static bool		Init( const char *defaultFilename, void *user_glCompressedTexImage2DARB );
+		static bool		Init( FileSystemCore *fileSystem, const char *defaultFilename, void *user_glCompressedTexImage2DARB );
 
 		// ==============================================================================
 		//! Shutdown, kill all image objects

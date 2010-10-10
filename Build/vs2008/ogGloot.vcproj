@@ -254,6 +254,18 @@
 							RelativePath="..\..\Libraries\Source\og\Gloot\WindowEx.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Gloot\MonitorEx.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Gloot\Platform.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Gloot\WindowEx.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>

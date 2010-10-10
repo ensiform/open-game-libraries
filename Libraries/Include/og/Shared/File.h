@@ -100,6 +100,13 @@ namespace og {
 		virtual ~File() {}
 
 		// ==============================================================================
+		//! Close the file
+		//!
+		//! Cleans up everything, beware after calling this, the file pointer is no longer valid!
+		// ==============================================================================
+		virtual void	Close( void ) = 0;
+
+		// ==============================================================================
 		//! Jump to a position
 		//!
 		//! @param	offset	Offset from origin.
@@ -161,7 +168,7 @@ namespace og {
 		//! @return Integer read from file
 		//! @exception FileReadWriteError	Thrown when not enough data available
 		// ==============================================================================
-		virtual int		ReadInt( void ) = 0;
+		int				ReadInt( void );
 
 		// ==============================================================================
 		//! Read an integer array
@@ -171,7 +178,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when not enough data available
 		// ==============================================================================
-		virtual void	ReadIntArray( int *values, int num ) = 0;
+		void			ReadIntArray( int *values, int num );
 
 		// ==============================================================================
 		//! Read an unsigned integer
@@ -180,7 +187,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when not enough data available
 		// ==============================================================================
-		virtual uInt	ReadUint( void ) = 0;
+		uInt			ReadUint( void );
 
 		// ==============================================================================
 		//! Read a short
@@ -189,7 +196,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when not enough data available
 		// ==============================================================================
-		virtual short	ReadShort( void ) = 0;
+		short			ReadShort( void );
 
 		// ==============================================================================
 		//! Read a short array
@@ -199,7 +206,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when not enough data available
 		// ==============================================================================
-		virtual void	ReadShortArray( short *values, int num ) = 0;
+		void			ReadShortArray( short *values, int num );
 
 		// ==============================================================================
 		//! Read an unsigned short
@@ -208,7 +215,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when not enough data available
 		// ==============================================================================
-		virtual uShort	ReadUshort( void ) = 0;
+		uShort			ReadUshort( void );
 
 		// ==============================================================================
 		//! Read a char
@@ -217,7 +224,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when not enough data available
 		// ==============================================================================
-		virtual char	ReadChar( void ) = 0;
+		char			ReadChar( void );
 
 		// ==============================================================================
 		//! Read a byte
@@ -226,7 +233,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when not enough data available
 		// ==============================================================================
-		virtual byte	ReadByte( void ) = 0;
+		byte			ReadByte( void );
 
 		// ==============================================================================
 		//! Read a float
@@ -235,7 +242,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when not enough data available
 		// ==============================================================================
-		virtual float	ReadFloat( void ) = 0;
+		float			ReadFloat( void );
 
 		// ==============================================================================
 		//! Read a float
@@ -245,7 +252,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when not enough data available
 		// ==============================================================================
-		virtual void	ReadFloatArray( float *values, int num ) = 0;
+		void			ReadFloatArray( float *values, int num );
 
 		// ==============================================================================
 		//! Read a boolean
@@ -254,7 +261,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when not enough data available
 		// ==============================================================================
-		virtual bool	ReadBool( void ) = 0;
+		bool			ReadBool( void );
 
 
 	// Writing Data (Endian independent -> file will be little endian)
@@ -265,7 +272,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when writing failed
 		// ==============================================================================
-		virtual void	WriteInt( int value ) = 0;
+		void			WriteInt( int value );
 
 		// ==============================================================================
 		//! Write an integer array
@@ -275,7 +282,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when writing failed
 		// ==============================================================================
-		virtual void	WriteIntArray( const int *values, int num ) = 0;
+		void			WriteIntArray( const int *values, int num );
 
 		// ==============================================================================
 		//! Write an unsigned integer
@@ -284,7 +291,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when writing failed
 		// ==============================================================================
-		virtual void	WriteUint( uInt value ) = 0;
+		void			WriteUint( uInt value );
 
 		// ==============================================================================
 		//! Write a short
@@ -293,7 +300,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when writing failed
 		// ==============================================================================
-		virtual void	WriteShort( short value ) = 0;
+		void			WriteShort( short value );
 
 		// ==============================================================================
 		//! Write an unsigned short
@@ -302,7 +309,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when writing failed
 		// ==============================================================================
-		virtual void	WriteUshort( uShort value ) = 0;
+		void			WriteUshort( uShort value );
 
 		// ==============================================================================
 		//! Write a character
@@ -311,7 +318,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when writing failed
 		// ==============================================================================
-		virtual void	WriteChar( char value ) = 0;
+		void			WriteChar( char value );
 
 		// ==============================================================================
 		//! Write a byte
@@ -320,7 +327,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when writing failed
 		// ==============================================================================
-		virtual void	WriteByte( byte value ) = 0;
+		void			WriteByte( byte value );
 
 		// ==============================================================================
 		//! Write a float
@@ -329,7 +336,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when writing failed
 		// ==============================================================================
-		virtual void	WriteFloat( float value ) = 0;
+		void			WriteFloat( float value );
 
 		// ==============================================================================
 		//! Write a float array
@@ -339,7 +346,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when writing failed
 		// ==============================================================================
-		virtual void	WriteFloatArray( const float *values, int num ) = 0;
+		void			WriteFloatArray( const float *values, int num );
 
 		// ==============================================================================
 		//! Write a boolean
@@ -348,7 +355,7 @@ namespace og {
 		//!
 		//! @exception FileReadWriteError	Thrown when writing failed
 		// ==============================================================================
-		virtual void	WriteBool( bool value ) = 0;
+		void			WriteBool( bool value );
 
 		// ==============================================================================
 		//! Get the filename
@@ -370,6 +377,9 @@ namespace og {
 		//! @return	The time in seconds (since 1.1.1970), when the file has been modified last
 		// ==============================================================================
 		virtual time_t	GetTime( void ) = 0;
+
+	private:
+		byte		endianBuf[4];	// buffer for reading/writing endian independent
 	};
 	//! @}
 }

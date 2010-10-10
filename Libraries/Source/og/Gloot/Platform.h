@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #ifndef __GLOOT_MANAGER_H__
 #define __GLOOT_MANAGER_H__
 
-#include <og/Shared.h>
+#include <og/Shared/Shared.h>
 
 #if defined( OG_WIN32 )
 	#include <windows.h>
@@ -50,8 +50,7 @@ freely, subject to the following restrictions:
 #endif
 
 #include <og/Common/Common.h>
-#include <og/Common/Thread/Thread.h>
-#include <og/Common/Thread/LockFreeQueue.h>
+#include <og/Shared/Thread/LockFreeQueue.h>
 
 #include <og/Gloot/glmin.h>
 #include <og/Gloot/gloot.h>

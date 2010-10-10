@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 */
 
 #include <og/Common/Common.h>
-#include <og/Common/SysInfo.h>
+#include <og/Shared/Thread/Thread.h>
 
 #ifdef OG_WIN32
 	#include <windows.h>
@@ -38,8 +38,6 @@ freely, subject to the following restrictions:
 #endif
 
 namespace og {
-const int MAX_TIMESTRING = 256;
-
 namespace SysInfo {
 static LARGE_INTEGER frequency;
 static double		pfcMultiplier;
@@ -96,10 +94,8 @@ AMD: http://www.amd.com/us-en/assets/content_type/white_papers_and_tech_docs/254
 #endif
 
 void RetrieveCPUInfo( void ) {
-	char	pszVendor[13];
-	char	pszProcessorName[49];
-	pszVendor[12] = 0;
-	pszProcessorName[48] = 0;
+	cpu.vendorName[12] = 0;
+	cpu.processorName[48] = 0;
 
 	// eax = 0 -> vendor_id
 	// eax = 0x80000000 -> largestExtFuncNr
@@ -108,9 +104,9 @@ void RetrieveCPUInfo( void ) {
 		mov		eax, 0
         cpuid
 		mov		cpu.largestStdFuncNr, eax
-		mov		dw pszVendor[0], ebx
-		mov		dw pszVendor[4], edx
-		mov		dw pszVendor[8], ecx
+		mov		dw cpu.vendorName[0], ebx
+		mov		dw cpu.vendorName[4], edx
+		mov		dw cpu.vendorName[8], ecx
 
 		mov		eax, 80000000h
 		cpuid
@@ -124,7 +120,7 @@ void RetrieveCPUInfo( void ) {
 		"movl     %%edx,4(%%esi);"
 		"movl     %%ecx,8(%%esi);"
 		: "=a"(cpu.largestStdFuncNr)
-		: "S"(pszVendor)
+		: "S"(cpu.vendorName)
 	);
 	__asm__ __volatile__(
 		"movl      $0x80000000, %%eax;"
@@ -140,26 +136,26 @@ void RetrieveCPUInfo( void ) {
 	}
 
 	// Convert string to enum.
-	if ( String::Cmp (pszVendor, "GenuineIntel") == 0 )
+	if ( strcmp(cpu.vendorName, "GenuineIntel") == 0 )
 		cpu.vendorID = CPU::INTEL;
-	else if ( String::Cmp (pszVendor, "AuthenticAMD") == 0 )
+	else if ( strcmp(cpu.vendorName, "AuthenticAMD") == 0 )
 		cpu.vendorID = CPU::AMD;
-	else if ( String::Cmp (pszVendor, "CyrixInstead") == 0 )
+	else if ( strcmp(cpu.vendorName, "CyrixInstead") == 0 )
 		cpu.vendorID = CPU::CYRIX;
-	else if ( String::Cmp (pszVendor, "CentaurHauls") == 0 )
+	else if ( strcmp(cpu.vendorName, "CentaurHauls") == 0 )
 		cpu.vendorID = CPU::CENTAUR;
-	else if ( String::Cmp (pszVendor, "SiS SiS SiS ") == 0 )
+	else if ( strcmp(cpu.vendorName, "SiS SiS SiS ") == 0 )
 		cpu.vendorID = CPU::SIS;
-	else if ( String::Cmp (pszVendor, "NexGenDriven") == 0 )
+	else if ( strcmp(cpu.vendorName, "NexGenDriven") == 0 )
 		cpu.vendorID = CPU::NEXTGEN;
-	else if ( String::Cmp (pszVendor, "GenuineTMx86") == 0
-		|| String::Cmp (pszVendor, "TransmetaCPU") == 0 )
+	else if ( strcmp(cpu.vendorName, "GenuineTMx86") == 0
+		|| strcmp(cpu.vendorName, "TransmetaCPU") == 0 )
 		cpu.vendorID = CPU::TRANSMETA;
-	else if ( String::Cmp (pszVendor, "RiseRiseRise") == 0 )
+	else if ( strcmp(cpu.vendorName, "RiseRiseRise") == 0 )
 		cpu.vendorID = CPU::RISE;
-	else if ( String::Cmp (pszVendor, "UMC UMC UMC ") == 0 )
+	else if ( strcmp(cpu.vendorName, "UMC UMC UMC ") == 0 )
 		cpu.vendorID = CPU::UMC;
-	else if ( String::Cmp (pszVendor, "Geode by NSC") == 0 )
+	else if ( strcmp(cpu.vendorName, "Geode by NSC") == 0 )
 		cpu.vendorID = CPU::NSC;
 	else {
 		cpu.vendorID = CPU::UNKNOWN;
@@ -243,7 +239,7 @@ void RetrieveCPUInfo( void ) {
 		__asm {
 			// Get the first 16 bytes of the processor name
 			mov		eax, 80000002h
-			lea		edi, pszProcessorName
+			lea		edi, cpu.processorName
 			cpuid
 			call save_string
 
@@ -296,20 +292,19 @@ end:
 			"addl     $16, %%esi;"
 			"ret;"
 "end:;"
-             : /* no output */ : "S" (pszProcessorName)
+             : /* no output */ : "S" (cpu.processorName)
 		);
 #endif
 	}
 
-	cpu.vendorName = pszVendor;
-	cpu.vendorName.StripLeadingWhitespaces();
-	cpu.vendorName.StripTrailingWhitespaces();
-	if(pszProcessorName[0]) {
-		cpu.processorName = pszProcessorName;
-		cpu.processorName.StripLeadingWhitespaces();
-		cpu.processorName.StripTrailingWhitespaces();
-	} else
-		cpu.processorName = cpu.vendorName.c_str();
+//	cpu.vendorName.StripLeadingWhitespaces();
+//	cpu.vendorName.StripTrailingWhitespaces();
+	if( cpu.processorName[0] )
+		strcpy( cpu.processorName, cpu.vendorName );
+	else {
+//		cpu.processorName.StripLeadingWhitespaces();
+//		cpu.processorName.StripTrailingWhitespaces();
+	}
 }
 /*
 ================
@@ -426,16 +421,16 @@ void RetrieveMemorySize( void ) {
 SysInfo::RetrieveOSInfo
 ================
 */
-void RetrieveOSInfo( void ) {
+bool RetrieveOSInfo( void ) {
 #if defined(OG_WIN32)
 	OSVERSIONINFO osInfo;
 	osInfo.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
 
 	// Failed ?
 	if( !GetVersionEx( &osInfo ) ) {
-		os.name = "Not identified";
+		strcpy( os.name, "Not identified" );
 		User::Error(ERR_SYSTEM_REQUIREMENTS, "Couldn't get OS version info" );
-		return;
+		return false;
 	}
 
 	os.majorVersion = osInfo.dwMajorVersion;
@@ -445,28 +440,28 @@ void RetrieveOSInfo( void ) {
 	// We require Win2K minimum
 	if( osInfo.dwPlatformId == VER_PLATFORM_WIN32_NT && osInfo.dwMajorVersion >= 5 ) {
 		if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 0 )
-			os.name = "Win2K";
+			strcpy( os.name, "Win2K" );
 		else if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 1 )
-			os.name = "WinXP";
+			strcpy( os.name, "WinXP" );
 		else if( osInfo.dwMajorVersion == 6 ) {
 			if( osInfo.dwMinorVersion == 0 )
-				os.name = "WinVista";
+				strcpy( os.name, "WinVista" );
 			else
-				os.name = "Win7";
+				strcpy( os.name, "Win7" );
 		}
 
-		if ( String::Icmpn(osInfo.szCSDVersion, "Service Pack ", 13) == 0 ) {
-			os.name += " SP";
-			os.name += (osInfo.szCSDVersion+13);
+		if ( strnicmp(osInfo.szCSDVersion, "Service Pack ", 13) == 0 ) {
+			strcat( os.name, " SP" );
+			strcat( os.name, osInfo.szCSDVersion+13 );
 		} else {
-			os.name += " ";
-			os.name += osInfo.szCSDVersion;
+			strcat( os.name, " " );
+			strcat( os.name, osInfo.szCSDVersion );
 		}
 	}
-	if ( os.name.IsEmpty() ) {
-		os.name = TS("Win $*.$*") << static_cast<uInt>(osInfo.dwMajorVersion) << static_cast<uInt>(osInfo.dwMinorVersion);
+	if ( os.name[0] == '\0' ) {
+		strcpy( os.name, TS("Win $*.$*") << static_cast<uInt>(osInfo.dwMajorVersion) << static_cast<uInt>(osInfo.dwMinorVersion) );
 		User::Error(ERR_SYSTEM_REQUIREMENTS, "Requires Windows 2000 or greater" );
-		return;
+		return false;
 	}
 #elif defined(OG_LINUX)
 	FILE *file = fopen("/proc/version", "r");
@@ -489,6 +484,7 @@ void RetrieveOSInfo( void ) {
 	os.name = "unknown unix";
 #else
 #endif
+	return true;
 }
 
 /*
@@ -496,37 +492,31 @@ void RetrieveOSInfo( void ) {
 SysInfo::Init
 ================
 */
-void Init( void ) {
+bool Init( void ) {
+	static bool result = false;
 	static bool initialized = false;
 	static Mutex writeLock;
 
 	// We only need to get it once, it wont change..
 	writeLock.Lock();
 	if ( initialized )
-		return;
+		return result;
 	initialized = true;
 
 	QueryPerformanceFrequency(&frequency);
 	pfcMultiplier = 1000000.0/static_cast<double>(frequency.QuadPart);
 
-	RetrieveOSInfo();
+	if ( !RetrieveOSInfo() )
+		return false;
 	RetrieveCPUInfo();
 	RetrieveCPUSpeed();
 	RetrieveMemorySize();
+	result = true;
+
 	writeLock.Unlock();
+	return true;
 }
 
-}
-
-/*
-================
-DateTime::MakeString
-================
-*/
-void DateTime::MakeString( const char *format, String &result ) {
-	char buffer [MAX_TIMESTRING];
-	strftime( buffer, MAX_TIMESTRING, format, this );
-	result = buffer; //! @todo	may need unicode conversion
 }
 
 /*

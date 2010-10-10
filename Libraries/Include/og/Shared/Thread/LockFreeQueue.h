@@ -31,6 +31,8 @@ freely, subject to the following restrictions:
 #ifndef __OG_LOCK_FREE_QUEUE_H__
 #define __OG_LOCK_FREE_QUEUE_H__
 
+#include <og/Shared/Thread/Thread.h>
+
 #if defined(OG_WIN32)
 	#include <windows.h>
 #endif

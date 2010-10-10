@@ -32,22 +32,6 @@ freely, subject to the following restrictions:
 
 namespace og {
 
-/*
-================
-Common::Init
-================
-*/
-bool Common::Init( void ) {
-	SysInfo::Init();
-	return true;
-}
-
-/*
-================
-Common::Shutdown
-================
-*/
-void Common::Shutdown( void ) {
-}
+FileSystemCore *commonFS = NULL;
 
 }

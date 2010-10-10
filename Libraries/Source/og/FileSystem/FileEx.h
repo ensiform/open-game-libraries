@@ -49,34 +49,10 @@ namespace og {
 
 		long			Size( void ) { return size; }						// Returns the filesize
 
-		// Reading Data (Endian independent -> file must be little endian)
-		int				ReadInt( void );
-		void			ReadIntArray( int *values, int num );
-		uInt			ReadUint( void );
-		short			ReadShort( void );
-		void			ReadShortArray( short *values, int num );
-		uShort			ReadUshort( void );
-		char			ReadChar( void );
-		byte			ReadByte( void );
-		float			ReadFloat( void );
-		void			ReadFloatArray( float *values, int num );
-		bool			ReadBool( void );
-
-		// Writing Data (Endian independent -> file will be little endian)
-		void			WriteInt( int value );
-		void			WriteIntArray( const int *values, int num );
-		void			WriteUint( uInt value );
-		void			WriteShort( short value );
-		void			WriteUshort( uShort value );
-		void			WriteChar( char value );
-		void			WriteByte( byte value );
-		void			WriteFloat( float value );
-		void			WriteFloatArray( const float *values, int num );
-		void			WriteBool( bool value );
-
 		const char *	GetFileName( void ) { return filename; }			// Returns the filename without path
 		const char *	GetFullPath( void ) { return fullpath.c_str(); }	// Returns the full filepath
 		time_t			GetTime( void ) { return time; }					// Returns the modification date/time
+		void			Close( void );										// Returns the modification date/time
 
 		// ---------------------- Internal FileEx Members -------------------
 
@@ -86,7 +62,6 @@ namespace og {
 
 	protected:
 		LinkedList<FileEx *>::nodeType *node;
-		byte		endianBuf[4];	// buffer for reading/writing endian independent
 		bool		writeMode;		// Reading or Writing ?
 
 		time_t		time;			// file modification date/time

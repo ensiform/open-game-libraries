@@ -93,7 +93,8 @@ bool ReadPureList( const char *filename ) {
 	return !allowedPakFiles.IsEmpty();
 }
 int main( int argc, char* argv[] ) {
-	og::Common::Init();
+	if ( !og::Shared::Init() )
+		return 0;
 	if ( !ReadPureList("purelist.txt") )
 		return 0;
 
@@ -106,6 +107,5 @@ int main( int argc, char* argv[] ) {
 		}
 		og::FileSystem::Shutdown();
 	}
-	og::Common::Shutdown();
 	return 0;
 }

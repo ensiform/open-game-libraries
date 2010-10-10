@@ -48,10 +48,10 @@ ImageFileTGA::Open
 ================
 */
 bool ImageFileTGA::Open( const char *filename ) {
-	if ( FS == NULL )
+	if ( imageFS == NULL )
 		return false;
 
-	File *file = FS->OpenFileReadBuffered( filename );
+	File *file = imageFS->OpenRead( filename, true, true );
 	if ( !file )
 		return false;
 
@@ -77,17 +77,17 @@ bool ImageFileTGA::Open( const char *filename ) {
 		imageDescriptor	= file->ReadByte();
 
 		if ( colorMapType != 0 ) {
-			FS->CloseFile( file );
+			file->Close();
 			User::Error( ERR_BAD_FILE_FORMAT, "Colormaps not allowed in Targa files.", filename);
 			return false;
 		}
 		if ( imageTypeCode != 2 && imageTypeCode != 3 && imageTypeCode != 10 ) {
-			FS->CloseFile( file );
+			file->Close();
 			User::Error( ERR_BAD_FILE_FORMAT, "Only Targa files of type 2, 3 or 10 allowed.", filename);
 			return false;
 		}
 		if ( bpp != 32 && bpp != 24 && imageTypeCode != 3 ) {
-			FS->CloseFile( file );
+			file->Close();
 			User::Error( ERR_BAD_FILE_FORMAT, "Only 24/32 bit Targa files allowed.", filename);
 			return false;
 		}
@@ -107,7 +107,7 @@ bool ImageFileTGA::Open( const char *filename ) {
 		return ReadType10( file, topDown );
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile( file );
+		file->Close();
 		User::Error( ERR_FILE_CORRUPT, TS("Targa: $*" ) << err.ToString(), filename );
 		return false;
 	}
@@ -172,7 +172,7 @@ bool ImageFileTGA::ReadType2( File *file, bool topDown ) {
 			}
 		}
 	}
-	FS->CloseFile( file );
+	file->Close();
 	return true;
 }
 
@@ -203,7 +203,7 @@ bool ImageFileTGA::ReadType3( File *file, bool topDown ) {
 				dst_pixel[0] = dst_pixel[1] = dst_pixel[2] = file->ReadByte();
 		}
 	}
-	FS->CloseFile( file );
+	file->Close();
 	return true;
 }
 
@@ -307,10 +307,10 @@ ImageFileTGA::SaveFile
 ================
 */
 bool ImageFileTGA::SaveFile( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
-	if ( FS == NULL )
+	if ( imageFS == NULL )
 		return false;
 
-	File *file = FS->OpenFileWrite( filename );
+	File *file = imageFS->OpenWrite( filename );
 	if ( !file )
 		return false;
 
@@ -362,11 +362,11 @@ bool ImageFileTGA::SaveFile( const char *filename, byte *data, uInt width, uInt 
 				}
 			}
 		}
-		FS->CloseFile( file );
+		file->Close();
 		return true;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile( file );
+		file->Close();
 		User::Error( ERR_FILE_WRITEFAIL, TS("Targa: $*" ) << err.ToString(), filename );
 		return false;
 	}

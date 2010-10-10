@@ -30,6 +30,9 @@
 #ifndef __OG_SYSINFO_H__
 #define __OG_SYSINFO_H__
 
+#include <time.h>
+#include <string.h>
+
 //! Open Game Libraries
 namespace og {
 //! @defgroup Common Common (Library)
@@ -64,8 +67,8 @@ namespace og {
 		// ==============================================================================
 		class Features {
 		public:
-			String		vendorName;			//!< Name of the vendor
-			String		processorName;		//!< Name of the processor
+			char		vendorName[13];		//!< Name of the vendor
+			char		processorName[49];	//!< Name of the processor
 			Vendor		vendorID;			//!< Identifier for the vendor
 			uLong		largestStdFuncNr;	//!< The largest std func nr
 			uLong		largestExtFuncNr;	//!< The largest extent func nr
@@ -217,7 +220,7 @@ namespace og {
 		uLong	majorVersion;	//!< The major version
 		uLong	minorVersion;	//!< The minor version
 		uLong	buildNumber;	//!< The build number
-		String	name;			//!< A string that tries to match the OS best
+		char	name[64];		//!< A string that tries to match the OS best
 	};
 
 	// ==============================================================================
@@ -227,7 +230,7 @@ namespace og {
 		// ==============================================================================
 		//! Initialize system information and hires time
 		// ==============================================================================
-		void			Init( void );
+		bool			Init( void );
 
 		// ==============================================================================
 		//! Get high resolution time
@@ -345,16 +348,6 @@ namespace og {
 		//! @return	true when using daylight savings 
 		// ==============================================================================
 		int			GetDayLightSavings( void ) { return tm_isdst; }
-
-		// ==============================================================================
-		//! Create a string version of the time
-		//!
-		//! @param	format	Describes the format to use
-		//! @param	result	Where to store the result
-		//!
-		//! @see	http://www.cplusplus.com/reference/clibrary/ctime/strftime/
-		// ==============================================================================
-		void		MakeString( const char *format, String &result );
 
 		// ==============================================================================
 		//! Compares this object with another one

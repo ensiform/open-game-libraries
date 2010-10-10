@@ -97,11 +97,11 @@ bool ogDemoWindow::Init( void ) {
 	og::StringList deviceList;
 	og::AudioSystem::GetDeviceList( deviceList );
 
-	if ( !og::AudioSystem::Init( "sounds/default.wav", deviceList.IsEmpty() ? NULL : deviceList[0].c_str() ) )
+	if ( !og::AudioSystem::Init( og::FS, "sounds/default.wav", deviceList.IsEmpty() ? NULL : deviceList[0].c_str() ) )
 		return false;
-	if ( !og::Image::Init( "gfx/default.tga", window->GetProcAddress("glCompressedTexImage2DARB") ) )
+	if ( !og::Image::Init( og::FS, "gfx/default.tga", window->GetProcAddress("glCompressedTexImage2DARB") ) )
 		return false;
-	if ( !og::Font::Init( "Arial" ) )
+	if ( !og::Font::Init( og::FS, "Arial" ) )
 		return false;
 
 	InitInput();
@@ -494,16 +494,14 @@ og::User::Main
 ================
 */
 int og::User::Main( int argc, char *argv[] ) {
-	Common::Init();
-
-	if ( !og::FileSystem::Init( ".gpk", ".", ".", "base" ) ) {
-		Common::Shutdown();
+	if ( !og::Shared::Init() )
 		return 0;
-	}
+
+	if ( !og::FileSystem::Init( ".gpk", ".", ".", "base" ) )
+		return 0;
 
 	if ( !og::FS->FileExists("gfx/asteroids/spaceship.tga") ) {
 		og::FileSystem::Shutdown();
-		Common::Shutdown();
 		printf( "You might wanna check your working directory ?" );
 		return 0;
 	}
@@ -511,7 +509,6 @@ int og::User::Main( int argc, char *argv[] ) {
 	Gloot::DisableSystemKeys( true );
 	if( !demoWindow.Init() ) {
 		og::FileSystem::Shutdown();
-		Common::Shutdown();
 		return 0;
 	}
 
@@ -536,7 +533,6 @@ int og::User::Main( int argc, char *argv[] ) {
 	demoWindow.UnregisterAllBinds();
 	Gloot::DisableSystemKeys( false );
 	og::FileSystem::Shutdown();
-	Common::Shutdown();
     return 0;
 }
 

@@ -33,7 +33,7 @@
 #ifndef __OG_GLOOT_H__
 #define __OG_GLOOT_H__
 
-#include <og/Shared.h>
+#include <og/Shared/Shared.h>
 #include <og/Gloot/Window.h>
 #include <og/Gloot/Monitor.h>
 #include <og/Gloot/Input.h>

@@ -96,6 +96,15 @@ namespace og {
 		static int		ToWide( const char *in, DynBuffer<wchar_t> &buffer );
 		void			FromBitFlags( int flags, const char **flagNames );
 
+		// ==============================================================================
+		//! Create a string version of the time
+		//!
+		//! @param	format	Describes the format to use
+		//! @param	time	The time to use
+		//!
+		//! @see	http://www.cplusplus.com/reference/clibrary/ctime/strftime/
+		// ==============================================================================
+		void			FromDateTime( const char *format, const tm *time );
 
 		// Search & Replace
 #if 1
@@ -215,10 +224,8 @@ namespace og {
 		String			operator+( const char *text );
 		friend String	operator+( const char *text, const String &str );
 
-#ifdef OG_COMMON_USE_FS
 		void			ReadFromFile( File *f );
 		void			WriteToFile( File *f ) const;
-#endif
 
 	protected:
 		friend class	StringList;

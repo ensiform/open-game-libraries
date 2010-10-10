@@ -123,7 +123,6 @@ DeclParser::DeclParser( int flags ) {
 		lexerFlags &= ~LEXER_FULL_LINES;
 }
 
-#ifdef OG_COMMON_USE_FS
 /*
 ================
 DeclParser::LoadFile
@@ -132,14 +131,14 @@ Loads either the binary or the text version, depending on which is newer.
 ================
 */
 bool DeclParser::LoadFile( const char *filename ) {
-	if ( FS == NULL )
+	if ( commonFS == NULL )
 		return false;
 	String binFilename(filename);
 	binFilename += ".bin";
-	bool binExists = FS->FileExists( binFilename.c_str() );
-	bool txtExists = FS->FileExists( filename );
+	bool binExists = commonFS->FileExists( binFilename.c_str() );
+	bool txtExists = commonFS->FileExists( filename );
 	if ( binExists && txtExists ) {
-		if ( FS->FileTime( binFilename.c_str() ) > FS->FileTime( filename ) )
+		if ( commonFS->FileTime( binFilename.c_str() ) > commonFS->FileTime( filename ) )
 			return BinaryFile( binFilename.c_str() );
 		return LexFile(filename);
 	}
@@ -171,7 +170,6 @@ bool DeclParser::LexFile( const char *filename ) {
 		return false;
 	}
 }
-#endif
 
 /*
 ================
@@ -251,26 +249,25 @@ void DeclParser::Parse( Lexer &lexer ) {
 		throw LexerError( LexerError::END_OF_FILE );
 }
 
-#ifdef OG_COMMON_USE_FS
 /*
 ================
 DeclParser::BinaryFile
 ================
 */
 bool DeclParser::BinaryFile( const char *filename ) {
-	if ( FS == NULL )
+	if ( commonFS == NULL )
 		return false;
-	File *file = FS->OpenFileRead( filename );
+	File *file = commonFS->OpenRead( filename );
 	if ( !file )
 		return false;
 
 	try {
 		bool ret = BinaryFile( file );
-		FS->CloseFile( file );
+		file->Close();
 		return ret;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile( file );
+		file->Close();
 		User::Error( ERR_FILE_CORRUPT, TS("Decl: $*" ) << err.ToString(), filename );
 		return false;
 	}
@@ -289,7 +286,6 @@ bool DeclParser::BinaryFile( File *file ) {
 
 	return false;
 }
-#endif
 
 /*
 ================
@@ -311,21 +307,20 @@ void DeclParser::SolveInheritance( void ) {
 		declTypes[i]->SolveInheritance();
 }
 
-#ifdef OG_COMMON_USE_FS
 /*
 ================
 DeclParser::MakeBinary
 ================
 */
 bool DeclParser::MakeBinary( const char *filename ) {
-	if ( FS == NULL )
+	if ( commonFS == NULL )
 		return false;
 
 	Lexer lexer;
 	if ( !lexer.LoadFile( filename ) )
 		return false;
 
-	File *f = FS->OpenFileWrite( TS( "$*.bin" ) << filename );
+	File *f = commonFS->OpenWrite( TS( "$*.bin" ) << filename );
 	if ( !f )
 		return false;
 
@@ -381,18 +376,17 @@ bool DeclParser::MakeBinary( const char *filename ) {
 		return true;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile( f );
+		f->Close();
 		User::Error( ERR_FILE_WRITEFAIL, TS("Binary Decl: $*.bin" ) << err.ToString(), filename );
 		return false;
 	}
 	catch( LexerError err ) {
-		FS->CloseFile( f );
+		f->Close();
 		String errStr;
 		err.ToString( errStr );
 		User::Error( ERR_LEXER_FAILURE, errStr.c_str(), filename );
 		return false;
 	}
 }
-#endif
 
 }

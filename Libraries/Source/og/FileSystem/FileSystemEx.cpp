@@ -118,7 +118,9 @@ Adds all pakfiles in the base directory.
 ================
 */
 bool FileSystemEx::Init( const char *_pakExtension, const char *_basePath, const char *_userPath, const char *_baseDir ) {
-	Common::Init();
+	if ( !Shared::Init() )
+		return false;
+	CommonSetFileSystem( this );
 
 	pakExtension	= _pakExtension;
 	basePath		= _basePath;
@@ -196,7 +198,7 @@ void FileSystemEx::Run( void ) {
 	CloseAllFiles();
 
 	// This tape will selfdestruct in 0 seconds
-	Common::Shutdown();
+	CommonSetFileSystem( NULL );
 
 	// Remove all resource directories
 	resourceDirs.Clear();
@@ -281,21 +283,13 @@ bool FileSystemEx::MakeDir( const char *path ) {
 FileSystemEx::MakePath
 ================
 */
-bool FileSystemEx::MakePath( const char *path ) {
-	swmrLock.LockRead();
-	bool ret = MakePathEx( TS("$*/$*/$*" ) << userPath << modPath << path );
-	swmrLock.UnlockRead();
-	return ret;
-}
-
-/*
-================
-FileSystemEx::MakePathEx
-
-Same as above, using explicit OS path
-================
-*/
-bool FileSystemEx::MakePathEx( const char *path ) {
+bool FileSystemEx::MakePath( const char *path, bool pure ) {
+	if ( pure ) {
+		swmrLock.LockRead();
+		bool ret = MakePath( TS("$*/$*/$*" ) << userPath << modPath << path, false );
+		swmrLock.UnlockRead();
+		return ret;
+	}
 	int len = String::ByteLength(path);
 	DynBuffer<char> newPath(len+1);
 
@@ -464,7 +458,7 @@ FileEx *FileSystemEx::OpenLocalFileRead( const char *filename, int *size ) {
 			fileEx->size = ftell( file );
 			if ( fileEx->size != -1 && fseek( file, 0, SEEK_SET ) == 0 ) {
 				// Get modification date/time
-				fileEx->time = FileTimeEx( filename );
+				fileEx->time = FileTime( filename, false );
 				fileEx->writeMode = false;
 				fileEx->fullpath = filename;
 				fileEx->fullpath.ToForwardSlashes();
@@ -487,57 +481,81 @@ FileEx *FileSystemEx::OpenLocalFileRead( const char *filename, int *size ) {
 
 /*
 ===========
-FileSystemEx::OpenFileRead
+FileSystemEx::OpenRead
 
-Finds a file in the pakfile list.
+Finds a file in the pakfile list or if pure is false, on the disk
 returns NULL if the file has not been found
 otherwise a new File Object and the filesize
-Used for streaming data out of either
-a pak file or a seperate file.
 ===========
 */
-File *FileSystemEx::OpenFileRead( const char *filename ) {
-	swmrLock.LockRead();
-	// Can the extension be loaded in pure mode ?
-	bool unpureFileAllowed = false;
-	if ( pureMode && !pureExtensions.IsEmpty() ) {
-		String strExt = String::GetFileExtension( filename, String::ByteLength(filename) );
-		if ( pureExtensions.Find( strExt.c_str() ) != -1 )
-			unpureFileAllowed = true;
+File *FileSystemEx::OpenRead( const char *filename, bool pure, bool buffered ) {
+	if ( buffered ) {
+		byte *buffer = NULL;
+		int filesize = LoadFile( filename, &buffer, pure );
+		if ( buffer == NULL )
+			return NULL;
+		
+		FileBuffered *fileEx = FileBuffered::Create( buffer );
+		fileEx->writeMode = false;
+		fileEx->size = filesize;
+		fileEx->time = FileTime(filename);
+		fileEx->fullpath = filename;
+		fileEx->fullpath.ToForwardSlashes();
+		int i = fileEx->fullpath.ReverseFind("/");
+		fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i);
+
+		AddFileEvent( new FileEvent( FileEvent::OPEN, fileEx ) );
+		return fileEx;
 	}
 
-	// Check for local files.
-	if ( !pureMode || unpureFileAllowed ) {
-		TS path( "$*/$*/$*" );
-		for( int i=searchPaths.Num()-1; i >= 0; i-- ) {
-			// check in reverse order to get mod dir before base dir
-			for( int j=resourceDirs.Num()-1; j >= 0; j-- ) {
-				// Try to open it.
-				FileEx *fileEx = OpenLocalFileRead( path << searchPaths[i] << resourceDirs[j] << filename );
-				if ( fileEx ) {
+	if ( !pure ) {
+		// Try to open it directly
+		FileEx *fileEx = OpenLocalFileRead( filename );
+		if ( fileEx )
+			return fileEx;
+	} else {
+		swmrLock.LockRead();
+		// Can the extension be loaded in pure mode ?
+		bool unpureFileAllowed = false;
+		if ( pureMode && !pureExtensions.IsEmpty() ) {
+			String strExt = String::GetFileExtension( filename, String::ByteLength(filename) );
+			if ( pureExtensions.Find( strExt.c_str() ) != -1 )
+				unpureFileAllowed = true;
+		}
+
+		// Check for local files.
+		if ( !pureMode || unpureFileAllowed ) {
+			TS path( "$*/$*/$*" );
+			for( int i=searchPaths.Num()-1; i >= 0; i-- ) {
+				// check in reverse order to get mod dir before base dir
+				for( int j=resourceDirs.Num()-1; j >= 0; j-- ) {
+					// Try to open it.
+					FileEx *fileEx = OpenLocalFileRead( path << searchPaths[i] << resourceDirs[j] << filename );
+					if ( fileEx ) {
+						swmrLock.UnlockRead();
+						return fileEx;
+					}
+					path.Reset();
+				}
+			}
+		}
+
+		// Search all pak files (in reverse order so
+		// mod pakfiles come before base pakfiles)
+		FileEx *fileEx;
+		for ( int i=PFLIST_NUM-1; i >= 0; i-- ) {
+			for( int j=pakFiles[i].Num()-1; j >= 0; j-- ) {
+				// Search for the file in the pakfile.
+				fileEx = static_cast<FileEx *>( pakFiles[i][j]->OpenFile( filename ) );
+				// Found it!
+				if ( fileEx != NULL ) {
 					swmrLock.UnlockRead();
 					return fileEx;
 				}
-				path.Reset();
 			}
 		}
+		swmrLock.UnlockRead();
 	}
-
-	// Search all pak files (in reverse order so
-	// mod pakfiles come before base pakfiles)
-	FileEx *fileEx;
-	for ( int i=PFLIST_NUM-1; i >= 0; i-- ) {
-		for( int j=pakFiles[i].Num()-1; j >= 0; j-- ) {
-			// Search for the file in the pakfile.
-			fileEx = static_cast<FileEx *>( pakFiles[i][j]->OpenFile( filename ) );
-			// Found it!
-			if ( fileEx != NULL ) {
-				swmrLock.UnlockRead();
-				return fileEx;
-			}
-		}
-	}
-	swmrLock.UnlockRead();
 
 	if ( *notFoundWarning )
 		User::Error( ERR_FS_FILE_OPENREAD, "Can't open file for reading", filename );
@@ -546,101 +564,19 @@ File *FileSystemEx::OpenFileRead( const char *filename ) {
 
 /*
 ===========
-FileSystemEx::OpenFileReadEx
-
-Same as above, using explicit OS path
+FileSystemEx::OpenWrite
 ===========
 */
-File *FileSystemEx::OpenFileReadEx( const char *filename ) {
-	// Try to open it.
-	FileEx *fileEx = OpenLocalFileRead( filename );
-	if ( fileEx )
-		return fileEx;
+File *FileSystemEx::OpenWrite( const char *filename, bool pure ) {
+	if ( pure ) {
+		swmrLock.LockRead();
+		File *ret = OpenWrite( TS( "$*/$*/$*" ) << userPath << modPath << filename, false );
+		swmrLock.UnlockRead();
+		return ret;
+	}
 
-	if ( *notFoundWarning )
-		User::Error( ERR_FS_FILE_OPENREAD, "Can't open file for reading", filename );
-	return NULL;
-}
-
-/*
-===========
-FileSystemEx::OpenFileReadBuffered
-
-Opens a file and buffers it while reading,
-This can be faster if you are using Seek a lot during file load
-===========
-*/
-File *FileSystemEx::OpenFileReadBuffered( const char *filename ) {
-	byte *buffer = NULL;
-	int filesize = LoadFile( filename, &buffer );
-	if ( buffer == NULL )
-		return NULL;
-	
-	FileBuffered *fileEx = FileBuffered::Create( buffer );
-	if ( fileEx == NULL )
-		return NULL;
-	fileEx->writeMode = false;
-	fileEx->size = filesize;
-	fileEx->time = FileTime(filename);
-	fileEx->fullpath = filename;
-	fileEx->fullpath.ToForwardSlashes();
-	int i = fileEx->fullpath.ReverseFind("/");
-	fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i);
-
-	AddFileEvent( new FileEvent( FileEvent::OPEN, fileEx ) );
-	return fileEx;
-}
-
-/*
-===========
-FileSystemEx::OpenFileReadBufferedEx
-
-Same as above, using explicit OS path
-===========
-*/
-File *FileSystemEx::OpenFileReadBufferedEx( const char *filename ) {
-	byte *buffer = NULL;
-	int filesize = LoadFileEx( filename, &buffer );
-	if ( buffer == NULL )
-		return NULL;
-	
-	FileBuffered *fileEx = FileBuffered::Create( buffer );
-	if ( fileEx == NULL )
-		return NULL;
-	fileEx->writeMode = false;
-	fileEx->size = filesize;
-	fileEx->time = FileTime(filename);
-	fileEx->fullpath = filename;
-	fileEx->fullpath.ToForwardSlashes();
-	int i = fileEx->fullpath.ReverseFind("/");
-	fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i);
-
-	AddFileEvent( new FileEvent( FileEvent::OPEN, fileEx ) );
-	return fileEx;
-}
-
-/*
-===========
-FileSystemEx::OpenFileWrite
-===========
-*/
-File *FileSystemEx::OpenFileWrite( const char *filename ) {
-	swmrLock.LockRead();
-	File *ret = OpenFileWriteEx( TS( "$*/$*/$*" ) << userPath << modPath << filename );
-	swmrLock.UnlockRead();
-	return ret;
-}
-
-/*
-===========
-FileSystemEx::OpenFileWriteEx
-
-Same as above, using explicit OS path
-===========
-*/
-File *FileSystemEx::OpenFileWriteEx( const char *filename ) {
 	// If the path doesn't exist and can not be created, fail.
-	if ( !MakePathEx( filename ) )
+	if ( !MakePath( filename, false ) )
 		return NULL;
 
 	// Try to open it.
@@ -668,48 +604,18 @@ File *FileSystemEx::OpenFileWriteEx( const char *filename ) {
 }
 
 /*
-================
-FileSystemEx::CloseFile
-
-Closes an open File
-================
-*/
-void FileSystemEx::CloseFile( File *file ) {
-	OG_ASSERT( file != NULL );
-	AddFileEvent( new FileEvent( FileEvent::CLOSE, file ) );
-}
-
-/*
 ===========
 FileSystemEx::FileSize
 
 Gets Filesize of a file (inside or outside a pakfile)
 ===========
 */
-int FileSystemEx::FileSize( const char *filename ) {
+int FileSystemEx::FileSize( const char *filename, bool pure ) {
 	// Open the file to get its size and then close it again.
-	File *file = OpenFileRead(filename);
+	File *file = OpenRead( filename, pure );
 	if ( file ) {
 		int size = file->Size();
-		CloseFile( file );
-		return size;
-	}
-	return -1;
-}
-
-/*
-===========
-FileSystemEx::FileSizeEx
-
-Same as above, using explicit OS path
-===========
-*/
-int FileSystemEx::FileSizeEx( const char *filename ) {
-	// Open the file to get its size and then close it again.
-	File *file = OpenFileReadEx(filename);
-	if ( file ) {
-		int size = file->Size();
-		CloseFile( file );
+		file->Close();
 		return size;
 	}
 	return -1;
@@ -722,25 +628,13 @@ FileSystemEx::FileExists
 Does the specified file exist ?
 ===========
 */
-bool FileSystemEx::FileExists( const char *filename ) {
+bool FileSystemEx::FileExists( const char *filename, bool pure ) {
 	*notFoundWarning = false;
-	bool ret = FileSize(filename) != -1;
+	File *file = OpenRead( filename, pure );
+	if ( file )
+		file->Close();
 	*notFoundWarning = true;
-	return ret;
-}
-
-/*
-===========
-FileSystemEx::FileExistsEx
-
-Same as above, using explicit OS path
-===========
-*/
-bool FileSystemEx::FileExistsEx( const char *filename ) {
-	*notFoundWarning = false;
-	bool ret = FileSizeEx(filename) != -1;
-	*notFoundWarning = true;
-	return ret;
+	return file != NULL;
 }
 
 /*
@@ -750,25 +644,17 @@ FileSystemEx::FileTime
 Returns the file modification date/time
 ===========
 */
-time_t FileSystemEx::FileTime( const char *filename ) {
-	*notFoundWarning = false;
-	File *file = OpenFileRead(filename);
-	if ( !file )
-		return 0;
-	time_t time = file->GetTime();
-	CloseFile( file );
-	*notFoundWarning = true;
-	return time;
-}
-
-/*
-===========
-FileSystemEx::FileTimeEx
-
-Same as above, using explicit OS path
-===========
-*/
-time_t FileSystemEx::FileTimeEx( const char *filename ) {
+time_t FileSystemEx::FileTime( const char *filename, bool pure ) {
+	if ( pure ) {
+		*notFoundWarning = false;
+		File *file = OpenRead( filename, pure );
+		if ( !file )
+			return 0;
+		time_t time = file->GetTime();
+		file->Close();
+		*notFoundWarning = true;
+		return time;
+	}
 #ifdef OG_WIN32
 	DynBuffer<wchar_t> strFilename;
 	String::ToWide( filename, strFilename );
@@ -792,11 +678,11 @@ Will load the whole file into a buffer
 (use FreeFile to free the buffer again)
 ============
 */
-int FileSystemEx::LoadFile( const char *path, byte **buffer ) {
+int FileSystemEx::LoadFile( const char *path, byte **buffer, bool pure ) {
 	OG_ASSERT( buffer != NULL );
 
 	// Open the file
-	File *file = OpenFileRead(path);
+	File *file = OpenRead( path, pure );
 	if ( !file ) {
 		*buffer = NULL;
 		return -1;
@@ -814,54 +700,13 @@ int FileSystemEx::LoadFile( const char *path, byte **buffer ) {
 		(*buffer)[size] = 0;
 
 		AddFileEvent( new FileEvent( FileEvent::BUFFER_LOAD, *buffer ) );
-		CloseFile( file );
+		file->Close();
 		return size;
 	}
 	catch( FileReadWriteError err ) {
 		delete[] *buffer;
 		*buffer = NULL;
-		CloseFile( file );
-		User::Error( ERR_FILE_CORRUPT, TS( "Unknown: $*" ) << err.ToString(), path );
-		return -1;
-	}
-}
-
-/*
-============
-FileSystemEx::LoadFileEx
-
-Same as above, using explicit OS path
-============
-*/
-int FileSystemEx::LoadFileEx( const char *path, byte **buffer ) {
-	OG_ASSERT( buffer!=NULL );
-
-	// Open the file
-	File *file = OpenFileReadEx(path);
-	if ( !file ) {
-		*buffer = NULL;
-		return -1;
-	}
-
-	// Allocate enough memory for the whole file.
-	int size = file->Size();
-	*buffer = new byte[size+1];
-
-	try {
-		// Read the whole file into the buffer
-		file->Read( *buffer, size );
-
-		// Just in case we are reading a text file, terminate the buffer
-		(*buffer)[size] = 0;
-
-		AddFileEvent( new FileEvent( FileEvent::BUFFER_LOAD, *buffer ) );
-		CloseFile( file );
-		return size;
-	}
-	catch( FileReadWriteError err ) {
-		delete[] *buffer;
-		*buffer = NULL;
-		CloseFile( file );
+		file->Close();
 		User::Error( ERR_FILE_CORRUPT, TS( "Unknown: $*" ) << err.ToString(), path );
 		return -1;
 	}

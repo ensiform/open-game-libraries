@@ -33,7 +33,7 @@
 #ifndef __OG_FABLE_H__
 #define __OG_FABLE_H__
 
-#include <og/Shared.h>
+#include <og/Shared/Shared.h>
 
 //! Open Game Libraries
 namespace og {

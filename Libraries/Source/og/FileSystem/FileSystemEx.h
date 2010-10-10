@@ -33,8 +33,7 @@ freely, subject to the following restrictions:
 #include <string>
 #include <zlib/zlib.h>
 #include <og/Common/Common.h>
-#include <og/Common/Thread/Thread.h>
-#include <og/Common/Thread/LockFreeQueue.h>
+#include <og/Shared/Thread/LockFreeQueue.h>
 #include <og/FileSystem/FileSystem.h>
 #include "FileEx.h"
 #include "PakFileEx.h"
@@ -79,28 +78,15 @@ namespace og {
 		void	RemovePureExtension( const char *ext );
 
 		// File Access
-		File *	OpenFileRead( const char *filename );
-		File *	OpenFileReadBuffered( const char *filename );
-		File *	OpenFileWrite( const char *filename );
-		void	CloseFile( File *file );
-		int		FileSize( const char *filename );
-		bool	FileExists( const char *filename );
-		time_t	FileTime( const char *filename );
+		File *	OpenRead( const char *filename, bool pure=true, bool buffered=false );
+		File *	OpenWrite( const char *filename, bool pure=true );
+		int		FileSize( const char *filename, bool pure=true );
+		bool	FileExists( const char *filename, bool pure=true );
+		time_t	FileTime( const char *filename, bool pure=true );
 
-		int		LoadFile( const char *path, byte **buffer );
+		int		LoadFile( const char *path, byte **buffer, bool pure=true );
 		void	FreeFile( byte *buffer );
-		bool	MakePath( const char *path );
-
-		// Same as above, using an explicit OS path
-		File *	OpenFileReadEx( const char *filename );
-		File *	OpenFileReadBufferedEx( const char *filename );
-		File *	OpenFileWriteEx( const char *filename );
-		int		FileSizeEx( const char *filename );
-		bool	FileExistsEx( const char *filename);
-		time_t	FileTimeEx( const char *filename);
-
-		int		LoadFileEx( const char *path, byte **buffer );
-		bool	MakePathEx( const char *path );
+		bool	MakePath( const char *path, bool pure=true );
 
 		// Retrieve file lists
 		FileList *GetFileList( const char *dir, const char *extension, int flags=LF_DEFAULT );

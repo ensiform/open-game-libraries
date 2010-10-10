@@ -122,7 +122,7 @@ bool ogDemoWindow::Init( void ) {
 	img_minFilter.SetModifiedCallback( FilterChangedCB );
 	img_magFilter.SetModifiedCallback( FilterChangedCB );
 
-	if ( !og::Image::Init( "gfx/default.tga", window->GetProcAddress("glCompressedTexImage2DARB") ) )
+	if ( !og::Image::Init( og::FS, "gfx/default.tga", window->GetProcAddress("glCompressedTexImage2DARB") ) )
 		return false;
 	og::Image::SetFilters( img_minFilter.GetInt(), img_magFilter.GetInt() );
 
@@ -444,7 +444,8 @@ og::User::Main
 ================
 */
 int og::User::Main( int argc, char *argv[] ) {
-	Common::Init();
+	if ( !og::Shared::Init() )
+		return 0;
 
 	if ( InitConsole() ) {
 		if ( og::FileSystem::Init( ".gpk", ".", ".", "base" ) ) {
@@ -452,14 +453,15 @@ int og::User::Main( int argc, char *argv[] ) {
 				og::Console::FatalError( "You might wanna check your working directory ?" );
 				//! @todo	wait for console close
 				og::FileSystem::Shutdown();
-				Common::Shutdown();
 				return 0;
 			}
 
+			Model::SetFileSystem( og::FS );
+
 			Gloot::DisableSystemKeys( true );
 			if( !demoWindow.Init() ) {
+				Model::SetFileSystem( NULL );
 				og::FileSystem::Shutdown();
-				Common::Shutdown();
 				return 0;
 			}
 
@@ -484,11 +486,11 @@ int og::User::Main( int argc, char *argv[] ) {
 			}
 
 			Gloot::DisableSystemKeys( false );
+			Model::SetFileSystem( NULL );
 			og::FileSystem::Shutdown();
 		}
 		og::Console::Shutdown();
 	}
-	Common::Shutdown();
     return 0;
 }
 

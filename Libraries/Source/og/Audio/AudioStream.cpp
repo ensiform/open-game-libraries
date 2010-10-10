@@ -107,7 +107,7 @@ VorbisStream::~VorbisStream
 VorbisStream::~VorbisStream() {
 	if ( data ) {
 		OG_ASSERT( numInUse == 0 );
-		FS->FreeFile( data );
+		audioFS->FreeFile( data );
 		data = NULL;
 	}
 }
@@ -118,7 +118,7 @@ VorbisStream::LoadFile
 ================
 */
 bool VorbisStream::LoadFile( const char *filename ) {
-	dataSize = FS->LoadFile( filename, &data );
+	dataSize = audioFS->LoadFile( filename, &data );
 	if ( dataSize == -1 )
 		return false;
 
@@ -328,7 +328,7 @@ const uInt chunkID_RIFF = 0x46464952;  // "RIFF"
 const uInt fileType_WAVE = 0x45564157; // "WAVE"
 
 bool WavStream::LoadFile( const char *filename ) {
-	File *file = FS->OpenFileRead( filename );
+	File *file = audioFS->OpenRead( filename );
 	if ( !file )
 		return false;
 
@@ -386,7 +386,7 @@ bool WavStream::LoadFile( const char *filename ) {
 					break;
 			}
 		}
-		FS->CloseFile(file);
+		file->Close();
 		User::Error( ERR_BAD_FILE_FORMAT, "File is no PCM wave file.", filename );
 		return false;
 	}
@@ -395,7 +395,7 @@ bool WavStream::LoadFile( const char *filename ) {
 			delete[] data;
 			data = NULL;
 		}
-		FS->CloseFile(file);
+		file->Close();
 		User::Error( ERR_FILE_CORRUPT, TS("Wave: $*" ) << err.ToString(), filename );
 		return false;
 	}

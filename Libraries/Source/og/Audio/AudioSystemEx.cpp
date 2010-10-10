@@ -31,6 +31,7 @@
 #include <al/alext.h>
 
 namespace og {
+FileSystemCore *audioFS = NULL;
 // The object and global pointer
 AudioSystemEx audioSystemObject;
 AudioSystem *AS = &audioSystemObject;
@@ -186,7 +187,7 @@ AudioSystemEx::Init
 ================
 */
 bool AudioSystemEx::Init( const char *defaultFilename, const char *deviceName ) {
-	if ( FS == NULL )
+	if ( audioFS == NULL )
 		return false;
 	if ( audioThread != NULL )
 		return true;
@@ -228,7 +229,7 @@ bool AudioSystemEx::Init( const char *defaultFilename, const char *deviceName ) 
 
 	// Read in all sound Decls
 	soundDecls.Clear();
-	FileList *files = FS->GetFileList( "decls/sounds", ".decl" );
+	FileList *files = audioFS->GetFileList( "decls/sounds", ".decl" );
 	if ( files ) {
 		DeclType sndDecls("soundDecl");
 		DeclParser parser;
@@ -238,7 +239,7 @@ bool AudioSystemEx::Init( const char *defaultFilename, const char *deviceName ) 
 		} while ( files->GetNext() );
 
 		parser.SolveInheritance();
-		FS->FreeFileList( files );
+		audioFS->FreeFileList( files );
 
 		const char *value;
 		int num = sndDecls.declList.Num();
@@ -384,9 +385,15 @@ bool AudioSystem::GetDeviceList( StringList &deviceList ) {
 
 	return true;
 }
-bool AudioSystem::Init( const char *defaultFilename, const char *deviceName )
-	{ return audioSystemObject.Init(defaultFilename, deviceName); }
-void AudioSystem::Shutdown( void )					{ audioSystemObject.Shutdown(); }
+bool AudioSystem::Init( FileSystemCore *fileSystem, const char *defaultFilename, const char *deviceName ) {
+	OG_ASSERT( fileSystem != NULL );
+	OG_ASSERT( defaultFilename != NULL );
+	if ( !Shared::Init() )
+		return false;
+	audioFS = fileSystem;
+	return audioSystemObject.Init(defaultFilename, deviceName);
+}
+void AudioSystem::Shutdown( void )					{ audioSystemObject.Shutdown(); audioFS = NULL; }
 void AudioSystem::SetWindowFocus( bool hasFocus )
 	{ audioSystemObject.windowFocus = hasFocus; AS->SetVolume( audioSystemObject.volume ); }
 

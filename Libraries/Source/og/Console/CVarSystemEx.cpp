@@ -590,7 +590,7 @@ bool CVarSystemEx::ExportToHTML( const char *filename, int flags ) const {
 	String templateBuffer = reinterpret_cast<char *>(buffer);
 	FS->FreeFile(buffer);
 
-	File *file = FS->OpenFileWrite(filename);
+	File *file = FS->OpenWrite(filename);
 	if ( !file )
 		return false;
 
@@ -646,7 +646,7 @@ bool CVarSystemEx::ExportToHTML( const char *filename, int flags ) const {
 	templateBuffer.Replace( "{{TABLE}}", table.c_str() );
 
 	file->Write( templateBuffer.c_str(), templateBuffer.ByteLength() );
-	FS->CloseFile(file);
+	file->Close();
 	return true;
 }
 
@@ -659,7 +659,7 @@ bool CVarSystemEx::WriteToConfig( const char *filename, int flags ) const {
 	if ( FS == NULL )
 		return false;
 
-	File *file = FS->OpenFileWrite(filename);
+	File *file = FS->OpenWrite(filename);
 	if ( !file )
 		return false;
 
@@ -693,7 +693,7 @@ bool CVarSystemEx::WriteToConfig( const char *filename, int flags ) const {
 	}
 #endif
 
-	FS->CloseFile(file);
+	file->Close();
 	return true;
 }
 

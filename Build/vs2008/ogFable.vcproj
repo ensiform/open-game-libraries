@@ -225,6 +225,18 @@
 								RelativePath="..\..\Libraries\Source\og\Fable\Win32\XInputChecker.cpp"
 								>
 							</File>
+							<File
+								RelativePath="..\..\Libraries\Source\og\Fable\Win32\DeviceDI.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Libraries\Source\og\Fable\Win32\DeviceXI.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Libraries\Source\og\Fable\Win32\XInputChecker.h"
+								>
+							</File>
 						</Filter>
 						<File
 							RelativePath="..\..\Libraries\Source\og\Fable\Fable.cpp"

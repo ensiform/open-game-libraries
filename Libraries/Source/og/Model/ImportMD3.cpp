@@ -136,10 +136,10 @@ Model::ImportMD3
 ================
 */
 Model *Model::ImportMD3( const char *filename ) {
-	if ( FS == NULL )
+	if ( modelFS == NULL )
 		return NULL;
 
-	File *file = FS->OpenFileRead( filename );
+	File *file = modelFS->OpenRead( filename );
 	if( !file ) {
 		og::User::Warning( TS("Can't open file: $*!" ) << filename );
 		return NULL;
@@ -256,11 +256,11 @@ Model *Model::ImportMD3( const char *filename ) {
 			surfaceOffset += surface.offsetEnd;
 		}
 
-		FS->CloseFile( file );
+		file->Close();
 		return model;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile(file);
+		file->Close();
 		delete model;
 		User::Error( ERR_FILE_CORRUPT, TS("MD3: $*" ) << err.ToString(), filename );
 		return NULL;

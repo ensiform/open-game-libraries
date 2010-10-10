@@ -66,10 +66,10 @@ struct mskmesh_t {
 };
 
 bool ReadBonesFromSKP( const char *filename, Model *model ) {
-	if ( FS == NULL )
+	if ( modelFS == NULL )
 		return false;
 
-	File *file = FS->OpenFileRead( filename );
+	File *file = modelFS->OpenRead( filename );
 	if( !file ) {
 		delete model;
 		return false;
@@ -123,11 +123,11 @@ bool ReadBonesFromSKP( const char *filename, Model *model ) {
 			bone.origin *= SKM_MODEL_SCALE;
 		}
 
-		FS->CloseFile( file );
+		file->Close();
 		return true;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile(file);
+		file->Close();
 		delete model;
 		User::Error( ERR_FILE_CORRUPT, TS("SKP: $*" ) << err.ToString(), filename );
 		return false;
@@ -140,10 +140,10 @@ Model::ImportSKM
 ================
 */
 Model *Model::ImportSKM( const char *filename, const char *filenameAnim ) {
-	if ( FS == NULL )
+	if ( modelFS == NULL )
 		return NULL;
 
-	File *file = FS->OpenFileRead( filename );
+	File *file = modelFS->OpenRead( filename );
 	if( !file )
 		return NULL;
 
@@ -254,11 +254,11 @@ Model *Model::ImportSKM( const char *filename, const char *filenameAnim ) {
 			file->Seek( lastPos, SEEK_SET );
 		}
 
-		FS->CloseFile( file );
+		file->Close();
 		return model;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile(file);
+		file->Close();
 		delete model;
 		User::Error( ERR_FILE_CORRUPT, TS("SKM: $*" ) << err.ToString(), filename );
 		return NULL;

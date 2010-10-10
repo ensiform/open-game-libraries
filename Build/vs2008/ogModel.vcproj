@@ -229,6 +229,10 @@
 							RelativePath="..\..\Libraries\Source\og\Model\ModelEx.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Model\ModelEx.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>

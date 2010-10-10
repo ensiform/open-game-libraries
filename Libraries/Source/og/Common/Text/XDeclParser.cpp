@@ -96,7 +96,6 @@ const XDeclNode *XDeclNode::GetNextByName( void ) const {
 ==============================================================================
 */
 
-#ifdef OG_COMMON_USE_FS
 /*
 ================
 XDeclParser::LoadFile
@@ -105,15 +104,15 @@ Loads either the binary or the text version, depending on which is newer.
 ================
 */
 bool XDeclParser::LoadFile( const char *filename ) {
-	if ( FS == NULL )
+	if ( commonFS == NULL )
 		return false;
 
 	String binFilename(filename);
 	binFilename += ".bin";
-	bool binExists = FS->FileExists( binFilename.c_str() );
-	bool txtExists = FS->FileExists( filename );
+	bool binExists = commonFS->FileExists( binFilename.c_str() );
+	bool txtExists = commonFS->FileExists( filename );
 	if ( binExists && txtExists ) {
-		if ( FS->FileTime( binFilename.c_str() ) > FS->FileTime( filename ) )
+		if ( commonFS->FileTime( binFilename.c_str() ) > commonFS->FileTime( filename ) )
 			return BinaryFile( binFilename.c_str() );
 		return LexFile(filename);
 	}
@@ -145,7 +144,6 @@ bool XDeclParser::LexFile( const char *filename ) {
 		return false;
 	}
 }
-#endif
 
 /*
 ================
@@ -244,27 +242,26 @@ void XDeclParser::Parse( Lexer &lexer ) {
 		throw LexerError( LexerError::END_OF_FILE );
 }
 
-#ifdef OG_COMMON_USE_FS
 /*
 ================
 XDeclParser::BinaryFile
 ================
 */
 bool XDeclParser::BinaryFile( const char *filename ) {
-	if ( FS == NULL )
+	if ( commonFS == NULL )
 		return false;
 
-	File *file = FS->OpenFileRead( filename );
+	File *file = commonFS->OpenRead( filename );
 	if ( !file )
 		return false;
 
 	try {
 		bool ret = BinaryFile( file );
-		FS->CloseFile( file );
+		file->Close();
 		return ret;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile( file );
+		file->Close();
 		User::Error( ERR_FILE_CORRUPT, TS("XDecl: $*" ) << err.ToString(), filename );
 		return false;
 	}
@@ -313,14 +310,14 @@ XDeclParser::MakeBinary
 ================
 */
 bool XDeclParser::MakeBinary( const char *filename ) {
-	if ( FS == NULL )
+	if ( commonFS == NULL )
 		return false;
 
 	XDeclParser parser;
 	if ( !parser.LexFile( filename ) )
 		return false;
 	
-	File *f = FS->OpenFileWrite( TS( "$*.bin" ) << filename );
+	File *f = commonFS->OpenWrite( TS( "$*.bin" ) << filename );
 	if ( !f )
 		return false;
 
@@ -332,11 +329,11 @@ bool XDeclParser::MakeBinary( const char *filename ) {
 		if ( node->numChildren )
 			WriteNodeAndChildren( node, f );
 
-		FS->CloseFile( f );
+		f->Close();
 		return true;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile( f );
+		f->Close();
 		User::Error( ERR_FILE_WRITEFAIL, TS("Binary XDecl: $*" ) << err.ToString(), filename );
 		return false;
 	}
@@ -357,6 +354,5 @@ void XDeclParser::WriteNodeAndChildren( const XDeclNode *node, File *f ) {
 		node = node->GetNext();
 	}
 }
-#endif
 
 }

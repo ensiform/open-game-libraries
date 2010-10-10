@@ -101,10 +101,10 @@ ImageFilePNG::Open
 ================
 */
 bool ImageFilePNG::Open( const char *filename ) {
-	if ( FS == NULL )
+	if ( imageFS == NULL )
 		return false;
 
-	File *file = FS->OpenFileReadBuffered( filename );
+	File *file = imageFS->OpenRead( filename, true, true );
 	if ( file == NULL )
 		return false;
 
@@ -115,7 +115,7 @@ bool ImageFilePNG::Open( const char *filename ) {
 
 		if ( png_ptr == NULL ) {
 			User::Error( ERR_OUT_OF_MEMORY, "png_create_read_struct", "-1" );
-			FS->CloseFile(file);
+			file->Close();
 			return false;
 		}
 
@@ -123,7 +123,7 @@ bool ImageFilePNG::Open( const char *filename ) {
 		if ( info_ptr == NULL ) {
 			png_destroy_read_struct(&png_ptr, png_infopp_NULL, png_infopp_NULL);
 			User::Error( ERR_OUT_OF_MEMORY, "png_create_info_struct", "-1" );
-			FS->CloseFile(file);
+			file->Close();
 			return false;
 		}
 
@@ -148,13 +148,13 @@ bool ImageFilePNG::Open( const char *filename ) {
 
 		png_destroy_read_struct(&png_ptr, &info_ptr, png_infopp_NULL);
 
-		FS->CloseFile(file);
+		file->Close();
 		return true;
 	}
 	catch( FileReadWriteError err ) {
 		if ( png_ptr )
 			png_destroy_read_struct(&png_ptr, &info_ptr, png_infopp_NULL);
-		FS->CloseFile( file );
+		file->Close();
 		User::Error( ERR_FILE_CORRUPT, TS("PNG: $*" ) << err.ToString(), filename );
 		return false;
 	}
@@ -166,10 +166,10 @@ ImageFilePNG::SaveFile
 ================
 */
 bool ImageFilePNG::SaveFile( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
-	if ( FS == NULL )
+	if ( imageFS == NULL )
 		return false;
 
-	File *file = FS->OpenFileWrite(filename);
+	File *file = imageFS->OpenWrite(filename);
 	if ( file == NULL )
 		return false;
 
@@ -180,7 +180,7 @@ bool ImageFilePNG::SaveFile( const char *filename, byte *data, uInt width, uInt 
 
 		if ( png_ptr == NULL ) {
 			User::Error( ERR_OUT_OF_MEMORY, "png_create_write_struct", "-1" );
-			FS->CloseFile(file);
+			file->Close();
 			return false;
 		}
 
@@ -188,7 +188,7 @@ bool ImageFilePNG::SaveFile( const char *filename, byte *data, uInt width, uInt 
 		if ( info_ptr == NULL ) {
 			png_destroy_write_struct( &png_ptr,  png_infopp_NULL );
 			User::Error( ERR_OUT_OF_MEMORY, "png_create_info_struct", "-1" );
-			FS->CloseFile(file);
+			file->Close();
 			return false;
 		}
 
@@ -218,13 +218,13 @@ bool ImageFilePNG::SaveFile( const char *filename, byte *data, uInt width, uInt 
 
 		png_destroy_write_struct( &png_ptr, &info_ptr );
 
-		FS->CloseFile(file);
+		file->Close();
 		return true;
 	}
 	catch( FileReadWriteError err ) {
 		if ( png_ptr )
 			png_destroy_write_struct( &png_ptr, &info_ptr );
-		FS->CloseFile( file );
+		file->Close();
 		User::Error( ERR_FILE_WRITEFAIL, TS("PNG: $*" ) << err.ToString(), filename );
 		return false;
 	}

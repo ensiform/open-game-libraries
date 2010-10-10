@@ -137,10 +137,10 @@ ImageFileDDS::Open
 ================
 */
 bool ImageFileDDS::Open( const char *filename ) {
-	if ( FS == NULL )
+	if ( imageFS == NULL )
 		return false;
 
-	File *file = FS->OpenFileReadBuffered( filename );
+	File *file = imageFS->OpenRead( filename, true, true );
 	if ( file == NULL )
 		return false;
 
@@ -149,7 +149,7 @@ bool ImageFileDDS::Open( const char *filename ) {
 		ddsHeader header;
 		file->Read( &header, sizeof(ddsHeader) );
 		if ( String::Cmpn( header.magic, "DDS ", 4 ) != 0 ) {
-			FS->CloseFile( file );
+			file->Close();
 			User::Error( ERR_BAD_FILE_FORMAT, "File is no DDS file.", filename );
 			return false;
 		}
@@ -173,7 +173,7 @@ bool ImageFileDDS::Open( const char *filename ) {
 				dxtFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
 				break;
 			default:
-				FS->CloseFile( file );
+				file->Close();
 				User::Error( ERR_BAD_FILE_FORMAT, "File has unsupported compression method, must be DXT1/3/5.", filename );
 				return false;
 		};
@@ -183,11 +183,11 @@ bool ImageFileDDS::Open( const char *filename ) {
 
 		file->Read( dynBuffer.data, bufSize );
 
-		FS->CloseFile( file );
+		file->Close();
 		return true;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile( file );
+		file->Close();
 		User::Error( ERR_FILE_CORRUPT, TS("DDS: $*" ) << err.ToString(), filename );
 		return false;
 	}

@@ -148,9 +148,7 @@ Lexer::Lexer
 Lexer::Lexer( int _flags ) : token(tokenBuffer) {
 	tokenBuffer[0] = '\0';
 	buffer = NULL;
-#ifdef OG_COMMON_USE_FS
 	bufferIsFile = false;
-#endif
 	flags = _flags;
 	warningTriggered = false;
 	hasByteOrderMark = false;
@@ -169,15 +167,13 @@ Lexer::~Lexer
 */
 Lexer::~Lexer() {
 	if ( buffer ) {
-#ifdef OG_COMMON_USE_FS
-		if ( bufferIsFile ) {
-			//! @todo	error
-			if ( FS != NULL )
-				FS->FreeFile(buffer);
-		}
-		else
-#endif
+		if ( !bufferIsFile )
 			delete[] buffer;
+		else {
+			//! @todo	error
+			if ( commonFS != NULL )
+				commonFS->FreeFile(buffer);
+		}
 	}
 }
 
@@ -442,19 +438,18 @@ void Lexer::FindToken( const char *str ) {
 	throw LexerError( LexerError::MISSING_TOKEN, token.line, str, "[EOF]" );
 }
 
-#ifdef OG_COMMON_USE_FS
 /*
 ================
 Lexer::LoadFile
 ================
 */
 bool Lexer::LoadFile( const char *filename ) {
-	if ( FS == NULL )
+	if ( commonFS == NULL )
 		return false;
 
 	buffer = NULL;
 	name = filename;
-	bufSize = FS->LoadFile( filename, &buffer );
+	bufSize = commonFS->LoadFile( filename, &buffer );
 	if ( bufSize == -1 )
 		return false;
 
@@ -474,7 +469,6 @@ bool Lexer::LoadFile( const char *filename ) {
 	line = 1;
 	return true;
 }
-#endif
 
 /*
 ================
@@ -500,9 +494,7 @@ bool Lexer::LoadData( const char *dataName, const byte *data, int size ) {
 	name = dataName;
 	bufSize = size;
 
-#ifdef OG_COMMON_USE_FS
 	bufferIsFile = false;
-#endif
 	tokPos = -1;
 	line = 1;
 	return true;

@@ -30,34 +30,20 @@ freely, subject to the following restrictions:
 #ifndef __OG_COMMON_H__
 #define __OG_COMMON_H__
 
-#include <og/Shared.h>
-
-#ifdef OG_COMMON_USE_FS
-  #include <og/FileSystem/FileSystem.h>
-#endif
+#include <og/Shared/Shared.h>
+#include <og/Shared/FileSystemCore.h>
+#include <og/Shared/Thread/ThreadLocalStorage.h>
 
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
 #include <stdio.h>
 
 namespace og {
-	/*
-	==============================================================================
-
-	  Common
-
-	==============================================================================
-	*/
-	namespace Common {
-		bool	Init( void );
-		void	Shutdown( void );
-	}
+	extern FileSystemCore *commonFS;
+	OG_INLINE void	CommonSetFileSystem( FileSystemCore *fileSystem ) { commonFS = fileSystem; }
 }
 
 // Public Library Includes
-#include "Thread/ThreadLocalStorage.h"
 #include "Timer.h"
 #include "Math/Random.h"
 #include "Color.h"
@@ -85,8 +71,6 @@ namespace og {
 #include "Text/DeclParser.h"
 #include "Text/XDeclParser.h"
 #include "Text/TextStream.h"
-#include "SysInfo.h"
-#include "Thread/Thread.h"
 
 // We include .inl files last, so we can access all classes here.
 #include "Timer.inl"

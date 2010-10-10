@@ -33,6 +33,7 @@
 #include "ImageEx.h"
 
 namespace og {
+FileSystemCore *imageFS = NULL;
 
 typedef byte *( *imageLoadFunc_t )( const char *filename, uInt &width, uInt &height, bool &hasAlpha );
 typedef bool ( *imageSaveFunc_t )( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
@@ -65,7 +66,14 @@ static Image *defaultImage = NULL;
 Image::Init
 ================
 */
-bool Image::Init( const char *defaultFilename, void *user_glCompressedTexImage2DARB ) {
+bool Image::Init( FileSystemCore *fileSystem, const char *defaultFilename, void *user_glCompressedTexImage2DARB ) {
+	OG_ASSERT( fileSystem != NULL );
+	OG_ASSERT( defaultFilename != NULL );
+
+	if ( !Shared::Init() )
+		return false;
+	imageFS = fileSystem;
+
 	static ImageFileTGA tgaHandler;
 	static ImageFilePNG pngHandler;
 	static ImageFileJPG jpgHandler;
@@ -98,6 +106,7 @@ void Image::Shutdown( void ) {
 	imageList.Clear();
 	imageFileTypes.Clear();
 	defaultImage = NULL;
+	imageFS = NULL;
 }
 
 /*
@@ -258,7 +267,7 @@ ImageEx::UploadImage
 ================
 */
 bool ImageEx::UploadImage( const char *filename ) {
-	if ( FS == NULL )
+	if ( imageFS == NULL )
 		return false;
 
 	fullpath = filename;
@@ -271,7 +280,7 @@ bool ImageEx::UploadImage( const char *filename ) {
 		// skips dds if denyPrecompressed is set.
 		for( int i=ImageEx::denyPrecompressed; i<4; i++ ) {
 			newFilename = TS( "$*.$*") << filename << validExtensions[i];
-			if ( FS->FileExists( newFilename.c_str() ) ) {
+			if ( imageFS->FileExists( newFilename.c_str() ) ) {
 				fullpath = newFilename;
 				extension = validExtensions[i];
 				break;
@@ -287,7 +296,7 @@ bool ImageEx::UploadImage( const char *filename ) {
 	if ( !imageFileTypes[index]->UploadFile( fullpath.c_str(), *this ) )
 		return false;
 
-	time = FS->FileTime( fullpath.c_str() );
+	time = imageFS->FileTime( fullpath.c_str() );
 	return true;
 }
 
@@ -297,10 +306,10 @@ ImageEx::ReloadImage
 ================
 */
 bool ImageEx::ReloadImage( bool force ) {
-	if ( FS == NULL )
+	if ( imageFS == NULL )
 		return false;
 
-	time_t newTime = FS->FileTime( fullpath.c_str() );
+	time_t newTime = imageFS->FileTime( fullpath.c_str() );
 	if ( !force && newTime > time )
 		return false;
 	String extension = fullpath.GetFileExtension();

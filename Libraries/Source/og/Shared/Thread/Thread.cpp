@@ -28,8 +28,7 @@ freely, subject to the following restrictions:
 */
 
 #include <og/Common/Common.h>
-#include <og/Common/Thread/ThreadLocalStorage.h>
-#include <og/Common/Thread/Thread.h>
+#include <og/Shared/Thread/Thread.h>
 
 #if defined(OG_WIN32)
 	#include <windows.h>

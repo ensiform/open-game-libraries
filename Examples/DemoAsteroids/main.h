@@ -34,6 +34,7 @@ freely, subject to the following restrictions:
 #include <og/Gloot/glmin.h>
 #include <og/Gloot/Gloot.h>
 #include <og/Common/Common.h>
+#include <og/FileSystem/FileSystem.h>
 #include <og/Audio/AudioSystem.h>
 #include <og/Image/Image.h>
 #include <og/Font/Font.h>

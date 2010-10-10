@@ -34,6 +34,8 @@ namespace og {
 const int GMD_VERSION = 1;	//!< The model file version
 const int GMA_VERSION = 1;	//!< The animation file version
 
+FileSystemCore *modelFS = NULL;
+
 /*
 ================
 FileReadString
@@ -145,6 +147,15 @@ MeshAnimated::~MeshAnimated() {
 
 ==============================================================================
 */
+/*
+================
+Model::SetFileSystem
+================
+*/
+void Model::SetFileSystem( FileSystemCore *fileSystem ) {
+	Shared::Init();
+	modelFS = fileSystem;
+}
 
 /*
 ================
@@ -165,10 +176,10 @@ Model::Load
 ================
 */
 Model *Model::Load( const char *filename ) {
-	if ( FS == NULL )
+	if ( modelFS == NULL )
 		return NULL;
 
-	File *file = FS->OpenFileRead( filename );
+	File *file = modelFS->OpenRead( filename );
 	if ( !file ) {
 		og::User::Warning( TS( "Can't open file: '$*'" ) << filename );
 		return NULL;
@@ -256,11 +267,11 @@ Model *Model::Load( const char *filename ) {
 				file->Seek( size, SEEK_CUR );
 			}
 		}
-		FS->CloseFile( file );
+		file->Close();
 		return model;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile(file);
+		file->Close();
 		delete model;
 		User::Error( ERR_FILE_CORRUPT, TS("MD3: $*" ) << err.ToString(), filename );
 		return NULL;
@@ -298,10 +309,10 @@ Model::Save
 ================
 */
 bool Model::Save( Model *model, const char *filename ) {
-	if ( FS == NULL )
+	if ( modelFS == NULL )
 		return false;
 
-	File *file = FS->OpenFileWriteEx( filename );
+	File *file = modelFS->OpenWrite( filename, false );
 	if ( !file )
 		return false;
 
@@ -327,7 +338,7 @@ bool Model::Save( Model *model, const char *filename ) {
 		// Write Bones
 		long sizePos = StartChunk( file, "Bones", numBones );
 		for( int i=0; i<numBones; i++ ) {
-			const Bone &bone = bones[i];
+			const Bone &bone = model->bones[i];
 			FileWriteString( file, bone.name.c_str() );
 			file->WriteInt( bone.idParent );
 			file->WriteFloatArray( &bone.origin.x, 3 );
@@ -338,7 +349,7 @@ bool Model::Save( Model *model, const char *filename ) {
 		// Write Meshes
 		sizePos = StartChunk( file, "Meshes", numMeshes );
 		for ( int i=0; i<numMeshes; i++ ) {
-			const MeshAnimated *mesh = static_cast<MeshAnimated *>(meshes[i]);
+			const MeshAnimated *mesh = static_cast<MeshAnimated *>(model->meshes[i]);
 			// Write Mesh Info
 			FileWriteString( file, mesh->name.c_str() );
 			FileWriteString( file, mesh->material.c_str() );
@@ -367,11 +378,11 @@ bool Model::Save( Model *model, const char *filename ) {
 			}
 		}
 		FinishChunk( file, sizePos );
-		FS->CloseFile( file );
+		file->Close();
 		return true;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile( file );
+		file->Close();
 		User::Error( ERR_FILE_WRITEFAIL, TS("GMD: $*" ) << err.ToString(), filename );
 		return NULL;
 	}

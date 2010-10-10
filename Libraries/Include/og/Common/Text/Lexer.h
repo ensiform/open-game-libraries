@@ -154,7 +154,6 @@ namespace og {
 		// ==============================================================================
 		~Lexer();
 
-#ifdef OG_COMMON_USE_FS
 		// ==============================================================================
 		//! Loads a file into buffer
 		//!
@@ -163,7 +162,6 @@ namespace og {
 		//! @return	true if it succeeds, false if it fails
 		// ==============================================================================
 		bool		LoadFile( const char *filename );
-#endif
 
 		// ==============================================================================
 		//! Loads a data
@@ -346,9 +344,7 @@ namespace og {
 		char		tokenBuffer[4096];	//!< Buffer for the token
 		Token		token;				//!< The current token
 		byte *		buffer;				//!< The file buffer
-#ifdef OG_COMMON_USE_FS
 		bool		bufferIsFile;		//!< Set if this data was loaded from a file
-#endif
 		bool		tokIsUnread;		//!< Set if a token was unread
 		int			bufSize;			//!< Size of the buffer
 		int			bufPos;				//!< The buffer position

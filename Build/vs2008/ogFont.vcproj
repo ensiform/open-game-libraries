@@ -209,6 +209,10 @@
 							RelativePath="..\..\Libraries\Source\og\Font\FontEx.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Font\FontEx.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>

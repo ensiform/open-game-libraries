@@ -143,13 +143,11 @@ namespace og {
 		bool		GetMat3( const char *key, const char *defaultValue, Mat3 &out ) const;
 
 		// Find functions
-		int					Find( const char *key ) const;
-		int					MatchPrefix( const char *prefix, int length, int prevMatch=-1 ) const;
+		int			Find( const char *key ) const;
+		int			MatchPrefix( const char *prefix, int length, int prevMatch=-1 ) const;
 
-#ifdef OG_COMMON_USE_FS
 		void		ReadFromFile( File *file );
 		void		WriteToFile( File *file ) const;
-#endif
 
 		// operators
 		Dict &		operator=( const Dict &other );

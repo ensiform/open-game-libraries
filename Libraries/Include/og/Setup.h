@@ -32,7 +32,6 @@
 
 #define OG_FINAL 0						//!< Set this to 1 to disable all OG_ASSERT's
 #define OG_FTOI_USE_SSE					//!< Use SSE extensions for Math::Ftoi
-#define OG_COMMON_USE_FS				//!< Use FileSystem on the Common library
 // #define OG_SHOW_MORE_WARNINGS		//!< Uncomment this if you want to see the warnings we disabled
 #define OG_VISUAL_LEAK_DETECTOR			//!< Uncomment to exclude the visual leak detector ( visual c++ only )
 

@@ -32,7 +32,7 @@
 #ifndef __OG_FONT_H__
 #define __OG_FONT_H__
 
-#include <og/Shared.h>
+#include <og/Shared/Shared.h>
 
 //! Open Game Libraries
 namespace og {
@@ -58,11 +58,12 @@ namespace og {
 		// ==============================================================================
 		//! Initializes the font library with a default font Family.
 		//!
+		//! @param	fileSystem		The FileSystem object
 		//! @param	defaultFamily	The font-family to use when the wanted one does not exist
 		//!
 		//! @return	true if the default font was loaded, otherwise false.
 		// ==============================================================================
-		static bool		Init( const char *defaultFamily );
+		static bool		Init( FileSystemCore *fileSystem, const char *defaultFamily );
 
 		// ==============================================================================
 		//! Shutdown, kill all font objects

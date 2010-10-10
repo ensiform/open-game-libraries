@@ -32,6 +32,7 @@
 #include "FontEx.h"
 
 namespace og {
+FileSystemCore *fontFS = NULL;
 
 OG_INLINE void FontSetColor( const Color &color ) { glColor4f( color.r, color.g, color.b, color.a ); }
 
@@ -140,10 +141,10 @@ FontFile::Open
 ================
 */
 bool FontFile::Open( const char *filename ) {
-	if ( FS == NULL )
+	if ( fontFS == NULL )
 		return false;
 
-	File *file = FS->OpenFileRead( filename );
+	File *file = fontFS->OpenRead( filename );
 	if ( !file )
 		return false;
 
@@ -153,7 +154,7 @@ bool FontFile::Open( const char *filename ) {
 		file->Read( magic, 3 );
 		version = file->ReadByte();
 		if ( String::Cmpn( magic, "BMF", 3 ) != 0 || version != 3 ) {
-			FS->CloseFile( file );
+			file->Close();
 			User::Error( ERR_BAD_FILE_FORMAT, "File is no BMF Version 3 file.", filename );
 			return false;
 		}
@@ -271,7 +272,7 @@ bool FontFile::Open( const char *filename ) {
 						// Create glyph data
 						GlyphInfo *glyph = new GlyphInfo;
 						if ( glyph == NULL ) {
-							FS->CloseFile( file );
+							file->Close();
 							User::Error( ERR_OUT_OF_MEMORY, "new GlyphInfo", TS() << sizeof(GlyphInfo) );
 							return false;
 						}
@@ -301,7 +302,7 @@ bool FontFile::Open( const char *filename ) {
 
 				default:
 					User::Warning("Unknown font block type found!");
-					FS->CloseFile( file );
+					file->Close();
 					return false;
 			}
 			hasBlock[type-1] = true;
@@ -311,11 +312,11 @@ bool FontFile::Open( const char *filename ) {
 			if ( !hasBlock[i] )
 				throw FileReadWriteError(FileReadWriteError::READ);
 		}
-		FS->CloseFile( file );
+		file->Close();
 		return true;
 	}
 	catch( FileReadWriteError err ) {
-		FS->CloseFile( file );
+		file->Close();
 		User::Error( ERR_FILE_CORRUPT, TS("Font: $*" ) << err.ToString(), filename );
 		return false;
 	}
@@ -558,11 +559,11 @@ FontFamily::Open
 ================
 */
 bool FontFamily::Open( const char *name ) {
-	if ( FS == NULL )
+	if ( fontFS == NULL )
 		return false;
 
 	OG_ASSERT( name != NULL );
-	FileList *files = FS->GetFileList( TS( "fonts/$*" ) << name, ".fnt", (LF_FILES | LF_CHECK_LOCAL | LF_CHECK_ARCHIVED) );
+	FileList *files = fontFS->GetFileList( TS( "fonts/$*" ) << name, ".fnt", (LF_FILES | LF_CHECK_LOCAL | LF_CHECK_ARCHIVED) );
 	if ( !files )
 		return false;
 
@@ -571,7 +572,7 @@ bool FontFamily::Open( const char *name ) {
 			fontFiles.Remove( fontFiles.Num()-1 );
 	} while ( files->GetNext() );
 
-	FS->FreeFileList( files );
+	fontFS->FreeFileList( files );
 
 	if ( fontFiles.IsEmpty() )
 		return false;
@@ -696,8 +697,12 @@ void FontEx::DrawString( float x, float y, const char *text, Align align ) const
 Font::Init
 ================
 */
-bool Font::Init( const char *_defaultFamily ) {
+bool Font::Init( FileSystemCore *fileSystem, const char *_defaultFamily ) {
+	OG_ASSERT( fileSystem != NULL );
 	OG_ASSERT( _defaultFamily != NULL );
+	if ( !Shared::Init() )
+		return false;
+	fontFS = fileSystem;
 	defaultFamily = FontFamily::Find( _defaultFamily );
 	return defaultFamily != NULL;
 }
@@ -711,6 +716,7 @@ void Font::Shutdown( void ) {
 	fontList.Clear();
 	fontFamilies.Clear();
 	defaultFamily = NULL;
+	fontFS = NULL;
 }
 
 /*

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="TestFS"
-	ProjectGUID="{81E27090-9EF9-574C-9744-6C2A47AB3374}"
-	RootNamespace="TestFS"
+	Name="ogShared"
+	ProjectGUID="{F17E8FA5-B6DE-4FD8-9A04-A446D2D55945}"
+	RootNamespace="ogShared"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -17,9 +17,9 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\Binaries"
-			IntermediateDirectory="..\out\obj\Examples\TestFS\Debug"
-			ConfigurationType="1"
+			OutputDirectory="..\out"
+			IntermediateDirectory="..\out\obj\ogShared\Debug"
+			ConfigurationType="4"
 			CharacterSet="2"
 			>
 			<Tool
@@ -48,7 +48,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				ProgramDataBaseFileName="$(OutDir)\TestFS.pdb"
+				ProgramDataBaseFileName="$(OutDir)\ogShared.pdb"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -63,16 +63,8 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogFileSystem.lib ..\out\zLib.lib winmm.lib"
-				OutputFile="$(OutDir)\TestFS.exe"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories=""
-				GenerateDebugInformation="true"
-				ProgramDataBaseFileName="$(OutDir)\TestFS.pdb"
-				SubSystem="1"
-				EntryPointSymbol="mainCRTStartup"
-				TargetMachine="1"
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\ogShared.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -101,9 +93,9 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\Binaries"
-			IntermediateDirectory="..\out\obj\Examples\TestFS\Release"
-			ConfigurationType="1"
+			OutputDirectory="..\out"
+			IntermediateDirectory="..\out\obj\ogShared\Release"
+			ConfigurationType="4"
 			CharacterSet="2"
 			>
 			<Tool
@@ -131,7 +123,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				ProgramDataBaseFileName="$(OutDir)\TestFS.pdb"
+				ProgramDataBaseFileName="$(OutDir)\ogShared.pdb"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -146,17 +138,8 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogFileSystem.lib ..\out\zLib.lib winmm.lib"
-				OutputFile="$(OutDir)\TestFS.exe"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories=""
-				GenerateDebugInformation="false"
-				SubSystem="1"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				EntryPointSymbol="mainCRTStartup"
-				TargetMachine="1"
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\ogShared.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -188,17 +171,88 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Examples"
+			Name="Libraries"
 			Filter=""
 			>
 			<Filter
-				Name="TestFS"
+				Name="Include"
 				Filter=""
 				>
-				<File
-					RelativePath="..\..\Examples\TestFS\main.cpp"
+				<Filter
+					Name="og"
+					Filter=""
 					>
-				</File>
+					<Filter
+						Name="Shared"
+						Filter=""
+						>
+						<Filter
+							Name="Thread"
+							Filter=""
+							>
+							<File
+								RelativePath="..\..\Libraries\Include\og\Shared\Thread\LockFreeQueue.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Libraries\Include\og\Shared\Thread\Thread.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Libraries\Include\og\Shared\Thread\ThreadLocalStorage.h"
+								>
+							</File>
+						</Filter>
+						<File
+							RelativePath="..\..\Libraries\Include\og\Shared\File.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Include\og\Shared\FileSystemCore.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Include\og\Shared\Shared.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Include\og\Shared\SysInfo.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Source"
+				Filter=""
+				>
+				<Filter
+					Name="og"
+					Filter=""
+					>
+					<Filter
+						Name="Shared"
+						Filter=""
+						>
+						<Filter
+							Name="Thread"
+							Filter=""
+							>
+							<File
+								RelativePath="..\..\Libraries\Source\og\Shared\Thread\Thread.cpp"
+								>
+							</File>
+						</Filter>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Shared\File.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Shared\SysInfo.cpp"
+							>
+						</File>
+					</Filter>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

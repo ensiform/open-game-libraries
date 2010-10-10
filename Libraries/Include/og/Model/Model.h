@@ -166,6 +166,13 @@ namespace og {
 	//! @{
 
 		// ==============================================================================
+		//! Set the FileSystem object
+		//!
+		//! @param	fileSystem	The FileSystem object
+		// ==============================================================================
+		static void		SetFileSystem( FileSystemCore *fileSystem );
+
+		// ==============================================================================
 		//! Loads from a .gmd file
 		//!
 		//! @param	filename	The (relative) file path
@@ -181,7 +188,7 @@ namespace og {
 		//!
 		//! @return	true if it succeeds, false if it fails
 		// ==============================================================================
-		bool	Save( Model *mdl, const char *filename );
+		static bool		Save( Model *mdl, const char *filename );
 
 		// ==============================================================================
 		//! Import from ASE (static model)
