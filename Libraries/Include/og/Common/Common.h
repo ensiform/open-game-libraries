@@ -44,7 +44,6 @@ namespace og {
 }
 
 // Public Library Includes
-#include "Timer.h"
 #include "Math/Random.h"
 #include "Color.h"
 #include "Hash/SecureHash.h"
@@ -73,7 +72,6 @@ namespace og {
 #include "Text/TextStream.h"
 
 // We include .inl files last, so we can access all classes here.
-#include "Timer.inl"
 #include "Math/Random.inl"
 #include "Color.inl"
 #include "Math/Math.inl"

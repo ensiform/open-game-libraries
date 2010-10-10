@@ -70,7 +70,7 @@ public:
 	}
 
 private:
-	og::String		deviceName;
+	String			deviceName;
 	XINPUT_STATE	state;
 	XINPUT_STATE	stateOld;
 	uInt			index;

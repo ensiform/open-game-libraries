@@ -381,7 +381,7 @@ int Gloot::GetKeyId( const char *name ) {
 	if ( name[1] == '\0' )
 		return name[0];
 	// some unknown key written in hex, probably unicode
-//	else if ( og::String::CmpPrefix( name, "0x") == 0 ) {
+//	else if ( String::CmpPrefix( name, "0x") == 0 ) {
 //		return HexToInt(name);
 
 	// Special key

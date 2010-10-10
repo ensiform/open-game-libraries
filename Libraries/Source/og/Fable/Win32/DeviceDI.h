@@ -72,7 +72,7 @@ public:
 	BOOL		AddAxis( LPCDIDEVICEOBJECTINSTANCE devObjInst );
 
 private:
-	og::String	deviceName;
+	String		deviceName;
 	IDirectInputDevice8 *device;
 
 	uInt		numSliders;

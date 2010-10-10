@@ -219,7 +219,19 @@
 							RelativePath="..\..\Libraries\Include\og\Shared\SysInfo.h"
 							>
 						</File>
+						<File
+							RelativePath="..\..\Libraries\Include\og\Shared\Timer.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Include\og\Shared\Timer.inl"
+							>
+						</File>
 					</Filter>
+					<File
+						RelativePath="..\..\Libraries\Include\og\Setup.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

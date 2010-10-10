@@ -383,15 +383,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\Libraries\Include\og\Common\Timer.h"
-							>
-						</File>
-						<File
 							RelativePath="..\..\Libraries\Include\og\Common\Color.inl"
-							>
-						</File>
-						<File
-							RelativePath="..\..\Libraries\Include\og\Common\Timer.inl"
 							>
 						</File>
 					</Filter>

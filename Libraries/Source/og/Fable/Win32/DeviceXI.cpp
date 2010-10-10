@@ -142,7 +142,7 @@ int DeviceXI::GetPOV( uInt index ) const {
 	if ( index >= XINPUT_MAX_POVS )
 		return -1;
 
-	og::Vec2 vec;
+	Vec2 vec;
 	if ( (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) != 0 )
 		vec.y = 1;
 	else if ( (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) != 0 )

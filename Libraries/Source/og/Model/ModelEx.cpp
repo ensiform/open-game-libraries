@@ -41,7 +41,7 @@ FileSystemCore *modelFS = NULL;
 FileReadString
 ================
 */
-int FileReadString( og::File *f, og::String &str ) {
+int FileReadString( File *f, String &str ) {
 	uShort len = f->ReadUshort();
 	if ( len > OG_STR_FILE_MAX_BYTES )
 		len = OG_STR_FILE_MAX_BYTES;
@@ -181,7 +181,7 @@ Model *Model::Load( const char *filename ) {
 
 	File *file = modelFS->OpenRead( filename );
 	if ( !file ) {
-		og::User::Warning( TS( "Can't open file: '$*'" ) << filename );
+		User::Warning( TS( "Can't open file: '$*'" ) << filename );
 		return NULL;
 	}
 

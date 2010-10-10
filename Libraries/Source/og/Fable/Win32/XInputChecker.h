@@ -50,7 +50,7 @@ public:
 
 	bool	IsXInput( const GUID &guid );
 
-	og::LinkedList<DWORD> listIds;
+	LinkedList<DWORD> listIds;
 };
 
 }

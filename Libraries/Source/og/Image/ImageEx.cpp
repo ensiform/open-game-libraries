@@ -165,7 +165,7 @@ Image::Save
 */
 bool Image::Save( const char *filename, byte *data, int width, int height, bool hasAlpha ) {
 	String extension;
-	og::String::GetFileExtension( filename, String::ByteLength(filename), extension );
+	String::GetFileExtension( filename, String::ByteLength(filename), extension );
 
 	int index = -1;
 	if ( !extension.IsEmpty() )

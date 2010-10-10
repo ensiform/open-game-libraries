@@ -132,7 +132,7 @@ FontFile::~FontFile() {
 
 	int max = pageImages.Num();
 	for( int i=0; i<max; i++ )
-		og::Image::Free( pageImages[i] );
+		Image::Free( pageImages[i] );
 }
 
 /*

@@ -151,7 +151,7 @@ XInputChecker::IsXInput
 ================
 */
 bool XInputChecker::IsXInput( const GUID &guid ) {
-	og::LinkedList<DWORD>::nodeType *node = listIds.GetFirstNode();
+	LinkedList<DWORD>::nodeType *node = listIds.GetFirstNode();
 	while( node != NULL ) {
         if( node->value == guid.Data1 )
             return true;

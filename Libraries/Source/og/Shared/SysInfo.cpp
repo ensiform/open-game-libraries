@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Common/Common.h>
+#include <cstdio>
 #include <og/Shared/Thread/Thread.h>
 
 #ifdef OG_WIN32
@@ -354,7 +354,7 @@ void RetrieveCPUSpeed( void ) {
 		do { QueryPerformanceCounter(&ulTicks); }
 		while (ulTicks.QuadPart <= ulValue);
 
-		cpu.speed = Math::FtoiFast(static_cast<float>(RDTSC() - start) * 0.001f/measureTime);
+		cpu.speed = static_cast<int>(static_cast<float>(RDTSC() - start) * 0.001f/measureTime);
 	}
 
 #elif defined(OG_LINUX)
@@ -369,7 +369,7 @@ void RetrieveCPUSpeed( void ) {
 			if ( match != NULL ) {
 				float speed;
 				sscanf( match, "cpu MHz : %f", &speed );
-				cpu.speed = Math::FtoiFast(speed);
+				cpu.speed = static_cast<int>(speed);
 				return;
 			}
 		}
@@ -404,7 +404,7 @@ void RetrieveMemorySize( void ) {
 			if ( match != NULL ) {
 				long memTotal;
 				sscanf( match, "MemTotal: %ld", &memTotal );
-				ram = Math::Ftol(static_cast<float>(memTotal)/1024.0f);
+				ramMB = memTotal/1024;
 				ramB = memTotal*1024;
 				return;
 			}
@@ -459,7 +459,7 @@ bool RetrieveOSInfo( void ) {
 		}
 	}
 	if ( os.name[0] == '\0' ) {
-		strcpy( os.name, TS("Win $*.$*") << static_cast<uInt>(osInfo.dwMajorVersion) << static_cast<uInt>(osInfo.dwMinorVersion) );
+		sprintf( os.name, "Win %d.%d", osInfo.dwMajorVersion, osInfo.dwMinorVersion );
 		User::Error(ERR_SYSTEM_REQUIREMENTS, "Requires Windows 2000 or greater" );
 		return false;
 	}

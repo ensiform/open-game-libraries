@@ -148,4 +148,12 @@ namespace og {
 //! @}
 }
 
+// Public Library Includes
+#include "SysInfo.h"
+#include "Timer.h"
+
+// We include .inl files last, so we can access all classes here.
+#include "Timer.inl"
+
+
 #endif

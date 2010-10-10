@@ -154,7 +154,7 @@ Model *LoadSMD( const char *filename, ListEx<smdMesh_t> &smdMeshes ) {
 						vert.origin *= SMD_MODEL_SCALE;
 
 						if ( vert.normal.IsZero() ) {
-							og::User::Warning( TS("Zero Normal found on vertex $*" ) << mesh.vertices.Num() );
+							User::Warning( TS("Zero Normal found on vertex $*" ) << mesh.vertices.Num() );
 							vert.normal.z = 1.0f;
 						}
 						// Check if the next token changes line

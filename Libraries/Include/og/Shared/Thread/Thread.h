@@ -42,6 +42,8 @@ If not specified otherwise, the object has thread safety class single.
 #ifndef __OG_THREAD_H__
 #define __OG_THREAD_H__
 
+#include <og/Shared/Shared.h>
+
 namespace og {
 	const int OG_INFINITE = 0xFFFFFFFF;
 
@@ -68,16 +70,23 @@ namespace og {
 		bool Wait( int ms );
 	};
 
+	class Waiter : public Condition {
+	public:
+		Waiter() : next(NULL) {}
+		Waiter *next;
+	};
+
 	class SingleWriterMultiReader {
 	private:
 		Mutex	mtx;
 		bool	writeRequest;
 		int		readers;
-		List<Condition> waiters;
+		Waiter *firstWaiter;
+		Waiter *lastWaiter;
 		Condition	unlockedRead;
 
 	public:
-		SingleWriterMultiReader() : writeRequest(false), readers(0) {}
+		SingleWriterMultiReader() : writeRequest(false), readers(0), firstWaiter(NULL), lastWaiter(NULL) {}
 
 		void LockRead( void );
 		void UnlockRead( void );

@@ -141,7 +141,7 @@ Model *Model::ImportMD3( const char *filename ) {
 
 	File *file = modelFS->OpenRead( filename );
 	if( !file ) {
-		og::User::Warning( TS("Can't open file: $*!" ) << filename );
+		User::Warning( TS("Can't open file: $*!" ) << filename );
 		return NULL;
 	}
 	

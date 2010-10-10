@@ -27,8 +27,8 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Common/Common.h>
 #include <og/Shared/Thread/Thread.h>
+#include <og/Shared/Thread/ThreadLocalStorage.h>
 
 #if defined(OG_WIN32)
 	#include <windows.h>
@@ -176,9 +176,13 @@ void Thread::Stop( bool blocking ) {
 void SingleWriterMultiReader::LockRead( void ) {
 	mtx.Lock();
 	if ( writeRequest ) {
-		Condition &cond = waiters.Alloc();
+		Waiter *waiter = new Waiter;
+		if ( firstWaiter == NULL )
+			firstWaiter = lastWaiter = waiter;
+		else
+			lastWaiter->next = waiter;
 		mtx.Unlock();
-		cond.Wait(INFINITE);
+		waiter->Wait(INFINITE);
 		LockRead();
 		return;
 	}
@@ -203,10 +207,11 @@ void SingleWriterMultiReader::LockWrite( void ) {
 	writeRequest = false;
 }
 void SingleWriterMultiReader::UnlockWrite( void ) {
-	int num = waiters.Num();
-	for( int i=0; i<num; i++ )
-		waiters[i].Signal();
-	waiters.Clear();
+	while( firstWaiter != NULL ) {
+		firstWaiter->Signal();
+		firstWaiter = firstWaiter->next;
+	}
+	lastWaiter = NULL;
 	mtx.Unlock();
 }
 
