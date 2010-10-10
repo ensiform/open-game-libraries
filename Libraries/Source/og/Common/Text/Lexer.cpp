@@ -62,13 +62,13 @@ LexerError::ToString
 void LexerError::ToString( String &result ) {
 	switch( type ) {
 		case CUSTOM:
-			result = TS("Error '$*' on line $*") << expected << line;
+			result = Format("Error '$*' on line $*") << expected << line;
 			return;
 		case BAD_TOKEN:
-			result = TS("Expected token of type '$*', found '$*' on line $*") << expected << found << line;
+			result = Format("Expected token of type '$*', found '$*' on line $*") << expected << found << line;
 			return;
 		case MISSING_TOKEN:
-			result = TS("Expected token '$*', found '$*' on line $*") << expected << found << line;
+			result = Format("Expected token '$*', found '$*' on line $*") << expected << found << line;
 			return;
 		case END_OF_FILE:
 			result = "Unexpected End of File";
@@ -216,7 +216,7 @@ void Lexer::Warning( const char *message ) {
 	if ( flags & LEXER_NOWARNINGS )
 		return;
 
-	User::Error(ERR_LEXER_WARNING, message, TS("file $*, line $*" ) << name << token.line );
+	User::Error(ERR_LEXER_WARNING, message, Format("file $*, line $*" ) << name << token.line );
 }
 
 /*
@@ -460,7 +460,7 @@ bool Lexer::LoadFile( const char *filename ) {
 	else {
 		bufPos = 0;
 		if ( !(flags & LEXER_NO_BOM_WARNING) )
-			User::Warning( TS("File missing BOM: '$*'" ) << filename );
+			User::Warning( Format("File missing BOM: '$*'" ) << filename );
 	}
 
 	bufferIsFile = true;
@@ -486,7 +486,7 @@ bool Lexer::LoadData( const char *dataName, const byte *data, int size ) {
 	else {
 		bufPos = 0;
 		if ( !(flags & LEXER_NO_BOM_WARNING) )
-			User::Warning( TS("File missing BOM: '$*'" ) << dataName );
+			User::Warning( Format("File missing BOM: '$*'" ) << dataName );
 	}
 
 	buffer = new byte[size];
@@ -515,7 +515,7 @@ void Lexer::ParseQuoted( void ) {
 	while ( bufPos < bufSize ) {
 		// Check for newlines
 		if ( buffer[bufPos] == '\n' || buffer[bufPos] == '\r' )
-			throw LexerError( LexerError::BAD_TOKEN, token.line, TS( "quote end: '\\$*'" ) << c, "[EOL]" );
+			throw LexerError( LexerError::BAD_TOKEN, token.line, Format( "quote end: '\\$*'" ) << c, "[EOL]" );
 
 		// Check for escape characters
 		if ( useEscapeChars && buffer[bufPos] == '\\' ) {
@@ -546,7 +546,7 @@ void Lexer::ParseQuoted( void ) {
 		AddToToken( buffer[bufPos] );
 		bufPos++;
 	}
-	throw LexerError( LexerError::BAD_TOKEN, token.line, TS("quote end: '\\$*'" ) << c, "[EOF]" );
+	throw LexerError( LexerError::BAD_TOKEN, token.line, Format("quote end: '\\$*'" ) << c, "[EOF]" );
 }
 
 /*

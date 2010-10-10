@@ -4,7 +4,7 @@ The Open Game Libraries.
 Copyright (C) 2007-2010 Lusito Software
 
 Author:  Santo Pfingsten (TTK-Bandit)
-Purpose: Text Streaming & Formatting
+Purpose: Text Formatting
 -----------------------------------------
 
 This software is provided 'as-is', without any express or implied
@@ -45,10 +45,45 @@ int vsnPrintf( char *dest, int size, const char *fmt, va_list list ) {
 
 /*
 ================
-TS::Reset
+Format::Format
 ================
 */
-void TS::Reset( bool keep, const char *fmt ) {
+Format::Format( const char *fmt ) {
+	firstFormatEntry = NULL;
+	lastFormatEntry = NULL;
+	numFormatEntries = 0;
+	Reset( false, fmt );
+}
+/*
+================
+Format::~Format
+================
+*/
+Format::~Format() {
+	DeleteFormatEntries();
+}
+
+/*
+================
+Format::DeleteFormatEntries
+================
+*/
+void Format::DeleteFormatEntries( void ){
+	FormatEntry *temp;
+	while( firstFormatEntry ) {
+		temp = firstFormatEntry;
+		firstFormatEntry = firstFormatEntry->next;
+		delete temp;
+	}
+	numFormatEntries = 0;
+}
+
+/*
+================
+Format::Reset
+================
+*/
+void Format::Reset( bool keep, const char *fmt ) {
 	floatPrecision = -1;
 	fillChar = ' ';
 
@@ -61,16 +96,18 @@ void TS::Reset( bool keep, const char *fmt ) {
 			memcpy( buffer, fmtBuffer, offset );
 			if ( paramCount > 0 )
 				paramCount = 0;
-			int max = fmtList.Num();
-			for( int i=0; i<max; i++ ) {
-				if ( fmtList[i].takeInput == 1 )
-					fmtList[i].takeInput = 2;
+
+			FormatEntry *entry = firstFormatEntry;
+			while( entry ) {
+				if ( entry->takeInput == 1 )
+					entry->takeInput = 2;
+				entry = entry->next;
 			}
 		}
 		buffer[offset] = '\0';
 		return;
 	}
-	fmtList.Clear();
+	DeleteFormatEntries();
 
 	hasFormat = (fmt != NULL);
 	if ( !hasFormat ) {
@@ -88,19 +125,25 @@ void TS::Reset( bool keep, const char *fmt ) {
 				if ( fmtBuffer[r+1] == '$' )
 					r++;
 				else {
-					fmtEntry_t &fmt = fmtList.Alloc();
-					fmt.fieldWidth = 0;
+					FormatEntry *entry = new FormatEntry;
+					if ( firstFormatEntry == NULL )
+						firstFormatEntry = lastFormatEntry = entry;
+					else
+						lastFormatEntry = lastFormatEntry->next = entry;
+					numFormatEntries++;
+
+					entry->fieldWidth = 0;
 					end = r;
 					if ( fmtBuffer[r+1] == '?' ) {
-						fmt.takeInput = 2;
+						entry->takeInput = 2;
 						r++;
 					} else if ( fmtBuffer[r+1] == '+' || fmtBuffer[r+1] == '-' ) {
 						bool negative = fmtBuffer[r+1] == '-';
-						fmt.takeInput = 0;
+						entry->takeInput = 0;
 						for ( r += 2; String::IsDigit(fmtBuffer[r]); r++ )
-							fmt.fieldWidth = 10 * fmt.fieldWidth + (fmtBuffer[r] - '0');
+							entry->fieldWidth = 10 * entry->fieldWidth + (fmtBuffer[r] - '0');
 						if ( negative )
-							fmt.fieldWidth *= -1;
+							entry->fieldWidth *= -1;
 						r--;
 					}
 					if ( fmtBuffer[r+1] == '*' ) {
@@ -110,7 +153,7 @@ void TS::Reset( bool keep, const char *fmt ) {
 							offset = end;
 						}
 						r++;
-						fmt.append = fmtBuffer + r + 1;
+						entry->append = fmtBuffer + r + 1;
 						w = r;
 						continue;
 					}
@@ -137,17 +180,35 @@ void TS::Reset( bool keep, const char *fmt ) {
 
 /*
 ================
-TS::TryPrint
+Format::GetFormatEntry
 ================
 */
-void TS::TryPrint( const char *fmt, ... ) {
+Format::FormatEntry *Format::GetFormatEntry( int index ) {
+	//! @todo: do this nicer
+	FormatEntry *entry = firstFormatEntry;
+	for( int i=0; i<index && entry; i++ )
+		entry = entry->next;
+	return entry;
+}
+
+/*
+================
+Format::TryPrint
+================
+*/
+void Format::TryPrint( const char *fmt, ... ) {
 	int size = bufferSize - offset;
 	if ( size > 1 ) {
 		va_list	list;
 		va_start(list, fmt);
 		int ret = vsnPrintf( buffer+offset, size, fmt, list );
 		if ( ret > 0 ) {
-			int fieldWidth = (paramCount == -1 || paramCount >= fmtList.Num()) ? 0 : fmtList[paramCount].fieldWidth;
+			int fieldWidth = 0;
+			if ( paramCount != -1 && paramCount < numFormatEntries ) {
+				FormatEntry *entry = GetFormatEntry( paramCount );
+				if ( entry )
+					fieldWidth = entry->fieldWidth;
+			}
 			bool alignLeft = true;
 			if ( fieldWidth < 0 ) {
 				fieldWidth *= -1;
@@ -177,37 +238,39 @@ void TS::TryPrint( const char *fmt, ... ) {
 		}
 		va_end(list);
 		if ( ret == -1 )
-			User::Error( ERR_BUFFER_OVERFLOW, "TS::TryPrint", TS() << size );
+			User::Error( ERR_BUFFER_OVERFLOW, "Format::TryPrint", Format() << size );
 	}
 }
 
 /*
 ================
-TS::OnAppend
+Format::OnAppend
 ================
 */
-void TS::OnAppend( void ) {
+void Format::OnAppend( void ) {
 	// This assert gets triggered when you add more parameters than where specified in the format.
 	//! @todo	add an error here ?
-	OG_ASSERT( paramCount < fmtList.Num() );
-	if ( paramCount < fmtList.Num() ) {
-		paramCount++;
-		TryPrint( "%s", fmtList[paramCount-1] );
+	OG_ASSERT( paramCount < numFormatEntries );
+	if ( paramCount < numFormatEntries ) {
+		FormatEntry *entry = GetFormatEntry( paramCount++ );
+		if ( entry )
+			TryPrint( "%s", entry->append );
 	}
 }
 
 /*
 ================
-TS::CheckVariableInput
+Format::CheckVariableInput
 ================
 */
-bool TS::CheckVariableInput( void ) {
+bool Format::CheckVariableInput( void ) {
 	// This assert gets triggered when you add more parameters than where specified in the format.
 	//! @todo	add an error here ?
-	OG_ASSERT( paramCount != -1 && paramCount < fmtList.Num() );
-	if ( paramCount < fmtList.Num() ) {
-		if ( fmtList[paramCount].takeInput == 2 ) {
-			fmtList[paramCount].takeInput = 1;
+	OG_ASSERT( paramCount != -1 && paramCount < numFormatEntries );
+	if ( paramCount < numFormatEntries ) {
+		FormatEntry *entry = GetFormatEntry( paramCount );
+		if ( entry && entry->takeInput == 2 ) {
+			entry->takeInput = 1;
 			return true;
 		}
 	}
@@ -216,56 +279,64 @@ bool TS::CheckVariableInput( void ) {
 
 /*
 ================
-TS::operator <<
+Format::operator <<
 ================
 */
-TS &TS::operator << ( int value ) {
+Format &Format::operator << ( int value ) {
 	if ( paramCount != -1 && CheckVariableInput() ) {
-		fmtList[paramCount].fieldWidth = value;
+		FormatEntry *entry = GetFormatEntry( paramCount );
+		if ( entry )
+			entry->fieldWidth = value;
 		return *this;
 	}
 	TryPrint( "%d", value );
 	return Finish();
 }
 
-TS &TS::operator << ( uInt value ) {
+Format &Format::operator << ( uInt value ) {
 	if ( paramCount != -1 && CheckVariableInput() ) {
-		fmtList[paramCount].fieldWidth = value;
+		FormatEntry *entry = GetFormatEntry( paramCount );
+		if ( entry )
+			entry->fieldWidth = value;
 		return *this;
 	}
 	TryPrint( "%u", value );
 	return Finish();
 }
 
-TS &TS::operator << ( short value ) {
+Format &Format::operator << ( short value ) {
 	if ( paramCount != -1 && CheckVariableInput() ) {
-		fmtList[paramCount].fieldWidth = value;
+		FormatEntry *entry = GetFormatEntry( paramCount );
+		if ( entry )
+			entry->fieldWidth = value;
 		return *this;
 	}
 	TryPrint( "%d", value );
 	return Finish();
 }
 
-TS &TS::operator << ( uShort value ) {
+Format &Format::operator << ( uShort value ) {
 	if ( paramCount != -1 && CheckVariableInput() ) {
-		fmtList[paramCount].fieldWidth = value;
+		FormatEntry *entry = GetFormatEntry( paramCount );
+		if ( entry )
+			entry->fieldWidth = value;
 		return *this;
 	}
 	TryPrint( "%u", value );
 	return Finish();
 }
 
-TS &TS::operator << ( char value ) {
+Format &Format::operator << ( char value ) {
 	TryPrint( "%c", value );
 	return Finish();
 }
 
-TS &TS::operator << ( byte value ) {
+Format &Format::operator << ( byte value ) {
 	TryPrint( "%u", value );
 	return Finish();
 }
 
-TS &TS::operator << ( float value ) {
+Format &Format::operator << ( float value ) {
 	if ( floatPrecision >= 0 )
 		TryPrint( "%.*f", floatPrecision, value );
 	else
@@ -273,104 +344,8 @@ TS &TS::operator << ( float value ) {
 	return Finish();
 }
 
-TS &TS::operator << ( const char *value ) {
+Format &Format::operator << ( const char *value ) {
 	TryPrint( "%s", value );
-	return Finish();
-}
-
-TS &TS::operator << ( const String &value ) {
-	TryPrint( "%s", value.c_str() );
-	return Finish();
-}
-
-TS &TS::operator << ( const Vec2 &value ) {
-	if ( floatPrecision >= 0 )
-		TryPrint( "%.*f %.*f",
-				floatPrecision, value.x, floatPrecision, value.y );
-	else
-		TryPrint( "%f %f",
-				value.x, value.y );
-	return Finish();
-}
-
-TS &TS::operator << ( const Vec3 &value ) {
-	if ( floatPrecision >= 0 )
-		TryPrint( "%.*f %.*f %.*f",
-				floatPrecision, value.x, floatPrecision, value.y, floatPrecision, value.z );
-	else
-		TryPrint( "%f %f %f",
-				value.x, value.y, value.z );
-	return Finish();
-}
-
-TS &TS::operator << ( const Vec4 &value ) {
-	if ( floatPrecision >= 0 )
-		TryPrint( "%.*f %.*f %.*f %.*f",
-				floatPrecision, value.x, floatPrecision, value.y, floatPrecision, value.z, floatPrecision, value.w );
-	else
-		TryPrint( "%f %f %f %f",
-				value.x, value.y, value.z, value.w );
-	return Finish();
-}
-
-TS &TS::operator << ( const Angles &value ) {
-	if ( floatPrecision >= 0 )
-		TryPrint( "%.*f %.*f %.*f",
-				floatPrecision, value.pitch, floatPrecision, value.yaw, floatPrecision, value.roll );
-	else
-		TryPrint( "%f %f %f",
-				value.pitch, value.yaw, value.roll );
-	return Finish();
-}
-
-TS &TS::operator << ( const Rect &value ) {
-	if ( floatPrecision >= 0 )
-		TryPrint( "%.*f %.*f %.*f %.*f",
-				floatPrecision, value.x, floatPrecision, value.y, floatPrecision, value.w, floatPrecision, value.h );
-	else
-		TryPrint( "%f %f %f %f",
-				value.x, value.y, value.w, value.h );
-	return Finish();
-}
-
-TS &TS::operator << ( const Quat &value ) {
-	if ( floatPrecision >= 0 )
-		TryPrint( "%.*f %.*f %.*f %.*f",
-				floatPrecision, value.x, floatPrecision, value.y, floatPrecision, value.z, floatPrecision, value.w );
-	else
-		TryPrint( "%f %f %f %f",
-				value.x, value.y, value.z, value.w );
-	return Finish();
-}
-
-TS &TS::operator << ( const Mat2 &value ) {
-	if ( floatPrecision >= 0 )
-		TryPrint( "%.*f %.*f %.*f %.*f",
-				floatPrecision, value[0].x, floatPrecision, value[0].y, floatPrecision, value[1].x, floatPrecision, value[1].y );
-	else
-		TryPrint( "%f %f %f %f",
-				value[0].x, value[0].y, value[1].x, value[1].y );
-	return Finish();
-}
-
-TS &TS::operator << ( const Mat3 &value ) {
-	if ( floatPrecision >= 0 )
-		TryPrint( "%.*f %.*f %.*f %.*f %.*f %.*f %.*f %.*f %.*f",
-				floatPrecision, value[0].x, floatPrecision, value[0].y, floatPrecision, value[0].z,
-				floatPrecision, value[1].x, floatPrecision, value[1].y, floatPrecision, value[1].z,
-				floatPrecision, value[2].x, floatPrecision, value[2].y, floatPrecision, value[2].z );
-	else
-		TryPrint( "%f %f %f %f %f %f %f %f %f",
-				value[0].x, value[0].y, value[0].z,
-				value[1].x, value[1].y, value[1].z,
-				value[2].x, value[2].y, value[2].z );
-	return Finish();
-}
-
-TS &TS::operator << ( const Color &value ) {
-	byte r, g, b, a;
-	value.ToBytes( r, g, b, a );
-	TryPrint( "#%X%X%X%X", r, g, b, a );
 	return Finish();
 }
 

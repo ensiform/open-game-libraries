@@ -76,7 +76,7 @@ pngWarning
 ================
 */
 void pngWarning( png_structp png_ptr, png_const_charp message ) {
-	User::Warning( TS("PNG: $*" ) << message );
+	User::Warning( Format("PNG: $*" ) << message );
 }
 
 /*
@@ -155,7 +155,7 @@ bool ImageFilePNG::Open( const char *filename ) {
 		if ( png_ptr )
 			png_destroy_read_struct(&png_ptr, &info_ptr, png_infopp_NULL);
 		file->Close();
-		User::Error( ERR_FILE_CORRUPT, TS("PNG: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_CORRUPT, Format("PNG: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }
@@ -225,7 +225,7 @@ bool ImageFilePNG::SaveFile( const char *filename, byte *data, uInt width, uInt 
 		if ( png_ptr )
 			png_destroy_write_struct( &png_ptr, &info_ptr );
 		file->Close();
-		User::Error( ERR_FILE_WRITEFAIL, TS("PNG: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_WRITEFAIL, Format("PNG: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }

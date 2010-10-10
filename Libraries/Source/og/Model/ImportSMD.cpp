@@ -73,7 +73,7 @@ Model *LoadSMD( const char *filename, ListEx<smdMesh_t> &smdMeshes ) {
 		lexer.ExpectToken( "version" );
 		int fileVersion = lexer.ReadInt();
 		if ( fileVersion != SMD_VERSION )
-			lexer.Error( TS("Version is $*, should be $*") << fileVersion << SMD_VERSION );
+			lexer.Error( Format("Version is $*, should be $*") << fileVersion << SMD_VERSION );
 
 		const Token *token;
 		const char *string;
@@ -93,7 +93,7 @@ Model *LoadSMD( const char *filename, ListEx<smdMesh_t> &smdMeshes ) {
 				do {
 					nodeIndex = lexer.ReadInt();
 					if ( nodeIndex != model->bones.Num() )
-						lexer.Error( TS("Bad Node Index, should be $*") << model->bones.Num() );
+						lexer.Error( Format("Bad Node Index, should be $*") << model->bones.Num() );
 
 					Bone &bone = model->bones.Alloc();
 					bone.name = lexer.ReadString();
@@ -109,7 +109,7 @@ Model *LoadSMD( const char *filename, ListEx<smdMesh_t> &smdMeshes ) {
 				do {
 					nodeIndex = lexer.ReadInt();
 					if ( nodeIndex < 0 || nodeIndex >= model->bones.Num() )
-						lexer.Error( TS("Node Index out of range: $*") << nodeIndex );
+						lexer.Error( Format("Node Index out of range: $*") << nodeIndex );
 
 					Bone &bone = model->bones[nodeIndex];
 					ParseVector( lexer, &bone.origin.x, 3);
@@ -138,7 +138,7 @@ Model *LoadSMD( const char *filename, ListEx<smdMesh_t> &smdMeshes ) {
 						index = materialNames.Num();
 						materialNames.Append( material );
 						smdMesh_t &mesh = smdMeshes.Alloc();
-						mesh.name = TS("mesh $*") << index;
+						mesh.name = Format("mesh $*") << index;
 						mesh.materialName = material;
 						mesh.vertices.SetGranularity(128);
 					}
@@ -154,7 +154,7 @@ Model *LoadSMD( const char *filename, ListEx<smdMesh_t> &smdMeshes ) {
 						vert.origin *= SMD_MODEL_SCALE;
 
 						if ( vert.normal.IsZero() ) {
-							User::Warning( TS("Zero Normal found on vertex $*" ) << mesh.vertices.Num() );
+							User::Warning( Format("Zero Normal found on vertex $*" ) << mesh.vertices.Num() );
 							vert.normal.z = 1.0f;
 						}
 						// Check if the next token changes line

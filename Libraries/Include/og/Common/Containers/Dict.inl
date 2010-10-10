@@ -107,7 +107,7 @@ Dict::SetInt
 ================
 */
 OG_INLINE void Dict::SetInt( const char *key, int value ) {
-	SetString( key, TS() << value );
+	SetString( key, Format() << value );
 }
 
 /*
@@ -131,7 +131,7 @@ Dict::SetFloat
 ================
 */
 OG_INLINE void Dict::SetFloat( const char *key, float value ) {
-	SetString( key, TS() << value );
+	SetString( key, Format() << value );
 }
 
 /*
@@ -155,7 +155,7 @@ Dict::SetVec2
 ================
 */
 OG_INLINE void Dict::SetVec2( const char *key, const Vec2 &value ) {
-	SetString( key, TS() << value );
+	SetString( key, Format() << value );
 }
 OG_INLINE void Dict::SetVec2( const char *key, float x, float y ) {
 	SetVec2( key, Vec2( x, y ) );
@@ -188,7 +188,7 @@ Dict::SetVec3
 ================
 */
 OG_INLINE void Dict::SetVec3( const char *key, const Vec3 &value ) {
-	SetString( key, TS() << value );
+	SetString( key, Format() << value );
 }
 OG_INLINE void Dict::SetVec3( const char *key, float x, float y, float z ) {
 	SetVec3( key, Vec3( x, y, z ) );
@@ -221,7 +221,7 @@ Dict::SetVec4
 ================
 */
 OG_INLINE void Dict::SetVec4( const char *key, const Vec4 &value ) {
-	SetString( key, TS() << value );
+	SetString( key, Format() << value );
 }
 OG_INLINE void Dict::SetVec4( const char *key, float x, float y, float z, float w ) {
 	SetVec4( key, Vec4( x, y, z, w ) );
@@ -254,7 +254,7 @@ Dict::SetRect
 ================
 */
 OG_INLINE void Dict::SetRect( const char *key, const Rect &value ) {
-	SetString( key, TS() << value );
+	SetString( key, Format() << value );
 }
 OG_INLINE void Dict::SetRect( const char *key, float x, float y, float w, float h ) {
 	SetRect( key, Rect( x, y, w, h ) );
@@ -287,7 +287,7 @@ Dict::SetColor
 ================
 */
 OG_INLINE void Dict::SetColor( const char *key, const Color &value ) {
-	SetString( key, TS() << value );
+	SetString( key, Format() << value );
 }
 OG_INLINE void Dict::SetColor( const char *key, float r, float g, float b, float a ) {
 	SetColor( key, Color( r, g, b, a ) );
@@ -320,7 +320,7 @@ Dict::SetAngles
 ================
 */
 OG_INLINE void Dict::SetAngles( const char *key, const Angles &value ) {
-	SetString( key, TS() << value );
+	SetString( key, Format() << value );
 }
 OG_INLINE void Dict::SetAngles( const char *key, float pitch, float yaw, float roll ) {
 	SetAngles( key, Angles( pitch, yaw, roll ) );
@@ -353,7 +353,7 @@ Dict::SetMat2
 ================
 */
 OG_INLINE void Dict::SetMat2( const char *key, const Mat2 &value ) {
-	SetString( key, TS() << value );
+	SetString( key, Format() << value );
 }
 OG_INLINE void Dict::SetMat2( const char *key, float xx, float xy, float yx, float yy ) {
 	SetMat2( key, Mat2( xx, xy, yx, yy ) );
@@ -386,7 +386,7 @@ Dict::SetMat3
 ================
 */
 OG_INLINE void Dict::SetMat3( const char *key, const Mat3 &value ) {
-	SetString( key, TS() << value );
+	SetString( key, Format() << value );
 }
 OG_INLINE void Dict::SetMat3( const char *key, float xx, float xy, float xz, float yx, float yy, float yz, float zx, float zy, float zz ) {
 	SetMat3( key, Mat3( xx, xy, xz, yx, yy, yz, zx, zy, zz ) );

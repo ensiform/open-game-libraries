@@ -150,7 +150,7 @@ FileSystemEx::Run
 ================
 */
 void FileSystemEx::Run( void ) {
-	Sleep(100);
+	Shared::Sleep(100);
 
 	// All this does is watch the open/close file events and on shutdown clear all files that where still open.
 	int index;
@@ -286,7 +286,7 @@ FileSystemEx::MakePath
 bool FileSystemEx::MakePath( const char *path, bool pure ) {
 	if ( pure ) {
 		swmrLock.LockRead();
-		bool ret = MakePath( TS("$*/$*/$*" ) << userPath << modPath << path, false );
+		bool ret = MakePath( Format("$*/$*/$*" ) << userPath << modPath << path, false );
 		swmrLock.UnlockRead();
 		return ret;
 	}
@@ -347,7 +347,7 @@ and its pakfiles to the pakfile list
 */
 void FileSystemEx::AddResourceDir( const char *name, pfListId listId ) {
 	if ( resourceDirs.IFind(name) != -1 ) {
-		User::Warning( TS("Trying to add resource dir '$*' twice" ) << name );
+		User::Warning( Format("Trying to add resource dir '$*' twice" ) << name );
 		return;
 	}
 	StringList files;
@@ -359,7 +359,7 @@ void FileSystemEx::AddResourceDir( const char *name, pfListId listId ) {
 		// Do a simple search
 		files.Clear();
 		if ( !LocalFileSearch( searchPaths[i].c_str(), name, pakExtension.c_str(), &files, LF_FILES ) ) {
-			User::Warning( TS("Searching resource dir '$*/$*' failed" ) << searchPaths[i] << name );
+			User::Warning( Format("Searching resource dir '$*/$*' failed" ) << searchPaths[i] << name );
 			continue;
 		}
 
@@ -525,7 +525,7 @@ File *FileSystemEx::OpenRead( const char *filename, bool pure, bool buffered ) {
 
 		// Check for local files.
 		if ( !pureMode || unpureFileAllowed ) {
-			TS path( "$*/$*/$*" );
+			Format path( "$*/$*/$*" );
 			for( int i=searchPaths.Num()-1; i >= 0; i-- ) {
 				// check in reverse order to get mod dir before base dir
 				for( int j=resourceDirs.Num()-1; j >= 0; j-- ) {
@@ -570,7 +570,7 @@ FileSystemEx::OpenWrite
 File *FileSystemEx::OpenWrite( const char *filename, bool pure ) {
 	if ( pure ) {
 		swmrLock.LockRead();
-		File *ret = OpenWrite( TS( "$*/$*/$*" ) << userPath << modPath << filename, false );
+		File *ret = OpenWrite( Format( "$*/$*/$*" ) << userPath << modPath << filename, false );
 		swmrLock.UnlockRead();
 		return ret;
 	}
@@ -707,7 +707,7 @@ int FileSystemEx::LoadFile( const char *path, byte **buffer, bool pure ) {
 		delete[] *buffer;
 		*buffer = NULL;
 		file->Close();
-		User::Error( ERR_FILE_CORRUPT, TS( "Unknown: $*" ) << err.ToString(), path );
+		User::Error( ERR_FILE_CORRUPT, Format( "Unknown: $*" ) << err.ToString(), path );
 		return -1;
 	}
 }
@@ -745,7 +745,7 @@ FileList *FileSystemEx::GetFileList( const char *dir, const char *extension, int
 		// Check for local files.
 		if ( !pureMode || unpureFileAllowed ) {
 			int max = searchPaths.Num();
-			TS path( "$*/$*" );
+			Format path( "$*/$*" );
 			for( int i=0; i<max; i++ ) {
 				for( int j=resourceDirs.Num()-1; j >= 0; j-- ) {
 					LocalFileSearch( path << searchPaths[i] << resourceDirs[j], dir, extension, &fileList->files, flags );
@@ -888,7 +888,7 @@ FileSystemEx::GetModList
 */
 ModList *FileSystemEx::GetModList( void ) {
 	int max = searchPaths.Num();
-	TS path( "$*/mods" );
+	Format path( "$*/mods" );
 	StringList modDirs;
 	ModListEx *mods = new ModListEx;
 	for( int i=0; i<max; i++ ) {

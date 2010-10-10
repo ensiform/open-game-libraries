@@ -414,7 +414,7 @@ int og::User::Main( int argc, char *argv[] ) {
 		og::Gloot::Synchronize();
 		myWindowA.Draw();
 		myWindowB.Draw();
-		og::Gloot::Sleep(16);
+		og::Shared::Sleep(16);
     }
 	Gloot::DisableSystemKeys( false );
     return 0;

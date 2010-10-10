@@ -70,7 +70,7 @@ bool ImportMD5AnimBaseFrame( const char *filename, Model *model ) {
 		lexer.ExpectToken( "MD5Version" );
 		int fileVersion = lexer.ReadInt();
 		if ( fileVersion != MD5_VERSION_DOOM3 && fileVersion != MD5_VERSION_QUAKEWARS )
-			lexer.Error( TS("MD5Version is $*, should be $* or $*") << fileVersion << MD5_VERSION_DOOM3 << MD5_VERSION_QUAKEWARS );
+			lexer.Error( Format("MD5Version is $*, should be $* or $*") << fileVersion << MD5_VERSION_DOOM3 << MD5_VERSION_QUAKEWARS );
 
 		const Token *token;
 		String key;
@@ -174,7 +174,7 @@ bool ImportMD5AnimBaseFrame( const char *filename, Model *model ) {
 					lexer.ExpectToken( "{" );
 					inFrameGroup = true;
 				} else {
-					lexer.Error( TS("Unexpected '$*'") << p );
+					lexer.Error( Format("Unexpected '$*'") << p );
 				}
 			}
 		}
@@ -209,7 +209,7 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 		lexer.ExpectToken( "MD5Version" );
 		int fileVersion = lexer.ReadInt();
 		if ( fileVersion != MD5_VERSION_DOOM3 && fileVersion != MD5_VERSION_QUAKEWARS )
-			lexer.Error( TS( "MD5Version is $*, should be $* or $*") << fileVersion << MD5_VERSION_DOOM3 << MD5_VERSION_QUAKEWARS );
+			lexer.Error( Format( "MD5Version is $*, should be $* or $*") << fileVersion << MD5_VERSION_DOOM3 << MD5_VERSION_QUAKEWARS );
 
 		const Token *token;
 		String key;
@@ -255,7 +255,7 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 				if ( readMeshVerts ) {
 					if ( lexer.CheckToken( "numtris" ) ) {
 						if ( numVerts != vertexList.Num() )
-							lexer.Error( TS("numVerts don't match: $*") << vertexList.Num() );
+							lexer.Error( Format("numVerts don't match: $*") << vertexList.Num() );
 						InitIndices( mesh, lexer.ReadInt() * 3 ); // numtris * 3
 						triCounter = 0;
 						indexCounter = 0;
@@ -267,7 +267,7 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 					
 					vertIndex = lexer.ReadInt();
 					if ( vertIndex != vertexList.Num() )
-						lexer.Error( TS("Bad Vert Index, should be $*") << vertexList.Num() );
+						lexer.Error( Format("Bad Vert Index, should be $*") << vertexList.Num() );
 
 					MD5Vertex &vertex = vertexList.Alloc();
 					ParseVector( lexer, &vertex.texCoord.x, 2 );
@@ -289,7 +289,7 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 					lexer.ExpectToken( "tri" );
 
 					if ( lexer.ReadInt() != triCounter )
-						lexer.Error( TS("Bad Tri Index, should be $*") << triCounter );
+						lexer.Error( Format("Bad Tri Index, should be $*") << triCounter );
 
 					mesh->indices[indexCounter++] = lexer.ReadInt();
 					mesh->indices[indexCounter++] = lexer.ReadInt();
@@ -298,7 +298,7 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 				} else {
 					if ( lexer.CheckToken( "}" ) ) {
 						if ( numWeights != weightList.Num() )
-							lexer.Error( TS("numWeights doesn't match $*") << weightList.Num() );
+							lexer.Error( Format("numWeights doesn't match $*") << weightList.Num() );
 
 						// Convert vertices:
 						num = vertexList.Num();
@@ -338,7 +338,7 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 					lexer.ExpectToken( "weight" );
 
 					if ( lexer.ReadInt() != weightList.Num() )
-						lexer.Error( TS("Bad VertexWeight Index, should be $*") << weightList.Num() );
+						lexer.Error( Format("Bad VertexWeight Index, should be $*") << weightList.Num() );
 
 					MD5Weight &weight = weightList.Alloc();
 					weight.jointIndex = lexer.ReadInt();
@@ -378,7 +378,7 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 					model->meshes.Append(mesh);
 
 					if ( fileVersion != MD5_VERSION_QUAKEWARS )
-						mesh->name = TS("mesh $*") << model->meshes.Num();
+						mesh->name = Format("mesh $*") << model->meshes.Num();
 					else {
 						lexer.ExpectToken( "name" );
 						mesh->name = lexer.ReadString();
@@ -398,7 +398,7 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 							else if ( lexer.CheckToken("vertexColor") )
 								readVertexColor = true;
 							else
-								lexer.Error( TS("Unknown flag: '$*'") << lexer.ReadString() );
+								lexer.Error( Format("Unknown flag: '$*'") << lexer.ReadString() );
 						}
 					}
 					lexer.ExpectToken( "numverts" );
@@ -412,7 +412,7 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 					inMeshGroup = true;
 					readMeshVerts = true;
 				} else {
-					lexer.Error( TS("Unexpected '$*'") << p );
+					lexer.Error( Format("Unexpected '$*'") << p );
 				}
 			}
 		}

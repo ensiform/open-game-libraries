@@ -175,7 +175,7 @@ void CVarDataEx::SetInt( int newValue ) {
 			callback();
 		return;
 	} else if ( !(flags & CVAR_INTEGER) ) {
-		SetString( TS() << newValue );
+		SetString( Format() << newValue );
 		return;
 	}
 
@@ -189,7 +189,7 @@ void CVarDataEx::SetInt( int newValue ) {
 	else if ( newValue == iValue )
 		return;
 
-	value = TS() << newValue;
+	value = Format() << newValue;
 	strValue	= value.c_str();
 	iValue		= newValue;
 	fValue		= static_cast<float>(newValue);
@@ -212,7 +212,7 @@ void CVarDataEx::SetFloat( float newValue ) {
 		SetInt( Math::FtoiFast(newValue) );
 		return;
 	} else if ( !(flags & CVAR_FLOAT) ) {
-		SetString( TS() << SetPrecision(CVAR_FLOAT_PRECISION) << newValue );
+		SetString( Format() << SetPrecision(CVAR_FLOAT_PRECISION) << newValue );
 		return;
 	}
 
@@ -226,7 +226,7 @@ void CVarDataEx::SetFloat( float newValue ) {
 	else if ( newValue == fValue )
 		return;
 
-	value		= TS() << SetPrecision(CVAR_FLOAT_PRECISION) << newValue;
+	value		= Format() << SetPrecision(CVAR_FLOAT_PRECISION) << newValue;
 	strValue	= value.c_str();
 	iValue		= Math::FtoiFast(newValue);
 	fValue		= newValue;
@@ -404,11 +404,11 @@ void CVarSystemEx::SetString( const char *key, const char *value, bool force ) {
 	CVar *cv = Find( key );
 	if ( cv ) {
 		if ( !force && ( cv->data->flags & (CVAR_ROM|CVAR_INIT) ) ) {
-			User::Warning( TS("$* is readonly" ) << cv->data->strName );
+			User::Warning( Format("$* is readonly" ) << cv->data->strName );
 			return;
 		}
 		if ( !force && ( cv->data->flags & CVAR_CHEAT && !net_allowCheats.GetBool() ) ) {
-			User::Warning( TS( "$* is cheat protected" ) << cv->data->strName );
+			User::Warning( Format( "$* is cheat protected" ) << cv->data->strName );
 			return;
 		}
 		cv->data->SetString( value );
@@ -441,11 +441,11 @@ void CVarSystemEx::SetBool( const char *key, bool value, bool force ) {
 	CVar *cv = Find( key );
 	if ( cv ) {
 		if ( !force && ( cv->data->flags & (CVAR_ROM|CVAR_INIT) ) ) {
-			User::Warning( TS( "$* is readonly" ) << cv->data->strName );
+			User::Warning( Format( "$* is readonly" ) << cv->data->strName );
 			return;
 		}
 		if ( !force && ( cv->data->flags & CVAR_CHEAT && !net_allowCheats.GetBool() ) ) {
-			User::Warning( TS( "$* is cheat protected" ) << cv->data->strName );
+			User::Warning( Format( "$* is cheat protected" ) << cv->data->strName );
 			return;
 		}
 		cv->data->SetBool( value );
@@ -475,17 +475,17 @@ void CVarSystemEx::SetInt( const char *key, int value, bool force ) {
 	CVar *cv = Find( key );
 	if ( cv ) {
 		if ( !force && ( cv->data->flags & (CVAR_ROM|CVAR_INIT) ) ) {
-			User::Warning( TS("$* is readonly" ) << cv->data->strName );
+			User::Warning( Format("$* is readonly" ) << cv->data->strName );
 			return;
 		}
 		if ( !force && ( cv->data->flags & CVAR_CHEAT && !net_allowCheats.GetBool() ) ) {
-			User::Warning( TS("$* is cheat protected" ) << cv->data->strName );
+			User::Warning( Format("$* is cheat protected" ) << cv->data->strName );
 			return;
 		}
 		cv->data->SetInt( value );
 		return;
 	}
-	CreateUnlinkedCVar( key, TS() << value );
+	CreateUnlinkedCVar( key, Format() << value );
 }
 
 /*
@@ -509,17 +509,17 @@ void CVarSystemEx::SetFloat( const char *key, float value, bool force ) {
 	CVar *cv = Find( key );
 	if ( cv ) {
 		if ( !force && ( cv->data->flags & (CVAR_ROM|CVAR_INIT) ) ) {
-			User::Warning( TS("$* is readonly" ) << cv->data->strName );
+			User::Warning( Format("$* is readonly" ) << cv->data->strName );
 			return;
 		}
 		if ( !force && ( cv->data->flags & CVAR_CHEAT && !net_allowCheats.GetBool() ) ) {
-			User::Warning( TS("$* is cheat protected" ) << cv->data->strName );
+			User::Warning( Format("$* is cheat protected" ) << cv->data->strName );
 			return;
 		}
 		cv->data->SetFloat( value );
 		return;
 	}
-	CreateUnlinkedCVar( key, TS() << value );
+	CreateUnlinkedCVar( key, Format() << value );
 }
 
 /*
@@ -609,7 +609,7 @@ bool CVarSystemEx::ExportToHTML( const char *filename, int flags ) const {
 	}
 	cvars.SortEx( CVarICmp, (void *)&dataList, false );
 	num = cvars.Num();
-	TS out("<tr><td>$*</td><td align=\"center\">$*</td><td align=\"center\">$*$*$*</td><td>$*</td></tr>\r\n");
+	Format out("<tr><td>$*</td><td align=\"center\">$*</td><td align=\"center\">$*$*$*</td><td>$*</td></tr>\r\n");
 	for ( i = 0; i<num; i++ ) {
 		const CVarDataEx &cd = dataList[cvars[i]];
 #endif
@@ -642,7 +642,7 @@ bool CVarSystemEx::ExportToHTML( const char *filename, int flags ) const {
 	table += "</table>\r\n";
 	String result;
 	result.FromBitFlags( flags & ~CVAR_MODIFIED, cvarFlagNames );
-	templateBuffer.Replace( "{{TITLE}}", TS("Exported CVars with flags ($*)" ) << result );
+	templateBuffer.Replace( "{{TITLE}}", Format("Exported CVars with flags ($*)" ) << result );
 	templateBuffer.Replace( "{{TABLE}}", table.c_str() );
 
 	file->Write( templateBuffer.c_str(), templateBuffer.ByteLength() );
@@ -684,7 +684,7 @@ bool CVarSystemEx::WriteToConfig( const char *filename, int flags ) const {
 	cvars.SortEx( CVarICmp, (void *)&dataList, false );
 	num = cvars.Num();
 	int index;
-	TS out( "seta $+32* \"$*\"\r\n" );
+	Format out( "seta $+32* \"$*\"\r\n" );
 	for ( i = 0; i<num; i++ ) {
 		index = cvars[i];
 		out << dataList[index].strName << dataList[index].strValue;
@@ -707,17 +707,17 @@ bool CVarSystemEx::OnCommand( const CmdArgs &args ) {
 	if ( cv ) {
 		if ( args.Argc() > 1 ) {
 			if ( cv->data->flags & (CVAR_ROM|CVAR_INIT) )
-				User::Warning( TS("$* is readonly" ) << cv->data->strName );
+				User::Warning( Format("$* is readonly" ) << cv->data->strName );
 			else if ( cv->data->flags & CVAR_CHEAT && !net_allowCheats.GetBool() )
-				User::Warning( TS("$* is cheat protected" ) << cv->data->strName );
+				User::Warning( Format("$* is cheat protected" ) << cv->data->strName );
 			else
 				cv->SetString( args.Argv(1) );
 		}
 		else
 			if ( cv->data->strDescription[0] )
-				Console::Print( TS( "$* is: \"$*\", default: \"$*\"\n- $*\n" ) << cv->data->strName << cv->data->strValue << cv->data->strDefaultValue << cv->data->strDescription );
+				Console::Print( Format( "$* is: \"$*\", default: \"$*\"\n- $*\n" ) << cv->data->strName << cv->data->strValue << cv->data->strDefaultValue << cv->data->strDescription );
 			else
-				Console::Print( TS( "$* is: \"$*\", default: \"$*\"\n" ) << cv->data->strName << cv->data->strValue << cv->data->strDefaultValue );
+				Console::Print( Format( "$* is: \"$*\", default: \"$*\"\n" ) << cv->data->strName << cv->data->strValue << cv->data->strDefaultValue );
 
 		return true;
 	}
@@ -733,7 +733,7 @@ void CVarSystemEx::CompleteCVar( const CmdArgs &args, argCompletionCB_t callback
 	// Find the cvar and call its completion func
 	CVar *cv = Find( args.Argv(0) );
 	if ( cv ) {
-		TS complete( "$* $*" );
+		Format complete( "$* $*" );
 		// Custom completion function
 		if ( cv->data->completion ) {
 			cv->data->completion->Complete(args, callback);
@@ -794,8 +794,8 @@ void CVarSystemEx::Cmd_ListCVars_f( const CmdArgs &args ) {
 		}
 		if( String::Icmp(args.Argv(1), "-type") == 0 ) {
 			disp = 0;
-			TS outrange("$* $* [$*, $*]\n");
-			TS out("$* $* [$*]\n");
+			Format outrange("$* $* [$*, $*]\n");
+			Format out("$* $* [$*]\n");
 			for ( int i=0; i<num; i++ ) {
 				CVarDataEx &cd = cvarDataList[i];
 				if ( match && cd.name.Find(matchstr, false) == String::INVALID_POSITION )
@@ -834,7 +834,7 @@ void CVarSystemEx::Cmd_ListCVars_f( const CmdArgs &args ) {
 			}
 		} else if( String::Icmp(args.Argv(1), "-flags") == 0 ) {
 			disp = 0;
-			TS out("$+32* $*\n");
+			Format out("$+32* $*\n");
 			for ( int i=0; i<num; i++ ) {
 				CVarDataEx &cd = cvarDataList[i];
 				if ( match && cd.name.Find(matchstr, false) == String::INVALID_POSITION )
@@ -848,7 +848,7 @@ void CVarSystemEx::Cmd_ListCVars_f( const CmdArgs &args ) {
 			}
 		} else if( String::Icmp(args.Argv(1), "-help") == 0 ) {
 			disp = 0;
-			TS out("$+32* $*\n");
+			Format out("$+32* $*\n");
 			for ( int i=0; i<num; i++ ) {
 				CVarDataEx &cd = cvarDataList[i];
 				if ( match && cd.name.Find(matchstr, false) == String::INVALID_POSITION )
@@ -864,7 +864,7 @@ void CVarSystemEx::Cmd_ListCVars_f( const CmdArgs &args ) {
 	}
 	if( disp == -1 ) {
 		disp = 0;
-		TS out("$+32* \"$*\"\n");
+		Format out("$+32* \"$*\"\n");
 		for ( int i=0; i<num; i++ ) {
 			CVarDataEx &cd = cvarDataList[i];
 			if ( match && cd.name.Find(matchstr, false) == String::INVALID_POSITION )
@@ -875,9 +875,9 @@ void CVarSystemEx::Cmd_ListCVars_f( const CmdArgs &args ) {
 		}
 	}
 	if( match )
-		Console::Print( TS( "\n$* cvar$* matching \"$*\" listed\n\n" ) << disp << (disp == 1 ? "" : "s") << matchstr );
+		Console::Print( Format( "\n$* cvar$* matching \"$*\" listed\n\n" ) << disp << (disp == 1 ? "" : "s") << matchstr );
 	else
-		Console::Print( TS( "\n$* cvar$* listed\n\n" ) << disp << (disp == 1 ? "" : "s") );
+		Console::Print( Format( "\n$* cvar$* listed\n\n" ) << disp << (disp == 1 ? "" : "s") );
 	Console::Print( "ListCVars [search string]        = list cvar values\n" );
 	Console::Print( "ListCVars -help [search string]  = list cvar descriptions\n" );
 	Console::Print( "ListCVars -type [search string]  = list cvar types\n" );
@@ -907,16 +907,16 @@ ConUsageString Cmd_Toggle_Usage("Toggles a CVar's value.", 1, "Toggle <variable>
 void CVarSystemEx::Cmd_Toggle_f( const CmdArgs &args ) {
 	CVar *cv = cvarSystem->Find(args.Argv(1));
 	if ( !cv ) {
-		User::Warning( TS("Cmd_Toggle_f: cvar \"$*\" not found!" ) << args.Argv(1) );
+		User::Warning( Format("Cmd_Toggle_f: cvar \"$*\" not found!" ) << args.Argv(1) );
 		return;
 	}
 
 	if ( cv->data->flags & (CVAR_ROM|CVAR_INIT) ) {
-		User::Warning( TS("Cmd_Toggle_f: $* is readonly" ) << cv->data->strName );
+		User::Warning( Format("Cmd_Toggle_f: $* is readonly" ) << cv->data->strName );
 		return;
 	}
 	if ( cv->data->flags & CVAR_CHEAT && !net_allowCheats.GetBool() ) {
-		User::Warning( TS("Cmd_Toggle_f: $* is cheat protected" ) << cv->data->strName );
+		User::Warning( Format("Cmd_Toggle_f: $* is cheat protected" ) << cv->data->strName );
 		return;
 	}
 
@@ -985,7 +985,7 @@ void CVarSystemEx::Cmd_Toggle_f( const CmdArgs &args ) {
 		else
 			cv->SetString(args.Argv(currentIndex+1));
 	}
-	Console::Print( TS( "set $* = \"$*\"\n" ) << cv->data->strName << cv->data->strValue );
+	Console::Print( Format( "set $* = \"$*\"\n" ) << cv->data->strName << cv->data->strValue );
 }
 
 /*
@@ -1008,7 +1008,7 @@ void CVarSystemEx::Cmd_Set_f( const CmdArgs &args ) {
 	CVar *cv = cvarSystem->Find(args.Argv(1));
 	if ( !cv )
 		return;
-	Console::Print( TS( "$* $* = \"$*\"\n" ) << args.Argv(0) << cv->data->strName << cv->data->strValue );
+	Console::Print( Format( "$* $* = \"$*\"\n" ) << args.Argv(0) << cv->data->strName << cv->data->strValue );
 }
 
 #ifdef CMD_CVAR_SETU
@@ -1062,7 +1062,7 @@ void CVarSystemEx::Cmd_Inc_f( const CmdArgs &args ) {
 	// Do not print Set Commands in Startup
 	if ( inEngineStartup )
 		return;
-	Console::Print( TS( "set $* = \"$*\"\n" ) << cv->data->strName << cv->data->strValue );
+	Console::Print( Format( "set $* = \"$*\"\n" ) << cv->data->strName << cv->data->strValue );
 }
 
 /*
@@ -1085,7 +1085,7 @@ void CVarSystemEx::Cmd_Dec_f( const CmdArgs &args ) {
 	// Do not print Set Commands in Startup
 	if ( inEngineStartup )
 		return;
-	Console::Print( TS( "set $* = \"$*\"\n" ) << cv->data->strName << cv->data->strValue );
+	Console::Print( Format( "set $* = \"$*\"\n" ) << cv->data->strName << cv->data->strValue );
 }
 
 /*
@@ -1135,7 +1135,7 @@ void CVarSystemEx::LinkCVar( CVar *cvar ) {
 			savedData->SetString(initData->strDefaultValue);
 		else if ( savedData->flags & CVAR_FLOAT ) {
 			// Make sure the correct precision is used
-			savedData->value		= TS() << SetPrecision(CVAR_FLOAT_PRECISION) << savedData->fValue;
+			savedData->value		= Format() << SetPrecision(CVAR_FLOAT_PRECISION) << savedData->fValue;
 			savedData->strValue		= savedData->value.c_str();
 			savedData->fValue		= String::ToFloat(savedData->strValue);
 			savedData->iValue		= Math::FtoiFast(savedData->fValue);

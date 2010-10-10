@@ -396,7 +396,7 @@ bool WavStream::LoadFile( const char *filename ) {
 			data = NULL;
 		}
 		file->Close();
-		User::Error( ERR_FILE_CORRUPT, TS("Wave: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_CORRUPT, Format("Wave: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }

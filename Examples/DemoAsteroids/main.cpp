@@ -521,11 +521,11 @@ int og::User::Main( int argc, char *argv[] ) {
 		else {
 			fpsTimer.Stop();
 			float fps = static_cast<float>(count * 1000000.0/static_cast<double>(fpsTimer.MicroSeconds()));
-			demoWindow.window->SetTitle( og::TS(APP_TITLE"| FPS: $*" ) << SetPrecision(2) << fps );
+			demoWindow.window->SetTitle( og::Format(APP_TITLE" | FPS: $*" ) << SetPrecision(2) << fps );
 			count = 0;
 			fpsTimer.Start();
 		}
-		og::Gloot::Sleep( 10 );
+		og::Shared::Sleep( 10 );
 		og::Gloot::Synchronize();
 		demoWindow.Draw();
     }

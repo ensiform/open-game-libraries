@@ -1,6 +1,6 @@
 // ==============================================================================
 //! @file
-//! @brief	Text Streaming & Formatting
+//! @brief	Text Formatting
 //! @author	Santo Pfingsten (TTK-Bandit)
 //! @note	Copyright (C) 2007-2010 Lusito Software
 // ==============================================================================
@@ -27,15 +27,12 @@
 //
 // ==============================================================================
 
-#ifndef __OG_TEXT_STREAM_H__
-#define __OG_TEXT_STREAM_H__
+#ifndef __OG_FORMAT_H__
+#define __OG_FORMAT_H__
 
 //! Open Game Libraries
 namespace og {
-//! @defgroup Common Common (Library)
-//! @{
-
-//! @defgroup CommonText Text
+//! @defgroup Shared Shared (Library)
 //! @{
 
 	// ==============================================================================
@@ -51,7 +48,7 @@ namespace og {
 		SetPrecision( int value ) : floatPrecision(value) {}
 
 	private:
-		friend class TS;
+		friend class Format;
 		int floatPrecision;	//!< The float precision
 	};
 
@@ -68,7 +65,7 @@ namespace og {
 		SetFill( char fillCh ) : ch(fillCh) {}
 
 	private:
-		friend class TS;
+		friend class Format;
 		char	ch;		//!< The new fill character
 	};
 
@@ -82,15 +79,20 @@ namespace og {
 	//! @li $-23*	=> Right aligned text, fill up 23 fillChars on the left
 	//! @li $?*		=> Accepts an extra input value, but works like the 2 above
 	// ==============================================================================
-	class TS {
+	class Format {
 	public:
 		// ==============================================================================
 		//! Constructor
 		//!
 		//! @param	fmt	Describes the format to use
 		// ==============================================================================
-		TS( const char *fmt = NULL ) { Reset( false, fmt ); }
+		Format( const char *fmt = NULL );
 
+		// ==============================================================================
+		//! Destructor
+		// ==============================================================================
+		~Format();
+		
 		// ==============================================================================
 		//! Reset the values already entered and (optional) the format
 		//!
@@ -107,6 +109,13 @@ namespace og {
 		int		ByteLength( void ) { return offset; }
 
 		// ==============================================================================
+		//! GetFloatPrecision
+		//!
+		//! @return	The float precision
+		// ==============================================================================
+		int		GetFloatPrecision( void ) { return floatPrecision; }
+
+		// ==============================================================================
 		//! Get the formatted buffer
 		//!
 		//! @return	Pointer to the formatted buffer
@@ -116,31 +125,47 @@ namespace og {
 		// Return the formated buffer
 		operator const char *( void ) const { return c_str(); }
 
+		// ==============================================================================
+		//! Try to print some value into the buffer, call Error if failed
+		//!
+		//! @note	Make sure you know what this is before you call it!
+		//! @param	fmt	Describes the format to use
+		// ==============================================================================
+		void	TryPrint( const char *fmt, ... );
+
+		// ==============================================================================
+		//! Finishes appending a value
+		//!
+		//! @note	Make sure you know what this is before you call it!
+		//! @return	self
+		// ==============================================================================
+		Format &	Finish( void ) {
+			floatPrecision = -1;
+			if ( paramCount != -1 )
+				OnAppend();
+			return *this;
+		}
+
 		// Fill with input
-		TS &operator << ( int value );
-		TS &operator << ( uInt value );
-		TS &operator << ( short value );
-		TS &operator << ( uShort value );
-		TS &operator << ( char value );
-		TS &operator << ( byte value );
-		TS &operator << ( float value );
-		TS &operator << ( const char *value );
-		TS &operator << ( const String &value );
-		TS &operator << ( const Vec2 &value );
-		TS &operator << ( const Vec3 &value );
-		TS &operator << ( const Vec4 &value );
-		TS &operator << ( const Angles &value );
-		TS &operator << ( const Rect &value );
-		TS &operator << ( const Quat &value );
-		TS &operator << ( const Mat2 &value );
-		TS &operator << ( const Mat3 &value );
-		TS &operator << ( const Color &value );
+		Format &operator << ( int value );
+		Format &operator << ( uInt value );
+		Format &operator << ( short value );
+		Format &operator << ( uShort value );
+		Format &operator << ( char value );
+		Format &operator << ( byte value );
+		Format &operator << ( float value );
+		Format &operator << ( const char *value );
 
 		// Manipulators
-		TS &operator << ( const SetFill &value ) { fillChar = value.ch; return *this; }
-		TS &operator << ( const SetPrecision &value ) { floatPrecision = value.floatPrecision; return *this; }
+		Format &operator << ( const SetFill &value ) { fillChar = value.ch; return *this; }
+		Format &operator << ( const SetPrecision &value ) { floatPrecision = value.floatPrecision; return *this; }
 
 	protected:
+
+		// ==============================================================================
+		//! Remove all format entries
+		// ==============================================================================
+		void	DeleteFormatEntries( void );
 
 		// ==============================================================================
 		//! Finished the formating after appending a value
@@ -153,41 +178,28 @@ namespace og {
 		bool	CheckVariableInput( void );
 
 		// ==============================================================================
-		//! Try to print some value into the buffer, call Error if failed
-		//!
-		//! @param	fmt	Describes the format to use
-		// ==============================================================================
-		void	TryPrint( const char *fmt, ... );
-
-		// ==============================================================================
-		//! Finishes appending a value
-		//!
-		//! @return	
-		// ==============================================================================
-		TS &	Finish( void ) {
-			floatPrecision = -1;
-			if ( paramCount != -1 )
-				OnAppend();
-			return *this;
-		}
-
-		// ==============================================================================
 		//! Format entry, used to define what input is expected and what to append after it
 		//!
 		//! @todo	Move float precision here too ?
 		// ==============================================================================
-		struct fmtEntry_t {
+		struct FormatEntry {
+			FormatEntry() : append(NULL), fieldWidth(0), takeInput(0), next(NULL) {}
+
 			const char *append;		//!< What to append after getting input
 			int			fieldWidth;	//!< Field width ( fill up the rest with fillChar, align right if negative )
 			int			takeInput;	//!< Accept variable input instead of a fixed value
+			FormatEntry *next;		//!< The next format entry
 		};
+		FormatEntry *GetFormatEntry( int index );
 
 		static const int bufferSize = 16384;	//!< Size of the buffer
 		char	buffer[bufferSize];	//!< The buffer
 		int		offset;				//!< The offset into the buffer
 
 		char	fmtBuffer[256];		//!< Format buffer
-		List<fmtEntry_t>fmtList;	//!< Pointers into the format buffer
+		FormatEntry *firstFormatEntry;//!< First format entry
+		FormatEntry *lastFormatEntry;//!< Last format entry
+		int		numFormatEntries;	//!< Number of format entries
 		bool	hasFormat;			//!< true if it has format
 		int		paramCount;			//!< Number of parameters to be expected
 		char	fillChar;			//!< The character to use to fill up
@@ -195,7 +207,6 @@ namespace og {
 		int		floatPrecision;		//!< The float precision
 	};
 
-//! @}
 //! @}
 }
 

@@ -180,7 +180,7 @@ void SingleWriterMultiReader::LockRead( void ) {
 		if ( firstWaiter == NULL )
 			firstWaiter = lastWaiter = waiter;
 		else
-			lastWaiter->next = waiter;
+			lastWaiter = lastWaiter->next = waiter;
 		mtx.Unlock();
 		waiter->Wait(INFINITE);
 		LockRead();
@@ -207,9 +207,12 @@ void SingleWriterMultiReader::LockWrite( void ) {
 	writeRequest = false;
 }
 void SingleWriterMultiReader::UnlockWrite( void ) {
+	Waiter *temp;
 	while( firstWaiter != NULL ) {
 		firstWaiter->Signal();
+		temp = firstWaiter;
 		firstWaiter = firstWaiter->next;
+		delete temp;
 	}
 	lastWaiter = NULL;
 	mtx.Unlock();

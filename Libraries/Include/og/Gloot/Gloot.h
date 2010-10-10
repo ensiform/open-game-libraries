@@ -57,12 +57,6 @@ namespace og {
 	namespace Gloot {
 	//! @addtogroup Gloot
 	//! @{
-		// ==============================================================================
-		//! Sleeps for a specified time
-		//!
-		//! @param	msec	Number of milliseconds to sleep.
-		// ==============================================================================
-		void		Sleep( int msec );
 
 		// ==============================================================================
 		//! Get the OpenGL version. 

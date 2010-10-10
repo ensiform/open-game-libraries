@@ -79,7 +79,7 @@ jpegOutputMessage
 METHODDEF(void) jpegOutputMessage( j_common_ptr cinfo ) {
 	char buffer[JMSG_LENGTH_MAX];
 	(*cinfo->err->format_message)(cinfo,buffer);
-	User::Warning( TS("Jpeg: $*" ) << buffer );
+	User::Warning( Format("Jpeg: $*" ) << buffer );
 }
 
 /*
@@ -265,7 +265,7 @@ bool ImageFileJPG::Open( const char *filename ) {
 	catch( FileReadWriteError err ) {
 		jpeg_destroy_decompress(&cinfo);
 		file->Close();
-		User::Error( ERR_FILE_CORRUPT, TS("Jpeg: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_CORRUPT, Format("Jpeg: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }
@@ -342,7 +342,7 @@ bool ImageFileJPG::SaveFile( const char *filename, byte *data, uInt width, uInt 
 	}
 	catch( FileReadWriteError err ) {
 		file->Close();
-		User::Error( ERR_FILE_WRITEFAIL, TS("Jpeg: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_WRITEFAIL, Format("Jpeg: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }

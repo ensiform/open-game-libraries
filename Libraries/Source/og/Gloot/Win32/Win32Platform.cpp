@@ -52,11 +52,6 @@ Platform Mgr;
 
 ==============================================================================
 */
-
-void Gloot::Sleep( int msec ) {
-	::Sleep(msec);
-}
-
 Platform::Platform() {
 	initialized = false;
 	GLVersion[0] = GLVersion[1] = GLVersion[2] = -1;

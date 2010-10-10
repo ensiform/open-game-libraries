@@ -262,7 +262,7 @@ bool XDeclParser::BinaryFile( const char *filename ) {
 	}
 	catch( FileReadWriteError err ) {
 		file->Close();
-		User::Error( ERR_FILE_CORRUPT, TS("XDecl: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_CORRUPT, Format("XDecl: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }
@@ -317,7 +317,7 @@ bool XDeclParser::MakeBinary( const char *filename ) {
 	if ( !parser.LexFile( filename ) )
 		return false;
 	
-	File *f = commonFS->OpenWrite( TS( "$*.bin" ) << filename );
+	File *f = commonFS->OpenWrite( Format( "$*.bin" ) << filename );
 	if ( !f )
 		return false;
 
@@ -334,7 +334,7 @@ bool XDeclParser::MakeBinary( const char *filename ) {
 	}
 	catch( FileReadWriteError err ) {
 		f->Close();
-		User::Error( ERR_FILE_WRITEFAIL, TS("Binary XDecl: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_WRITEFAIL, Format("Binary XDecl: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }

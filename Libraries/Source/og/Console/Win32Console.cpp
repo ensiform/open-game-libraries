@@ -214,8 +214,8 @@ bool ConsoleWindow::Init( void ) {
 	}
 
 	DynBuffer<wchar_t> windowClass, windowTitle;
-	String::ToWide( TS("$* Console" ) << appTitle, windowClass );
-	String::ToWide( TS("$* WinConsole" ) << appTitle, windowTitle );
+	String::ToWide( Format("$* Console" ) << appTitle, windowClass );
+	String::ToWide( Format("$* WinConsole" ) << appTitle, windowTitle );
 
 	hInstance = GetModuleHandle(NULL);
 

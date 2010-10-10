@@ -1509,11 +1509,11 @@ void String::FormatNumBytes( uLongLong bytes, int digits, fnbStyle style ) {
 					digits--;
 				case FNB_FLOATEX:
 					if ( floorValue != value ) {
-						*this = TS( "$* $*") << SetPrecision( digits-Math::Digits(floorValue) ) << static_cast<float>(value) << units[i];
+						*this = Format( "$* $*") << SetPrecision( digits-Math::Digits(floorValue) ) << static_cast<float>(value) << units[i];
 						return;
 					}
 				default:
-					*this = TS("$* $*") << floorValue << units[i];
+					*this = Format("$* $*") << floorValue << units[i];
 					return;
 			}
 		}
@@ -1521,7 +1521,7 @@ void String::FormatNumBytes( uLongLong bytes, int digits, fnbStyle style ) {
 
 	// Should never get here
 	value = Math::FtoiFast(static_cast<float>(bytesD / Math::Pow(1024.0, static_cast<float>(total_units-1))));
-	*this = TS("$* $*") << static_cast<float>(value) << units[total_units-1];
+	*this = Format("$* $*") << static_cast<float>(value) << units[total_units-1];
 }
 
 /*

@@ -273,7 +273,7 @@ bool FontFile::Open( const char *filename ) {
 						GlyphInfo *glyph = new GlyphInfo;
 						if ( glyph == NULL ) {
 							file->Close();
-							User::Error( ERR_OUT_OF_MEMORY, "new GlyphInfo", TS() << sizeof(GlyphInfo) );
+							User::Error( ERR_OUT_OF_MEMORY, "new GlyphInfo", Format() << sizeof(GlyphInfo) );
 							return false;
 						}
 						glyph->texCoords[0].Set( x * imageScaleX, y * imageScaleY );
@@ -317,7 +317,7 @@ bool FontFile::Open( const char *filename ) {
 	}
 	catch( FileReadWriteError err ) {
 		file->Close();
-		User::Error( ERR_FILE_CORRUPT, TS("Font: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_CORRUPT, Format("Font: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }
@@ -563,7 +563,7 @@ bool FontFamily::Open( const char *name ) {
 		return false;
 
 	OG_ASSERT( name != NULL );
-	FileList *files = fontFS->GetFileList( TS( "fonts/$*" ) << name, ".fnt", (LF_FILES | LF_CHECK_LOCAL | LF_CHECK_ARCHIVED) );
+	FileList *files = fontFS->GetFileList( Format( "fonts/$*" ) << name, ".fnt", (LF_FILES | LF_CHECK_LOCAL | LF_CHECK_ARCHIVED) );
 	if ( !files )
 		return false;
 

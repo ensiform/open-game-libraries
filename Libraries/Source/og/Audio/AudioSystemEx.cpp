@@ -71,7 +71,7 @@ CheckAlErrors
 bool CheckAlErrors( void ) {
 	ALenum error = alGetError();
 	if( error != AL_NO_ERROR ) {
-		User::Warning( TS("OpenAL Error: $*!" ) << alErrorMessage(error) );
+		User::Warning( Format("OpenAL Error: $*!" ) << alErrorMessage(error) );
 		return false;
 	}
 	return true;
@@ -257,7 +257,7 @@ bool AudioSystemEx::Init( const char *defaultFilename, const char *deviceName ) 
 					decl.sounds.Append( value );
 			}
 			if ( decl.sounds.IsEmpty() )
-				User::Warning( TS("Sound '$*' has no filenames defined." ) << sndDecls.declList.GetKey(i) );
+				User::Warning( Format("Sound '$*' has no filenames defined." ) << sndDecls.declList.GetKey(i) );
 		}
 	}
 
@@ -325,7 +325,7 @@ AudioSystemEx::Find
 const SoundDecl *AudioSystemEx::Find( const char *name ) const {
 	int index = soundDecls.Find( name );
 	if ( index == -1 ) {
-		User::Warning( TS("Sound '$*' not found." ) << name );
+		User::Warning( Format("Sound '$*' not found." ) << name );
 		return NULL;
 	}
 	return &soundDecls[index];

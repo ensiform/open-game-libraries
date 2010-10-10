@@ -146,7 +146,7 @@ static void ReadMaterial( Lexer &lexer ) {
 		if ( String::Icmp( p, "}" ) == 0 ) 
 			return;
 		if ( String::Icmp( p, "*" ) != 0 ) 
-			lexer.Error( TS("expected *, got '$*'") << p );
+			lexer.Error( Format("expected *, got '$*'") << p );
 
 		//! @todo	Finish this
 
@@ -172,7 +172,7 @@ static void ReadMaterialList( Lexer &lexer ) {
 		if ( String::Icmp( p, "}" ) == 0 ) 
 			return;
 		if ( String::Icmp( p, "*" ) != 0 ) 
-			lexer.Error( TS("expected *, got '$*'") << p );
+			lexer.Error( Format("expected *, got '$*'") << p );
 
 		if ( lexer.CheckToken( "MATERIAL_COUNT" ) )
 			numMaterials = lexer.ReadInt();
@@ -201,7 +201,7 @@ static void ReadMesh( Lexer &lexer, aseMesh *inMesh ) {
 		if ( String::Icmp( p, "}" ) == 0 ) 
 			return;
 		if ( String::Icmp( p, "*" ) != 0 ) 
-			lexer.Error( TS("expected *, got '$*'") << p );
+			lexer.Error( Format("expected *, got '$*'") << p );
 
 		if ( lexer.CheckToken( "MESH_NUMVERTEX" ) ) {
 			inMesh->numVerts = lexer.ReadInt();
@@ -278,7 +278,7 @@ static void ReadMesh( Lexer &lexer, aseMesh *inMesh ) {
 			lexer.ExpectToken("}");
 		}
 		else if ( lexer.CheckToken( "MESH_NUMTVFACES" ) )
-			lexer.ExpectToken( TS() << inMesh->numTris );
+			lexer.ExpectToken( Format() << inMesh->numTris );
 		else if ( lexer.CheckToken( "MESH_TFACELIST" ) ) {
 			lexer.ExpectToken("{");
 			for( int i=0; i<inMesh->numTris; i++ ) {
@@ -316,7 +316,7 @@ static void ReadGeoMObject( Lexer &lexer, ListEx<aseMesh> &myMeshList ) {
 		if ( String::Icmp( p, "}" ) == 0 ) 
 			return;
 		if ( String::Icmp( p, "*" ) != 0 ) 
-			lexer.Error( TS("expected *, got '$*'") << p );
+			lexer.Error( Format("expected *, got '$*'") << p );
 
 		if ( lexer.CheckToken( "NODE_NAME" ) )
 			name = lexer.ReadString();
@@ -357,7 +357,7 @@ Model *Model::ImportASE( const char *filename ) {
 			if ( !p || !*p )
 				continue;
 			if ( String::Icmp( p, "*" ) != 0 ) 
-				lexer.Error( TS("expected *, got '$*'") << p );
+				lexer.Error( Format("expected *, got '$*'") << p );
 
 			if ( lexer.CheckToken( "MATERIAL_LIST" ) ) 
 				ReadMaterialList( lexer );

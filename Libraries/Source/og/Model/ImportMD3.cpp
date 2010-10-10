@@ -141,7 +141,7 @@ Model *Model::ImportMD3( const char *filename ) {
 
 	File *file = modelFS->OpenRead( filename );
 	if( !file ) {
-		User::Warning( TS("Can't open file: $*!" ) << filename );
+		User::Warning( Format("Can't open file: $*!" ) << filename );
 		return NULL;
 	}
 	
@@ -262,7 +262,7 @@ Model *Model::ImportMD3( const char *filename ) {
 	catch( FileReadWriteError err ) {
 		file->Close();
 		delete model;
-		User::Error( ERR_FILE_CORRUPT, TS("MD3: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_CORRUPT, Format("MD3: $*" ) << err.ToString(), filename );
 		return NULL;
 	}
 }

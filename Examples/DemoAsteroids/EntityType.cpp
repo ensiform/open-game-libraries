@@ -91,18 +91,18 @@ ogEntityType::SpawnEntity
 ogEntity *ogEntityType::SpawnEntity( const char *className, const og::Dict *additionalSettings ) {
 	int index = demoWindow.game.entityDecls.declList.Find( className );
 	if ( index == -1 )
-		throw ogError( og::TS("Classname '$*' does not exist!" ) << className );
+		throw ogError( og::Format("Classname '$*' does not exist!" ) << className );
 
 	const og::Dict &baseDict = demoWindow.game.entityDecls.declList[index];
 
 	const char *entityType = baseDict.GetString("entityType");
 
 	if ( entityType[0] == '\0' )
-		throw ogError( og::TS("Classname '$*' did not define an entityType!" ) << className );
+		throw ogError( og::Format("Classname '$*' did not define an entityType!" ) << className );
 
 	index = typeDict.Find( entityType );
 	if ( index == -1 )
-		throw ogError( og::TS("EntityType '$*' not found!" ) << entityType );
+		throw ogError( og::Format("EntityType '$*' not found!" ) << entityType );
 
 	ogEntityType *type = typeDict[index];
 
@@ -112,10 +112,10 @@ ogEntity *ogEntityType::SpawnEntity( const char *className, const og::Dict *addi
 
 	if ( additionalSettings ) {
 		ent->settings.Append( *additionalSettings, true );
-		ent->name = additionalSettings->GetString( "name", og::TS( "unnamed_entity_$*" ) << demoWindow.game.spawnCount );
+		ent->name = additionalSettings->GetString( "name", og::Format( "unnamed_entity_$*" ) << demoWindow.game.spawnCount );
 	}
 	else
-		ent->name = og::TS("unnamed_entity_$*") << demoWindow.game.spawnCount;
+		ent->name = og::Format("unnamed_entity_$*") << demoWindow.game.spawnCount;
 
 	demoWindow.game.RegisterEntity( ent );
 
@@ -186,7 +186,7 @@ void ogEntityType::InitEntityTypes( void ) {
 
 		superIndex = typeDict.Find( type->superTypeName );
 		if ( superIndex == -1 )
-			throw ogError( og::TS("EntityClass '$*' has unknown SuperClass '$*'!" ) << type->typeName << type->superTypeName );
+			throw ogError( og::Format("EntityClass '$*' has unknown SuperClass '$*'!" ) << type->typeName << type->superTypeName );
 
 		type->superType = typeDict[superIndex];
 	}

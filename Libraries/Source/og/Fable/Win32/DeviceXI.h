@@ -66,7 +66,7 @@ public:
 	// ---------------------- Internal DeviceXI Members -------------------
 
 	DeviceXI( uInt idx ) : index(idx) {
-		deviceName = TS("XInput$*") << index;
+		deviceName = Format("XInput$*") << index;
 	}
 
 private:

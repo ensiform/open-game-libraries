@@ -32,51 +32,51 @@ OG_INLINE void getErrorString( og::ErrorId id, const char *msg, const char *para
 	switch( id ) {
 		// Generic Errors:
 		case og::ERR_SYSTEM_REQUIREMENTS:
-			result = og::TS( "Your system is not suitable due to: $*." ) << msg;
+			result = og::Format( "Your system is not suitable due to: $*." ) << msg;
 			return;
 		case og::ERR_BUFFER_OVERFLOW:
-			result = og::TS( "Buffer overflow in $*, size:$*." ) << msg << param;
+			result = og::Format( "Buffer overflow in $*, size:$*." ) << msg << param;
 			return;
 		case og::ERR_OUT_OF_MEMORY:
-			result = og::TS( "'$*' returned NULL, size would be $*" ) << msg << param;
+			result = og::Format( "'$*' returned NULL, size would be $*" ) << msg << param;
 			return;
 
 		// File Errors
 		case og::ERR_BAD_FILE_FORMAT:
 		case og::ERR_FILE_CORRUPT:
 		case og::ERR_FILE_WRITEFAIL:
-			result = og::TS( "$*: on file '$*'" ) << msg << param;
+			result = og::Format( "$*: on file '$*'" ) << msg << param;
 			return;
 
 		// Lexer Problems
 		case og::ERR_LEXER_WARNING:
-			result = og::TS( "Lexer Warning('$*'): $*." ) << param << msg;
+			result = og::Format( "Lexer Warning('$*'): $*." ) << param << msg;
 			return;
 		case og::ERR_LEXER_FAILURE:
-			result = og::TS( "Lexer Error('$*'): $*." ) << param << msg;
+			result = og::Format( "Lexer Error('$*'): $*." ) << param << msg;
 			return;
 
 		// zLib Errors:
 		case og::ERR_ZIP_CRC32:
-			result = og::TS( "Crc32 corrupt for file: '$*' on zip: '$*'." ) << param << msg;
+			result = og::Format( "Crc32 corrupt for file: '$*' on zip: '$*'." ) << param << msg;
 			return;
 
 		// Filesystem Errors
 		case og::ERR_FS_FILE_OPENREAD:
 		case og::ERR_FS_FILE_OPENWRITE:
 		case og::ERR_FS_MAKEPATH:
-			result = og::TS( "$*: '$*'" ) << msg << param;
+			result = og::Format( "$*: '$*'" ) << msg << param;
 			return;
 
 		// Console Errors
 		case og::ERR_CVAR_INIT:
 		case og::ERR_CVAR_LINK:
-			result = og::TS( "$*: '$*'" ) << msg << param;
+			result = og::Format( "$*: '$*'" ) << msg << param;
 			return;
 
 		// Audio Errors
 		case og::ERR_AUDIO_INIT:
-			result = og::TS( "Audio initialization failed: '$*'." ) << msg;
+			result = og::Format( "Audio initialization failed: '$*'." ) << msg;
 			return;
 	}
 	result = "Unknown";

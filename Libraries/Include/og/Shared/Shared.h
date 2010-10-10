@@ -141,14 +141,27 @@ namespace og {
 	namespace Shared {
 	//! @addtogroup Shared
 	//! @{
+
+		// ==============================================================================
+		//! Initialize Shared parts
+		//!
+		//! @return	true on success, otherwise false
+		// ==============================================================================
 		OG_INLINE bool	Init( void ) { return SysInfo::Init(); }
-		OG_INLINE void	Shutdown( void );
+
+		// ==============================================================================
+		//! Sleeps for a specified time
+		//!
+		//! @param	msec	Number of milliseconds to sleep.
+		// ==============================================================================
+		void			Sleep( int msec );
 	//! @}
 	}
 //! @}
 }
 
 // Public Library Includes
+#include "Format.h"
 #include "SysInfo.h"
 #include "Timer.h"
 

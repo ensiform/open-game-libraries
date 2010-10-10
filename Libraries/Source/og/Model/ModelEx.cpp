@@ -181,7 +181,7 @@ Model *Model::Load( const char *filename ) {
 
 	File *file = modelFS->OpenRead( filename );
 	if ( !file ) {
-		User::Warning( TS( "Can't open file: '$*'" ) << filename );
+		User::Warning( Format( "Can't open file: '$*'" ) << filename );
 		return NULL;
 	}
 
@@ -195,7 +195,7 @@ Model *Model::Load( const char *filename ) {
 
 		int version = file->ReadInt();
 		if ( version != GMD_VERSION )
-			throw FileReadWriteError( TS( "Wrong Version($*), should be ($*)'" ) << version << GMD_VERSION );
+			throw FileReadWriteError( Format( "Wrong Version($*), should be ($*)'" ) << version << GMD_VERSION );
 
 		String modelName, author, appName;
 		FileReadString( file, modelName );
@@ -216,7 +216,7 @@ Model *Model::Load( const char *filename ) {
 			entries = file->ReadUint();
 			if ( name.Icmp("Bones") == 0 ) {
 				if ( entries != numBones )
-					throw FileReadWriteError( TS( "numBones($*) does not match the chunks numEntries($*)" ) << numBones << entries );
+					throw FileReadWriteError( Format( "numBones($*) does not match the chunks numEntries($*)" ) << numBones << entries );
 
 				// Read Bones
 				for ( int j=0; j<entries; j++ ) {
@@ -228,7 +228,7 @@ Model *Model::Load( const char *filename ) {
 				}
 			} else if ( name.Icmp("Meshes") == 0 ) {
 				if ( entries != numMeshes )
-					throw FileReadWriteError( TS( "numMeshes($*) does not match the chunks numEntries($*)" ) << numMeshes << entries );
+					throw FileReadWriteError( Format( "numMeshes($*) does not match the chunks numEntries($*)" ) << numMeshes << entries );
 
 				// Read Meshes
 				for ( int j=0; j<entries; j++ ) {
@@ -273,7 +273,7 @@ Model *Model::Load( const char *filename ) {
 	catch( FileReadWriteError err ) {
 		file->Close();
 		delete model;
-		User::Error( ERR_FILE_CORRUPT, TS("MD3: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_CORRUPT, Format("MD3: $*" ) << err.ToString(), filename );
 		return NULL;
 	}
 }
@@ -383,7 +383,7 @@ bool Model::Save( Model *model, const char *filename ) {
 	}
 	catch( FileReadWriteError err ) {
 		file->Close();
-		User::Error( ERR_FILE_WRITEFAIL, TS("GMD: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_WRITEFAIL, Format("GMD: $*" ) << err.ToString(), filename );
 		return NULL;
 	}
 }

@@ -38,11 +38,6 @@ freely, subject to the following restrictions:
 #include <stdlib.h>
 #include <stdio.h>
 
-namespace og {
-	extern FileSystemCore *commonFS;
-	OG_INLINE void	CommonSetFileSystem( FileSystemCore *fileSystem ) { commonFS = fileSystem; }
-}
-
 // Public Library Includes
 #include "Math/Random.h"
 #include "Color.h"
@@ -69,7 +64,22 @@ namespace og {
 #include "Text/Lexer.h"
 #include "Text/DeclParser.h"
 #include "Text/XDeclParser.h"
-#include "Text/TextStream.h"
+
+namespace og {
+	extern FileSystemCore *commonFS;
+	OG_INLINE void	CommonSetFileSystem( FileSystemCore *fileSystem ) { commonFS = fileSystem; }
+	
+	Format &operator << ( Format &fmt, const String &value );
+	Format &operator << ( Format &fmt, const Vec2 &value );
+	Format &operator << ( Format &fmt, const Vec3 &value );
+	Format &operator << ( Format &fmt, const Vec4 &value );
+	Format &operator << ( Format &fmt, const Angles &value );
+	Format &operator << ( Format &fmt, const Rect &value );
+	Format &operator << ( Format &fmt, const Quat &value );
+	Format &operator << ( Format &fmt, const Mat2 &value );
+	Format &operator << ( Format &fmt, const Mat3 &value );
+	Format &operator << ( Format &fmt, const Color &value );
+}
 
 // We include .inl files last, so we can access all classes here.
 #include "Math/Random.inl"

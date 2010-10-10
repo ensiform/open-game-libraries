@@ -91,7 +91,7 @@ void DeclType::DoInheritance( int index ) {
 
 		inheritFrom = declList.Find( value );
 		if ( inheritFrom == -1 ) { 
-			User::Error(ERR_LEXER_WARNING, TS("Could not find inheritance '$*' of type $*" ) << value << name, declList.GetKey(index).c_str() );
+			User::Error(ERR_LEXER_WARNING, Format("Could not find inheritance '$*' of type $*" ) << value << name, declList.GetKey(index).c_str() );
 			continue;
 		}
 
@@ -231,7 +231,7 @@ void DeclParser::Parse( Lexer &lexer ) {
 					}
 				} else {
 					resultDict = NULL;
-					lexer.Warning( TS("Unknown decl Type '$*'") << p );
+					lexer.Warning( Format("Unknown decl Type '$*'") << p );
 				}
 				lexer.ExpectToken("{");
 				getKeyValue = true;
@@ -268,7 +268,7 @@ bool DeclParser::BinaryFile( const char *filename ) {
 	}
 	catch( FileReadWriteError err ) {
 		file->Close();
-		User::Error( ERR_FILE_CORRUPT, TS("Decl: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_CORRUPT, Format("Decl: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }
@@ -320,7 +320,7 @@ bool DeclParser::MakeBinary( const char *filename ) {
 	if ( !lexer.LoadFile( filename ) )
 		return false;
 
-	File *f = commonFS->OpenWrite( TS( "$*.bin" ) << filename );
+	File *f = commonFS->OpenWrite( Format( "$*.bin" ) << filename );
 	if ( !f )
 		return false;
 
@@ -377,7 +377,7 @@ bool DeclParser::MakeBinary( const char *filename ) {
 	}
 	catch( FileReadWriteError err ) {
 		f->Close();
-		User::Error( ERR_FILE_WRITEFAIL, TS("Binary Decl: $*.bin" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_WRITEFAIL, Format("Binary Decl: $*.bin" ) << err.ToString(), filename );
 		return false;
 	}
 	catch( LexerError err ) {

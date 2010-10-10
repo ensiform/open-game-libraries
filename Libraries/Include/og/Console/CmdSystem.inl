@@ -47,7 +47,7 @@ ConUsageString::ShowUsage
 */
 OG_INLINE void ConUsageString::ShowUsage( void ) const {
 	//! @todo Since this .inl should be useable from other modules, this need to be done differently.
-	Console::Print( TS( "Usage: $*\n" ) << strUsage );
+	Console::Print( Format( "Usage: $*\n" ) << strUsage );
 }
 
 /*
@@ -73,8 +73,8 @@ ConArgCompleteBoolean::Complete
 ================
 */
 OG_INLINE void ConArgCompleteBoolean::Complete( const CmdArgs &args, argCompletionCB_t callback ) const {
-	callback( TS( "$* 0" ) << args.Argv( 0 ) );
-	callback( TS( "$* 1" ) << args.Argv( 0 ) );
+	callback( Format( "$* 0" ) << args.Argv( 0 ) );
+	callback( Format( "$* 1" ) << args.Argv( 0 ) );
 }
 
 /*
@@ -83,7 +83,7 @@ ConArgCompleteInteger::Complete
 ================
 */
 OG_INLINE void ConArgCompleteInteger::Complete( const CmdArgs &args, argCompletionCB_t callback ) const {
-	TS param( "$* $*" );
+	Format param( "$* $*" );
 	for ( int i = min; i <= max; i++ ) {
 		callback( param << args.Argv( 0 ) << i );
 		param.Reset();
@@ -108,7 +108,7 @@ ConArgCompleteString::Complete
 ================
 */
 OG_INLINE void ConArgCompleteString::Complete( const CmdArgs &args, argCompletionCB_t callback ) const {
-	TS param( "$* $*" );
+	Format param( "$* $*" );
 	int num = list.Num();
 	for ( int i=0; i<num; i++ ) {
 		callback( param << args.Argv( 0 ) << list[i] );
@@ -129,9 +129,9 @@ OG_INLINE void ConArgCompleteFile::Complete( const CmdArgs &args, argCompletionC
 	if ( !files )
 		return;
 
-	TS param( "$* $*" );
+	Format param( "$* $*" );
 	do {
-		callback( TS( "$* $*" ) << args.Argv( 0 ) << files->GetName() );
+		callback( Format( "$* $*" ) << args.Argv( 0 ) << files->GetName() );
 		param.Reset();
 	} while ( files->GetNext() );
 

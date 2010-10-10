@@ -91,7 +91,7 @@ bool ReadBonesFromSKP( const char *filename, Model *model ) {
 		if ( numframes <= 0 )
 			throw FileReadWriteError("File has no frames");
 		if( type != SKM_MODELTYPE )
-			throw FileReadWriteError( TS("File has wrong type number ($* should be $*)\n" ) << type << SKM_MODELTYPE );
+			throw FileReadWriteError( Format("File has wrong type number ($* should be $*)\n" ) << type << SKM_MODELTYPE );
 		if( numbones > SKM_MAX_BONES )
 			throw FileReadWriteError("File has too many bones");
 		if ( numframes > SKM_MAX_FRAMES )
@@ -129,7 +129,7 @@ bool ReadBonesFromSKP( const char *filename, Model *model ) {
 	catch( FileReadWriteError err ) {
 		file->Close();
 		delete model;
-		User::Error( ERR_FILE_CORRUPT, TS("SKP: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_CORRUPT, Format("SKP: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }
@@ -166,9 +166,9 @@ Model *Model::ImportSKM( const char *filename, const char *filenameAnim ) {
 		uInt ofs_meshes = file->ReadUint();
 
 		if( type != SKM_MODELTYPE )
-			throw FileReadWriteError( TS("File has wrong type number ($* should be $*)" ) << type << SKM_MODELTYPE );
+			throw FileReadWriteError( Format("File has wrong type number ($* should be $*)" ) << type << SKM_MODELTYPE );
 		if( filesize > SKM_MAX_FILESIZE )
-			throw FileReadWriteError( TS("File has has wrong filesize ($* should be less than $*)" ) << filesize << SKM_MAX_FILESIZE );
+			throw FileReadWriteError( Format("File has has wrong filesize ($* should be less than $*)" ) << filesize << SKM_MAX_FILESIZE );
 
 		if( nummeshes <= 0 )
 			throw FileReadWriteError("File has no meshes");
@@ -183,7 +183,7 @@ Model *Model::ImportSKM( const char *filename, const char *filenameAnim ) {
 		file->Seek( ofs_meshes, SEEK_SET );
 
 		if ( numbones != model->bones.Num() )
-			throw FileReadWriteError( TS("NumBones do not match : (SKP: $*, SKM: $*)\n" ) << model->bones.Num() << numbones );
+			throw FileReadWriteError( Format("NumBones do not match : (SKP: $*, SKM: $*)\n" ) << model->bones.Num() << numbones );
 
 		mskmesh_t skm_mesh;
 		uInt ofs_verts, ofs_texcoords, ofs_indices, ofs_references;
@@ -205,19 +205,19 @@ Model *Model::ImportSKM( const char *filename, const char *filenameAnim ) {
 
 			// Print out some warnings
 			if( skm_mesh.numverts <= 0 )
-				throw FileReadWriteError( TS("mesh $* has no vertexes" ) << i );
+				throw FileReadWriteError( Format("mesh $* has no vertexes" ) << i );
 			else if( skm_mesh.numverts > SKM_MAX_VERTS )
-				throw FileReadWriteError( TS("mesh $* has too many vertexes" ) << i );
+				throw FileReadWriteError( Format("mesh $* has too many vertexes" ) << i );
 
 			if( skm_mesh.numtris <= 0 )
-				throw FileReadWriteError( TS("mesh $* has no indices" ) << i );
+				throw FileReadWriteError( Format("mesh $* has no indices" ) << i );
 			else if( skm_mesh.numtris > SKM_MAX_TRIS )
-				throw FileReadWriteError( TS("mesh $* has too many indices" ) << i );
+				throw FileReadWriteError( Format("mesh $* has too many indices" ) << i );
 
 			if( skm_mesh.numreferences <= 0 )
-				throw FileReadWriteError( TS("mesh $* has no bone references" ) << i );
+				throw FileReadWriteError( Format("mesh $* has no bone references" ) << i );
 			else if( skm_mesh.numreferences > SKM_MAX_BONES )
-				throw FileReadWriteError( TS("mesh $* has too many bone references" ) << i );
+				throw FileReadWriteError( Format("mesh $* has too many bone references" ) << i );
 
 			// Read Vertex Information
 			file->Seek( ofs_verts, SEEK_SET );
@@ -260,7 +260,7 @@ Model *Model::ImportSKM( const char *filename, const char *filenameAnim ) {
 	catch( FileReadWriteError err ) {
 		file->Close();
 		delete model;
-		User::Error( ERR_FILE_CORRUPT, TS("SKM: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_CORRUPT, Format("SKM: $*" ) << err.ToString(), filename );
 		return NULL;
 	}
 }

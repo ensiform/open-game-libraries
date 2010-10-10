@@ -234,7 +234,7 @@ void ogGame::Think( int frameTime ) {
 
 		SpawnAsteroidsLevel( localPlayer->origin, localPlayer->radius, level );
 		level++;
-		levelText.value = og::TS("Level: $*") << level;
+		levelText.value = og::Format("Level: $*") << level;
 		if ( level >= maxLevels ) {
 			PlaySound( "win", windowCenter );
 			state = GS_WIN;

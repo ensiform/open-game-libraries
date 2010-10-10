@@ -188,7 +188,7 @@ bool ImageFileDDS::Open( const char *filename ) {
 	}
 	catch( FileReadWriteError err ) {
 		file->Close();
-		User::Error( ERR_FILE_CORRUPT, TS("DDS: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_CORRUPT, Format("DDS: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }

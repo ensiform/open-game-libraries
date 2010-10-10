@@ -108,7 +108,7 @@ bool ImageFileTGA::Open( const char *filename ) {
 	}
 	catch( FileReadWriteError err ) {
 		file->Close();
-		User::Error( ERR_FILE_CORRUPT, TS("Targa: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_CORRUPT, Format("Targa: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }
@@ -367,7 +367,7 @@ bool ImageFileTGA::SaveFile( const char *filename, byte *data, uInt width, uInt 
 	}
 	catch( FileReadWriteError err ) {
 		file->Close();
-		User::Error( ERR_FILE_WRITEFAIL, TS("Targa: $*" ) << err.ToString(), filename );
+		User::Error( ERR_FILE_WRITEFAIL, Format("Targa: $*" ) << err.ToString(), filename );
 		return false;
 	}
 }

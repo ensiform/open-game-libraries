@@ -171,7 +171,7 @@ bool Image::Save( const char *filename, byte *data, int width, int height, bool 
 	if ( !extension.IsEmpty() )
 		index = imageFileTypes.Find( extension.c_str() );
 	if ( index == -1 ) {
-		User::Warning( TS("Unknown image type for file '$*'" ) << filename );
+		User::Warning( Format("Unknown image type for file '$*'" ) << filename );
 		return false;
 	}
 
@@ -279,7 +279,7 @@ bool ImageEx::UploadImage( const char *filename ) {
 		String newFilename;
 		// skips dds if denyPrecompressed is set.
 		for( int i=ImageEx::denyPrecompressed; i<4; i++ ) {
-			newFilename = TS( "$*.$*") << filename << validExtensions[i];
+			newFilename = Format( "$*.$*") << filename << validExtensions[i];
 			if ( imageFS->FileExists( newFilename.c_str() ) ) {
 				fullpath = newFilename;
 				extension = validExtensions[i];
@@ -289,7 +289,7 @@ bool ImageEx::UploadImage( const char *filename ) {
 	}
 	int index = imageFileTypes.Find( extension.c_str() );
 	if ( index == -1 ) {
-		User::Warning( TS("Unknown image type for file '$*'" ) << filename );
+		User::Warning( Format("Unknown image type for file '$*'" ) << filename );
 		return false;
 	}
 
@@ -315,7 +315,7 @@ bool ImageEx::ReloadImage( bool force ) {
 	String extension = fullpath.GetFileExtension();
 	int index = imageFileTypes.Find( extension.c_str() );
 	if ( index == -1 ) {
-		User::Warning( TS("Unknown image type for file '$*'" ) << fullpath );
+		User::Warning( Format("Unknown image type for file '$*'" ) << fullpath );
 		return false;
 	}
 

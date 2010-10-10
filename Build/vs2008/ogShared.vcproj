@@ -212,6 +212,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\Libraries\Include\og\Shared\Format.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\Libraries\Include\og\Shared\Shared.h"
 							>
 						</File>
@@ -257,6 +261,14 @@
 						</Filter>
 						<File
 							RelativePath="..\..\Libraries\Source\og\Shared\File.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Shared\Format.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Shared\Shared.cpp"
 							>
 						</File>
 						<File

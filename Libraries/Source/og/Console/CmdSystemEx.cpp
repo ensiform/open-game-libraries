@@ -75,7 +75,7 @@ void CmdSystemEx::AddCmd( const char *cmd, cmdFunc_t func, int flags, const ConU
 
 	int index = cmdList.Find( cmd );
 	if ( index != -1 ) {
-		User::Warning( TS( "Trying to add command '$*', which already exists!" ) << cmd );
+		User::Warning( Format( "Trying to add command '$*', which already exists!" ) << cmd );
 		return;
 	}
 	ConsoleCmd &newCmd = cmdList[cmd];
@@ -179,7 +179,7 @@ void CmdSystemEx::ExecuteSingleCmd( const char *cmd ) {
 			return;
 		}
 		if( cCmd.flags & CMD_CHEAT && !net_allowCheats.GetBool() ) {
-			User::Warning( TS( "$* is cheat protected" ) << cmdList.GetKey(index) );
+			User::Warning( Format( "$* is cheat protected" ) << cmdList.GetKey(index) );
 			return;
 		}
 		if ( cCmd.usage->minArguments > (args.Argc()-1) )
@@ -189,7 +189,7 @@ void CmdSystemEx::ExecuteSingleCmd( const char *cmd ) {
 		return;
 	}
 	if ( !cvarSystemEx->OnCommand(args) )
-		User::Warning( TS( "Unknown command '$*'.\n" ) << arg0 );
+		User::Warning( Format( "Unknown command '$*'.\n" ) << arg0 );
 }
 
 /*
@@ -330,8 +330,8 @@ const char *CmdSystemEx::CompleteCmd( const char *buf, argCompletionCB_t callbac
 	}
 
 	// Send the list back and print it in the console
-	Console::Print( TS( "]$*\n" ) << returnBuffer );
-	TS complete( "    $*\n" );
+	Console::Print( Format( "]$*\n" ) << returnBuffer );
+	Format complete( "    $*\n" );
 	for( i=0; i<numEntries; i++ ) {
 		if ( callback )
 			callback( completionList[i].c_str() );
@@ -389,7 +389,7 @@ bool CmdSystemEx::ExportToHTML( const char *filename, int flags ) const {
 
 	String table = "<table width=\"900\">\r\n<tr><th width=\"30%\" style=\"text-align:left\"><b>Name</b></th><th style=\"text-align:left\"><b>Description</b></th></tr>\r\n";
 
-	TS out("<tr><td>$*</td><td>$*</td></tr>\r\n");
+	Format out("<tr><td>$*</td><td>$*</td></tr>\r\n");
 	int num = cmdList.Num();
 	for ( int i = 0; i<num; i++ ) {
 		if ( cmdList[i].flags & flags ) {
@@ -400,7 +400,7 @@ bool CmdSystemEx::ExportToHTML( const char *filename, int flags ) const {
 	table += "</table>\r\n";
 	String result;
 	result.FromBitFlags( flags, cmdFlagNames );
-	templateBuffer.Replace("{{TITLE}}", TS( "Exported Commands with flags ($*)" ) << result );
+	templateBuffer.Replace("{{TITLE}}", Format( "Exported Commands with flags ($*)" ) << result );
 	templateBuffer.Replace("{{TABLE}}", table.c_str());
 
 	file->Write( templateBuffer.c_str(), templateBuffer.ByteLength() );
@@ -436,7 +436,7 @@ void CmdSystemEx::Cmd_ListCmds_f( const CmdArgs &args ) {
 	int num = cmdList.Num();
 	int i = 0;
 	int disp = 0;
-	TS out("  $+18* - $*\n");
+	Format out("  $+18* - $*\n");
 	for( i=0; i<num; i++ ) {
 		if ( match && String::Find(cmdList.GetKey(i).c_str(), matchstr, false) == String::INVALID_POSITION )
 			continue;
@@ -447,9 +447,9 @@ void CmdSystemEx::Cmd_ListCmds_f( const CmdArgs &args ) {
 	}
 
 	if( match )
-		Console::Print( TS( "\n  $* command$* matching \"$*\"\n" ) << disp << (disp == 1 ? "" : "s") << matchstr );
+		Console::Print( Format( "\n  $* command$* matching \"$*\"\n" ) << disp << (disp == 1 ? "" : "s") << matchstr );
 	else
-		Console::Print( TS( "\n  $* command$*\n" ) << disp << (disp == 1 ? "" : "s") );
+		Console::Print( Format( "\n  $* command$*\n" ) << disp << (disp == 1 ? "" : "s") );
 }
 
 /*
@@ -482,17 +482,17 @@ void CmdSystemEx::Cmd_Help_f( const CmdArgs &args ) {
 	// Try Command List
 	int i = CmdSystemObject.cmdList.Find(cmd);
 	if ( i != -1 ) {
-		Console::Print( TS( "$*: $*\n" ) << CmdSystemObject.cmdList.GetKey(i) << CmdSystemObject.cmdList[i].usage->strDescription );
+		Console::Print( Format( "$*: $*\n" ) << CmdSystemObject.cmdList.GetKey(i) << CmdSystemObject.cmdList[i].usage->strDescription );
 		CmdSystemObject.cmdList[i].usage->ShowUsage();
 		return;
 	}
 	// Not a Command, is it a CVar?
 	CVar *cv = cvarSystem->Find(cmd);
 	if ( cv ) {
-		Console::Print( TS( "$*: $*\n" ) << cv->data->strName << cv->data->strDescription );
+		Console::Print( Format( "$*: $*\n" ) << cv->data->strName << cv->data->strDescription );
 		return;
 	}
-	Console::Print( TS( "Command/Cvar not found: '$*'.\n" ) << cmd );
+	Console::Print( Format( "Command/Cvar not found: '$*'.\n" ) << cmd );
 }
 
 /*
@@ -521,7 +521,7 @@ ConArgCompleteFile Cmd_Exec_Completion( "", ".cfg" );
 void CmdSystemEx::Cmd_Exec_f( const CmdArgs &args ) {
 	String name = args.Argv(1);
 	name.DefaultFileExtension(".cfg");
-	Console::Print( TS( "Executing '$*'\n" ) << name );
+	Console::Print( Format( "Executing '$*'\n" ) << name );
 	cmdSystem->ExecuteConfig( name.c_str() );
 }
 
@@ -534,7 +534,7 @@ ConUsageString Cmd_Echo_Usage("Print text to console.", 1, "Echo <text>");
 void CmdSystemEx::Cmd_Echo_f( const CmdArgs &args ) {
 	String result;
 	args.Args( result );
-	Console::Print( TS( "$*\n" ) << result );
+	Console::Print( Format( "$*\n" ) << result );
 }
 
 /*
@@ -565,7 +565,7 @@ public:
 
 		fullList.Sort( StringListICmp, true );
 		num = fullList.Num();
-		TS complete( "$* $*" );
+		Format complete( "$* $*" );
 		for( i = 0; i < num; i++ ) {
 			callback( complete << args.Argv( 0 ) << fullList[i] );
 			complete.Reset();
@@ -579,7 +579,7 @@ public:
 	void Complete( const CmdArgs &args, argCompletionCB_t callback ) const {
 		const DictEx<CVarDataEx> &cvarDataList = cvarSystemEx->GetCVarDataList();
 		int num = cvarDataList.Num();
-		TS complete( "$* $*" );
+		Format complete( "$* $*" );
 		for ( int i=0; i<num; i++ ) {
 			callback( complete << args.Argv( 0 ) << cvarDataList[i].strName );
 			complete.Reset();

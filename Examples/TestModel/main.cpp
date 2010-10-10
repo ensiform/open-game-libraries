@@ -478,11 +478,11 @@ int og::User::Main( int argc, char *argv[] ) {
 				else {
 					fpsTimer.Stop();
 					float fps = static_cast<float>(count * 1000000.0/static_cast<double>(fpsTimer.MicroSeconds()));
-					demoWindow.window->SetTitle( og::TS(APP_TITLE"| FPS: $*" ) << SetPrecision(2) << fps );
+					demoWindow.window->SetTitle( og::Format(APP_TITLE" | FPS: $*" ) << SetPrecision(2) << fps );
 					count = 0;
 					fpsTimer.Start();
 				}
-				og::Gloot::Sleep( 10 );
+				og::Shared::Sleep( 10 );
 			}
 
 			Gloot::DisableSystemKeys( false );
@@ -500,7 +500,7 @@ og::User::IsPakFileAllowed
 ================
 */
 bool og::User::IsPakFileAllowed( og::PakFile *pakFile ) {
-	og::Console::Print( og::TS("Adding file '$*'\n" ) << pakFile->GetFilename() );
+	og::Console::Print( og::Format("Adding file '$*'\n" ) << pakFile->GetFilename() );
 	return true;
 }
 
@@ -514,7 +514,7 @@ void og::User::Error( og::ErrorId id, const char *msg, const char *param ) {
 
 	og::String result;
 	getErrorString( id, msg, param, result );
-	og::Console::FatalError( og::TS( "Error: $*\n" ) << result );
+	og::Console::FatalError( og::Format( "Error: $*\n" ) << result );
 }
 
 /*
@@ -523,7 +523,7 @@ og::User::Warning
 ================
 */
 void og::User::Warning( const char *msg ) {
-	og::Console::Print( og::TS( "$*\n" ) << msg );
+	og::Console::Print( og::Format( "$*\n" ) << msg );
 }
 
 /*
@@ -532,7 +532,7 @@ og::User::AssertFailed
 ================
 */
 void og::User::AssertFailed( const char *code, const char *function ) {
-	og::Console::FatalError( og::TS( "Assert($*) failed in $*!\n" ) << code << function );
+	og::Console::FatalError( og::Format( "Assert($*) failed in $*!\n" ) << code << function );
 }
 
 /*

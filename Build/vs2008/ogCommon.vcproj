@@ -362,10 +362,6 @@
 								>
 							</File>
 							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Text\TextStream.h"
-								>
-							</File>
-							<File
 								RelativePath="..\..\Libraries\Include\og\Common\Text\XDeclParser.h"
 								>
 							</File>
@@ -482,10 +478,6 @@
 							</File>
 							<File
 								RelativePath="..\..\Libraries\Source\og\Common\Text\String.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Common\Text\TextStream.cpp"
 								>
 							</File>
 							<File
