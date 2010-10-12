@@ -33,9 +33,13 @@ freely, subject to the following restrictions:
 #include "EntityType.h"
 #include "Entities.h"
 #include "../Shared/LogoScreen.h"
+#include "../Shared/SoundManager.h"
 const int	PORTAL_BORDER	= 50;
 const int	MAX_GENTITIES	= 1024;
 const int	MAX_SOUNDS		= 20;
+
+extern og::Random globalRand;
+extern const og::Vec2 windowCenter;
 
 void DrawImage( og::Image *image, float x, float y, float width, float height );
 
@@ -76,9 +80,9 @@ public:
 	void	Draw( float fadeIn );
 	void	SpawnAsteroidsLevel( og::Vec2 origin, float radius, int spawnLevel );
 	void	Reset( void );
-	void	PlaySound( const char *name, og::Vec2 origin );
 	void	StartAmbience( void );
 	void	ShowAsteroids( void );
+	OG_INLINE void	PlaySound( const char *name, const og::Vec2 &origin ) { soundManager.Play( name, origin-windowCenter ); }
 
 public:
 	ogPlayer *	localPlayer;
@@ -90,10 +94,7 @@ public:
 	int			state;
 	int			stateTime;
 
-	int			nextEmitter;
-	og::AudioEmitter *audioEmitters[MAX_SOUNDS];
-	og::AudioEmitter *ambienceEmitter;
-
+	ogSoundManager2D soundManager;
 	og::DeclType	entityDecls;
 	void		RegisterEntity( ogEntity *ent );
 	void		UnregisterEntity( ogEntity *ent );
@@ -105,8 +106,5 @@ public:
 	int			entityCount;
 	int			level;
 };
-
-extern og::Random globalRand;
-extern const og::Vec2 windowCenter;
 
 #endif

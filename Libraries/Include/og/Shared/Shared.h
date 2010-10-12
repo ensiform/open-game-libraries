@@ -152,9 +152,31 @@ namespace og {
 		// ==============================================================================
 		//! Sleeps for a specified time
 		//!
-		//! @param	msec	Number of milliseconds to sleep.
+		//! @param	msec	Number of milliseconds to sleep
 		// ==============================================================================
 		void			Sleep( int msec );
+		
+		// ==============================================================================
+		//! Create an error string from the given values
+		//!
+		//! @param	id		The error id
+		//! @param	msg		The error message
+		//! @param	param	The error param
+		//!
+		//! @return	Allocated c-string, you need to free it when you're done!
+		//!
+		//! @see	FreeErrorString
+		// ==============================================================================
+		char *			CreateErrorString( ErrorId id, const char *msg, const char *param );
+		
+		// ==============================================================================
+		//! Free an error string
+		//!
+		//! @param	str		The error string
+		//!
+		//! @see	CreateErrorString
+		// ==============================================================================
+		void			FreeErrorString( char *str );
 	//! @}
 	}
 //! @}

@@ -29,7 +29,6 @@ freely, subject to the following restrictions:
 
 #include "main.h"
 #include "Game.h"
-#include "../Shared/Shared.h"
 
 og::Random globalRand;
 
@@ -65,12 +64,6 @@ ogGame::ogGame
 ================
 */
 ogGame::ogGame() : entityDecls("entityDecl") {
-	memset( audioEmitters, NULL, sizeof(og::AudioEmitter *) * MAX_SOUNDS );
-	for( int i=0; i<MAX_SOUNDS; i++ )
-		audioEmitters[i] = NULL;
-	nextEmitter = 0;
-	ambienceEmitter = NULL;
-
 	entityCount = 0;
 	firstFreeEntityNum = 0;
 	lastUsedEntityNum = 0;
@@ -136,13 +129,6 @@ bool ogGame::Init( void ) {
 	og::Vec3 up(0, 0, -1);
 	og::Vec3 origin(0, 0, 1);
 	og::AS->SetListener( origin, forward, up );
-	// create audio emitters
-	for( int i=0; i<MAX_SOUNDS; i++ ) {
-		audioEmitters[i] = og::AS->CreateAudioEmitter();
-		audioEmitters[i]->Init( 1 );
-	}
-	ambienceEmitter = og::AS->CreateAudioEmitter();
-	ambienceEmitter->Init( 1 );
 
 	globalRand.SeedTime();
 	return true;
@@ -154,35 +140,8 @@ ogGame::StartAmbience
 ================
 */
 void ogGame::StartAmbience( void ) {
-	const og::SoundDecl *decl = og::AS->Find( "ambience" );
-	if ( decl ) {
-		ambienceEmitter->Play( 0, decl );
-		ambienceEmitter->SetPosition( og::c_vec3::origin );
-	}
+	soundManager.StartAmbience("ambience");
 	SpawnAsteroidsLevel( windowCenter, 25, 2 );
-}
-
-/*
-================
-ogGame::PlaySound
-================
-*/
-void ogGame::PlaySound( const char *name, og::Vec2 origin ) {
-	const og::SoundDecl *decl = og::AS->Find( name );
-	if ( decl ) {
-		for( int i=0; i<MAX_SOUNDS && audioEmitters[nextEmitter]->IsOccupied(0); i++ ) {
-			nextEmitter++;
-			if ( nextEmitter >= MAX_SOUNDS )
-				nextEmitter = 0;
-		}
-		og::Vec3 audioOrigin( origin.x-windowCenter.x, origin.y-windowCenter.y, 10.0f );
-		audioOrigin *= 0.01f;
-		audioEmitters[nextEmitter]->Play( 0, decl );
-		audioEmitters[nextEmitter]->SetPosition( audioOrigin );
-		nextEmitter++;
-		if ( nextEmitter >= MAX_SOUNDS )
-			nextEmitter = 0;
-	}
 }
 
 /*
@@ -378,12 +337,8 @@ void ogGame::Shutdown( void ) {
 	}
 
 	spawnCount = 0;
-	
-	for( int i=0; i<MAX_SOUNDS; i++ ) {
-		if ( audioEmitters[i] )
-			audioEmitters[i]->Pause(0);
-	}
-	if ( ambienceEmitter )
-		ambienceEmitter->Pause(0);
+
+	soundManager.StopAll();
+	soundManager.StopAmbience();
 }
 

@@ -29,7 +29,6 @@ freely, subject to the following restrictions:
 
 #include <stdio.h>
 #include "main.h"
-#include "../Shared/Shared.h"
 
 ogDemoWindow demoWindow;
 
@@ -97,6 +96,8 @@ bool ogDemoWindow::Init( void ) {
 	og::StringList deviceList;
 	og::AudioSystem::GetDeviceList( deviceList );
 
+	if ( !game.soundManager.Init( "sounds/default.wav" ) || !game.soundManager.SetupEmitters( MAX_SOUNDS ) )
+		return false;
 	if ( !og::AudioSystem::Init( og::FS, "sounds/default.wav", deviceList.IsEmpty() ? NULL : deviceList[0].c_str() ) )
 		return false;
 	if ( !og::Image::Init( og::FS, "gfx/default.tga", window->GetProcAddress("glCompressedTexImage2DARB") ) )
@@ -178,7 +179,7 @@ ogDemoWindow::DrawIntro
 */
 void ogDemoWindow::DrawIntro( int frameTime ) {
 	if ( fadeIn == 1.1f ) {
-		intro.Init( og::c_vec3::origin, 4000, "intro_track");
+		intro.Init( og::c_vec3::origin, 4000, game.soundManager.Find("intro_track") );
 		fadeIn = 1.0f;
 	}
 	SetupPerspective();
@@ -430,7 +431,7 @@ void ogDemoWindow::ShowCredits( bool quitAfter ) {
 		yOffset += 50.0f;
 	}
 
-	outro.Init( yOffset, 85.0f, "outro_track" );
+	outro.Init( yOffset, 85.0f, game.soundManager.Find("outro_track") );
 }
 
 /*
@@ -552,9 +553,9 @@ og::User::Error
 */
 void og::User::Error( og::ErrorId id, const char *msg, const char *param ) {
 	// Todo: Throw an exception on the id's you think are important.
-	og::String result;
-	getErrorString( id, msg, param, result );
-	printf( "%s\n", result.c_str() );
+	char *result = Shared::CreateErrorString( id, msg, param );
+	printf( "%s\n", result );
+	Shared::FreeErrorString( result );
 }
 
 /*

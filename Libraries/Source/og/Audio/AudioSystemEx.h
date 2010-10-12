@@ -43,32 +43,6 @@ namespace og {
 	extern FileSystemCore *audioFS;
 	bool CheckAlErrors( void );
 
-	/*
-	==============================================================================
-
-	  SoundDeclEx
-
-	==============================================================================
-	*/
-	class SoundDeclEx : public SoundDecl {
-	public:
-		// ---------------------- Public SoundDecl Interface -------------------
-
-		float	GetMinDistance( void ) { return minDistance; }
-		float	GetMaxDistance( void ) { return maxDistance; }
-
-		// ---------------------- Internal SoundDeclEx Members -------------------
-
-	public:
-		float	minDistance;
-		float	maxDistance;
-		float	volume;
-		bool	loop;
-		int		safeLevel;
-
-		StringList sounds;
-	};
-
 	class AudioThread : public Thread {
 	public:
 		AudioThread( AudioStream *stream ) : firstAudioSource(NULL), defaultStream(stream) {}
@@ -104,9 +78,8 @@ namespace og {
 		void				SetMaxVariations( int num ) { maxVariations = num; }
 		void				SetListener( const Vec3 &origin, const Vec3 &forward, const Vec3 &up );
 
-		const SoundDecl *	Find( const char *name ) const;
-		AudioEmitter *		CreateAudioEmitter( void );
-		void				FreeAudioEmitter( AudioEmitter * );
+		AudioEmitter *		CreateAudioEmitter( int channels=0 );
+		void				FreeAudioEmitter( AudioEmitter *emitter );
 
 		// ---------------------- Internal AudioSystemEx Members -------------------
 
@@ -116,14 +89,15 @@ namespace og {
 	private:
 		friend class AudioSystem;
 		friend class AudioSource;
+		friend class AudioThread;
 
 		bool		Init( const char *defaultFilename, const char *deviceName );
 		void		Shutdown( void );
 
 		bool		windowFocus;
+		float		focusVolume;
 		float		volume;
 		int			maxVariations;
-		DictEx<SoundDeclEx>	soundDecls;
 		LinkedList<AudioEmitterEx> audioEmitters;
 		Mutex		emitterLock;
 

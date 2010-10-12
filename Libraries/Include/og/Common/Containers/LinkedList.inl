@@ -39,14 +39,14 @@ namespace og {
 
 ==============================================================================
 */
-template< class type > TLS<typename LinkedList<type>::cmpData_t> LinkedList<type>::cmpData;
+template<class type> TLS<typename LinkedList<type>::cmpData_t> LinkedList<type>::cmpData;
 
 /*
 ================
 LinkedList::LinkedList
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE LinkedList<type>::LinkedList( void ) {
 	start		= NULL;
 	end			= NULL;
@@ -58,7 +58,7 @@ OG_INLINE LinkedList<type>::LinkedList( void ) {
 LinkedList::LinkedList
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE LinkedList<type>::LinkedList( const LinkedList<type> &other ) {
 	start		= NULL;
 	end			= NULL;
@@ -70,7 +70,7 @@ OG_INLINE LinkedList<type>::LinkedList( const LinkedList<type> &other ) {
 LinkedList::~LinkedList
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE LinkedList<type>::~LinkedList() {
 	Clear();
 }
@@ -80,7 +80,7 @@ OG_INLINE LinkedList<type>::~LinkedList() {
 LinkedList::Clear
 ================
 */
-template< class type >
+template<class type>
 void LinkedList<type>::Clear( void ) {
 	if ( start ) {
 		nodeType *node = start;
@@ -103,7 +103,7 @@ LinkedList::IsEmpty
 Checks to see if list is empty
 ================
 */
-template< class type >
+template<class type>
 bool LinkedList<type>::IsEmpty( void ) const {
 	return num == 0;
 }
@@ -116,7 +116,7 @@ Clear the list and
 copy all items from the other list.
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE void LinkedList<type>::Copy( const LinkedList<type> &other ) {
 	Clear();
 	for( nodeType *node = other.start; node != NULL; node = node->next )
@@ -130,7 +130,7 @@ LinkedList::operator=
 Synonym for Copy
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE LinkedList<type> &LinkedList<type>::operator=( const LinkedList<type> &other ) {
 	Copy(other);
 	return *this;
@@ -143,7 +143,7 @@ LinkedList::AddToStart
 Insert an Item to the start of the list.
 ================
 */
-template< class type >
+template<class type>
 void LinkedList<type>::AddToStart( const type &value ) {
 	Alloc( NULL, true ) = value;
 }
@@ -155,7 +155,7 @@ LinkedList::AddToEnd
 Insert an Item to the end of the list.
 ================
 */
-template< class type >
+template<class type>
 void LinkedList<type>::AddToEnd( const type &value ) {
 	Alloc() = value;
 }
@@ -167,7 +167,7 @@ LinkedList::InsertBefore
 Insert an Item right before the specified one.
 ================
 */
-template< class type >
+template<class type>
 void LinkedList<type>::InsertBefore( nodeType *node, const type &value ) {
 	Alloc( node, true ) = value;
 }
@@ -179,7 +179,7 @@ LinkedList::InsertAfter
 Insert an item right after the specified one.
 ================
 */
-template< class type >
+template<class type>
 void LinkedList<type>::InsertAfter( nodeType *node, const type &value ) {
 	Alloc( node, false ) = value;
 }
@@ -191,7 +191,7 @@ LinkedList::Alloc
 Allocate an item at the specified position.
 ================
 */
-template< class type >
+template<class type>
 type &LinkedList<type>::Alloc( nodeType *baseNode, bool before ) {
 	nodeType *newNode = new nodeType;
 	if ( start == NULL ) {
@@ -227,7 +227,7 @@ LinkedList::Remove
 Removes an item from the list.
 ================
 */
-template< class type >
+template<class type>
 void LinkedList<type>::Remove( nodeType *node ) {
 	OG_ASSERT( node != NULL );
 
@@ -257,7 +257,7 @@ Returns the index of the searched item.
 -1 if no item with this value was found.
 ================
 */
-template< class type >
+template<class type>
 Node<type> *LinkedList<type>::Find( const type &value ) const {
 	nodeType *node = start;
 	for( int i=0; node != NULL; i++ ) {
@@ -276,7 +276,7 @@ Returns the index of the searched item.
 -1 if no item with this value was found.
 ================
 */
-template< class type >
+template<class type>
 Node<type> *LinkedList<type>::FindByAddress( const type *value ) const {
 	nodeType *node = start;
 	for( int i=0; node != NULL; i++ ) {
@@ -294,7 +294,7 @@ LinkedList::Sort
 Sorts the list and removes duplicates.
 ================
 */
-template< class type >
+template<class type>
 void LinkedList<type>::Sort( cmpFunc_t compare, bool removeDupes ) {
 	if ( num < 2 )
 		return;
@@ -336,7 +336,7 @@ LinkedList::SortEx
 Sorts the list and removes duplicates.
 ================
 */
-template< class type >
+template<class type>
 void LinkedList<type>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupes ) {
 	if ( num < 2 )
 		return;
@@ -377,7 +377,7 @@ void LinkedList<type>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupe
 LinkedList::CompareCallback
 ================
 */
-template< class type >
+template<class type>
 int LinkedList<type>::CompareCallback( const void *a, const void *b ) {
 	const nodeType *pa = *(const nodeType **)a;
 	const nodeType *pb = *(const nodeType **)b;
@@ -389,7 +389,7 @@ int LinkedList<type>::CompareCallback( const void *a, const void *b ) {
 LinkedList::CompareCallbackEx
 ================
 */
-template< class type >
+template<class type>
 int LinkedList<type>::CompareCallbackEx( const void *a, const void *b ) {
 	const nodeType *pa = *(const nodeType **)a;
 	const nodeType *pb = *(const nodeType **)b;

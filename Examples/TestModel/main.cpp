@@ -32,7 +32,6 @@ freely, subject to the following restrictions:
 #include <stdio.h>
 #include <og/Image/Image.h>
 #include "main.h"
-#include "../Shared/Shared.h"
 
 #pragma comment(lib, "../../Thirdparty/gl/glew32.lib")
 
@@ -512,9 +511,9 @@ og::User::Error
 void og::User::Error( og::ErrorId id, const char *msg, const char *param ) {
 	// Todo: Throw an exception on the id's you think are important.
 
-	og::String result;
-	getErrorString( id, msg, param, result );
+	char *result = Shared::CreateErrorString( id, msg, param );
 	og::Console::FatalError( og::Format( "Error: $*\n" ) << result );
+	Shared::FreeErrorString( result );
 }
 
 /*

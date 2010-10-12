@@ -38,7 +38,7 @@ namespace og {
 
 	==============================================================================
 	*/
-	template< class type >
+	template<class type>
 	class Node {
 	private:
 		Node<type> *prev;
@@ -59,7 +59,7 @@ namespace og {
 
 	==============================================================================
 	*/
-	template< class type >
+	template<class type>
 	class LinkedList {
 	public:
 		LinkedList( void );

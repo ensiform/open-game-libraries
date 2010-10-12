@@ -38,6 +38,7 @@ AudioSystem *AS = &audioSystemObject;
 
 const int MAX_AUDIOSOURCES = 64;
 const int MAX_SAFE_LEVELS = 8;
+const float FOCUS_STEP = 0.05f;
 
 /*
 ================
@@ -104,6 +105,19 @@ void AudioThread::Run( void ) {
 		for( AudioSource *source = firstAudioSource; source != NULL; source = source->next ) {
 			if ( source->IsActive() )
 				source->Frame();
+		}
+
+		// do focus fading
+		if ( audioSystemObject.windowFocus && audioSystemObject.focusVolume != 1.0f ) {
+			audioSystemObject.focusVolume += FOCUS_STEP;
+			if ( audioSystemObject.focusVolume > 1.0f )
+				audioSystemObject.focusVolume = 1.0f;
+			audioSystemObject.SetVolume( audioSystemObject.volume );
+		} else if ( !audioSystemObject.windowFocus && audioSystemObject.focusVolume != 0.0f ) {
+			audioSystemObject.focusVolume -= FOCUS_STEP;
+			if ( audioSystemObject.focusVolume < 0.0f )
+				audioSystemObject.focusVolume = 0.0f;
+			audioSystemObject.SetVolume( audioSystemObject.volume );
 		}
 	}
 	if ( firstAudioSource ) {
@@ -172,6 +186,7 @@ AudioSystemEx::AudioSystemEx
 */
 AudioSystemEx::AudioSystemEx() {
 	volume = 1.0f;
+	focusVolume = 1.0f;
 	windowFocus = true;
 	maxVariations = 0;
 	
@@ -227,40 +242,6 @@ bool AudioSystemEx::Init( const char *defaultFilename, const char *deviceName ) 
 	windowFocus = true;
 	maxVariations = 0;
 
-	// Read in all sound Decls
-	soundDecls.Clear();
-	FileList *files = audioFS->GetFileList( "decls/sounds", ".decl" );
-	if ( files ) {
-		DeclType sndDecls("soundDecl");
-		DeclParser parser;
-		parser.AddDeclType( &sndDecls );
-		do {
-			parser.LoadFile( files->GetName() );
-		} while ( files->GetNext() );
-
-		parser.SolveInheritance();
-		audioFS->FreeFileList( files );
-
-		const char *value;
-		int num = sndDecls.declList.Num();
-		for( int i=0; i<num; i++ ) {
-			Dict &dict = sndDecls.declList[i];
-			SoundDeclEx &decl	= soundDecls[sndDecls.declList.GetKey(i).c_str()];
-			decl.minDistance	= dict.GetFloat("minDistance");
-			decl.maxDistance	= dict.GetFloat("maxDistance");
-			decl.volume			= dict.GetFloat("volume");
-			decl.loop			= dict.GetBool("loop");
-			decl.safeLevel		= dict.GetInt("safeLevel");
-			for( int j = dict.MatchPrefix( "sound", 5 ); j != -1; j = dict.MatchPrefix( "sound", 5, j ) ) {
-				value = dict.GetKeyValue(j)->GetValue().c_str();
-				if ( value[0] != '\0' )
-					decl.sounds.Append( value );
-			}
-			if ( decl.sounds.IsEmpty() )
-				User::Warning( Format("Sound '$*' has no filenames defined." ) << sndDecls.declList.GetKey(i) );
-		}
-	}
-
 	audioThread = new AudioThread( defaultStream );
 	audioThread->Start("AudioThread");
 
@@ -278,7 +259,6 @@ void AudioSystemEx::Shutdown( void ) {
 		audioThread = NULL;
 	}
 
-	soundDecls.Clear();
 	audioEmitters.Clear();
 
 	if ( context ) {
@@ -290,7 +270,6 @@ void AudioSystemEx::Shutdown( void ) {
 		alcCloseDevice( device );
 		device = NULL;
 	}
-
 }
 
 /*
@@ -301,7 +280,7 @@ AudioSystemEx::SetVolume
 void AudioSystemEx::SetVolume( float value ) {
 	volume = value;
 	if ( device )
-		alListenerf( AL_GAIN, windowFocus ? volume : 0.0f );
+		alListenerf( AL_GAIN, focusVolume * volume );
 }
 
 /*
@@ -319,28 +298,16 @@ void AudioSystemEx::SetListener( const Vec3 &origin, const Vec3 &forward, const 
 
 /*
 ================
-AudioSystemEx::Find
-================
-*/
-const SoundDecl *AudioSystemEx::Find( const char *name ) const {
-	int index = soundDecls.Find( name );
-	if ( index == -1 ) {
-		User::Warning( Format("Sound '$*' not found." ) << name );
-		return NULL;
-	}
-	return &soundDecls[index];
-}
-
-/*
-================
 AudioSystemEx::CreateAudioEmitter
 ================
 */
-AudioEmitter *AudioSystemEx::CreateAudioEmitter( void ) {
+AudioEmitter *AudioSystemEx::CreateAudioEmitter( int channels ) {
 	emitterLock.Lock();
 	AudioEmitter *emt = &audioEmitters.Alloc();
 	emitterLock.Unlock();
 
+	if ( channels > 0 )
+		emt->Init( channels );
 	return emt;
 }
 
@@ -394,7 +361,6 @@ bool AudioSystem::Init( FileSystemCore *fileSystem, const char *defaultFilename,
 	return audioSystemObject.Init(defaultFilename, deviceName);
 }
 void AudioSystem::Shutdown( void )					{ audioSystemObject.Shutdown(); audioFS = NULL; }
-void AudioSystem::SetWindowFocus( bool hasFocus )
-	{ audioSystemObject.windowFocus = hasFocus; AS->SetVolume( audioSystemObject.volume ); }
+void AudioSystem::SetWindowFocus( bool hasFocus )	{ audioSystemObject.windowFocus = hasFocus; }
 
 }

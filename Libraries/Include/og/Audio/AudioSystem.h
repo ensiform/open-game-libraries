@@ -40,39 +40,26 @@ namespace og {
 //! You need to include <og/Audio/AudioSystem.h>
 //! @see	UserCallbacks
 //! @todo	See if thrown errors work without problems.
-//! @todo	Stream bigger files
 //!	@todo	Cache a list of sounds + clear all cached sounds
 //! @todo	Get progress on caching ( percentage )
-//! @todo	Move SoundDecl loading to the user
 //! @{
 
 	// ==============================================================================
-	//! SoundDecl Object.
+	//! Sound Object
 	//!
 	//! This is what a texture description is for graphics.
 	// ==============================================================================
-	class SoundDecl {
+	class Sound {
 	public:
-		// ==============================================================================
-		//! Virtual Destructor
-		// ==============================================================================
-		virtual ~SoundDecl() {}
-
-		// ==============================================================================
-		//! Minimum distance to hear it
-		//! @return	The minimum distance
-		// ==============================================================================
-		virtual float	GetMinDistance( void ) = 0;
-
-		// ==============================================================================
-		//! Maximum distance to hear it
-		//! @return	The maximum distance
-		// ==============================================================================
-		virtual float	GetMaxDistance( void ) = 0;
+		float		minDistance;	//!< Minimum hearing distance ( 100% volume )
+		float		maxDistance;	//!< Maximum hearing distance ( 0% volume )
+		float		volume;			//!< Volume scale, 0.0f - 1.0f
+		bool		loop;			//!< Flag to make this sound loop until manually stopped
+		StringList	filenames;		//!< Sound filenames to randomly chose from
 	};
 
 	// ==============================================================================
-	//! AudioEmitter Object.
+	//! AudioEmitter Object
 	//!
 	//! @todo	One channel that can play (non-looping) sounds without stopping anything.
 	//!			This channel would be created on play, and freed when done (or StopAll was called).
@@ -90,7 +77,7 @@ namespace og {
 		// ==============================================================================
 		//! Initializes audio emitter with the number of channels
 		//!
-		//! @param	channels	Number of channels you need on this object.
+		//! @param	channels	Number of channels you need on this object
 		// ==============================================================================
 		virtual void	Init( int channels ) = 0;
 
@@ -105,10 +92,13 @@ namespace og {
 		//! Play a sound on the specified channel
 		//!
 		//! @param	channel		Which channel to play the sound on
-		//! @param	decl		SoundDecl to play
+		//! @param	sound		Sound to play
 		//! @param	allowLoop	Allow looping playback
+		//!
+		//! @note	Don't delete the sound object after passing it,
+		//!			since the pointer is passed internally to a different thread
 		// ==============================================================================
-		virtual void	Play( int channel, const SoundDecl *decl, bool allowLoop=true ) = 0;
+		virtual void	Play( int channel, const Sound *sound, bool allowLoop=true ) = 0;
 
 		// ==============================================================================
 		//! Pause a sound on the specified channel
@@ -171,11 +161,10 @@ namespace og {
 	};
 
 	// ==============================================================================
-	//! AudioSystem Object.
+	//! AudioSystem Object
 	//!
 	//! This the interface to play stuff.
 	//! @note	Thread safety class: multiple ( except for Init/Shutdown )
-	//! @note	Important: On Init/Shutdown, all SoundDecls get invalid!
 	// ==============================================================================
 	class AudioSystem {
 	public:
@@ -206,7 +195,7 @@ namespace og {
 		// ==============================================================================
 		//! Shuts down all audio playback and frees all resources.
 		//!
-		//! Clears all audio buffers, decls and emitters.
+		//! Clears all audio buffers and emitters.
 		// ==============================================================================
 		static void		Shutdown( void );
 
@@ -229,7 +218,7 @@ namespace og {
 		virtual void				SetVolume( float value ) = 0;
 
 		// ==============================================================================
-		//! Set how many different audio files a SoundDecl may contain (to play sounds at random).
+		//! Set how many different audio files a Sound may contain (to play sounds at random).
 		//!
 		//! @param	num		Maximum number of variations
 		// ==============================================================================
@@ -245,23 +234,13 @@ namespace og {
 		virtual void				SetListener( const Vec3 &origin, const Vec3 &forward, const Vec3 &up ) = 0;
 
 		// ==============================================================================
-		//! Find a SoundDecl
-		//!
-		//! @param	name	Name of the SoundDecl
-		//!
-		//! @return	Pointer to a SoundDecl object if exists, otherwise NULL
-		//!
-		//! @note	Important: On Init/Shutdown, all SoundDecls get invalid!
-		//! @todo	Should this return a default object it none was found ?
-		// ==============================================================================
-		virtual const SoundDecl *	Find( const char *name ) const = 0;
-
-		// ==============================================================================
 		//! Create an AudioEmitter
+		//!
+		//! @param	channels	Number of channels you need on this object
 		//!
 		//! @return	Pointer to a new AudioEmitter object
 		// ==============================================================================
-		virtual AudioEmitter *		CreateAudioEmitter( void ) = 0;
+		virtual AudioEmitter *		CreateAudioEmitter( int channels=0 ) = 0;
 
 		// ==============================================================================
 		//! Free an AudioEmitter previously created by AudioSystem::CreateAudioEmitter

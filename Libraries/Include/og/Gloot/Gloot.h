@@ -44,7 +44,6 @@ namespace og {
 	//! You need to include <og/Gloot/Gloot.h>
 	//! @see	UserCallbacks
 	//! @todo	Make windowList threadsafe
-	//! @todo	InputManager for the demo.
 	//! @todo	Check where Error and Warning Messages would be appropriate
 	//! @todo	Add checks for out of memory stuff
 	//! @todo	Linux window code
@@ -71,8 +70,6 @@ namespace og {
 
 		// ==============================================================================
 		//! Synchronize window thread ( so window events get forwarded )
-		//!
-		//! @todo	Move this to Window ?
 		// ==============================================================================
 		void		Synchronize( void );
 

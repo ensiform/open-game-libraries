@@ -48,4 +48,63 @@ void Shared::Sleep( int msec ) {
 #endif
 }
 
+/*
+=================
+Shared::CreateErrorString
+=================
+*/
+char *Shared::CreateErrorString( ErrorId id, const char *msg, const char *param ) {
+	// Todo: Throw an exception on the id's you think are important.
+	switch( id ) {
+		// Generic Errors:
+		case ERR_SYSTEM_REQUIREMENTS:
+			return strdup( Format( "Your system is not suitable due to: $*." ) << msg );
+		case ERR_BUFFER_OVERFLOW:
+			return strdup( Format( "Buffer overflow in $*, size:$*." ) << msg << param );
+		case ERR_OUT_OF_MEMORY:
+			return strdup( Format( "'$*' returned NULL, size would be $*" ) << msg << param );
+
+		// File Errors
+		case ERR_BAD_FILE_FORMAT:
+		case ERR_FILE_CORRUPT:
+		case ERR_FILE_WRITEFAIL:
+			return strdup( Format( "$*: on file '$*'" ) << msg << param );
+
+		// Lexer Problems
+		case ERR_LEXER_WARNING:
+			return strdup( Format( "Lexer Warning('$*'): $*." ) << param << msg );
+		case ERR_LEXER_FAILURE:
+			return strdup( Format( "Lexer Error('$*'): $*." ) << param << msg );
+
+		// zLib Errors:
+		case ERR_ZIP_CRC32:
+			return strdup( Format( "Crc32 corrupt for file: '$*' on zip: '$*'." ) << param << msg );
+
+		// Filesystem Errors
+		case ERR_FS_FILE_OPENREAD:
+		case ERR_FS_FILE_OPENWRITE:
+		case ERR_FS_MAKEPATH:
+			return strdup( Format( "$*: '$*'" ) << msg << param );
+
+		// Console Errors
+		case ERR_CVAR_INIT:
+		case ERR_CVAR_LINK:
+			return strdup( Format( "$*: '$*'" ) << msg << param );
+
+		// Audio Errors
+		case ERR_AUDIO_INIT:
+			return strdup( Format( "Audio initialization failed: '$*'." ) << msg );
+	}
+	return strdup( Format( "Unknown Error($*): '$*' : '$*'." ) << id << msg << (param ? param : "NULL") );
+}
+
+/*
+=================
+Shared::FreeErrorString
+=================
+*/
+void Shared::FreeErrorString( char *str ) {
+	free( str );
+}
+
 }

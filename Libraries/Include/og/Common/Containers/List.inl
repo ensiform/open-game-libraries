@@ -40,14 +40,14 @@ namespace og {
 ==============================================================================
 */
 
-template< class type > TLS<typename List<type>::cmpData_t> List<type>::cmpData;
+template<class type> TLS<typename List<type>::cmpData_t> List<type>::cmpData;
 
 /*
 ================
 List::List
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE List<type>::List( int _granularity ) {
 	list		= NULL;
 	granularity = _granularity;
@@ -59,7 +59,7 @@ OG_INLINE List<type>::List( int _granularity ) {
 List::List
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE List<type>::List( const List<type> &other ) {
 	list = NULL;
 	granularity = other.granularity;
@@ -71,7 +71,7 @@ OG_INLINE List<type>::List( const List<type> &other ) {
 List::~List
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE List<type>::~List() {
 	Clear();
 }
@@ -81,7 +81,7 @@ OG_INLINE List<type>::~List() {
 List::Clear
 ================
 */
-template< class type >
+template<class type>
 void List<type>::Clear( void ) {
 	if ( list ) {
 		delete[] list;
@@ -98,9 +98,49 @@ List::IsEmpty
 Checks to see if list is empty
 ================
 */
-template< class type >
+template<class type>
 bool List<type>::IsEmpty( void ) const {
 	return num == 0 || list == NULL;
+}
+
+/*
+================
+List::Num
+================
+*/
+template<class type>
+int List<type>::Num( void ) const {
+	return num;
+}
+
+/*
+================
+List::AllocSize
+================
+*/
+template<class type>
+int List<type>::AllocSize( void ) const {
+	return size;
+}
+
+/*
+================
+List::SetGranularity
+================
+*/
+template<class type>
+void List<type>::SetGranularity( int granularity ) {
+	this->granularity = granularity;
+}
+
+/*
+================
+List::GetGranularity
+================
+*/
+template<class type>
+int List<type>::GetGranularity( void ) {
+	return granularity;
 }
 
 #if 0 // disabled until we need them and know how we want them to act
@@ -109,7 +149,7 @@ bool List<type>::IsEmpty( void ) const {
 List::Allocated
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE size_t List<type>::Allocated( void ) const {
 	return size * sizeof( type );
 }
@@ -119,7 +159,7 @@ OG_INLINE size_t List<type>::Allocated( void ) const {
 List::Size
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE size_t List<type>::Size( void ) const {
 	return sizeof( List<type> ) + Allocated();
 }
@@ -129,7 +169,7 @@ OG_INLINE size_t List<type>::Size( void ) const {
 List::MemoryUsed
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE size_t List<type>::MemoryUsed( void ) const {
 	return num * sizeof( *list );
 }
@@ -140,15 +180,25 @@ OG_INLINE size_t List<type>::MemoryUsed( void ) const {
 List::operator[]
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE const type& List<type>::operator[]( int index ) const {
 	OG_ASSERT( index >= 0 && index <= num );
 	return list[index];
 }
-template< class type >
+template<class type>
 OG_INLINE type& List<type>::operator[]( int index ) {
 	OG_ASSERT( index >= 0 && index <= num );
 	return list[index];
+}
+
+/*
+================
+List::operator+=
+================
+*/
+template<class type>
+void List<type>::operator+=( type value ) {
+	Alloc() = value;
 }
 
 /*
@@ -159,7 +209,7 @@ Clear the list and
 copy all items from the other list.
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE void List<type>::Copy( const List<type> &other ) {
 	Clear();
 	for( int i=0; i<other.num; i++ )
@@ -173,7 +223,7 @@ List::operator=
 Synonym for Copy
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE List<type> &List<type>::operator=( const List<type> &other ) {
 	Copy(other);
 	return *this;
@@ -186,7 +236,7 @@ List::CheckSize
 Calls Resize if needed
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE void List<type>::CheckSize( int newSize, bool keepContent ) {
 	if ( newSize > size )
 		Resize( newSize, keepContent );
@@ -200,11 +250,21 @@ Returns the first free item
 in the list and resizes if needed.
 ================
 */
-template< class type >
+template<class type>
 type& List<type>::Alloc( void ) {
 	CheckSize( num+1 );
 	num++;
 	return list[num-1];
+}
+
+/*
+================
+List::Append
+================
+*/
+template<class type>
+void List<type>::Append( type value ) {
+	Alloc() = value;
 }
 
 /*
@@ -215,7 +275,7 @@ Removes items from the list.
 The list size won't shrink.
 ================
 */
-template< class type >
+template<class type>
 void List<type>::Remove( int index ) {
 	OG_ASSERT( index >= 0 && index < num );
 
@@ -234,7 +294,7 @@ Returns the index of the searched item.
 -1 if no item with this value was found.
 ================
 */
-template< class type >
+template<class type>
 int List<type>::Find( type value ) const {
 	for ( int i=0; i<num; i++ ) {
 		if ( list[i] == value )
@@ -250,7 +310,7 @@ List::Sort
 Sorts the list and removes duplicates.
 ================
 */
-template< class type >
+template<class type>
 void List<type>::Sort( cmpFunc_t compare, bool removeDupes ) {
 	if ( num < 2 )
 		return;
@@ -273,7 +333,7 @@ List::SortEx
 Sorts the list and removes duplicates.
 ================
 */
-template< class type >
+template<class type>
 void List<type>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupes ) {
 	if ( num < 2 )
 		return;
@@ -295,7 +355,7 @@ void List<type>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupes ) {
 List::CompareCallback
 ================
 */
-template< class type >
+template<class type>
 int List<type>::CompareCallback( const void *a, const void *b ) {
 	return cmpData->func( *(const type *)a, *(const type *)b );
 }
@@ -305,7 +365,7 @@ int List<type>::CompareCallback( const void *a, const void *b ) {
 ListEx::CompareCallbackEx
 ================
 */
-template< class type >
+template<class type>
 int List<type>::CompareCallbackEx( const void *a, const void *b ) {
 	return cmpData->funcEx( *(const type *)a, *(const type *)b, cmpData->param );
 }
@@ -320,7 +380,7 @@ Copies all of the content if wanted.
 Old list will be freed.
 ================
 */
-template< class type >
+template<class type>
 void List<type>::Resize( int newSize, bool keepContent ) {
 	OG_ASSERT( newSize > 0 );
 	size = Math::FtoiFast( ceil( static_cast<float>(newSize)/static_cast<float>(granularity) ) ) * granularity;
@@ -347,14 +407,14 @@ void List<type>::Resize( int newSize, bool keepContent ) {
 ==============================================================================
 */
 
-template< class type > TLS<typename ListEx<type>::cmpData_t> ListEx<type>::cmpData;
+template<class type> TLS<typename ListEx<type>::cmpData_t> ListEx<type>::cmpData;
 
 /*
 ================
 ListEx::ListEx
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE ListEx<type>::ListEx( int _granularity ) {
 	list		= NULL;
 	granularity = _granularity;
@@ -366,7 +426,7 @@ OG_INLINE ListEx<type>::ListEx( int _granularity ) {
 ListEx::ListEx
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE ListEx<type>::ListEx( const ListEx<type> &other ) {
 	list = NULL;
 	granularity = other.granularity;
@@ -378,7 +438,7 @@ OG_INLINE ListEx<type>::ListEx( const ListEx<type> &other ) {
 ListEx::~ListEx
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE ListEx<type>::~ListEx() {
 	Clear();
 }
@@ -390,7 +450,7 @@ ListEx::Clear
 Clears the list and the items allocated.
 ================
 */
-template< class type >
+template<class type>
 void ListEx<type>::Clear( void ) {
 	if ( list ) {
 		for ( int i=0; i<num; i++ )
@@ -409,9 +469,49 @@ ListEx::IsEmpty
 Checks to see if list is empty
 ================
 */
-template< class type >
+template<class type>
 bool ListEx<type>::IsEmpty( void ) const {
 	return num == 0 || *list == NULL;
+}
+
+/*
+================
+ListEx::Num
+================
+*/
+template<class type>
+int ListEx<type>::Num( void ) const {
+	return num;
+}
+
+/*
+================
+ListEx::AllocSize
+================
+*/
+template<class type>
+int ListEx<type>::AllocSize( void ) const {
+	return size;
+}
+
+/*
+================
+ListEx::SetGranularity
+================
+*/
+template<class type>
+void ListEx<type>::SetGranularity( int granularity ) {
+	this->granularity = granularity;
+}
+
+/*
+================
+List::GetGranularity
+================
+*/
+template<class type>
+int ListEx<type>::GetGranularity( void ) {
+	return granularity;
 }
 
 #if 0 // disabled until we need them and know how we want them to act
@@ -420,7 +520,7 @@ bool ListEx<type>::IsEmpty( void ) const {
 ListEx::Allocated
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE size_t ListEx<type>::Allocated( void ) const {
 	return size * sizeof( type );
 }
@@ -430,7 +530,7 @@ OG_INLINE size_t ListEx<type>::Allocated( void ) const {
 ListEx::Size
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE size_t ListEx<type>::Size( void ) const {
 	return sizeof( ListEx<type> ) + Allocated();
 }
@@ -440,7 +540,7 @@ OG_INLINE size_t ListEx<type>::Size( void ) const {
 ListEx::MemoryUsed
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE size_t ListEx<type>::MemoryUsed( void ) const {
 	return num * sizeof( **list );
 }
@@ -451,15 +551,25 @@ OG_INLINE size_t ListEx<type>::MemoryUsed( void ) const {
 ListEx::operator[]
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE const type& ListEx<type>::operator[]( int index ) const {
 	OG_ASSERT( index >= 0 && index <= num );
 	return *list[index];
 }
-template< class type >
+template<class type>
 OG_INLINE type& ListEx<type>::operator[]( int index ) {
 	OG_ASSERT( index >= 0 && index <= num );
 	return *list[index];
+}
+
+/*
+================
+ListEx::operator+=
+================
+*/
+template<class type>
+void ListEx<type>::operator+=( const type &value ) {
+	Alloc() = value;
 }
 
 /*
@@ -470,7 +580,7 @@ Clear the list and
 copy all items from the other list.
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE void ListEx<type>::Copy( const ListEx<type> &other ) {
 	Clear();
 	for( int i=0; i<other.num; i++ )
@@ -484,7 +594,7 @@ ListEx::operator=
 Synonym for Copy
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE ListEx<type> &ListEx<type>::operator=( const ListEx<type> &other ) {
 	Clear();
 	for( int i=0; i<other.num; i++ )
@@ -500,7 +610,7 @@ ListEx::CheckSize
 Calls Resize if needed
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE void ListEx<type>::CheckSize( int newSize, bool keepContent ) {
 	if ( newSize > size )
 		Resize( newSize, keepContent );
@@ -514,11 +624,21 @@ Returns the first free item
 in the list and resizes if needed.
 ================
 */
-template< class type >
+template<class type>
 type& ListEx<type>::Alloc( void ) {
 	CheckSize( num+1 );
 	list[num] = new type;
 	return *list[num++];
+}
+
+/*
+================
+ListEx::Append
+================
+*/
+template<class type>
+void ListEx<type>::Append( const type &value ) {
+	Alloc() = value;
 }
 
 /*
@@ -530,7 +650,7 @@ The list size won't shrink.
 But it frees the actual item data.
 ================
 */
-template< class type >
+template<class type>
 void ListEx<type>::Remove( int index ) {
 	OG_ASSERT( index >= 0 && index < num );
 
@@ -550,7 +670,7 @@ Returns the index of the searched item.
 -1 if no item with this value was found.
 ================
 */
-template< class type >
+template<class type>
 int ListEx<type>::Find( const type &value ) const {
 	for ( int i=0; i<num; i++ ) {
 		if ( *list[i] == value )
@@ -566,7 +686,7 @@ ListEx::Sort
 Sorts the list and removes duplicates.
 ================
 */
-template< class type >
+template<class type>
 void ListEx<type>::Sort( cmpFunc_t compare, bool removeDupes ) {
 	if ( num < 2 )
 		return;
@@ -589,7 +709,7 @@ ListEx::SortEx
 Sorts the list and removes duplicates.
 ================
 */
-template< class type >
+template<class type>
 void ListEx<type>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupes ) {
 	if ( num < 2 )
 		return;
@@ -611,7 +731,7 @@ void ListEx<type>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupes ) 
 ListEx::CompareCallback
 ================
 */
-template< class type >
+template<class type>
 int ListEx<type>::CompareCallback( const void *a, const void *b ) {
 	const type *pa = *(const type **)a;
 	const type *pb = *(const type **)b;
@@ -623,7 +743,7 @@ int ListEx<type>::CompareCallback( const void *a, const void *b ) {
 ListEx::CompareCallbackEx
 ================
 */
-template< class type >
+template<class type>
 int ListEx<type>::CompareCallbackEx( const void *a, const void *b ) {
 	const type *pa = *(const type **)a;
 	const type *pb = *(const type **)b;
@@ -641,7 +761,7 @@ Otherwise the old data will be freed
 Old pointer list will be freed.
 ================
 */
-template< class type >
+template<class type>
 void ListEx<type>::Resize( int newSize, bool keepContent ) {
 	OG_ASSERT( newSize > 0 );
 	size = static_cast<int>( ceil( static_cast<float>(newSize)/static_cast<float>(granularity) ) ) * granularity;
@@ -670,6 +790,30 @@ void ListEx<type>::Resize( int newSize, bool keepContent ) {
 
 ==============================================================================
 */
+
+/*
+================
+StringList::Append
+================
+*/
+OG_INLINE void StringList::Append( const String &value ) {
+	Alloc() = value;
+}
+OG_INLINE void StringList::Append( const char *value ) {
+	Alloc() = value;
+}
+OG_INLINE void StringList::Append( const char *value, int byteLen, int len ) {
+	Alloc().SetData( value, byteLen, len );
+}
+
+/*
+================
+StringList::operator+=
+================
+*/
+OG_INLINE void StringList::operator+=( const char *value ) {
+	Alloc() = value;
+}
 
 /*
 ================

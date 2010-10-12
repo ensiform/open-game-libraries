@@ -78,17 +78,15 @@ AudioSource::~AudioSource() {
 AudioSource::Play
 ================
 */
-bool AudioSource::Play( AudioEmitterEx *_emitter, int channel, const SoundDecl *decl, bool allowLoop ) {
-	OG_ASSERT( _emitter != NULL && decl != NULL );
+bool AudioSource::Play( AudioEmitterEx *_emitter, int channel, const Sound *sound, bool allowLoop ) {
+	OG_ASSERT( _emitter != NULL && sound != NULL );
 
 	Stop();
 
 	emitter = _emitter;
 	emitterChannel = channel;
 
-	const SoundDeclEx *sndDecl = static_cast<const SoundDeclEx *>(decl);
-
-	int num = sndDecl->sounds.Num();
+	int num = sound->filenames.Num();
 	if ( num == 0 ) {
 		emitter = NULL;
 		emitterChannel = 0;
@@ -100,18 +98,18 @@ bool AudioSource::Play( AudioEmitterEx *_emitter, int channel, const SoundDecl *
 
 	const char *filename;
 	if ( num == 1 )
-		filename = sndDecl->sounds[0].c_str();
+		filename = sound->filenames[0].c_str();
 	else {
 		// Multiple sounds available, randomly choose one.
 		Random rnd;
-		filename = sndDecl->sounds[ rnd.RandomInt(0, num-1) ].c_str();
+		filename = sound->filenames[ rnd.RandomInt(0, num-1) ].c_str();
 	}
 
-	alSourcef( alSourceNum, AL_REFERENCE_DISTANCE, sndDecl->minDistance );
-	alSourcef( alSourceNum, AL_MAX_DISTANCE, sndDecl->maxDistance );
-	alSourcef( alSourceNum, AL_GAIN, sndDecl->volume );
+	alSourcef( alSourceNum, AL_REFERENCE_DISTANCE, sound->minDistance );
+	alSourcef( alSourceNum, AL_MAX_DISTANCE, sound->maxDistance );
+	alSourcef( alSourceNum, AL_GAIN, sound->volume );
 
-	bool loop = allowLoop ? sndDecl->loop : false;
+	bool loop = allowLoop ? sound->loop : false;
 	audioSystemObject.audioThread->PlayStream( this, filename, loop );
 
 	return CheckAlErrors();

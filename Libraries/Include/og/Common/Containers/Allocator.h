@@ -43,7 +43,7 @@ namespace og {
 	//! 
 	//! Allocates a list of objects instead of manually allocating each object
 	// ==============================================================================
-	template< class type >
+	template<class type>
 	class Allocator {
 	public:
 		// ==============================================================================

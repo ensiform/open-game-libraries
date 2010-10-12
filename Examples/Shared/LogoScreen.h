@@ -45,7 +45,7 @@ freely, subject to the following restrictions:
 class ogLogoScreen {
 public:
 	ogLogoScreen();
-	void	Init( const og::Vec3 &logoCenter, int time, const char *soundName );
+	void	Init( const og::Vec3 &logoCenter, int time, const og::Sound *sound );
 	void	Draw( int frameTime );
 	bool	IsDone( void ) { return timer.Milliseconds() > playTime; }
 
@@ -53,11 +53,10 @@ private:
 	void	DrawLogo( void );
 
 	og::Image	*image;
-	og::AudioEmitter *sound;
+	og::AudioEmitter *emitter;
 	og::Timer	timer;
 
 	// Settings
-	og::String	soundName;
 	og::Vec3	center;
 	int			playTime;
 };
@@ -100,7 +99,7 @@ public:
 	~ogCreditsScreen();
 
 	void	AddEntry( ogCreditsEntry *entry );
-	void	Init( float height, float speed, const char *soundName );
+	void	Init( float height, float speed, const og::Sound *sound );
 	void	Draw2D( int frameTime );
 	void	Draw3D( int frameTime );
 	bool	IsActive( void ) const { return isActive; }

@@ -121,13 +121,13 @@ bool AudioEmitterEx::IsValidChannel( int channel ) const {
 AudioEmitterEx::Play
 ================
 */
-void AudioEmitterEx::Play( int channel, const SoundDecl *decl, bool allowLoop ) {
+void AudioEmitterEx::Play( int channel, const Sound *sound, bool allowLoop ) {
 	if ( !audioSystemObject.audioThread )
 		return;
 	EmitterEvent *evt = new EmitterEvent( this );
 	evt->type = EmitterEvent::PLAY;
 	evt->channel = channel;
-	evt->decl = decl;
+	evt->sound = sound;
 	evt->allowLoop = allowLoop;
 	audioSystemObject.audioThread->AddEvent( evt );
 }
@@ -258,7 +258,7 @@ void AudioEmitterEx::OnEvent( EmitterEvent *evt ) {
 					source = audioSystemObject.audioThread->FindFreeAudioSource();
 
 				if ( source ) {
-					if ( source->Play( this, evt->channel, evt->decl, evt->allowLoop ) ) {
+					if ( source->Play( this, evt->channel, evt->sound, evt->allowLoop ) ) {
 						sndChannels[evt->channel] = source;
 						sndChannels[evt->channel]->OnUpdate( &details );
 					}

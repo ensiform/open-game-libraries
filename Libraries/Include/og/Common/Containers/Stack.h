@@ -38,7 +38,7 @@ namespace og {
 
 	==============================================================================
 	*/
-	template< class type >
+	template<class type>
 	class Stack {
 	public:
 		void		Push( const type& element );
@@ -62,7 +62,7 @@ namespace og {
 
 	==============================================================================
 	*/
-	template< class type >
+	template<class type>
 	class Queue {
 	public:
 		void		Push( const type& element );

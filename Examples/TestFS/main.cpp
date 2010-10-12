@@ -31,7 +31,6 @@ freely, subject to the following restrictions:
 #include <string>
 #include <og/Common/Common.h>
 #include <og/FileSystem/FileSystem.h>
-#include "../Shared/Shared.h"
 
 og::StringList allowedPakFiles;
 
@@ -53,9 +52,9 @@ namespace User {
 
 	void	Error( ErrorId id, const char *msg, const char *param ) {
 		// Todo: Throw an exception on the id's you think are important.
-		og::String result;
-		getErrorString( id, msg, param, result );
-		printf( "%s\n", result.c_str() );
+		char *result = Shared::CreateErrorString( id, msg, param );
+		printf( "%s\n", result );
+		Shared::FreeErrorString( result );
 	}
 	void	Warning( const char *msg ) {
 		printf( msg );

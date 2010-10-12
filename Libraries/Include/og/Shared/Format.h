@@ -70,7 +70,7 @@ namespace og {
 	};
 
 	// ==============================================================================
-	//! Text Stream
+	//! Format
 	//!
 	//! Type safe alternative to VA ( sprintf ).
 	//! @note

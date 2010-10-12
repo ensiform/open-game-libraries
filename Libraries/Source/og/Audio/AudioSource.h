@@ -58,7 +58,7 @@ namespace og {
 		AudioSource( AudioSource *previous, uInt sourceNum );
 		~AudioSource();
 
-		bool	Play( AudioEmitterEx *emitter, int channel, const SoundDecl *decl, bool allowLoop );
+		bool	Play( AudioEmitterEx *emitter, int channel, const Sound *sound, bool allowLoop );
 		void	Pause( void );
 		void	Stop( void );
 

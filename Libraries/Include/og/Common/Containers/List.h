@@ -44,7 +44,7 @@ namespace og {
 
 	==============================================================================
 	*/
-	template< class type >
+	template<class type>
 	class List {
 	public:
 		List( int granularity = 16 );
@@ -58,11 +58,11 @@ namespace og {
 
 		bool		IsEmpty( void ) const;					// Checks to see if list is empty
 
-		int			Num( void ) const { return num; }		// Number of used entries
-		int			AllocSize( void ) const { return size; } // Number of allocated items
+		int			Num( void ) const;						// Number of used entries
+		int			AllocSize( void ) const;				// Number of allocated items
 
-		void		SetGranularity( int granularity ) { this->granularity = granularity; } // Set the granularity
-		int			GetGranularity( void ) { return granularity; } // Get the granularity
+		void		SetGranularity( int granularity );		// Set the granularity
+		int			GetGranularity( void );					// Get the granularity
 
 #if 0 // disabled until we need them and know how we want them to act
 		size_t		Allocated( void ) const;				// Returns total size of allocated memory
@@ -71,7 +71,7 @@ namespace og {
 #endif
 
 		type&		Alloc( void );							// Get the next unused item, resize the list if needed.
-		void		Append( type value ) { Alloc() = value; } // Add a new item, resize the list if needed.
+		void		Append( type value );					// Add a new item, resize the list if needed.
 		void		Remove( int index );					// Remove an item (list won't be resized).
 		void		Copy( const List<type> &other );		// Copy data from an existing list
 
@@ -83,7 +83,7 @@ namespace og {
 		const type &operator[]( int index ) const;			// Get the specified item
 		type &		operator[]( int index );				// Get the specified item
 		List<type> &operator=( const List<type> &other );	// Copy data from an existing list
-		void		operator+=( type value ) { Alloc() = value; } // Add a new item, resize the list if needed.
+		void		operator+=( type value );				// Add a new item, resize the list if needed.
 
 	protected:
 		int			granularity;							// by how much to grow the list everytime it needs resizing.
@@ -119,7 +119,7 @@ namespace og {
 
 	==============================================================================
 	*/
-	template< class type >
+	template<class type>
 	class ListEx {
 	public:
 		ListEx( int granularity = 16 );
@@ -133,11 +133,11 @@ namespace og {
 
 		bool		IsEmpty( void ) const;					// Checks to see if list is empty
 
-		int			Num( void ) const { return num; }		// Number of used entries
-		int			AllocSize( void ) const { return size; } // Number of allocated item pointers
+		int			Num( void ) const;						// Number of used entries
+		int			AllocSize( void ) const;				// Number of allocated item pointers
 
-		void		SetGranularity( int granularity ) { this->granularity = granularity; } // Set the granularity
-		int			GetGranularity( void ) { return granularity; } // Get the granularity
+		void		SetGranularity( int granularity );		// Set the granularity
+		int			GetGranularity( void );					// Get the granularity
 
 #if 0 // disabled until we need them and know how we want them to act
 		size_t		Allocated( void ) const;				// Returns total size of allocated memory
@@ -146,9 +146,9 @@ namespace og {
 #endif
 
 		type&		Alloc( void );							// Get the next unused item, resize the list if needed.
-		void		Append( const type &value ) { Alloc() = value; } // Add a new item, resize the list if needed.
+		void		Append( const type &value );			// Add a new item, resize the list if needed.
 		void		Remove( int index );					// Remove an item (list won't be resized).
-		void		Copy( const ListEx<type> &other );	// Copy data from an existing list
+		void		Copy( const ListEx<type> &other );		// Copy data from an existing list
 
 		int			Find( const type &value ) const;		// Find an item in the list
 		void		Sort( cmpFunc_t compare, bool removeDupes ); // Sort the list and (optional) remove duplicates
@@ -158,7 +158,7 @@ namespace og {
 		const type &operator[]( int index ) const;			// Get the specified item
 		type &		operator[]( int index );				// Get the specified item
 		ListEx<type> &operator=( const ListEx<type> &other );	// Copy data from an existing list
-		void		operator+=( const type &value ) { Alloc() = value; } // Add a new item, resize the list if needed.
+		void		operator+=( const type &value );		// Add a new item, resize the list if needed.
 
 	protected:
 		int			granularity;							// by how much to grow the list everytime it needs resizing.
@@ -195,15 +195,15 @@ namespace og {
 		StringList( int granularity = 16 ) : ListEx<String>(granularity) {}
 		virtual ~StringList() {}
 
-		void		Append( const String &value ) { Alloc() = value; } // Add a new string, resize the list if needed.
-		void		Append( const char *value ) { Alloc() = value; } // Add a new string, resize the list if needed.
-		void		Append( const char *value, int byteLen, int len ) { Alloc().SetData( value, byteLen, len ); } // Add a new string (only first n characters), resize the list if needed.
+		void		Append( const String &value );					// Add a new string, resize the list if needed.
+		void		Append( const char *value );					// Add a new string, resize the list if needed.
+		void		Append( const char *value, int byteLen, int len ); // Add a new string (only first n characters), resize the list if needed.
 
 		int			Find( const char *value ) const;				// Find an item in the list
 		int			IFind( const char *value ) const;				// Find an item in the list
 
 		// operators
-		void		operator+=( const char *value ) { Alloc() = value; } // Add a new string, resize the list if needed
+		void		operator+=( const char *value );				// Add a new string, resize the list if needed
 	};
 }
 #endif

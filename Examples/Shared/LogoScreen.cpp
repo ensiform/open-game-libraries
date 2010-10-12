@@ -127,7 +127,7 @@ ogLogoScreen::ogLogoScreen
 */
 ogLogoScreen::ogLogoScreen() {
 	image = NULL;
-	sound = NULL;
+	emitter = NULL;
 }
 
 /*
@@ -135,20 +135,17 @@ ogLogoScreen::ogLogoScreen() {
 ogLogoScreen::Init
 ================
 */
-void ogLogoScreen::Init( const og::Vec3 &logoCenter, int time, const char *soundName ) {
+void ogLogoScreen::Init( const og::Vec3 &logoCenter, int time, const og::Sound *sound ) {
 	if ( timer.IsActive() )
 		return;
 	center = logoCenter;
 	playTime = time;
 
 	image = og::Image::Find("gfx/logodice.png");
-	const og::SoundDecl *decl = og::AS->Find( soundName );
-	if ( decl ) {
-		if ( !sound ) {
-			sound = og::AS->CreateAudioEmitter();
-			sound->Init( 1 );
-		}
-		sound->Play( 0, decl );
+	if ( sound ) {
+		if ( !emitter )
+			emitter = og::AS->CreateAudioEmitter( 1 );
+		emitter->Play( 0, sound );
 	}
 
 	timer.Start();
@@ -249,12 +246,12 @@ void ogCreditsScreen::AddEntry( ogCreditsEntry *entry ) {
 	entries.Append( entry );
 }
 
-void ogCreditsScreen::Init( float height, float speed, const char *soundName ) {
+void ogCreditsScreen::Init( float height, float speed, const og::Sound *sound ) {
 	scrollSpeed = speed;
 	scrollHeight = height;
 	isActive = true;
 	isDone = false;
-	logo.Init( og::Vec3( 0, 8, -4 ), 1000 * static_cast<int>(height/speed) + 3000, soundName );
+	logo.Init( og::Vec3( 0, 8, -4 ), 1000 * static_cast<int>(height/speed) + 3000, sound );
 }
 
 void ogCreditsScreen::Draw2D( int frameTime ) {

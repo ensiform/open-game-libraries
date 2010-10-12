@@ -45,7 +45,7 @@ namespace og {
 Allocator::Allocator
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE Allocator<type>::Allocator( int _granularity ) : granularity(_granularity) {
 	CreateChunk();
 }
@@ -55,7 +55,7 @@ OG_INLINE Allocator<type>::Allocator( int _granularity ) : granularity(_granular
 Allocator::~Allocator
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE Allocator<type>::~Allocator() {
 	int num = allocationList.Num();
 	for( int i=0; i<num; i++ )
@@ -68,7 +68,7 @@ OG_INLINE Allocator<type>::~Allocator() {
 Allocator::Free
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE void Allocator<type>::CreateChunk( void ) {
 	allocChunk_t &chunk = allocationList.Alloc();
 	chunk.last = 0;
@@ -81,7 +81,7 @@ Allocator::Alloc
 ================
 */
 
-template< class type >
+template<class type>
 OG_INLINE type *Allocator<type>::Alloc( void ) {
 	allocChunk_t &chunk = allocationList[allocationList.Num()-1];
 	type *ret = &chunk.list[chunk.last];

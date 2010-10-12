@@ -45,7 +45,7 @@ namespace og {
 		EEVT_Type type;
 		AudioEmitterEx *emitter;
 		int channel;
-		const SoundDecl *decl;
+		const Sound *sound;
 		bool allowLoop;
 	};
 
@@ -63,7 +63,7 @@ namespace og {
 		void	Init( int channels );
 		int		NumChannels( void ) { return numChannels; }
 
-		void	Play( int channel, const SoundDecl *decl, bool allowLoop=true );
+		void	Play( int channel, const Sound *sound, bool allowLoop=true );
 		void	Pause( int channel );
 		void	Stop( int channel );
 		void	StopAll( void );

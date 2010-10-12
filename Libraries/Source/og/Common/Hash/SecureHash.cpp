@@ -32,6 +32,7 @@ freely, subject to the following restrictions:
 #include <stdio.h>
 
 namespace og {
+const uInt HASH_BUFFER_SIZE = 4096;
 
 /*
 ================
@@ -108,7 +109,6 @@ void SecureHash::Finish( void ) {
 SecureHash::ComputeFile
 ================
 */
-const uInt bufSize = 4096;
 bool SecureHash::ComputeFile( const char *fileName ) {
 	FILE *file = fopen( fileName, "rb" );	
 	if( !file )
@@ -116,16 +116,16 @@ bool SecureHash::ComputeFile( const char *fileName ) {
 
 	Reset();
 
-	byte buffer[bufSize];
+	byte buffer[HASH_BUFFER_SIZE];
 	int read;
 	do {
-		if ( !( read = fread( buffer, 1, bufSize, file ) ) )
+		if ( !( read = fread( buffer, 1, HASH_BUFFER_SIZE, file ) ) )
 			break;
 		if( !AddBuffer( buffer, read ) ) {
 			fclose(file);
 			return false;
 		}
-	} while( read == bufSize );
+	} while( read == HASH_BUFFER_SIZE );
 
 	Finish();
 

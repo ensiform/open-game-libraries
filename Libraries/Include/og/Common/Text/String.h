@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #define __OG_STRING_H__
 
 namespace og {
-	template< class type > class DynBuffer;
+	template<class type> class DynBuffer;
 	class StringList;
 	const int OG_STR_HARDBUFFER_SIZE = 20;
 	const int OG_STR_GRANULARITY = 16;
@@ -107,7 +107,6 @@ namespace og {
 		void			FromDateTime( const char *format, const tm *time );
 
 		// Search & Replace
-#if 1
 		int				Find( const char *text, bool caseSensitive=true, int start=0 ) const;					// Find index of first occurrence of text
 		static int		Find( const char *str, const char *text, bool caseSensitive=true, int start=0 );		// Find index of first occurrence of text in str
 		int				FindOneOf( const char *text, bool caseSensitive=true, int start=0 ) const;				// Find index of first occurrence of one of the chars specified in text
@@ -115,16 +114,6 @@ namespace og {
 		int				ReverseFind( const char *text, bool caseSensitive=true ) const;							// Find index of last occurrence of c
 		static int		ReverseFind( const char *str, const char *text, bool caseSensitive=true );				// Find index of last occurrence of c in str
 		int				Replace( const char *a, const char *b, int start=0 );									// Replace a with b
-#else
-		int				Find( const char *text, int start=0 ) const;			// Find index of first occurrence of text
-		int				IFind( const char *text, int start=0 ) const;			// Find index of first occurrence of text
-		int				FindOneOf( const char *text, int start=0 ) const;		// Find index of first occurrence of one of the chars specified in text
-		int				IFindOneOf( const char *text, int start=0 ) const;		// Find index of first occurrence of one of the chars specified in text
-		int				ReverseFind( const char *text ) const;					// Find index of last occurrence of c
-		int				IReverseFind( const char *text ) const;					// Find index of last occurrence of c
-		int				Replace( const char *a, const char *b, int start=0 );	// replace a with b
-		int				IReplace( const char *a, const char *b, int start=0 );	// replace a with b
-#endif
 
 		// Strip left
 		int				StripLeading( const char *text );

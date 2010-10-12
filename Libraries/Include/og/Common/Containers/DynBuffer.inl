@@ -45,7 +45,7 @@ namespace og {
 DynBuffer::DynBuffer
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE DynBuffer<type>::DynBuffer( int _size ) {
 	size = _size;
 	if ( size > 0 )
@@ -59,7 +59,7 @@ OG_INLINE DynBuffer<type>::DynBuffer( int _size ) {
 DynBuffer::~DynBuffer
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE DynBuffer<type>::~DynBuffer() {
 	Clear();
 }
@@ -69,7 +69,7 @@ OG_INLINE DynBuffer<type>::~DynBuffer() {
 DynBuffer::Clear
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE void DynBuffer<type>::Clear( void ) {
 	if ( data ) {
 		delete[] data;
@@ -83,7 +83,7 @@ OG_INLINE void DynBuffer<type>::Clear( void ) {
 DynBuffer::CheckSize
 ================
 */
-template< class type >
+template<class type>
 OG_INLINE void DynBuffer<type>::CheckSize( int newSize ) {
 	if ( newSize > size ) {
 		if ( data )
