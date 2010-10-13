@@ -89,7 +89,7 @@ bool ogDemoWindow::Init( void ) {
 	if( !window )
 		return false;
 	
-    // Enable vertical sync (on cards that support it)
+	// Enable vertical sync (on cards that support it)
 	window->MakeCurrent();
 	window->SetSwapinterval( true );
 
@@ -271,7 +271,7 @@ void ogDemoWindow::SetupOrtho( void ) {
 
 	glDisable( GL_LIGHTING );
 	glEnable(GL_SCISSOR_TEST);
-    glScissor(clip[0], clip[1], clip[2], clip[3]);
+	glScissor(clip[0], clip[1], clip[2], clip[3]);
 
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
@@ -529,12 +529,12 @@ int og::User::Main( int argc, char *argv[] ) {
 		og::Shared::Sleep( 10 );
 		og::Gloot::Synchronize();
 		demoWindow.Draw();
-    }
+	}
 
 	demoWindow.UnregisterAllBinds();
 	Gloot::DisableSystemKeys( false );
 	og::FileSystem::Shutdown();
-    return 0;
+	return 0;
 }
 
 /*

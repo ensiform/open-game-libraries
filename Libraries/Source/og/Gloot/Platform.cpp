@@ -114,21 +114,21 @@ OG_INLINE float Rad2Deg( float f ) {
 
 void Gloot::CreatePerspectiveMatrix( float fovX, float aspect, float zNear, float zFar, float matrix[16] ) {
 	static const float limit = Math::Deg2Rad( 179.0f );
-    float fovRX = Math::Deg2Rad(fovX);
-    float x = aspect / tanf( fovRX * 0.5f );
-    float fovRY = 2.0f * atan2f( 1.0f, x );
+	float fovRX = Math::Deg2Rad(fovX);
+	float x = aspect / tanf( fovRX * 0.5f );
+	float fovRY = 2.0f * atan2f( 1.0f, x );
 
-    fovRX += 0.5f * (fovRX-fovRY);
-    if ( fovRX > limit )
-            fovRX = limit;
+	fovRX += 0.5f * (fovRX-fovRY);
+	if ( fovRX > limit )
+			fovRX = limit;
 
-    x = aspect / tanf( fovRX * 0.5f );
-    fovRY = 2.0f * atan2f( 1.0f, x );
-    if ( fovRY > limit )
-            fovRY = limit;
+	x = aspect / tanf( fovRX * 0.5f );
+	fovRY = 2.0f * atan2f( 1.0f, x );
+	if ( fovRY > limit )
+			fovRY = limit;
 
-    float xFac = tanf( fovRX * 0.5f );
-    float yFac = tanf( fovRY * 0.5f );
+	float xFac = tanf( fovRX * 0.5f );
+	float yFac = tanf( fovRY * 0.5f );
 
 	float depth = zFar - zNear;
 	matrix[0]  = 1.0f/xFac; matrix[1]  = 0.0f; matrix[2]  = 0.0f; matrix[3]  = 0.0f;

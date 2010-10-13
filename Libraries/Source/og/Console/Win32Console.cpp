@@ -423,7 +423,7 @@ void ConsoleWindow::Print( ConPrint *evt ) {
 	SendMessage( hWndLog, EM_EXGETSEL, 0, (LPARAM)&crOld );
 
 	CHARRANGE cr;
-    cr.cpMin = -1;cr.cpMax = -1;
+	cr.cpMin = -1;cr.cpMax = -1;
 
 	// If we removed a newline on the last call to Print, re-add it now.
 	if ( evt->lastWasEndl ) {
@@ -441,7 +441,7 @@ void ConsoleWindow::Print( ConPrint *evt ) {
 	SendMessage( hWndLog, EM_EXSETSEL, 0, (LPARAM)&crOld );
 
 	// Scroll to end
-    SendMessage( hWndLog, WM_VSCROLL, SB_BOTTOM, (LPARAM)NULL );
+	SendMessage( hWndLog, WM_VSCROLL, SB_BOTTOM, (LPARAM)NULL );
 }
 
 /*

@@ -102,7 +102,7 @@ void RetrieveCPUInfo( void ) {
 #if defined(OG_ASM_MSVC)
 	__asm {
 		mov		eax, 0
-        cpuid
+		cpuid
 		mov		cpu.largestStdFuncNr, eax
 		mov		dw cpu.vendorName[0], ebx
 		mov		dw cpu.vendorName[4], edx
@@ -194,7 +194,7 @@ void RetrieveCPUInfo( void ) {
 #if defined(OG_ASM_MSVC)
 	__asm {
 		mov		eax, 1
-        cpuid
+		cpuid
 		mov		dw cpu.processorSignature, eax
 		mov		dw cpu.miscInfo, ebx
 		mov		dw cpu.general, edx
@@ -292,7 +292,7 @@ end:
 			"addl     $16, %%esi;"
 			"ret;"
 "end:;"
-             : /* no output */ : "S" (cpu.processorName)
+				 : /* no output */ : "S" (cpu.processorName)
 		);
 #endif
 	}

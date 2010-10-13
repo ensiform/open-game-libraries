@@ -53,26 +53,26 @@ XInputChecker::XInputChecker
 ================
 */
 XInputChecker::XInputChecker() {
-    // CoInit if needed
-    HRESULT hr = CoInitialize( NULL );
-    bool bCleanupCOM = SUCCEEDED( hr );
+	// CoInit if needed
+	HRESULT hr = CoInitialize( NULL );
+	bool bCleanupCOM = SUCCEEDED( hr );
 
-    // Create WMI
-    IWbemLocator* pIWbemLocator = NULL;
-    hr = CoCreateInstance( __uuidof( WbemLocator ), NULL, CLSCTX_INPROC_SERVER, __uuidof( IWbemLocator ), ( LPVOID* )&pIWbemLocator );
+	// Create WMI
+	IWbemLocator* pIWbemLocator = NULL;
+	hr = CoCreateInstance( __uuidof( WbemLocator ), NULL, CLSCTX_INPROC_SERVER, __uuidof( IWbemLocator ), ( LPVOID* )&pIWbemLocator );
 	if( FAILED( hr ) || pIWbemLocator == NULL ) {
 		if( bCleanupCOM )
 			CoUninitialize();
 		return;
 	}
 
-    IEnumWbemClassObject* pEnumDevices = NULL;
-    IWbemServices* pIWbemServices = NULL;
-    IWbemClassObject* pDevices[20] = {0};
+	IEnumWbemClassObject* pEnumDevices = NULL;
+	IWbemServices* pIWbemServices = NULL;
+	IWbemClassObject* pDevices[20] = {0};
 
-    BSTR bstrDeviceID = NULL;
-    BSTR bstrClassName = NULL;
-    BSTR bstrNamespace = NULL;
+	BSTR bstrDeviceID = NULL;
+	BSTR bstrClassName = NULL;
+	BSTR bstrNamespace = NULL;
 
 	// Do just once
 	do {
@@ -128,12 +128,12 @@ XInputChecker::XInputChecker() {
 	}
 	while( 0 ); // Do just once
 
-    if( bstrNamespace )
-        SysFreeString( bstrNamespace );
-    if( bstrDeviceID )
-        SysFreeString( bstrDeviceID );
-    if( bstrClassName )
-        SysFreeString( bstrClassName );
+	if( bstrNamespace )
+		SysFreeString( bstrNamespace );
+	if( bstrDeviceID )
+		SysFreeString( bstrDeviceID );
+	if( bstrClassName )
+		SysFreeString( bstrClassName );
 
 	for( int i=0; i<20; i++ )
 		SAFE_RELEASE( pDevices[i] );
@@ -142,7 +142,7 @@ XInputChecker::XInputChecker() {
 	SAFE_RELEASE( pIWbemServices );
 	
 	if( bCleanupCOM )
-        CoUninitialize();
+		CoUninitialize();
 }
 
 /*
@@ -153,11 +153,11 @@ XInputChecker::IsXInput
 bool XInputChecker::IsXInput( const GUID &guid ) {
 	LinkedList<DWORD>::nodeType *node = listIds.GetFirstNode();
 	while( node != NULL ) {
-        if( node->value == guid.Data1 )
-            return true;
+		if( node->value == guid.Data1 )
+			return true;
 		node = node->GetNext();
 	}
-    return false;
+	return false;
 }
 
 }

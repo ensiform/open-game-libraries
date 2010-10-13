@@ -36,10 +36,10 @@ freely, subject to the following restrictions:
 #include <math.h>
 
 #ifndef HID_USAGE_PAGE_GENERIC
-	#define HID_USAGE_PAGE_GENERIC         ((USHORT) 0x01)
+	#define HID_USAGE_PAGE_GENERIC	((USHORT) 0x01)
 #endif
 #ifndef HID_USAGE_GENERIC_MOUSE
-	#define HID_USAGE_GENERIC_MOUSE        ((USHORT) 0x02)
+	#define HID_USAGE_GENERIC_MOUSE	((USHORT) 0x02)
 #endif
 
 namespace og {
@@ -192,12 +192,12 @@ bool WindowEx::Create( void ) {
 	if( !hDC )
 		return false;
 
-    RAWINPUTDEVICE Rid[1];
-    Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC; 
-    Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE; 
-    Rid[0].dwFlags = RIDEV_INPUTSINK;   
-    Rid[0].hwndTarget = hWnd;
-    RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
+	RAWINPUTDEVICE Rid[1];
+	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC; 
+	Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE; 
+	Rid[0].dwFlags = RIDEV_INPUTSINK;   
+	Rid[0].hwndTarget = hWnd;
+	RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
 
 	isOpen = true;
 	return true;
@@ -226,7 +226,7 @@ bool WindowEx::CreateContext( void ) {
 	if( !hRC_simple )
 		return false;
 
-    // Try creating an advanced context.
+	// Try creating an advanced context.
 	if ( !Mgr.wglCreateContextAttribsARB )
 		hRC = hRC_simple;
 	else {
@@ -559,10 +559,10 @@ LRESULT WindowEx::WndCallback( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 				mouseLock = false;
 			}
 			return 0;
-        case WM_MOUSEMOVE:
+		case WM_MOUSEMOVE:
 			if ( hasFocus && mouseLock && !mouseUseRaw ) {
-                int x = (int)((short)LOWORD(lParam));
-                int y = (int)((short)HIWORD(lParam));
+				int x = (int)((short)LOWORD(lParam));
+				int y = (int)((short)HIWORD(lParam));
 
 				int center[2] = { windowConfig.width/2, windowConfig.height/2 };
 				if( x != center[0] || y != center[1] ) {
@@ -844,7 +844,7 @@ void WindowEvent::Execute( void ) {
 			if( window->windowConfig.listener )
 				window->windowConfig.listener->OnMouseWheel( wParam );
 			break;
-        case WM_MOUSEMOVE:
+		case WM_MOUSEMOVE:
 			if ( window->hasFocus && window->mouseLock ) {
 				// Call the user-supplied callback, if it exists
 				if( window->windowConfig.listener )

@@ -40,33 +40,6 @@ namespace og {
 //! @see	Console
 //! @{
 
-	/*
-	recommendations for cvar naming prefixes:
-	(fixme: unfinished.. those who need thought are marked with //)
-
-	info_*:	Informations, like game version, build date, etc.. flagged CVAR_ROM(non-exclusive)
-	sys_*:	Detected hardware info, like cpu, gpu, ram, etc.. flagged CVAR_ROM(non-exclusive)
-	com_*:	CVars flagged with CVAR_ENGINE but not one of the following:
-//	dev_*:	CVars flagged with CVAR_DEVELOPER
-	r_*:	CVars flagged with CVAR_RENDERER, except images
-//	img_*:	CVars flagged with CVAR_RENDERER image (quality,..) settings
-	s_*:	CVars flagged with CVAR_SOUND
-	in_*:	CVars flagged with CVAR_INPUT
-	net_*:	CVars flagged with CVAR_NETWORK
-	g_*:	CVars flagged with CVAR_GAME, except physics
-//	phys_*:	CVars flagged with CVAR_GAME, physics
-//	ns_*:	CVars flagged with CVAR_NETSYNC
-	feed_*:	CVars flagged with CVAR_BROWSERFEED
-	si_*:	CVars flagged with CVAR_SERVERINFO
-	cl_*:	CVars flagged with CVAR_CLIENT
-	fs_*:	Filesystem settings
-	gui_*:	Graphical User Interface
-	hud_*:	Heads Up Display
-	ai_*:	Artificial Intelligence
-
-	fixme: more ?
-	*/
-
 	// ==============================================================================
 	//! CVar Flags
 	// ==============================================================================
@@ -111,7 +84,7 @@ namespace og {
 		CVAR_NETSYNC	= BIT(20),		//!< Synced over network instantly
 		CVAR_BROWSERFEED= BIT(21),		//!< Information for the Serverbrowser only
 		CVAR_SERVERINFO	= BIT(22),		//!< General server information
-		CVAR_CLIENT	= BIT(23),			//!< General client/user information
+		CVAR_CLIENT		= BIT(23),		//!< General client/user information
 
 		CVAR_CUSTOM_BIT	= 24			//!< The first free bit for custom CVar flags.\n
 										//!  Keep in mind, there are only 32 bits available ( BIT(0)-BIT(31) )

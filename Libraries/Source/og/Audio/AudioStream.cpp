@@ -87,8 +87,8 @@ public:
 
 	bool	LoadFile( const char *filename );
 
-    AudioStreamData *CreateStreamData( bool loop );
-    void	ClearStreamData( AudioStreamData *streamData );
+	AudioStreamData *CreateStreamData( bool loop );
+	void	ClearStreamData( AudioStreamData *streamData );
 	bool	UploadData( AudioStreamData *streamData, int buffer, uInt maxSize );
 
 	// Vorbis Callbacks
@@ -129,9 +129,9 @@ bool VorbisStream::LoadFile( const char *filename ) {
 	vorbis_info *fileInfo = ov_info( &streamData->file, -1 );
 
 	if ( fileInfo->channels == 1 )
-        format = AL_FORMAT_MONO16;
-    else
-        format = AL_FORMAT_STEREO16;
+		format = AL_FORMAT_MONO16;
+	else
+		format = AL_FORMAT_STEREO16;
 	freq = fileInfo->rate;
 	outSize = freq * fileInfo->channels * 2;
 
@@ -300,7 +300,7 @@ public:
 	bool	LoadFile( const char *filename );
 
    AudioStreamData *CreateStreamData( bool loop );
-    void	ClearStreamData( AudioStreamData *streamData );
+	void	ClearStreamData( AudioStreamData *streamData );
 	bool	UploadData( AudioStreamData *streamData, int buffer, uInt maxSize );
 };
 
@@ -484,11 +484,11 @@ bool AudioStream::StartStream( AudioSource *src, bool loop ) {
 				return false;
 			}
 		}
-    
+
 		alSourcei( src->alSourceNum, AL_LOOPING, false ); // solved differently when streaming
 		alSourceQueueBuffers( src->alSourceNum, AUDIOSRC_BUFFERS, src->alBuffers );
 	}
-    alSourcePlay( src->alSourceNum );
+	alSourcePlay( src->alSourceNum );
 
 	return true;
 }
