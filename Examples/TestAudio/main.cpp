@@ -200,7 +200,7 @@ void ogDemoWindow::Draw( void ) {
 	glPointSize(10.0f);
 	glEnable(GL_POINT_SMOOTH);
 	glBegin( GL_POINTS );
-		glVertex2i( windowCenter.x, windowCenter.y );
+		glVertex2f( windowCenter.x, windowCenter.y );
 		glColor3f( 0.5f, 0.5f, 0.0f );
 		glVertex2f( soundPos.x, soundPos.y );
 	glEnd();
