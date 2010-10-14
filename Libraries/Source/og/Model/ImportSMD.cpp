@@ -256,7 +256,7 @@ Model *Model::ImportSMD( const char *filename ) {
 			for( k=0; k<numWeights; k++ ) {
 				smdWeight_t &smdWeight = vert.weights[k];
 				VertexWeight &weight = inWeights.Alloc();
-				weight.influence = Math::Min(smdWeight.influence, 1.0f);
+				weight.influence = Min(smdWeight.influence, 1.0f);
 				weight.boneId = smdWeight.jointId;
 				infTotal += weight.influence;
 

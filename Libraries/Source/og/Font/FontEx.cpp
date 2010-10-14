@@ -700,8 +700,6 @@ Font::Init
 bool Font::Init( FileSystemCore *fileSystem, const char *_defaultFamily ) {
 	OG_ASSERT( fileSystem != NULL );
 	OG_ASSERT( _defaultFamily != NULL );
-	if ( !Shared::Init() )
-		return false;
 	fontFS = fileSystem;
 	defaultFamily = FontFamily::Find( _defaultFamily );
 	return defaultFamily != NULL;

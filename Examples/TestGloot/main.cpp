@@ -397,8 +397,6 @@ og::User::Main
 ================
 */
 int og::User::Main( int argc, char *argv[] ) {
-	if ( !og::Shared::Init() )
-		return 0;
 	Gloot::DisableSystemKeys( true );
 	SimpleWindowClass myWindowA;
 #ifdef DEMO_OPENGL3
@@ -414,7 +412,7 @@ int og::User::Main( int argc, char *argv[] ) {
 		og::Gloot::Synchronize();
 		myWindowA.Draw();
 		myWindowB.Draw();
-		og::Shared::Sleep(16);
+		og::Sleep(16);
 	}
 	Gloot::DisableSystemKeys( false );
 	return 0;
@@ -426,7 +424,10 @@ og::User::Error
 ================
 */
 void og::User::Error( og::ErrorId id, const char *msg, const char *param ) {
-	fprintf( stderr, "GLOOT Error(%d): '%s':'%s'\n", id, msg, param?param:"-" );
+	// Todo: Throw an exception on the id's you think are important.
+	char *result = CreateErrorString( id, msg, param );
+	fprintf( stderr, "%s\n", result );
+	FreeErrorString( result );
 }
 
 /*

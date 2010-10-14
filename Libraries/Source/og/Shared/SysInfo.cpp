@@ -43,7 +43,6 @@ static LARGE_INTEGER frequency;
 static double		pfcMultiplier;
 
 CPU::Features	cpu;
-OSInfo			os;
 uLongLong		ramB; // in bytes
 uLongLong		ramMB; // in MByte
 
@@ -418,105 +417,96 @@ void RetrieveMemorySize( void ) {
 
 /*
 ================
-SysInfo::RetrieveOSInfo
+SysInfo::GetOSInfo
 ================
 */
-bool RetrieveOSInfo( void ) {
-#if defined(OG_WIN32)
-	OSVERSIONINFO osInfo;
-	osInfo.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-
-	// Failed ?
-	if( !GetVersionEx( &osInfo ) ) {
-		strcpy( os.name, "Not identified" );
-		User::Error(ERR_SYSTEM_REQUIREMENTS, "Couldn't get OS version info" );
-		return false;
-	}
-
-	os.majorVersion = osInfo.dwMajorVersion;
-	os.minorVersion = osInfo.dwMinorVersion;
-	os.buildNumber = osInfo.dwBuildNumber;
-
-	// We require Win2K minimum
-	if( osInfo.dwPlatformId == VER_PLATFORM_WIN32_NT && osInfo.dwMajorVersion >= 5 ) {
-		if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 0 )
-			strcpy( os.name, "Win2K" );
-		else if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 1 )
-			strcpy( os.name, "WinXP" );
-		else if( osInfo.dwMajorVersion == 6 ) {
-			if( osInfo.dwMinorVersion == 0 )
-				strcpy( os.name, "WinVista" );
-			else
-				strcpy( os.name, "Win7" );
-		}
-
-		if ( strnicmp(osInfo.szCSDVersion, "Service Pack ", 13) == 0 ) {
-			strcat( os.name, " SP" );
-			strcat( os.name, osInfo.szCSDVersion+13 );
-		} else {
-			strcat( os.name, " " );
-			strcat( os.name, osInfo.szCSDVersion );
-		}
-	}
-	if ( os.name[0] == '\0' ) {
-		sprintf( os.name, "Win %d.%d", osInfo.dwMajorVersion, osInfo.dwMinorVersion );
-		User::Error(ERR_SYSTEM_REQUIREMENTS, "Requires Windows 2000 or greater" );
-		return false;
-	}
-#elif defined(OG_LINUX)
-	FILE *file = fopen("/proc/version", "r");
-	if( file != NULL ) {
-		char buffer[256];
-		int len = fread (buffer, 1, 255, file);
-		fclose( file );
-		if ( len != 0 ) {
-			buffer[len] = '\0';
-			char *p = strchr( buffer, '(' );
-			if ( p != NULL || (p = strchr( buffer, '\n' )) != NULL )
-				*p = '\0';
-
-			os.name = buffer;
-			os.name.StripTrailingWhitespaces();
-			// caplength here maybe ? just in case..
-			return;
-		}
-	}
-	os.name = "unknown unix";
-#else
-#endif
-	return true;
-}
-
-/*
-================
-SysInfo::Init
-================
-*/
-bool Init( void ) {
-	static bool result = false;
+OSInfo *SysInfo::GetOSInfo( void ) {
+	static OSInfo data;
 	static bool initialized = false;
 	static Mutex writeLock;
 
 	// We only need to get it once, it wont change..
 	writeLock.Lock();
-	if ( initialized )
-		return result;
-	initialized = true;
+	if ( !initialized ) {
+#if defined(OG_WIN32)
+		OSVERSIONINFO osInfo;
+		osInfo.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
 
-	QueryPerformanceFrequency(&frequency);
-	pfcMultiplier = 1000000.0/static_cast<double>(frequency.QuadPart);
+		// Failed ?
+		if( !GetVersionEx( &osInfo ) ) {
+			strcpy( data.name, "Not identified" );
+			User::Error(ERR_SYSTEM_REQUIREMENTS, "Couldn't get OS version info" );
+		} else {
+			data.majorVersion = osInfo.dwMajorVersion;
+			data.minorVersion = osInfo.dwMinorVersion;
+			data.buildNumber = osInfo.dwBuildNumber;
 
-	if ( !RetrieveOSInfo() )
-		return false;
-	RetrieveCPUInfo();
-	RetrieveCPUSpeed();
-	RetrieveMemorySize();
-	result = true;
+			// We require Win2K minimum
+			if( osInfo.dwPlatformId == VER_PLATFORM_WIN32_NT && osInfo.dwMajorVersion >= 5 ) {
+				if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 0 )
+					strcpy( data.name, "Win2K" );
+				else if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 1 )
+					strcpy( data.name, "WinXP" );
+				else if( osInfo.dwMajorVersion == 6 ) {
+					if( osInfo.dwMinorVersion == 0 )
+						strcpy( data.name, "WinVista" );
+					else
+						strcpy( data.name, "Win7" );
+				}
 
+				if ( strnicmp(osInfo.szCSDVersion, "Service Pack ", 13) == 0 ) {
+					strcat( data.name, " SP" );
+					strcat( data.name, osInfo.szCSDVersion+13 );
+				} else {
+					strcat( data.name, " " );
+					strcat( data.name, osInfo.szCSDVersion );
+				}
+			}
+			if ( data.name[0] == '\0' ) {
+				sprintf( data.name, "Win %d.%d", osInfo.dwMajorVersion, osInfo.dwMinorVersion );
+				User::Error(ERR_SYSTEM_REQUIREMENTS, "Requires Windows 2000 or greater" );
+			}
+		}
+#elif defined(OG_LINUX)
+		FILE *file = fopen("/proc/version", "r");
+		if( file != NULL ) {
+			char buffer[256];
+			int len = fread (buffer, 1, 255, file);
+			fclose( file );
+			if ( len != 0 ) {
+				buffer[len] = '\0';
+				char *p = strchr( buffer, '(' );
+				if ( p != NULL || (p = strchr( buffer, '\n' )) != NULL )
+					*p = '\0';
+
+				data.name = buffer;
+				data.name.StripTrailingWhitespaces();
+				// caplength here maybe ? just in case..
+				return;
+			}
+		}
+		data.name = "unknown unix";
+#else
+#endif
+		initialized = true;
+	}
 	writeLock.Unlock();
-	return true;
+	return &data;
 }
 
+
+// Init SysInfo
+struct Initializer {
+	Initializer() {
+		QueryPerformanceFrequency(&frequency);
+		pfcMultiplier = 1000000.0/static_cast<double>(frequency.QuadPart);
+
+		RetrieveCPUInfo();
+		RetrieveCPUSpeed();
+		RetrieveMemorySize();
+	}
+};
+static Initializer initializer;
 }
 
 /*

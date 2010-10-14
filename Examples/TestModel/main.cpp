@@ -443,9 +443,6 @@ og::User::Main
 ================
 */
 int og::User::Main( int argc, char *argv[] ) {
-	if ( !og::Shared::Init() )
-		return 0;
-
 	if ( InitConsole() ) {
 		if ( og::FileSystem::Init( ".gpk", ".", ".", "base" ) ) {
 			if ( !og::FS->FileExists("gfx/default.tga") ) {
@@ -481,7 +478,7 @@ int og::User::Main( int argc, char *argv[] ) {
 					count = 0;
 					fpsTimer.Start();
 				}
-				og::Shared::Sleep( 10 );
+				og::Sleep( 10 );
 			}
 
 			Gloot::DisableSystemKeys( false );
@@ -510,10 +507,9 @@ og::User::Error
 */
 void og::User::Error( og::ErrorId id, const char *msg, const char *param ) {
 	// Todo: Throw an exception on the id's you think are important.
-
-	char *result = Shared::CreateErrorString( id, msg, param );
+	char *result = CreateErrorString( id, msg, param );
 	og::Console::FatalError( og::Format( "Error: $*\n" ) << result );
-	Shared::FreeErrorString( result );
+	FreeErrorString( result );
 }
 
 /*

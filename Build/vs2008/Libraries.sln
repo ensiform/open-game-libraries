@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogShared", "ogShared.vcproj", "{F17E8FA5-B6DE-4FD8-9A04-A446D2D55945}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogCommon", "ogCommon.vcproj", "{3F587580-96AD-8142-94F9-6DB09A06E6F2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogShared", "ogShared.vcproj", "{F17E8FA5-B6DE-4FD8-9A04-A446D2D55945}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogMath", "ogMath.vcproj", "{FF5B2A74-C2DA-D34A-A780-086B4BEB2F7B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogFont", "ogFont.vcproj", "{3CA644BA-99E4-DC47-B800-13AB49737240}"
 EndProject
@@ -27,14 +29,18 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3F587580-96AD-8142-94F9-6DB09A06E6F2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{3F587580-96AD-8142-94F9-6DB09A06E6F2}.Debug|Win32.Build.0 = Debug|Win32
-		{3F587580-96AD-8142-94F9-6DB09A06E6F2}.Release|Win32.ActiveCfg = Release|Win32
-		{3F587580-96AD-8142-94F9-6DB09A06E6F2}.Release|Win32.Build.0 = Release|Win32
 		{F17E8FA5-B6DE-4FD8-9A04-A446D2D55945}.Debug|Win32.ActiveCfg = Debug|Win32
 		{F17E8FA5-B6DE-4FD8-9A04-A446D2D55945}.Debug|Win32.Build.0 = Debug|Win32
 		{F17E8FA5-B6DE-4FD8-9A04-A446D2D55945}.Release|Win32.ActiveCfg = Release|Win32
 		{F17E8FA5-B6DE-4FD8-9A04-A446D2D55945}.Release|Win32.Build.0 = Release|Win32
+		{3F587580-96AD-8142-94F9-6DB09A06E6F2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3F587580-96AD-8142-94F9-6DB09A06E6F2}.Debug|Win32.Build.0 = Debug|Win32
+		{3F587580-96AD-8142-94F9-6DB09A06E6F2}.Release|Win32.ActiveCfg = Release|Win32
+		{3F587580-96AD-8142-94F9-6DB09A06E6F2}.Release|Win32.Build.0 = Release|Win32
+		{FF5B2A74-C2DA-D34A-A780-086B4BEB2F7B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FF5B2A74-C2DA-D34A-A780-086B4BEB2F7B}.Debug|Win32.Build.0 = Debug|Win32
+		{FF5B2A74-C2DA-D34A-A780-086B4BEB2F7B}.Release|Win32.ActiveCfg = Release|Win32
+		{FF5B2A74-C2DA-D34A-A780-086B4BEB2F7B}.Release|Win32.Build.0 = Release|Win32
 		{3CA644BA-99E4-DC47-B800-13AB49737240}.Debug|Win32.ActiveCfg = Debug|Win32
 		{3CA644BA-99E4-DC47-B800-13AB49737240}.Debug|Win32.Build.0 = Debug|Win32
 		{3CA644BA-99E4-DC47-B800-13AB49737240}.Release|Win32.ActiveCfg = Release|Win32

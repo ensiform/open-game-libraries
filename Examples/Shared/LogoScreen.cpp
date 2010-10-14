@@ -165,7 +165,7 @@ void ogLogoScreen::Draw( int frameTime ) {
 	const int FADE_TIME = 1200;
 	int rest = playTime - timer.Milliseconds() - 200;
 	if ( rest < FADE_TIME )
-		lightValue = og::Math::Clamp( static_cast<float>(rest) / static_cast<float>(FADE_TIME), 0.0f, 1.0f );
+		lightValue = og::Clamp( static_cast<float>(rest) / static_cast<float>(FADE_TIME), 0.0f, 1.0f );
 	
 	GLfloat light_diffuse[] = { lightValue, lightValue, lightValue, 1.0};
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);

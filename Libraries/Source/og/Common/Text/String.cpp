@@ -362,7 +362,7 @@ String::CapLength
 void String::CapLength( int len, bool elipsis ) {
 	if ( len < length ) {
 		if ( elipsis )
-			len = Math::Max(len-3, 0);
+			len = Max(len-3, 0);
 
 		for( int i=0, pos=0; data[i] != '\0'; i++ ) {
 			if( (data[i] & MASK2BIT) != MASK1BIT ) {
@@ -1272,7 +1272,7 @@ String::WriteToFile
 ================
 */
 void String::WriteToFile( File *f ) const {
-	int byteLen = Math::Min( byteLength, OG_STR_FILE_MAX_BYTES );
+	int byteLen = Min( byteLength, OG_STR_FILE_MAX_BYTES );
 	f->WriteUshort(static_cast<uShort>( byteLen ));
 	f->WriteUshort(static_cast<uShort>(length));
 	f->Write( data, byteLen );
@@ -1563,7 +1563,7 @@ int String::ToWide( const char *in, uInt numBytes, wchar_t *out, uInt outSize ) 
 }
 int String::ToWide( const char *in, DynBuffer<wchar_t> &buffer ) {
 	uInt numBytes = String::ByteLength( in ) + 1;
-	uInt size = Math::Max( 1, String::ToWide( in, numBytes, NULL, 0 ) );
+	uInt size = Max( 1, String::ToWide( in, numBytes, NULL, 0 ) );
 	buffer.CheckSize( size );
 	if ( size == 1 )
 		buffer.data[0] = '\0';

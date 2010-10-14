@@ -42,36 +42,6 @@ namespace og {
 
 /*
 ================
-Math::Min
-================
-*/
-template<class type>
-OG_INLINE type Math::Min( type a, type b ) {
-	return a<b?a:b;
-}
-
-/*
-================
-Math::Max
-================
-*/
-template<class type>
-OG_INLINE type Math::Max( type a, type b ) {
-	return a>b?a:b;
-}
-
-/*
-================
-Math::Clamp
-================
-*/
-template<class type>
-OG_INLINE type Math::Clamp( type value, type min, type max ) {
-	return (value>max) ? max : ((value<min) ? min : value);
-}
-
-/*
-================
 Math::Abs
 ================
 */

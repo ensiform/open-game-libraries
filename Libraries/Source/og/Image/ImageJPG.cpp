@@ -112,7 +112,7 @@ METHODDEF(boolean) jpgFillInputBuffer( j_decompress_ptr cinfo ) {
 		return TRUE; 
 	}
 	int available = src->file->Size() - src->file->Tell();
-	int toRead = Math::Min(available, INPUT_BUF_SIZE);
+	int toRead = Min(available, INPUT_BUF_SIZE);
 	src->file->Read( src->buffer, toRead );
 	src->next_input_byte = src->buffer;
 	src->bytes_in_buffer = toRead;

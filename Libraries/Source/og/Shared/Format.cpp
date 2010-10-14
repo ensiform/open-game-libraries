@@ -218,7 +218,7 @@ void Format::TryPrint( const char *fmt, ... ) {
 				offset += ret;
 			else {
 				if ( !alignLeft ) {
-					int max = Math::Min( offset + fieldWidth - ret, bufferSize-1 );
+					int max = Min( offset + fieldWidth - ret, bufferSize-1 );
 					for( ; offset < max; offset++ )
 						buffer[offset] = fillChar;
 					size = bufferSize - offset;
@@ -229,7 +229,7 @@ void Format::TryPrint( const char *fmt, ... ) {
 					}
 				} else {
 					offset += ret;
-					int max = Math::Min( offset + fieldWidth - ret, bufferSize-1 );
+					int max = Min( offset + fieldWidth - ret, bufferSize-1 );
 					for( ; offset < max; offset++ )
 						buffer[offset] = fillChar;
 					buffer[offset] = '\0';

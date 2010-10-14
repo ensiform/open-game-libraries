@@ -264,88 +264,6 @@
 							</File>
 						</Filter>
 						<Filter
-							Name="Hash"
-							Filter=""
-							>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Hash\Hash.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Hash\SecureHash.h"
-								>
-							</File>
-						</Filter>
-						<Filter
-							Name="Math"
-							Filter=""
-							>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Angles.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Bounds.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Math.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Matrix.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Quat.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Random.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Rectangle.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Vector.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Angles.inl"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Bounds.inl"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Math.inl"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Matrix.inl"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Quat.inl"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Random.inl"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Rectangle.inl"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Math\Vector.inl"
-								>
-							</File>
-						</Filter>
-						<Filter
 							Name="Text"
 							Filter=""
 							>
@@ -371,15 +289,7 @@
 							</File>
 						</Filter>
 						<File
-							RelativePath="..\..\Libraries\Include\og\Common\Color.h"
-							>
-						</File>
-						<File
 							RelativePath="..\..\Libraries\Include\og\Common\Common.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\Libraries\Include\og\Common\Color.inl"
 							>
 						</File>
 					</Filter>
@@ -423,48 +333,6 @@
 							</File>
 						</Filter>
 						<Filter
-							Name="Hash"
-							Filter=""
-							>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Common\Hash\Hash.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Common\Hash\SecureHash.cpp"
-								>
-							</File>
-						</Filter>
-						<Filter
-							Name="Math"
-							Filter=""
-							>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Common\Math\Angles.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Common\Math\Bounds.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Common\Math\Matrix.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Common\Math\Quat.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Common\Math\Random.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Common\Math\Vector.cpp"
-								>
-							</File>
-						</Filter>
-						<Filter
 							Name="Text"
 							Filter=""
 							>
@@ -485,10 +353,6 @@
 								>
 							</File>
 						</Filter>
-						<File
-							RelativePath="..\..\Libraries\Source\og\Common\Color.cpp"
-							>
-						</File>
 						<File
 							RelativePath="..\..\Libraries\Source\og\Common\Common.cpp"
 							>

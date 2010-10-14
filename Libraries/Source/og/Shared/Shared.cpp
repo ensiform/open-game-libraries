@@ -37,10 +37,10 @@ namespace og {
 
 /*
 =================
-Shared::Sleep
+Sleep
 =================
 */
-void Shared::Sleep( int msec ) {
+void Sleep( int msec ) {
 #ifdef OG_WIN32
 	::Sleep(msec);
 #else
@@ -50,10 +50,10 @@ void Shared::Sleep( int msec ) {
 
 /*
 =================
-Shared::CreateErrorString
+CreateErrorString
 =================
 */
-char *Shared::CreateErrorString( ErrorId id, const char *msg, const char *param ) {
+char *CreateErrorString( ErrorId id, const char *msg, const char *param ) {
 	// Todo: Throw an exception on the id's you think are important.
 	switch( id ) {
 		// Generic Errors:
@@ -100,10 +100,10 @@ char *Shared::CreateErrorString( ErrorId id, const char *msg, const char *param 
 
 /*
 =================
-Shared::FreeErrorString
+FreeErrorString
 =================
 */
-void Shared::FreeErrorString( char *str ) {
+void FreeErrorString( char *str ) {
 	free( str );
 }
 

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="TestFS"
-	ProjectGUID="{81E27090-9EF9-574C-9744-6C2A47AB3374}"
-	RootNamespace="TestFS"
+	Name="TestAudio"
+	ProjectGUID="{E089D8F8-23C2-184B-B3FA-EC19550AB970}"
+	RootNamespace="TestAudio"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\Binaries"
-			IntermediateDirectory="..\out\obj\Examples\TestFS\Debug"
+			IntermediateDirectory="..\out\obj\Examples\TestAudio\Debug"
 			ConfigurationType="1"
 			CharacterSet="2"
 			>
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\Libraries\Include"
+				AdditionalIncludeDirectories="..\..\Thirdparty;..\..\Libraries\Include"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -48,7 +48,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				ProgramDataBaseFileName="$(OutDir)\TestFS.pdb"
+				ProgramDataBaseFileName="$(OutDir)\TestAudio.pdb"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -57,20 +57,20 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
-				AdditionalIncludeDirectories="..\..\Libraries\Include"
+				AdditionalIncludeDirectories="..\..\Thirdparty;..\..\Libraries\Include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogMath.lib ..\out\ogFileSystem.lib ..\out\zLib.lib winmm.lib"
-				OutputFile="$(OutDir)\TestFS.exe"
+				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogMath.lib ..\out\ogGloot.lib ..\out\ogAudio.lib ..\out\ogImage.lib ..\out\ogFileSystem.lib ..\out\ogFont.lib ..\out\soft_oal.lib ..\out\ogg.lib ..\out\vorbis.lib ..\out\jpeg.lib ..\out\png.lib ..\out\zLib.lib opengl32.lib winmm.lib"
+				OutputFile="$(OutDir)\TestAudio.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
-				ProgramDataBaseFileName="$(OutDir)\TestFS.pdb"
-				SubSystem="1"
+				ProgramDataBaseFileName="$(OutDir)\TestAudio.pdb"
+				SubSystem="2"
 				EntryPointSymbol="mainCRTStartup"
 				TargetMachine="1"
 			/>
@@ -102,7 +102,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="..\..\Binaries"
-			IntermediateDirectory="..\out\obj\Examples\TestFS\Release"
+			IntermediateDirectory="..\out\obj\Examples\TestAudio\Release"
 			ConfigurationType="1"
 			CharacterSet="2"
 			>
@@ -124,14 +124,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
-				AdditionalIncludeDirectories="..\..\Libraries\Include"
+				AdditionalIncludeDirectories="..\..\Thirdparty;..\..\Libraries\Include"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				ProgramDataBaseFileName="$(OutDir)\TestFS.pdb"
+				ProgramDataBaseFileName="$(OutDir)\TestAudio.pdb"
 				DebugInformationFormat="0"
 			/>
 			<Tool
@@ -140,19 +140,19 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
-				AdditionalIncludeDirectories="..\..\Libraries\Include"
+				AdditionalIncludeDirectories="..\..\Thirdparty;..\..\Libraries\Include"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogMath.lib ..\out\ogFileSystem.lib ..\out\zLib.lib winmm.lib"
-				OutputFile="$(OutDir)\TestFS.exe"
+				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogMath.lib ..\out\ogGloot.lib ..\out\ogAudio.lib ..\out\ogImage.lib ..\out\ogFileSystem.lib ..\out\ogFont.lib ..\out\soft_oal.lib ..\out\ogg.lib ..\out\vorbis.lib ..\out\jpeg.lib ..\out\png.lib ..\out\zLib.lib opengl32.lib winmm.lib"
+				OutputFile="$(OutDir)\TestAudio.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="false"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				EntryPointSymbol="mainCRTStartup"
@@ -192,11 +192,36 @@
 			Filter=""
 			>
 			<Filter
-				Name="TestFS"
+				Name="TestAudio"
 				Filter=""
 				>
 				<File
-					RelativePath="..\..\Examples\TestFS\main.cpp"
+					RelativePath="..\..\Examples\TestAudio\main.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Examples\TestAudio\main.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Shared"
+				Filter=""
+				>
+				<File
+					RelativePath="..\..\Examples\Shared\SoundManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Examples\Shared\SoundManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Examples\Shared\FontText.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Examples\Shared\FontText.h"
 					>
 				</File>
 			</Filter>

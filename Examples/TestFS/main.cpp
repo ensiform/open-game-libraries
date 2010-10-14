@@ -52,9 +52,9 @@ namespace User {
 
 	void	Error( ErrorId id, const char *msg, const char *param ) {
 		// Todo: Throw an exception on the id's you think are important.
-		char *result = Shared::CreateErrorString( id, msg, param );
+		char *result = CreateErrorString( id, msg, param );
 		printf( "%s\n", result );
-		Shared::FreeErrorString( result );
+		FreeErrorString( result );
 	}
 	void	Warning( const char *msg ) {
 		printf( msg );
@@ -92,8 +92,6 @@ bool ReadPureList( const char *filename ) {
 	return !allowedPakFiles.IsEmpty();
 }
 int main( int argc, char* argv[] ) {
-	if ( !og::Shared::Init() )
-		return 0;
 	if ( !ReadPureList("purelist.txt") )
 		return 0;
 

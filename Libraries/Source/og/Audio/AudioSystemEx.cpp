@@ -355,8 +355,6 @@ bool AudioSystem::GetDeviceList( StringList &deviceList ) {
 bool AudioSystem::Init( FileSystemCore *fileSystem, const char *defaultFilename, const char *deviceName ) {
 	OG_ASSERT( fileSystem != NULL );
 	OG_ASSERT( defaultFilename != NULL );
-	if ( !Shared::Init() )
-		return false;
 	audioFS = fileSystem;
 	return audioSystemObject.Init(defaultFilename, deviceName);
 }

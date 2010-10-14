@@ -31,8 +31,6 @@ freely, subject to the following restrictions:
 #define __OG_COLOR_H__
 
 namespace og {
-	class String;
-
 	/*
 	==============================================================================
 
@@ -52,7 +50,7 @@ namespace og {
 		float			a;
 
 		void			Set( float r, float g, float b, float a=1.0f );
-		void			Clamp( void );
+		void			ClampSelf( void );
 
 		bool			Cmp( const Color &col ) const;
 		bool			Cmp( const Color &col, float epsilon ) const;

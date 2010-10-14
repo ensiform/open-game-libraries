@@ -30,7 +30,9 @@ freely, subject to the following restrictions:
 #ifndef __OG_MATH_H__
 #define __OG_MATH_H__
 
+#include <og/Shared/Shared.h>
 #include <float.h>
+#include <math.h>
 
 #ifdef INFINITY
 	#undef INFINITY
@@ -45,10 +47,6 @@ namespace og {
 	==============================================================================
 	*/
 	namespace Math {
-		template<class type> type Min( type a, type b );
-		template<class type> type Max( type a, type b );
-		template<class type> type Clamp( type value, type min, type max );
-
 		int		Abs( int i );
 		float	Fabs( float f );
 
@@ -119,5 +117,40 @@ namespace og {
 		const int	MASK_SIGNED = 0x7FFFFFFF;
 	};
 }
+
+// Public Library Includes
+#include "Random.h"
+#include "Math.h"
+#include "Vector.h"
+#include "Rectangle.h"
+#include "Matrix.h"
+#include "Quat.h"
+#include "Angles.h"
+#include "Bounds.h"
+#include "Color.h"
+#include "Hash/SecureHash.h"
+#include "Hash/Hash.h"
+
+namespace og {
+	Format &operator << ( Format &fmt, const Vec2 &value );
+	Format &operator << ( Format &fmt, const Vec3 &value );
+	Format &operator << ( Format &fmt, const Vec4 &value );
+	Format &operator << ( Format &fmt, const Angles &value );
+	Format &operator << ( Format &fmt, const Rect &value );
+	Format &operator << ( Format &fmt, const Quat &value );
+	Format &operator << ( Format &fmt, const Mat2 &value );
+	Format &operator << ( Format &fmt, const Mat3 &value );
+}
+
+// We include .inl files last, so we can access all classes here.
+#include "Random.inl"
+#include "Math.inl"
+#include "Vector.inl"
+#include "Rectangle.inl"
+#include "Matrix.inl"
+#include "Quat.inl"
+#include "Angles.inl"
+#include "Bounds.inl"
+#include "Color.inl"
 
 #endif

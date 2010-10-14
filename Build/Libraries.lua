@@ -22,6 +22,16 @@ solution "Libraries"
 
 	-- [end] Settings that are true for all projects
 
+	-- ogShared Static Library
+	project "ogShared"
+		uuid "F17E8FA5-B6DE-4FD8-9A04-A446D2D55945"
+		kind "StaticLib"
+		language "C++"
+		targetdir( libDir )
+		includedirs { librariesPath .. "/Include" }
+		files { librariesPath .. "/Include/og/Setup.h", librariesPath .. "/Include/og/Shared/**.h", librariesPath .. "/Include/og/Shared/**.inl", librariesPath .. "/Source/og/Shared/**.cpp" }
+		objdir( objectDir .. "/ogShared" )
+
 	-- ogCommon Static Library
 	project "ogCommon"
 		uuid "3F587580-96AD-8142-94F9-6DB09A06E6F2"
@@ -32,15 +42,15 @@ solution "Libraries"
 		files { librariesPath .. "/Include/og/Common/**.h", librariesPath .. "/Include/og/Common/**.inl", librariesPath .. "/Source/og/Common/**.cpp" }
 		objdir( objectDir .. "/ogCommon" )
 
-	-- ogShared Static Library
-	project "ogShared"
-		uuid "F17E8FA5-B6DE-4FD8-9A04-A446D2D55945"
+	-- ogMath Static Library
+	project "ogMath"
+		uuid "FF5B2A74-C2DA-D34A-A780-086B4BEB2F7B"
 		kind "StaticLib"
 		language "C++"
 		targetdir( libDir )
 		includedirs { librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/Setup.h", librariesPath .. "/Include/og/Shared/**.h", librariesPath .. "/Include/og/Shared/**.inl", librariesPath .. "/Source/og/Shared/**.cpp" }
-		objdir( objectDir .. "/ogShared" )
+		files { librariesPath .. "/Include/og/Math/**.h", librariesPath .. "/Include/og/Math/**.inl", librariesPath .. "/Source/og/Math/**.cpp" }
+		objdir( objectDir .. "/ogMath" )
 
 	-- ogFont Static Library
 	project "ogFont"

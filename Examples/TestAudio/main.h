@@ -4,7 +4,7 @@ The Open Game Libraries.
 Copyright (C) 2007-2010 Lusito Software
 
 Author:  Santo Pfingsten (TTK-Bandit)
-Purpose: Basic Library stuff
+Purpose: Somewhat of a demo application
 -----------------------------------------
 
 This software is provided 'as-is', without any express or implied
@@ -27,22 +27,41 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
+#include <og/Gloot/Gloot.h>
 #include <og/Common/Common.h>
+#include "../Shared/SoundManager.h"
+#include "../Shared/FontText.h"
 
-namespace og {
+/*
+==============================================================================
 
-FileSystemCore *commonFS = NULL;
+  ogDemoWindow
 
-Format &operator << ( Format &fmt, const String &value ) {
-	fmt.TryPrint( "%s", value.c_str() );
-	return fmt.Finish();
-}
+==============================================================================
+*/
+class ogDemoWindow : public og::WindowListener {
+public:
+	ogDemoWindow();
+	virtual bool	Init( void );
+	bool	SetupWindow( int x, int y, byte multiSamples, const char *title, int *contextAttribs );
 
-Format &operator << ( Format &fmt, const Color &value ) {
-	byte r, g, b, a;
-	value.ToBytes( r, g, b, a );
-	fmt.TryPrint( "#%X%X%X%X", r, g, b, a );
-	return fmt.Finish();
-}
+	bool	IsOpen( void ) { return window && window->IsOpen(); }
+	void	Draw( void );
 
-}
+protected:
+	void	OnMouseButton( int button, bool down );
+	bool	OnClose( bool forced );
+
+	void	UpdateSound( void );
+
+	og::Window *window;
+	og::Vec3	soundPos;
+	og::Vec3	soundPosOld;
+	bool		mouseDown;
+	bool		manualPosition;
+	og::Angles	soundAngle;
+	ogSoundManager soundManager;
+	og::AudioEmitter *audioEmitter;
+	og::Timer	frameTimer;
+	ogFontText	*helpText[2];
+};

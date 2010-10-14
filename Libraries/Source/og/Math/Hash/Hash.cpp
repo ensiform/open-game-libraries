@@ -29,7 +29,7 @@
 //
 // ==============================================================================
 
-#include <og/Common/Common.h>
+#include <og/Math/Math.h>
 #include <ctype.h>
 
 namespace og {

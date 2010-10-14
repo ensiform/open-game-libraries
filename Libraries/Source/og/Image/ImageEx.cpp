@@ -70,8 +70,6 @@ bool Image::Init( FileSystemCore *fileSystem, const char *defaultFilename, void 
 	OG_ASSERT( fileSystem != NULL );
 	OG_ASSERT( defaultFilename != NULL );
 
-	if ( !Shared::Init() )
-		return false;
 	imageFS = fileSystem;
 
 	static ImageFileTGA tgaHandler;
@@ -184,7 +182,7 @@ Image::SetRoundDown
 ================
 */
 void Image::SetRoundDown( int limit ) {
-	ImageEx::roundDownLimit = Math::ClosestPowerOfTwo( Math::Clamp( limit, 2, ImageEx::maxTextureSize ) );
+	ImageEx::roundDownLimit = Math::ClosestPowerOfTwo( Clamp( limit, 2, ImageEx::maxTextureSize ) );
 }
 
 /*
@@ -193,7 +191,7 @@ Image::SetPicmip
 ================
 */
 void Image::SetPicmip( int value ) {
-	ImageEx::picmip = Math::Clamp( value, 0, MAX_PICMIP );
+	ImageEx::picmip = Clamp( value, 0, MAX_PICMIP );
 }
 
 /*
@@ -223,7 +221,7 @@ Image::SetJpegQuality
 ================
 */
 void Image::SetJpegQuality( int quality ) {
-	ImageEx::jpegQuality = Math::Clamp( quality, 0, 100 );
+	ImageEx::jpegQuality = Clamp( quality, 0, 100 );
 }
 
 /*
@@ -380,8 +378,8 @@ void ImageFileNoDXT::ResampleAsNeeded( void ) {
 		newHeight >>= ImageEx::picmip;
 	}
 	// Can't get bigger than maxTextureSize
-	newWidth = Math::Clamp( newWidth, 1, ImageEx::maxTextureSize );
-	newHeight = Math::Clamp( newHeight, 1, ImageEx::maxTextureSize );
+	newWidth = Clamp( newWidth, 1, ImageEx::maxTextureSize );
+	newHeight = Clamp( newHeight, 1, ImageEx::maxTextureSize );
 
 	if ( width != newWidth || height != newHeight )
 		ResampleFast( newWidth, newHeight );

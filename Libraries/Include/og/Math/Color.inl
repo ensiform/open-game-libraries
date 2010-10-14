@@ -54,14 +54,14 @@ OG_INLINE void Color::Set( float _r, float _g, float _b, float _a ) {
 
 /*
 ================
-Color::Clamp
+Color::ClampSelf
 ================
 */
-OG_INLINE void Color::Clamp( void ) {
-	r = Math::Clamp( r, 1.0f, 0.0f );
-	g = Math::Clamp( g, 1.0f, 0.0f );
-	b = Math::Clamp( b, 1.0f, 0.0f );
-	a = Math::Clamp( a, 1.0f, 0.0f );
+OG_INLINE void Color::ClampSelf( void ) {
+	r = Clamp( r, 1.0f, 0.0f );
+	g = Clamp( g, 1.0f, 0.0f );
+	b = Clamp( b, 1.0f, 0.0f );
+	a = Clamp( a, 1.0f, 0.0f );
 }
 
 /*
@@ -89,10 +89,10 @@ Color::ToBytes
 ================
 */
 OG_INLINE void Color::ToBytes( byte &_r, byte &_g, byte &_b, byte &_a ) const {
-	_r = static_cast<byte>( Math::Clamp( r, 0.0f, 1.0f ) * 255.0f );
-	_g = static_cast<byte>( Math::Clamp( g, 0.0f, 1.0f ) * 255.0f );
-	_b = static_cast<byte>( Math::Clamp( b, 0.0f, 1.0f ) * 255.0f );
-	_a = static_cast<byte>( Math::Clamp( a, 0.0f, 1.0f ) * 255.0f );
+	_r = static_cast<byte>( Clamp( r, 0.0f, 1.0f ) * 255.0f );
+	_g = static_cast<byte>( Clamp( g, 0.0f, 1.0f ) * 255.0f );
+	_b = static_cast<byte>( Clamp( b, 0.0f, 1.0f ) * 255.0f );
+	_a = static_cast<byte>( Clamp( a, 0.0f, 1.0f ) * 255.0f );
 }
 
 /*

@@ -153,7 +153,6 @@ Model::SetFileSystem
 ================
 */
 void Model::SetFileSystem( FileSystemCore *fileSystem ) {
-	Shared::Init();
 	modelFS = fileSystem;
 }
 

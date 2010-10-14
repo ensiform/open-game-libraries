@@ -84,11 +84,6 @@ namespace og {
 #elif defined( OG_MACOS_X )
 #endif
 
-	template<class type>
-	OG_INLINE type Clamp( type value, type min, type max ) {
-		return (value>max) ? max : ((value<min) ? min : value);
-	}
-
 	typedef std::map<WPARAM, int> KeyMap;
 	typedef std::pair<WPARAM, int> KeyPair;
 

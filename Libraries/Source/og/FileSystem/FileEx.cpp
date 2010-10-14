@@ -368,7 +368,7 @@ void FileInPak::Read( void *buffer, uInt len ) {
 		throw FileReadWriteError(FileReadWriteError::END_OF_FILE);
 	// Data is not compressed
 	else if ( !compressedData ) {
-		totalRead = Math::Min(static_cast<uLong>(len), remainingFinalSize);
+		totalRead = Min(static_cast<uLong>(len), remainingFinalSize);
 
 		// Jump to current position in zipfile and read next block into buffer
 		if ( fseek( file, posInZipfile, SEEK_SET ) != 0 || fread( buffer, totalRead, 1, file ) != 1 )
@@ -392,14 +392,14 @@ void FileInPak::Read( void *buffer, uInt len ) {
 
 		// Init the stream output
 		stream.next_out = static_cast<Bytef *>(buffer);
-		stream.avail_out = Math::Min(static_cast<uLong>(len), remainingFinalSize);
+		stream.avail_out = Min(static_cast<uLong>(len), remainingFinalSize);
 
 		// While there's data in output
 		while ( stream.avail_out > 0 ) {
 			// Refill the input buffer if empty (raw input).
 			if ( stream.avail_in == 0 && remainingArchivedSize > 0 ) {
 				// Get the number of bytes we want to fill the buffer with.
-				toRead = Math::Min(UNZ_BUFSIZE, remainingArchivedSize);
+				toRead = Min(UNZ_BUFSIZE, remainingArchivedSize);
 
 				// If no bytes left to read, return end of file
 				if ( toRead == 0 )

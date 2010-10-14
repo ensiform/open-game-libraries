@@ -118,8 +118,6 @@ Adds all pakfiles in the base directory.
 ================
 */
 bool FileSystemEx::Init( const char *_pakExtension, const char *_basePath, const char *_userPath, const char *_baseDir ) {
-	if ( !Shared::Init() )
-		return false;
 	CommonSetFileSystem( this );
 
 	pakExtension	= _pakExtension;
@@ -150,7 +148,7 @@ FileSystemEx::Run
 ================
 */
 void FileSystemEx::Run( void ) {
-	Shared::Sleep(100);
+	Sleep(100);
 
 	// All this does is watch the open/close file events and on shutdown clear all files that where still open.
 	int index;

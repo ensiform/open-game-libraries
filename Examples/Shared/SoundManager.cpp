@@ -103,7 +103,7 @@ const og::Sound *ogSoundManager::Find( const char *name ) const {
 	int index = sounds.Find( name );
 	if ( index == -1 ) {
 		og::User::Warning( og::Format("Sound '$*' not found." ) << name );
-		return NULL;
+		return &defaultSound;
 	}
 	return &sounds[index];
 }
@@ -156,22 +156,19 @@ ogSoundManager2D::Play
 ================
 */
 void ogSoundManager2D::Play( const char *name, const og::Vec2 &origin ) {
-	const og::Sound *sound = Find( name );
-	if ( sound ) {
-		int max = audioEmitters.Num();
-		for( int i=0; i<max && audioEmitters[nextEmitter]->IsOccupied(0); i++ ) {
-			nextEmitter++;
-			if ( nextEmitter >= max )
-				nextEmitter = 0;
-		}
-		og::Vec3 audioOrigin( origin.x, origin.y, 10.0f );
-		audioOrigin *= 0.01f;
-		audioEmitters[nextEmitter]->Play( 0, sound );
-		audioEmitters[nextEmitter]->SetPosition( audioOrigin );
+	int max = audioEmitters.Num();
+	for( int i=0; i<max && audioEmitters[nextEmitter]->IsOccupied(0); i++ ) {
 		nextEmitter++;
 		if ( nextEmitter >= max )
 			nextEmitter = 0;
 	}
+	og::Vec3 audioOrigin( origin.x, origin.y, 10.0f );
+	audioOrigin *= 0.01f;
+	audioEmitters[nextEmitter]->Play( 0, Find( name ) );
+	audioEmitters[nextEmitter]->SetPosition( audioOrigin );
+	nextEmitter++;
+	if ( nextEmitter >= max )
+		nextEmitter = 0;
 }
 
 /*

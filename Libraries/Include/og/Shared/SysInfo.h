@@ -228,11 +228,6 @@ namespace og {
 	// ==============================================================================
 	namespace SysInfo {
 		// ==============================================================================
-		//! Initialize system information and hires time
-		// ==============================================================================
-		bool			Init( void );
-
-		// ==============================================================================
 		//! Get high resolution time
 		//!
 		//! @return	The time in microseconds
@@ -250,8 +245,14 @@ namespace og {
 		// ==============================================================================
 		uLong			GetTime( void );
 
+		// ==============================================================================
+		//! Get information about the Operating System
+		//!
+		//! @return	Pointer to an OSInfo object
+		// ==============================================================================
+		OSInfo *		GetOSInfo( void );
+
 		extern CPU::Features	cpu;	//!< CPU information
-		extern OSInfo			os;		//!< OS information
 		extern uLongLong		ramB;	//!< Available RAM in bytes
 		extern uLongLong		ramMB;	//!< Available RAM in megabytes
 	};

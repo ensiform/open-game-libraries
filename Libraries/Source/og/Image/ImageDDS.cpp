@@ -113,8 +113,8 @@ bool ImageFileDDS::UploadFile( const char *filename, ImageEx &image ) {
 		else
 			og_glCompressedTexImage2DARB( GL_TEXTURE_2D, mipNum++, dxtFormat, mipWidth, mipHeight, 0, mipSize, src_data );
 
-		mipWidth = Math::Max(mipWidth >> 1, 1);
-		mipHeight = Math::Max(mipHeight >> 1, 1);
+		mipWidth = Max(mipWidth >> 1, 1);
+		mipHeight = Max(mipHeight >> 1, 1);
 
 		src_data += mipSize;
 	}

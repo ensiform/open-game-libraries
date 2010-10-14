@@ -33,23 +33,12 @@ freely, subject to the following restrictions:
 #include <og/Shared/Shared.h>
 #include <og/Shared/FileSystemCore.h>
 #include <og/Shared/Thread/ThreadLocalStorage.h>
+#include <og/Math/Math.h>
 
-#include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 
 // Public Library Includes
-#include "Math/Random.h"
-#include "Color.h"
-#include "Hash/SecureHash.h"
-#include "Hash/Hash.h"
-#include "Math/Math.h"
-#include "Math/Vector.h"
-#include "Math/Rectangle.h"
-#include "Math/Matrix.h"
-#include "Math/Quat.h"
-#include "Math/Angles.h"
-#include "Math/Bounds.h"
 #include "Text/String.h"
 #include "Containers/List.h"
 #include "Containers/LinkedList.h"
@@ -70,27 +59,10 @@ namespace og {
 	OG_INLINE void	CommonSetFileSystem( FileSystemCore *fileSystem ) { commonFS = fileSystem; }
 	
 	Format &operator << ( Format &fmt, const String &value );
-	Format &operator << ( Format &fmt, const Vec2 &value );
-	Format &operator << ( Format &fmt, const Vec3 &value );
-	Format &operator << ( Format &fmt, const Vec4 &value );
-	Format &operator << ( Format &fmt, const Angles &value );
-	Format &operator << ( Format &fmt, const Rect &value );
-	Format &operator << ( Format &fmt, const Quat &value );
-	Format &operator << ( Format &fmt, const Mat2 &value );
-	Format &operator << ( Format &fmt, const Mat3 &value );
 	Format &operator << ( Format &fmt, const Color &value );
 }
 
 // We include .inl files last, so we can access all classes here.
-#include "Math/Random.inl"
-#include "Color.inl"
-#include "Math/Math.inl"
-#include "Math/Vector.inl"
-#include "Math/Rectangle.inl"
-#include "Math/Matrix.inl"
-#include "Math/Quat.inl"
-#include "Math/Angles.inl"
-#include "Math/Bounds.inl"
 #include "Text/String.inl"
 #include "Containers/List.inl"
 #include "Containers/LinkedList.inl"

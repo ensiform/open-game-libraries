@@ -136,50 +136,69 @@ namespace og {
 		void	AssertFailed( const char *code, const char *function );
 	//! @}
 	}
-
-	//! Shared
-	namespace Shared {
-	//! @addtogroup Shared
-	//! @{
-
-		// ==============================================================================
-		//! Initialize Shared parts
-		//!
-		//! @return	true on success, otherwise false
-		// ==============================================================================
-		OG_INLINE bool	Init( void ) { return SysInfo::Init(); }
-
-		// ==============================================================================
-		//! Sleeps for a specified time
-		//!
-		//! @param	msec	Number of milliseconds to sleep
-		// ==============================================================================
-		void			Sleep( int msec );
-		
-		// ==============================================================================
-		//! Create an error string from the given values
-		//!
-		//! @param	id		The error id
-		//! @param	msg		The error message
-		//! @param	param	The error param
-		//!
-		//! @return	Allocated c-string, you need to free it when you're done!
-		//!
-		//! @see	FreeErrorString
-		// ==============================================================================
-		char *			CreateErrorString( ErrorId id, const char *msg, const char *param );
-		
-		// ==============================================================================
-		//! Free an error string
-		//!
-		//! @param	str		The error string
-		//!
-		//! @see	CreateErrorString
-		// ==============================================================================
-		void			FreeErrorString( char *str );
-	//! @}
-	}
 //! @}
+
+	// ==============================================================================
+	//! Sleeps for a specified time
+	//!
+	//! @param	msec	Number of milliseconds to sleep
+	// ==============================================================================
+	void	Sleep( int msec );
+
+	// ==============================================================================
+	//! Create an error string from the given values
+	//!
+	//! @param	id		The error id
+	//! @param	msg		The error message
+	//! @param	param	The error param
+	//!
+	//! @return	Allocated c-string, you need to free it when you're done!
+	//!
+	//! @see	FreeErrorString
+	// ==============================================================================
+	char *	CreateErrorString( ErrorId id, const char *msg, const char *param );
+	
+	// ==============================================================================
+	//! Free an error string
+	//!
+	//! @param	str		The error string
+	//!
+	//! @see	CreateErrorString
+	// ==============================================================================
+	void	FreeErrorString( char *str );
+
+	// ==============================================================================
+	//! Minimum
+	//!
+	//! @param	a		The first value
+	//! @param	b		The second value
+	//!
+	//! @return	The smaller one of a and b
+	// ==============================================================================
+	template<class type> type Min( type a, type b ) { return (a < b) ? a : b; }
+
+	// ==============================================================================
+	//! Maximum
+	//!
+	//! @param	a		The first value
+	//! @param	b		The second value
+	//!
+	//! @return	The greater one of a and b
+	// ==============================================================================
+	template<class type> type Max( type a, type b ) { return (a > b) ? a : b; }
+
+	// ==============================================================================
+	//! Clamp
+	//!
+	//! @param	value	The value
+	//! @param	min		The minumum
+	//! @param	max		The maximum
+	//!
+	//! @return	The value limited to min and max
+	// ==============================================================================
+	template<class type> type Clamp( type value, type min, type max ) {
+		return (value>max) ? max : ((value<min) ? min : value);
+	}
 }
 
 // Public Library Includes

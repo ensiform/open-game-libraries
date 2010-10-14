@@ -402,7 +402,7 @@ uLong PakFileEx::FindCentralDir( FILE *file ) {
 		return 0;
 
 	// Don't try to read more than we can get;
-	uLong maxRead = Math::Min( static_cast<uLong>(SIZE_CENTRALDIREND + MAX_COMMENT),fileSize );
+	uLong maxRead = Min( static_cast<uLong>(SIZE_CENTRALDIREND + MAX_COMMENT),fileSize );
 
 	// Jump to read start position
 	uLong startSearch =fileSize-maxRead;

@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Common/Common.h>
+#include <og/Math/Math.h>
 #include <stdio.h>
 
 namespace og {
@@ -141,7 +141,7 @@ SecureHash::AddBuffer
 bool SecureHash::AddBuffer( const byte* buffer, uInt bufferSize ) {
 	uInt llSize;
 	do {
-		messageBlockSize = Math::Min( bufferSize, (uInt)64 );
+		messageBlockSize = Min( bufferSize, (uInt)64 );
 		bufferSize -= messageBlockSize;
 
 		llSize = 8 * messageBlockSize;
