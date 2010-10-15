@@ -151,7 +151,7 @@ bool ImageFilePNG::Open( const char *filename ) {
 		file->Close();
 		return true;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		if ( png_ptr )
 			png_destroy_read_struct(&png_ptr, &info_ptr, png_infopp_NULL);
 		file->Close();
@@ -221,7 +221,7 @@ bool ImageFilePNG::SaveFile( const char *filename, byte *data, uInt width, uInt 
 		file->Close();
 		return true;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		if ( png_ptr )
 			png_destroy_write_struct( &png_ptr, &info_ptr );
 		file->Close();

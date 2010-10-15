@@ -296,4 +296,43 @@ void File::WriteBool( bool value ) {
 	Write( &b, 1 );
 }
 
+/*
+==============================================================================
+
+  FileReadWriteError
+
+==============================================================================
+*/
+/*
+================
+FileReadWriteError::FileReadWriteError
+================
+*/
+FileReadWriteError::FileReadWriteError( const char *msg ) {
+	customMsg = msg;
+	type = CUSTOM;
+}
+FileReadWriteError::FileReadWriteError( ErrorType type ) {
+	this->type = type;
+}
+
+/*
+================
+FileReadWriteError::ToString
+================
+*/
+const char *FileReadWriteError::ToString( void ) {
+	switch(type) {
+			case CUSTOM:		return customMsg.c_str();
+			case DECOMPRESS:	return "Decompression failed";
+			case READ:			return "Read failed";
+			case WRITE:			return "Write failed";
+			case REWIND:		return "Rewind failed";
+			case SEEK:			return "Seek failed";
+			case FLUSH:			return "Flush failed";
+			case END_OF_FILE:	return "Unexpected end of file";
+	}
+	return "Unknown read/write error";
+}
+
 }

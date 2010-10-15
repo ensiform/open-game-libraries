@@ -175,23 +175,11 @@
 				Filter=""
 				>
 				<File
-					RelativePath="..\..\Thirdparty\jpeg\cderror.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Thirdparty\jpeg\jchuff.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\Thirdparty\jpeg\jconfig.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\Thirdparty\jpeg\jdct.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Thirdparty\jpeg\jdhuff.h"
 					>
 				</File>
 				<File
@@ -223,11 +211,19 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\Thirdparty\jpeg\jaricom.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Thirdparty\jpeg\jcapimin.c"
 					>
 				</File>
 				<File
 					RelativePath="..\..\Thirdparty\jpeg\jcapistd.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Thirdparty\jpeg\jcarith.c"
 					>
 				</File>
 				<File
@@ -271,10 +267,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\Thirdparty\jpeg\jcphuff.c"
-					>
-				</File>
-				<File
 					RelativePath="..\..\Thirdparty\jpeg\jcprepct.c"
 					>
 				</File>
@@ -292,6 +284,10 @@
 				</File>
 				<File
 					RelativePath="..\..\Thirdparty\jpeg\jdapistd.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Thirdparty\jpeg\jdarith.c"
 					>
 				</File>
 				<File
@@ -339,10 +335,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\Thirdparty\jpeg\jdphuff.c"
-					>
-				</File>
-				<File
 					RelativePath="..\..\Thirdparty\jpeg\jdpostct.c"
 					>
 				</File>
@@ -380,10 +372,6 @@
 				</File>
 				<File
 					RelativePath="..\..\Thirdparty\jpeg\jidctint.c"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Thirdparty\jpeg\jidctred.c"
 					>
 				</File>
 				<File

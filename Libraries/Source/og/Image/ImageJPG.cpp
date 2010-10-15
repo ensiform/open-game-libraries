@@ -32,9 +32,7 @@
 
 #include <setjmp.h> 
 extern "C" { 
-	#define XMD_H
 	#include <jpeg/jpeglib.h>
-	#undef XMD_H
 }
 
 namespace og {
@@ -262,7 +260,7 @@ bool ImageFileJPG::Open( const char *filename ) {
 		file->Close();
 		return true;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		jpeg_destroy_decompress(&cinfo);
 		file->Close();
 		User::Error( ERR_FILE_CORRUPT, Format("Jpeg: $*" ) << err.ToString(), filename );
@@ -340,7 +338,7 @@ bool ImageFileJPG::SaveFile( const char *filename, byte *data, uInt width, uInt 
 		file->Close();
 		return true;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		file->Close();
 		User::Error( ERR_FILE_WRITEFAIL, Format("Jpeg: $*" ) << err.ToString(), filename );
 		return false;

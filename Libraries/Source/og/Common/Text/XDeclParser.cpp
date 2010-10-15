@@ -260,7 +260,7 @@ bool XDeclParser::BinaryFile( const char *filename ) {
 		file->Close();
 		return ret;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		file->Close();
 		User::Error( ERR_FILE_CORRUPT, Format("XDecl: $*" ) << err.ToString(), filename );
 		return false;
@@ -332,7 +332,7 @@ bool XDeclParser::MakeBinary( const char *filename ) {
 		f->Close();
 		return true;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		f->Close();
 		User::Error( ERR_FILE_WRITEFAIL, Format("Binary XDecl: $*" ) << err.ToString(), filename );
 		return false;

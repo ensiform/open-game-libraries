@@ -266,7 +266,7 @@ bool DeclParser::BinaryFile( const char *filename ) {
 		file->Close();
 		return ret;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		file->Close();
 		User::Error( ERR_FILE_CORRUPT, Format("Decl: $*" ) << err.ToString(), filename );
 		return false;
@@ -375,7 +375,7 @@ bool DeclParser::MakeBinary( const char *filename ) {
 		}
 		return true;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		f->Close();
 		User::Error( ERR_FILE_WRITEFAIL, Format("Binary Decl: $*.bin" ) << err.ToString(), filename );
 		return false;

@@ -390,7 +390,7 @@ bool WavStream::LoadFile( const char *filename ) {
 		User::Error( ERR_BAD_FILE_FORMAT, "File is no PCM wave file.", filename );
 		return false;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		if ( data ) {
 			delete[] data;
 			data = NULL;

@@ -40,7 +40,7 @@ namespace og {
 //! @see	UserCallbacks
 //! @todo	See if thrown errors work without problems in the file loaders.
 //! @todo	Later: Save Function for DDS files ?
-//! @todo	Later: Update to latest versions of libPNG and libJPG
+//! @todo	Later: Update to latest versions of libPNG
 //! @{
 
 	// ==============================================================================

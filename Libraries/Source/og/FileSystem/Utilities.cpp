@@ -43,56 +43,6 @@ namespace og {
 /*
 ==============================================================================
 
-  FileReadWriteError
-
-==============================================================================
-*/
-/*
-================
-FileReadWriteError::FileReadWriteError
-================
-*/
-FileReadWriteError::FileReadWriteError( const char *msg ) {
-	customMsg = strdup(msg);
-	type = CUSTOM;
-}
-FileReadWriteError::FileReadWriteError( ErrorType type ) {
-	customMsg = NULL;
-	this->type = type;
-}
-
-/*
-================
-FileReadWriteError::~FileReadWriteError
-================
-*/
-FileReadWriteError::~FileReadWriteError() {
-	if ( customMsg )
-		free( (void*)customMsg );
-}
-
-/*
-================
-FileReadWriteError::ToString
-================
-*/
-const char *FileReadWriteError::ToString( void ) {
-	switch(type) {
-			case CUSTOM:		return customMsg;
-			case DECOMPRESS:	return "Decompression failed";
-			case READ:			return "Read failed";
-			case WRITE:			return "Write failed";
-			case REWIND:		return "Rewind failed";
-			case SEEK:			return "Seek failed";
-			case FLUSH:			return "Flush failed";
-			case END_OF_FILE:	return "Unexpected end of file";
-	}
-	return "Unknown read/write error";
-}
-
-/*
-==============================================================================
-
   FileFinder
 
 ==============================================================================

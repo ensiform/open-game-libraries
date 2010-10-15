@@ -59,7 +59,7 @@ namespace og {
 			END_OF_FILE		//!< Unexpected end of file
 		};
 		ErrorType type;			//!< The error type id
-		const char *customMsg;	//!< The custom error message
+		String customMsg;	//!< The custom error message
 
 		// ==============================================================================
 		//! Constructor
@@ -74,11 +74,6 @@ namespace og {
 		//! @param	type	The error type id
 		// ==============================================================================
 		FileReadWriteError( ErrorType type );
-
-		// ==============================================================================
-		//! Destructor
-		// ==============================================================================
-		~FileReadWriteError();
 
 		// ==============================================================================
 		//! Get a string representation of the error type

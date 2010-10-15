@@ -269,7 +269,7 @@ Model *Model::Load( const char *filename ) {
 		file->Close();
 		return model;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		file->Close();
 		delete model;
 		User::Error( ERR_FILE_CORRUPT, Format("MD3: $*" ) << err.ToString(), filename );
@@ -380,7 +380,7 @@ bool Model::Save( Model *model, const char *filename ) {
 		file->Close();
 		return true;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		file->Close();
 		User::Error( ERR_FILE_WRITEFAIL, Format("GMD: $*" ) << err.ToString(), filename );
 		return NULL;

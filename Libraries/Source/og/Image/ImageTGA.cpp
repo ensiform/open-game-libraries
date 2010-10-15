@@ -106,7 +106,7 @@ bool ImageFileTGA::Open( const char *filename ) {
 			return ReadType3( file, topDown );
 		return ReadType10( file, topDown );
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		file->Close();
 		User::Error( ERR_FILE_CORRUPT, Format("Targa: $*" ) << err.ToString(), filename );
 		return false;
@@ -365,7 +365,7 @@ bool ImageFileTGA::SaveFile( const char *filename, byte *data, uInt width, uInt 
 		file->Close();
 		return true;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		file->Close();
 		User::Error( ERR_FILE_WRITEFAIL, Format("Targa: $*" ) << err.ToString(), filename );
 		return false;

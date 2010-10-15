@@ -315,7 +315,7 @@ bool FontFile::Open( const char *filename ) {
 		file->Close();
 		return true;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		file->Close();
 		User::Error( ERR_FILE_CORRUPT, Format("Font: $*" ) << err.ToString(), filename );
 		return false;

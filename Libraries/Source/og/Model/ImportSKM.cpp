@@ -126,7 +126,7 @@ bool ReadBonesFromSKP( const char *filename, Model *model ) {
 		file->Close();
 		return true;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		file->Close();
 		delete model;
 		User::Error( ERR_FILE_CORRUPT, Format("SKP: $*" ) << err.ToString(), filename );
@@ -257,7 +257,7 @@ Model *Model::ImportSKM( const char *filename, const char *filenameAnim ) {
 		file->Close();
 		return model;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		file->Close();
 		delete model;
 		User::Error( ERR_FILE_CORRUPT, Format("SKM: $*" ) << err.ToString(), filename );

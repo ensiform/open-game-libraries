@@ -701,7 +701,7 @@ int FileSystemEx::LoadFile( const char *path, byte **buffer, bool pure ) {
 		file->Close();
 		return size;
 	}
-	catch( FileReadWriteError err ) {
+	catch( FileReadWriteError &err ) {
 		delete[] *buffer;
 		*buffer = NULL;
 		file->Close();
