@@ -43,6 +43,7 @@ namespace og {
 	class Vec2 {
 	public:
 		Vec2() { Zero(); }
+		Vec2( const StringType &value ) { String::ToFloatArray( value, &x, 2 ); }
 		explicit Vec2( float x, float y ) { Set( x, y ); }
 		Vec2( const Vec2 &v ) { Set( v.x, v.y ); }
 
@@ -122,6 +123,7 @@ namespace og {
 	class Vec3 {
 	public:
 		Vec3() { Zero(); }
+		Vec3( const StringType &value ) { String::ToFloatArray( value, &x, 3 ); }
 		explicit Vec3( float x, float y, float z ) { Set( x, y, z ); }
 		Vec3( const Vec3 &v ) { Set( v.x, v.y, v.z ); }
 
@@ -208,6 +210,7 @@ namespace og {
 	class Vec4 {
 	public:
 		Vec4() { Zero(); }
+		Vec4( const StringType &value ) { String::ToFloatArray( value, &x, 4 ); }
 		explicit Vec4( float x, float y, float z, float w ) { Set( x, y, z, w ); }
 		Vec4( const Vec4 &v ) { Set( v.x, v.y, v.z, v.w ); }
 
@@ -288,6 +291,7 @@ namespace og {
 	class Vec5 {
 	public:
 		Vec5() { Zero(); }
+		Vec5( const StringType &value ) { String::ToFloatArray( value, &x, 5 ); }
 		explicit Vec5( float x, float y, float z, float s, float t ) { Set( x, y, z, s, t ); }
 		Vec5( const Vec5 &v ) { Set( v.x, v.y, v.z, v.s, v.t ); }
 
@@ -348,6 +352,7 @@ namespace og {
 	class VecX {
 	public:
 		VecX() { Zero(); }
+		VecX( const StringType &value ) { String::ToFloatArray( value, v, dim ); }
 		VecX( const VecX<dim> &vec ) { Set(vec); }
 		explicit VecX( float vec, ... );
 		VecX( const float *vec ) { Set(vec); }

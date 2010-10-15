@@ -38,11 +38,14 @@ Format &operator << ( Format &fmt, const String &value ) {
 	return fmt.Finish();
 }
 
-Format &operator << ( Format &fmt, const Color &value ) {
-	byte r, g, b, a;
-	value.ToBytes( r, g, b, a );
-	fmt.TryPrint( "#%X%X%X%X", r, g, b, a );
-	return fmt.Finish();
+int StringToWide( const char *in, DynBuffer<wchar_t> &buffer ) {
+	uInt numBytes = String::ByteLength( in ) + 1;
+	uInt size = Max( 1, String::ToWide( in, numBytes, NULL, 0 ) );
+	buffer.CheckSize( size );
+	if ( size == 1 )
+		buffer.data[0] = '\0';
+	else
+		String::ToWide( in, numBytes, buffer.data, buffer.size );
+	return size;
 }
-
 }

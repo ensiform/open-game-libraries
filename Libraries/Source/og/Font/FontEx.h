@@ -33,6 +33,7 @@
 #include <og/Font/Font.h>
 #include <og/Common/Common.h>
 #include <og/Image/Image.h>
+#include <og/Math/Math.h>
 #include <map>
 
 //! Open Game Libraries

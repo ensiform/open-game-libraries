@@ -44,10 +44,10 @@ void SpawnAsteroidsRadial( const char *classname, og::Vec2 origin, int count, fl
 	og::Dict addSettings;
 	for( int i=0; i<count; i++, angle+=angleStep ) {
 		dir.FromAngle( globalRand.RandomFloat( angle-spreadAngle, angle+spreadAngle) );
-		addSettings.SetVec2("origin", origin + dir * globalRand.RandomFloat( minDist, maxDist ) );
-		addSettings.SetVec2("velocity", dir *globalRand.RandomFloat( minSpeed, maxspeed ) );
-		addSettings.SetFloat("rotation", angle);
-		addSettings.SetFloat("rotationSpeed", globalRand.RandomFloat( -maxRot, maxRot));
+		addSettings.Set("origin", origin + dir * globalRand.RandomFloat( minDist, maxDist ) );
+		addSettings.Set("velocity", dir *globalRand.RandomFloat( minSpeed, maxspeed ) );
+		addSettings.Set("rotation", angle);
+		addSettings.Set("rotationSpeed", globalRand.RandomFloat( -maxRot, maxRot));
 		ogEntityType::SpawnEntity( classname, &addSettings );
 	}
 }
@@ -65,10 +65,10 @@ void SpawnAsteroidsRandom( const char *classname, og::Vec2 origin, int count, fl
 	og::Dict addSettings;
 	for( int i=0; i<count; i++, angle+=angleStep ) {
 		dir.FromAngle( globalRand.RandomFloat( angle-spreadAngle, angle+spreadAngle) );
-		addSettings.SetVec2("origin", origin + dir * globalRand.RandomFloat( minDist, maxDist ) );
+		addSettings.Set("origin", origin + dir * globalRand.RandomFloat( minDist, maxDist ) );
 		dir.FromAngle( globalRand.RandomFloat( 0, 360.0f) );
-		addSettings.SetVec2("velocity", dir *globalRand.RandomFloat( minSpeed, maxspeed ) );
-		addSettings.SetFloat("rotationSpeed", globalRand.RandomFloat( -maxRot, maxRot));
+		addSettings.Set("velocity", dir *globalRand.RandomFloat( minSpeed, maxspeed ) );
+		addSettings.Set("rotationSpeed", globalRand.RandomFloat( -maxRot, maxRot));
 		ogEntityType::SpawnEntity( classname, &addSettings );
 	}
 }
@@ -104,19 +104,20 @@ ogEntity::Spawn
 ================
 */
 void ogEntity::Spawn( void ) {
-	image = og::Image::Find(settings.GetString("image"));
-	og::Vec2 halfImageSize = settings.GetVec2("imageSize") * 0.5f;
+	image = og::Image::Find(settings["image"]);
+	og::Vec2 halfImageSize = settings["imageSize"];
+	halfImageSize *= 0.5f;
 	imageVerts[0].Set( -halfImageSize.x, -halfImageSize.y );
 	imageVerts[1].Set( halfImageSize.x, halfImageSize.y );
 	float t = og::Math::Square(halfImageSize.x) + og::Math::Square(halfImageSize.y);
 	if ( t != 0.0f )
 		drawRadius = og::Math::Sqrt(t);
-	origin = settings.GetVec2("origin");
-	velocity = settings.GetVec2("velocity");
-	radius = settings.GetFloat("radius");
-	rotation = settings.GetFloat("rotation");
-	rotationSpeed = settings.GetFloat("rotationSpeed");
-	popTime = popTimeFull = settings.GetFloat("popTime", "0.5");
+	origin = settings["origin"];
+	velocity = settings["velocity"];
+	radius = settings["radius"];
+	rotation = settings["rotation"];
+	rotationSpeed = settings["rotationSpeed"];
+	popTime = popTimeFull = settings.Get("popTime", "0.5");
 }
 
 /*
@@ -166,7 +167,7 @@ void ogEntity::Think( float timeScale ) {
 		CheckCollisions( origin + portalOffset );
 	}
 	if ( doExplode ) {
-		demoWindow.game.PlaySound( settings.GetString("snd_destroy"), origin );
+		demoWindow.game.PlaySound( settings["snd_destroy"], origin );
 		Explode();
 	}
 }
@@ -261,17 +262,17 @@ ogPlayer::Spawn
 ================
 */
 void ogPlayer::Spawn( void ) {
-	imageShield = og::Image::Find(settings.GetString("image_shield"));
-	imageThrust = og::Image::Find(settings.GetString("image_thrust"));
-	imageReverse = og::Image::Find(settings.GetString("image_reverse"));
-	imageLeft = og::Image::Find(settings.GetString("image_left"));
-	imageRight = og::Image::Find(settings.GetString("image_right"));
-	acceleration = settings.GetFloat("acceleration");
-	maxSpeed = settings.GetFloat("maxSpeed");
-	lifes = settings.GetInt("lifes");
-	spawnProtection = settings.GetFloat("spawnProtection");
-	spawnProtectionFade = settings.GetFloat("spawnProtectionFade");
-	blastClass = settings.GetString("blast");
+	imageShield = og::Image::Find(settings["image_shield"]);
+	imageThrust = og::Image::Find(settings["image_thrust"]);
+	imageReverse = og::Image::Find(settings["image_reverse"]);
+	imageLeft = og::Image::Find(settings["image_left"]);
+	imageRight = og::Image::Find(settings["image_right"]);
+	acceleration = settings["acceleration"];
+	maxSpeed = settings["maxSpeed"];
+	lifes = settings["lifes"];
+	spawnProtection = settings["spawnProtection"];
+	spawnProtectionFade = settings["spawnProtectionFade"];
+	blastClass = settings["blast"];
 }
 
 /*
@@ -371,8 +372,8 @@ ogPlayer::Explode
 ================
 */
 void ogPlayer::Explode( void ) {
-	og::String spawnClass = settings.GetString("spawn");
-	int spawnCount = settings.GetInt("spawnCount");
+	og::String spawnClass = settings["spawn"];
+	int spawnCount = settings["spawnCount"];
 	if ( !spawnClass.IsEmpty() && spawnCount > 0 )
 		SpawnAsteroidsRadial( spawnClass.c_str(), origin, spawnCount, radius*0.15f, radius*0.35f, 50.0f, 100.0f, 60.0f, 0.35f );
 
@@ -390,8 +391,8 @@ void ogPlayer::Reset( void ) {
 	velocity.Set( 0, 0 );
 	rotation = 0.0f;
 	doExplode = false;
-	demoWindow.game.PlaySound( settings.GetString("snd_teleport"), origin );
-	spawnProtection = settings.GetFloat("spawnProtection");
+	demoWindow.game.PlaySound( settings["snd_teleport"], origin );
+	spawnProtection = settings["spawnProtection"];
 	popTime = popTimeFull;
 }
 
@@ -404,11 +405,11 @@ void ogPlayer::Attack( void ) {
 	og::Dict addSettings;
 	og::Vec2 dir;
 	dir.FromAngle( rotation-90 );
-	addSettings.SetVec2("origin", origin + dir * radius*0.75f );
-	addSettings.SetVec2("velocity", dir );
-	addSettings.SetFloat("rotation", rotation);
+	addSettings.Set("origin", origin + dir * radius*0.75f );
+	addSettings.Set("velocity", dir );
+	addSettings.Set("rotation", rotation);
 	static_cast<ogPlayer *>( ogEntityType::SpawnEntity( blastClass.c_str(), &addSettings ) );
-	demoWindow.game.PlaySound( settings.GetString("snd_shot"), origin );
+	demoWindow.game.PlaySound( settings["snd_shot"], origin );
 }
 
 
@@ -427,8 +428,8 @@ ogBlast::Spawn
 ================
 */
 void ogBlast::Spawn( void ) {
-	velocity *= settings.GetFloat("speed");
-	timeLeft = settings.GetFloat("lifeTime");
+	velocity *= (float)settings["speed"];
+	timeLeft = settings["lifeTime"];
 }
 
 /*
@@ -479,8 +480,8 @@ void ogAsteroid::Collide( ogEntity *ent ) {
 		}
 		doExplode = true;
 
-		og::String spawnClass = settings.GetString("spawn");
-		int spawnCount = settings.GetInt("spawnCount");
+		og::String spawnClass = settings["spawn"];
+		int spawnCount = settings["spawnCount"];
 		if ( !spawnClass.IsEmpty() && spawnCount > 0 )
 			SpawnAsteroidsRadial( spawnClass.c_str(), origin, spawnCount, radius*0.15f, radius*0.35f, 50.0f, 100.0f, 60.0f, 0.7f );
 	}
@@ -502,7 +503,7 @@ ogSplitter::Spawn
 ================
 */
 void ogSplitter::Spawn( void ) {
-	timeLeft = lifeTime = settings.GetFloat("lifeTime");
+	timeLeft = lifeTime = settings["lifeTime"];
 }
 
 /*
@@ -546,8 +547,8 @@ ogItem::Spawn
 ================
 */
 void ogItem::Spawn( void ) {
-	extraLifes = settings.GetInt("extraLifes");
-	timeLeft = settings.GetFloat("lifeTime");
+	extraLifes = settings["extraLifes"];
+	timeLeft = settings["lifeTime"];
 }
 
 /*

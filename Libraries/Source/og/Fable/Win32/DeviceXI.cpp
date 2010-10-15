@@ -28,6 +28,7 @@
 // ==============================================================================
 
 #include <og/Shared/Shared.h>
+#include <og/Math/Math.h>
 
 #ifdef OG_WIN32
 

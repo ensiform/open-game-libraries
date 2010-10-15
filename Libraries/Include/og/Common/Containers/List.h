@@ -202,6 +202,8 @@ namespace og {
 		int			Find( const char *value ) const;				// Find an item in the list
 		int			IFind( const char *value ) const;				// Find an item in the list
 
+		void		SplitString( const char *text, const char * delimiter=";" );
+
 		// operators
 		void		operator+=( const char *value );				// Add a new string, resize the list if needed
 	};

@@ -30,6 +30,20 @@ freely, subject to the following restrictions:
 #include <og/Math/Math.h>
 
 namespace og {
+/*
+================
+SingleHexToFloat
+================
+*/
+static float SingleHexToFloat( char c ) {
+	if ( c <= '9' && c >= '0' )
+		return static_cast<float>( c - '0' ) / 15.0f;
+	else if ( c <= 'f' && c >= 'a' )
+		return static_cast<float>( c - 'a' + 10 ) / 15.0f;
+	else if ( c <= 'F' && c >= 'A' )
+		return static_cast<float>( c - 'A' + 10 ) / 15.0f;
+	return 1.0f;
+}
 
 /*
 ==============================================================================
@@ -38,6 +52,59 @@ namespace og {
 
 ==============================================================================
 */
+
+/*
+================
+Color::GetEscapeColor
+================
+*/
+int Color::GetEscapeColor( const char *str, Color &destColor, const Color &defaultColor ) {
+	if ( *str == '\0' )
+		return -1;
+
+	if ( *str == 'c' ) {
+		if ( str[1] == '\0' || str[2] == '\0' || str[3] == '\0' )
+			return -1;
+		destColor.r = SingleHexToFloat( str[1] );
+		destColor.g = SingleHexToFloat( str[2] );
+		destColor.b = SingleHexToFloat( str[3] );
+		return 4;
+	}
+	switch( *str ) {
+		default:
+		case '0':
+			destColor = defaultColor;
+			break;
+		case '1':
+			destColor = c_color::red;
+			break;
+		case '2':
+			destColor = c_color::green;
+			break;
+		case '3':
+			destColor = c_color::yellow;
+			break;
+		case '4':
+			destColor = c_color::blue;
+			break;
+		case '5':
+			destColor = c_color::cyan;
+			break;
+		case '6':
+			destColor = c_color::magenta;
+			break;
+		case '7':
+			destColor = c_color::white;
+			break;
+		case '8':
+			destColor = c_color::gray;
+			break;
+		case '9':
+			destColor = c_color::black;
+			break;
+	}
+	return 1;
+}
 
 namespace c_color {
 	Color transparent( 0.0f, 0.0f, 0.0f, 0.0f );

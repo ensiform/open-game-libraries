@@ -32,6 +32,17 @@ freely, subject to the following restrictions:
 namespace og {
 
 /*
+================
+MathIsPowerOfTwo
+================
+*/
+OG_INLINE bool MathIsPowerOfTwo( int x ) {
+	// This is the faster of the two known methods
+	// with the x > 0 check moved to the beginning
+	return x > 0 && ( x & ( x - 1 ) ) == 0;
+}
+
+/*
 ==============================================================================
 
   HashIndex
@@ -43,11 +54,35 @@ namespace og {
 
 /*
 ================
+HashIndex::HashIndex
+================
+*/
+HashIndex::HashIndex( int _hashSize ) {
+	OG_ASSERT( _hashSize > 0 && MathIsPowerOfTwo( _hashSize ) );
+
+	hashSize = _hashSize;
+	mask = hashSize-1;
+	initialized = false;
+	nodeList = NULL;
+	findNode = NULL;
+}
+
+/*
+================
+HashIndex::~HashIndex
+================
+*/
+HashIndex::~HashIndex() {
+	Clear();
+}
+
+/*
+================
 HashIndex::Init
 ================
 */
 void HashIndex::Init( void ) {
-	OG_ASSERT( hashSize > 0 && Math::IsPowerOfTwo( hashSize ) );
+	OG_ASSERT( hashSize > 0 && MathIsPowerOfTwo( hashSize ) );
 	nodeList = new HashIndexNode_s *[hashSize];
 	memset(nodeList, 0, sizeof(HashIndexNode_s *) * hashSize);
 	initialized = true;
@@ -82,7 +117,7 @@ void HashIndex::Clear( int newHashSize ) {
 		initialized = false;
 	}
 	if ( newHashSize != -1 ) {
-		OG_ASSERT( newHashSize > 0 && Math::IsPowerOfTwo( newHashSize ) );
+		OG_ASSERT( newHashSize > 0 && MathIsPowerOfTwo( newHashSize ) );
 		hashSize = newHashSize;
 	}
 }

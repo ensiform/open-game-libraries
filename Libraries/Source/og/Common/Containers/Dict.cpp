@@ -84,7 +84,7 @@ void Dict::Copy( const Dict &other ) {
 	Clear();
 	int num = other.entries.Num();
 	for ( int i = 0; i < num; i++ )
-		SetString( other.entries[i].GetKey().c_str(), other.entries[i].GetValue().c_str() );
+		Set( other.entries[i].GetKey().c_str(), other.entries[i].GetValue().c_str() );
 }
 
 /*
@@ -96,16 +96,16 @@ void Dict::Append( const Dict &other, bool overWrite ) {
 	int num = other.entries.Num();
 	for ( int i = 0; i < num; i++ ) {
 		if ( overWrite || Find( other.entries[i].GetKey().c_str() ) == -1 )
-			SetString( other.entries[i].GetKey().c_str(), other.entries[i].GetValue().c_str() );
+			Set( other.entries[i].GetKey().c_str(), other.entries[i].GetValue().c_str() );
 	}
 }
 
 /*
 ================
-Dict::SetString
+Dict::Set
 ================
 */
-void Dict::SetString( const char *key, const char *value ) {
+void Dict::Set( const char *key, const char *value ) {
 	if ( key == NULL || key[0] == '\0' )
 		return;
 
@@ -125,32 +125,14 @@ void Dict::SetString( const char *key, const char *value ) {
 
 /*
 ================
-Dict::GetString
+Dict::Get
 ================
 */
-const char *Dict::GetString( const char *key, const char *defaultValue ) const {
+StringType Dict::Get( const char *key, const char *defaultValue ) const {
 	int index = Find( key );
 	if ( index == -1 )
-		return defaultValue;
-	return entries[index].GetValue().c_str();
-}
-bool Dict::GetString( const char *key, const char *defaultValue, const char **out ) const {
-	int index = Find( key );
-	if ( index == -1 ) {
-		*out = defaultValue;
-		return false;
-	}
-	*out = entries[index].GetValue().c_str();
-	return true;
-}
-bool Dict::GetString( const char *key, const char *defaultValue, String &out ) const {
-	int index = Find( key );
-	if ( index == -1 ) {
-		out = defaultValue;
-		return false;
-	}
-	out = entries[index].GetValue();
-	return true;
+		return StringType( defaultValue );
+	return StringType( entries[index].GetValue().c_str() );
 }
 
 /*
@@ -201,7 +183,7 @@ void Dict::ReadFromFile( File *file ) {
 	for ( int i = 0; i < n; i++ ) {
 		key.ReadFromFile( file );
 		val.ReadFromFile( file );
-		SetString(key.c_str(), val.c_str());
+		Set(key.c_str(), val.c_str());
 	}
 }
 

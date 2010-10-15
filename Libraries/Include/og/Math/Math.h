@@ -128,10 +128,9 @@ namespace og {
 #include "Angles.h"
 #include "Bounds.h"
 #include "Color.h"
-#include "Hash/SecureHash.h"
-#include "Hash/Hash.h"
 
 namespace og {
+	Format &operator << ( Format &fmt, const Color &value );
 	Format &operator << ( Format &fmt, const Vec2 &value );
 	Format &operator << ( Format &fmt, const Vec3 &value );
 	Format &operator << ( Format &fmt, const Vec4 &value );

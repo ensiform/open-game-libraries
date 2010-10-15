@@ -42,30 +42,6 @@ namespace og {
 
 /*
 ================
-HashIndex::HashIndex
-================
-*/
-OG_INLINE HashIndex::HashIndex( int _hashSize ) {
-	OG_ASSERT( _hashSize > 0 && Math::IsPowerOfTwo( _hashSize ) );
-
-	hashSize = _hashSize;
-	mask = hashSize-1;
-	initialized = false;
-	nodeList = NULL;
-	findNode = NULL;
-}
-
-/*
-================
-HashIndex::~HashIndex
-================
-*/
-OG_INLINE HashIndex::~HashIndex() {
-	Clear();
-}
-
-/*
-================
 HashIndex::First
 ================
 */
@@ -98,7 +74,7 @@ HashIndex::GenerateKey
 ================
 */
 OG_INLINE int HashIndex::GenerateKey( const char *value, bool caseSensitive ) {
-	return Hash::Compute32(value, caseSensitive);
+	return FNV32(value, caseSensitive);
 }
 
 }

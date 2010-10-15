@@ -215,15 +215,6 @@ OG_INLINE String String::GetFileExtension( void ) const {
 
 /*
 ================
-String::Split
-================
-*/
-OG_INLINE void String::Split( StringList& list, const char *delimiter ) const {
-	Split( data, list, delimiter );
-}
-
-/*
-================
 String::Cmp
 ================
 */

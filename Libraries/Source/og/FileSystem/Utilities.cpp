@@ -101,8 +101,8 @@ class FileFinder {
 public:
 	FileFinder( const char *_baseDir, const char *_extension, StringList *_list, int flags ) {
 #ifdef OG_WIN32
-		String::ToWide( _baseDir, baseDir );
-		String::ToWide( _extension, extension );
+		StringToWide( _baseDir, baseDir );
+		StringToWide( _extension, extension );
 #else
 		baseDir = _baseDir;
 		extension = _extension;
@@ -248,7 +248,7 @@ bool LocalFileSearch( const char *baseDir, const char *dir, const char *extensio
 
 #ifdef OG_WIN32
 	DynBuffer<wchar_t> strDir;
-	String::ToWide( dir, strDir );
+	StringToWide( dir, strDir );
 	return finder.SearchDir( strDir.data );
 #else
 	return finder.SearchDir( dir );
@@ -284,8 +284,8 @@ fopenwin32
 */
 FILE *fopenwin32( const char *filename, const char *mode ) {
 	DynBuffer<wchar_t> strFilename, strMode;
-	String::ToWide( filename, strFilename );
-	String::ToWide( mode, strMode );
+	StringToWide( filename, strFilename );
+	StringToWide( mode, strMode );
 	return _wfopen( strFilename.data, strMode.data );
 }
 #endif

@@ -41,6 +41,7 @@ namespace og {
 	class Rect {
 	public:
 		Rect() { Zero(); }
+		Rect( const StringType &value ) { String::ToFloatArray( value, &x, 4 ); }
 		explicit Rect( float x, float y, float w, float h ) { Set( x, y, w, h ); }
 		Rect( const Rect &r ) { Set( r.x, r.y, r.w, r.h ); }
 

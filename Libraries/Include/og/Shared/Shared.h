@@ -2,7 +2,9 @@
 //! @file
 //! @brief	Shared Parts (used by all Open Game Libraries)
 //! @author	Santo Pfingsten (TTK-Bandit)
+//! @author	chongo <Landon Curt Noll> ( Fowler/Noll/Vo Hash algorithm )
 //! @note	Copyright (C) 2007-2010 Lusito Software
+//! @see	http://www.isthe.com/chongo/tech/comp/fnv/
 // ==============================================================================
 //
 // The Open Game Libraries.
@@ -199,14 +201,36 @@ namespace og {
 	template<class type> type Clamp( type value, type min, type max ) {
 		return (value>max) ? max : ((value<min) ? min : value);
 	}
+
+	// ==============================================================================
+	//! FNV Hash 32 bit
+	//!
+	//! @param	value			The string to hash
+	//! @param	caseSensitive	use case sensitive hashing
+	//!
+	//! @return	32 bit hash value
+	// ==============================================================================
+	uInt		FNV32( const char *value, bool caseSensitive );
+
+	// ==============================================================================
+	//! FNV Hash 64 bit
+	//!
+	//! @param	value			The string to hash
+	//! @param	caseSensitive	use case sensitive hashing
+	//!
+	//! @return	64 bit hash value
+	// ==============================================================================
+	uLongLong	FNV64( const char *value, bool caseSensitive );
 }
 
 // Public Library Includes
+#include "String.h"
 #include "Format.h"
 #include "SysInfo.h"
 #include "Timer.h"
 
 // We include .inl files last, so we can access all classes here.
+#include "String.inl"
 #include "Timer.inl"
 
 

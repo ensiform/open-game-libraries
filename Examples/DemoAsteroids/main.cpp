@@ -375,12 +375,12 @@ void ogDemoWindow::ShowCredits( bool quitAfter ) {
 	game.Shutdown();
 
 	og::Dict titleFont;
-	titleFont.SetString("fontAlign", "2");
-	titleFont.SetString("fontSize", "48");
+	titleFont.Set("fontAlign", "2");
+	titleFont.Set("fontSize", "48");
 
 	og::Dict textFont;
-	textFont.SetString("fontAlign", "2");
-	textFont.SetString("fontSize", "24");
+	textFont.Set("fontAlign", "2");
+	textFont.Set("fontSize", "24");
 
 	struct TextEntries {
 		const char *title;

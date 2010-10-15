@@ -31,6 +31,7 @@
 #define __OG_MODEL_H__
 
 #include <og/Common/Common.h>
+#include <og/Math/Math.h>
 
 //! Open Game Libraries
 namespace og {

@@ -168,7 +168,7 @@ bool WindowEx::Create( void ) {
 	int y = wa.top + windowConfig.y;
 
 	DynBuffer<wchar_t> strTitle;
-	String::ToWide( windowConfig.title, strTitle );
+	StringToWide( windowConfig.title, strTitle );
 
 	// Create window
 	hWnd = CreateWindowEx(
@@ -879,7 +879,7 @@ void WindowEx::SetFullScreen( const VideoMode *mode, Monitor *monitor ) {
 
 void WindowEx::SetTitle( const char *title ) {
 	static DynBuffer<wchar_t> strTitle;
-	String::ToWide( title, strTitle );
+	StringToWide( title, strTitle );
 	PostMessage( hWnd, WM_SET_TITLE, (WPARAM)strTitle.data, 0 );
 }
 

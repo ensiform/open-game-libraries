@@ -276,15 +276,7 @@
 								>
 							</File>
 							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Text\String.h"
-								>
-							</File>
-							<File
 								RelativePath="..\..\Libraries\Include\og\Common\Text\XDeclParser.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Common\Text\String.inl"
 								>
 							</File>
 						</Filter>
@@ -342,10 +334,6 @@
 							</File>
 							<File
 								RelativePath="..\..\Libraries\Source\og\Common\Text\Lexer.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Common\Text\String.cpp"
 								>
 							</File>
 							<File

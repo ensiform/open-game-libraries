@@ -33,6 +33,7 @@
 
 #include <og/Shared/Shared.h>
 #include <og/Common/Common.h>
+#include <og/Math/Math.h>
 
 //! Open Game Libraries
 namespace og {

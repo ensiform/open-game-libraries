@@ -349,4 +349,9 @@ Format &Format::operator << ( const char *value ) {
 	return Finish();
 }
 
+Format &Format::operator << ( const String &value ) {
+	TryPrint( "%s", value.c_str() );
+	return Finish();
+}
+
 }

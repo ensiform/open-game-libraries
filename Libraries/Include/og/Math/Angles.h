@@ -46,6 +46,7 @@ namespace og {
 		enum { PITCH, YAW, ROLL }; // up/down, left/right, lean
 
 		Angles() { Zero(); }
+		Angles( const StringType &value ) { String::ToFloatArray( value, &pitch, 3 ); }
 		explicit Angles( float pitch, float yaw, float roll ) { Set( pitch, yaw, roll ); }
 		Angles( const Angles &ang ) { Set( ang[0], ang[1], ang[2] ); }
 

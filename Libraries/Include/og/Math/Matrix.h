@@ -48,6 +48,7 @@ namespace og {
 	class Mat2 {
 	public:
 		Mat2() { Zero(); }
+		Mat2( const StringType &value ) { String::ToFloatArray( value, &mat[0].x, 4 ); }
 		explicit Mat2( const Vec2 &v0, const Vec2 &v1 );
 		explicit Mat2( float x0, float y0, float x1, float y1 );
 		explicit Mat2( float msrc[2][2] );
@@ -112,6 +113,7 @@ namespace og {
 	class Mat3 {
 	public:
 		Mat3() { Zero(); }
+		Mat3( const StringType &value ) { String::ToFloatArray( value, &mat[0].x, 9 ); }
 		explicit Mat3( const Vec3 &v0, const Vec3 &v1, const Vec3 &v2 );
 		explicit Mat3( float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2 );
 		explicit Mat3( float msrc[3][3] );

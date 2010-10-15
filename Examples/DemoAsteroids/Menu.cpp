@@ -110,15 +110,15 @@ void ogMenu::Init( void ) {
 	cursorRight = og::Image::Find( "gfx/asteroids/menucursor_right.tga" );
 
 	og::Dict dict;
-	dict.SetInt("fontAlign", 2);
-	dict.SetInt("fontSize", 36);
-	dict.SetString("font", "lucida");
+	dict.Set("fontAlign", "2");
+	dict.Set("fontSize", "36");
+	dict.Set("font", "lucida");
 	titleText.Init( dict );
 	titleText.SetWidth( static_cast<float>(WINDOW_WIDTH) );
 	titleText.value = "Lusito's Asteroids Clone!";
 
-	dict.SetInt("fontSize", 24);
-	dict.SetString( "fontColor", "1 1 1 0.7" );
+	dict.Set("fontSize", "24");
+	dict.Set( "fontColor", "1 1 1 0.7" );
 	helpText.Init( dict );
 	helpText.SetWidth( static_cast<float>(WINDOW_WIDTH) );
 	helpText.value = "( Use Arrow keys to navigate, Space to attack )";

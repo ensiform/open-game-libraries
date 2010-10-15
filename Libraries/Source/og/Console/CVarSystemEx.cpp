@@ -545,7 +545,7 @@ void CVarSystemEx::ToDict( int flags, Dict *dict ) const {
 	int num = dataList.Num();
 	for ( int i = 0; i<num; i++ ) {
 		if ( dataList[i].flags & flags )
-			dict->SetString( dataList[i].strName, dataList[i].strValue );
+			dict->Set( dataList[i].strName, dataList[i].strValue );
 	}
 }
 

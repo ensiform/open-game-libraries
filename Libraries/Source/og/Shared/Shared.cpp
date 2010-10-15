@@ -4,6 +4,8 @@ The Open Game Libraries.
 Copyright (C) 2007-2010 Lusito Software
 
 Author:  Santo Pfingsten (TTK-Bandit)
+author	chongo <Landon Curt Noll> ( Fowler/Noll/Vo Hash algorithm )
+see	http://www.isthe.com/chongo/tech/comp/fnv/
 Purpose: Shared parts
 -----------------------------------------
 
@@ -107,4 +109,47 @@ void FreeErrorString( char *str ) {
 	free( str );
 }
 
+/*
+================
+FNV32
+================
+*/
+uInt FNV32( const char *value, bool caseSensitive ) {
+	uInt hval = 0x811c9dc5;
+	const byte *s = reinterpret_cast<const byte *>(value);
+	if ( caseSensitive ) {
+		while ( *s != '\0' ) {
+			hval ^= static_cast<uInt>(*s++);
+			hval += (hval<<1) + (hval<<4) + (hval<<7) + (hval<<8) + (hval<<24);
+		}
+	} else {
+		while ( *s != '\0' ) {
+			hval ^= static_cast<uInt>(tolower(*s++));
+			hval += (hval<<1) + (hval<<4) + (hval<<7) + (hval<<8) + (hval<<24);
+		}
+	}
+	return hval;
+}
+
+/*
+================
+FNV64
+================
+*/
+uLongLong FNV64( const char *value, bool caseSensitive ) {
+	uLongLong hval = ((uLongLong)0x84222325 << 32 | (uLongLong)0x1b3);
+	const byte *s = reinterpret_cast<const byte *>(value);
+	if ( caseSensitive ) {
+		while ( *s != '\0' ) {
+			hval ^= static_cast<uLongLong>(*s++);
+			hval += (hval<<1) + (hval<<4) + (hval<<5) + (hval<<7) + (hval<<8) + (hval<<40);
+		}
+	} else {
+		while ( *s != '\0' ) {
+			hval ^= static_cast<uLongLong>(tolower(*s++));
+			hval += (hval<<1) + (hval<<4) + (hval<<5) + (hval<<7) + (hval<<8) + (hval<<40);
+		}
+	}
+	return hval;
+}
 }

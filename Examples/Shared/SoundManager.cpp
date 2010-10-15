@@ -69,10 +69,10 @@ bool ogSoundManager::Init( const char *defaultFilename ) {
 	for( int i=0; i<num; i++ ) {
 		og::Dict &dict		= soundDecls.declList[i];
 		og::Sound &sound	= sounds[soundDecls.declList.GetKey(i).c_str()];
-		sound.minDistance	= dict.GetFloat("minDistance");
-		sound.maxDistance	= dict.GetFloat("maxDistance");
-		sound.volume		= dict.GetFloat("volume");
-		sound.loop			= dict.GetBool("loop");
+		sound.minDistance	= dict["minDistance"];
+		sound.maxDistance	= dict["maxDistance"];
+		sound.volume		= dict["volume"];
+		sound.loop			= dict["loop"];
 		for( int j = dict.MatchPrefix( "sound", 5 ); j != -1; j = dict.MatchPrefix( "sound", 5, j ) ) {
 			value = dict.GetKeyValue(j)->GetValue().c_str();
 			if ( value[0] != '\0' )

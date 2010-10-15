@@ -155,6 +155,7 @@ namespace og {
 		Format &operator << ( byte value );
 		Format &operator << ( float value );
 		Format &operator << ( const char *value );
+		Format &operator << ( const String &value );
 
 		// Manipulators
 		Format &operator << ( const SetFill &value ) { fillChar = value.ch; return *this; }

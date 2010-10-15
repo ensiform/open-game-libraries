@@ -31,8 +31,7 @@ freely, subject to the following restrictions:
 #define __OG_STRING_H__
 
 namespace og {
-	template<class type> class DynBuffer;
-	class StringList;
+	class File;
 	const int OG_STR_HARDBUFFER_SIZE = 20;
 	const int OG_STR_GRANULARITY = 16;
 	const int OG_STR_FILE_MAX_BYTES = 65534;	//!< The maximum bytelength of a string in a file
@@ -93,7 +92,6 @@ namespace og {
 
 		void			FromWide( const wchar_t *in );
 		static int		ToWide( const char *in, uInt numBytes, wchar_t *out, uInt outSize );
-		static int		ToWide( const char *in, DynBuffer<wchar_t> &buffer );
 		void			FromBitFlags( int flags, const char **flagNames );
 
 		// ==============================================================================
@@ -153,10 +151,6 @@ namespace og {
 		String			Mid( int start, int len ) const;
 		void			Mid( int start, int len, String &str ) const;
 
-		// Splitting
-		void			Split( StringList& list, const char * delimiter=";" ) const;
-		static void		Split( const char *text, StringList& list, const char *delimiter=";" );
-
 		// String Comparison (len is considered character count, not byte count)
 		int				Cmp( const char *text ) const;
 		int				Cmpn( const char *text, int len ) const;
@@ -178,7 +172,6 @@ namespace og {
 		static void		BothLengths( const char *text, size_t *byteLength, size_t *length );
 
 		// Escape Colors
-		static int		GetEscapeColor( const char *str, Color &destColor, const Color &defaultColor );
 		static int		GetEscapeColorLength( const char *str );
 		static size_t	StripEscapeColor( char *str );	// Returns how many bytes have been removed.
 		void			StripEscapeColor( void );
@@ -190,9 +183,6 @@ namespace og {
 		static bool		ToFloatArray( const char *str, float *fp, int dim );
 		static double	ToDouble( const char *str );
 		static bool		ToDoubleArray( const char *str, double *dp, int dim );
-
-		static bool		ToMat2( const char *str, Mat2 &out ) { return String::ToFloatArray( str, &out[0].x, 4 ); }
-		static bool		ToMat3( const char *str, Mat3 &out ) { return String::ToFloatArray( str, &out[0].x, 9 ); }
 
 		// operators
 		bool			operator==( const String &other ) const;
@@ -232,6 +222,34 @@ namespace og {
 
 		void			SetData( const char *text, int byteLength, int length );
 		void			AppendData( const char *text, int byteLength, int length );
+	};
+
+	/*
+	==============================================================================
+
+	  StringType
+
+	  Helper for dict return value conversion
+
+	==============================================================================
+	*/
+	class StringType {
+	private:
+		StringType( const char *val ) : value(val) {}
+		StringType( const StringType & ) {} // not copyable
+		const char *value;
+
+		friend class Dict;
+	public:
+
+		// Conversion operators
+		operator const char *() const { return value; }
+		operator bool	() const { return String::ToInt( value ) != 0; }
+		operator int	() const { return String::ToInt( value ); }
+		operator uInt	() const { return String::ToInt( value ); }
+		operator long	() const { return String::ToInt( value ); }
+		operator uLong	() const { return String::ToInt( value ); }
+		operator float	() const { return String::ToFloat( value ); }
 	};
 }
 

@@ -31,6 +31,13 @@ freely, subject to the following restrictions:
 
 namespace og {
 
+Format &operator << ( Format &fmt, const Color &value ) {
+	byte r, g, b, a;
+	value.ToBytes( r, g, b, a );
+	fmt.TryPrint( "#%X%X%X%X", r, g, b, a );
+	return fmt.Finish();
+}
+
 Format &operator << ( Format &fmt, const Vec2 &value ) {
 	int precision = fmt.GetFloatPrecision();
 	if ( precision >= 0 )

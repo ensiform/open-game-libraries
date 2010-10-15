@@ -196,7 +196,7 @@ void XDeclParser::Parse( Lexer &lexer ) {
 					name = p;
 					addNode = false;
 					if ( lexer.CheckToken("=") ) {
-						currentNode->dict.SetString( name.c_str(), lexer.ReadString() );
+						currentNode->dict.Set( name.c_str(), lexer.ReadString() );
 						lexer.ExpectToken(";");
 					} else if ( lexer.CheckToken("(") ) {
 						addNode = true;
@@ -222,7 +222,7 @@ void XDeclParser::Parse( Lexer &lexer ) {
 			} else  {
 				name = p;
 				lexer.ExpectToken("=");
-				currentNode->dict.SetString( name.c_str(), lexer.ReadString() );
+				currentNode->dict.Set( name.c_str(), lexer.ReadString() );
 				if ( !lexer.CheckToken(",") ) {
 					lexer.ExpectToken(")");
 					if ( lexer.CheckToken(";") ) {

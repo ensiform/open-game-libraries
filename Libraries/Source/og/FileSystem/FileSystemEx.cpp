@@ -246,7 +246,7 @@ FileSystemEx::IsDir
 bool FileSystemEx::IsDir( const char *path ) {
 #ifdef OG_WIN32
 	DynBuffer<wchar_t> strPath;
-	String::ToWide( path, strPath );
+	StringToWide( path, strPath );
 	struct _stat stat_Info;
 	if ( _wstat ( strPath.data, &stat_Info ) == -1 )
 		return false;
@@ -269,7 +269,7 @@ bool FileSystemEx::MakeDir( const char *path ) {
 		return true;
 #ifdef OG_WIN32
 	DynBuffer<wchar_t> strPath;
-	String::ToWide( path, strPath );
+	StringToWide( path, strPath );
 	return _wmkdir( strPath.data ) == 0;
 #else
 	return mkdir( path, 0777 ) == 0;
@@ -655,7 +655,7 @@ time_t FileSystemEx::FileTime( const char *filename, bool pure ) {
 	}
 #ifdef OG_WIN32
 	DynBuffer<wchar_t> strFilename;
-	String::ToWide( filename, strFilename );
+	StringToWide( filename, strFilename );
 	struct _stat fileStat;
 	if ( _wstat ( strFilename.data, &fileStat ) == -1 )
 		return false;

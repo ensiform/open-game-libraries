@@ -33,13 +33,12 @@ freely, subject to the following restrictions:
 #include <og/Shared/Shared.h>
 #include <og/Shared/FileSystemCore.h>
 #include <og/Shared/Thread/ThreadLocalStorage.h>
-#include <og/Math/Math.h>
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 // Public Library Includes
-#include "Text/String.h"
 #include "Containers/List.h"
 #include "Containers/LinkedList.h"
 #include "Containers/Stack.h"
@@ -57,13 +56,10 @@ freely, subject to the following restrictions:
 namespace og {
 	extern FileSystemCore *commonFS;
 	OG_INLINE void	CommonSetFileSystem( FileSystemCore *fileSystem ) { commonFS = fileSystem; }
-	
-	Format &operator << ( Format &fmt, const String &value );
-	Format &operator << ( Format &fmt, const Color &value );
+	int StringToWide( const char *in, DynBuffer<wchar_t> &buffer );
 }
 
 // We include .inl files last, so we can access all classes here.
-#include "Text/String.inl"
 #include "Containers/List.inl"
 #include "Containers/LinkedList.inl"
 #include "Containers/Stack.inl"

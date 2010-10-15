@@ -29,8 +29,8 @@ freely, subject to the following restrictions:
 */
 
 #include "Platform.h"
-#include<algorithm>
-#include<math.h>
+#include <algorithm>
+#include <og/Math/Math.h>
 
 namespace og {
 

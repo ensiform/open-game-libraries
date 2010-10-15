@@ -240,7 +240,7 @@ void DeclParser::Parse( Lexer &lexer ) {
 					getKeyValue = false;
 				else if ( resultDict ) {
 					key = p;
-					(*resultDict).SetString( key.c_str(), lexer.ReadString() );
+					(*resultDict).Set( key.c_str(), lexer.ReadString() );
 				}
 			}
 		}
@@ -364,7 +364,7 @@ bool DeclParser::MakeBinary( const char *filename ) {
 					}
 					else {
 						key = p;
-						dict.SetString( key.c_str(), lexer.ReadString() );
+						dict.Set( key.c_str(), lexer.ReadString() );
 					}
 				}
 			}

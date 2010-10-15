@@ -475,7 +475,7 @@ void FontFile::DrawString( const FontEx *font, float x, float y, const char *tex
 	bool updateColor = false;
 	int i=0;
 	while( text[i] == '^' ) {
-		escapeLength = String::GetEscapeColor( text+i+1, lastColor, font->defaultColor );
+		escapeLength = Color::GetEscapeColor( text+i+1, lastColor, font->defaultColor );
 		if ( !escapeLength )
 			break;
 		i += escapeLength + 1;
@@ -521,7 +521,7 @@ void FontFile::DrawString( const FontEx *font, float x, float y, const char *tex
 		i += charLen;
 		// Check escape colors before the first char
 		while( text[i] == '^' ) {
-			escapeLength = String::GetEscapeColor( text+i+1, lastColor, font->defaultColor );
+			escapeLength = Color::GetEscapeColor( text+i+1, lastColor, font->defaultColor );
 			if ( !escapeLength )
 				break;
 			i += escapeLength + 1;

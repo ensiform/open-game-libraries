@@ -45,6 +45,7 @@ namespace og {
 	class Bounds {
 	public:
 		Bounds() { Zero(); }
+		Bounds( const StringType &value ) { String::ToFloatArray( value, &bounds[0].x, 6 ); }
 		explicit Bounds( float minsx, float minsy, float minsz, float maxsx, float maxsy, float maxsz ) { Set( minsx, minsy, minsz, maxsx, maxsy, maxsz ); }
 		explicit Bounds( const Vec3 &mins, const Vec3 &maxs ) { Set( mins.x, mins.y, mins.z, maxs.x, maxs.y, maxs.z ); }
 		explicit Bounds( const Vec3 &cpt ) { Set( cpt.x, cpt.y, cpt.z, cpt.x, cpt.y, cpt.z ); }

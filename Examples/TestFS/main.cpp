@@ -30,6 +30,7 @@ freely, subject to the following restrictions:
 #include <vector>
 #include <string>
 #include <og/Common/Common.h>
+#include <og/Shared/SecureHash.h>
 #include <og/FileSystem/FileSystem.h>
 
 og::StringList allowedPakFiles;

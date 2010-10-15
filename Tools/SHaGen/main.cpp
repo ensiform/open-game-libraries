@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Common/Common.h>
+#include <og/Shared/SecureHash.h>
 #include <stdio.h>
 
 int main( int argc, char* argv[] ) {

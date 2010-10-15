@@ -216,7 +216,15 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\Libraries\Include\og\Shared\SecureHash.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\Libraries\Include\og\Shared\Shared.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Include\og\Shared\String.h"
 							>
 						</File>
 						<File
@@ -225,6 +233,10 @@
 						</File>
 						<File
 							RelativePath="..\..\Libraries\Include\og\Shared\Timer.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Include\og\Shared\String.inl"
 							>
 						</File>
 						<File
@@ -268,7 +280,15 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\Libraries\Source\og\Shared\SecureHash.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\..\Libraries\Source\og\Shared\Shared.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Shared\String.cpp"
 							>
 						</File>
 						<File

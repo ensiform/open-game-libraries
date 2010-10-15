@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogMath.lib ..\out\ogFileSystem.lib ..\out\zLib.lib winmm.lib"
+				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogFileSystem.lib ..\out\zLib.lib winmm.lib"
 				OutputFile="$(OutDir)\TestFS.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
@@ -147,7 +147,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogMath.lib ..\out\ogFileSystem.lib ..\out\zLib.lib winmm.lib"
+				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogFileSystem.lib ..\out\zLib.lib winmm.lib"
 				OutputFile="$(OutDir)\TestFS.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""

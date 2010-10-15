@@ -27,9 +27,10 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Common/Common.h>
-#include <ctype.h>
-#include <stdarg.h>
+#include <og/Shared/Shared.h>
+#include <og/Shared/File.h>
+#include <math.h>
+#include <vector>
 
 #ifdef OG_WIN32
 	#include<windows.h>
@@ -47,6 +48,20 @@ const byte	MASK5BIT	= 0xF8;
 const byte	MASK6BIT	= 0xFC;
 const byte	MASK7BIT	= 0xFE;
 
+/*
+================
+NumDigits
+================
+*/
+static int NumDigits( int x ) {
+	int digits = 1;
+	int step = 10;
+	while (step <= x) {
+		digits++;
+		step *= 10;
+	}
+	return digits;
+}
 /*
 ================
 Utf8ToWChar
@@ -183,21 +198,6 @@ int countBytesForLengthReverse( const char *str, int len, int byteLen ) {
 }
 
 /*
-================
-SingleHexToFloat
-================
-*/
-static float SingleHexToFloat( char c ) {
-	if ( c <= '9' && c >= '0' )
-		return static_cast<float>( c - '0' ) / 15.0f;
-	else if ( c <= 'f' && c >= 'a' )
-		return static_cast<float>( c - 'a' + 10 ) / 15.0f;
-	else if ( c <= 'F' && c >= 'A' )
-		return static_cast<float>( c - 'A' + 10 ) / 15.0f;
-	return 1.0f;
-}
-
-/*
 ==============================================================================
 
   String
@@ -263,7 +263,7 @@ String::Resize
 */
 void String::Resize( int newSize, bool keepContent ) {
 	OG_ASSERT( newSize > 0 );
-	size = Math::FtoiFast( ceil( static_cast<float>(newSize)/static_cast<float>(OG_STR_GRANULARITY) ) ) * OG_STR_GRANULARITY;
+	size = static_cast<int>( ceil( static_cast<float>(newSize)/static_cast<float>(OG_STR_GRANULARITY) ) ) * OG_STR_GRANULARITY;
 
 	char *newData = new char[ size ];
 
@@ -448,13 +448,13 @@ int String::Replace( const char *a, const char *b, int start ) {
 	int lenB = ByteLength(b);
 	int max = byteLength - lenA;
 	if ( max >= start ) {
-		List<int> positions;
+		std::vector<int> positions;
 		int i;
 		for ( i=start; i<=max; i++ ) {
 			if ( Cmpn( data+i, a, lenA ) == 0 )
-				positions.Append(i);
+				positions.push_back(i);
 		}
-		int count = positions.Num();
+		int count = positions.size();
 		if ( count ) {
 			char *oldData;
 			int oldByteLength = byteLength;
@@ -916,38 +916,6 @@ void String::Mid( int start, int len, String &str ) const {
 
 /*
 ================
-String::Split
-================
-*/
-void String::Split( const char *text, StringList& list, const char *delimiter ) {
-	if ( !text || !text[0] )
-		return;
-	int pos1 = 0;
-	int pos2 = 0;
-	int byteLen, len;
-
-	do {
-		pos2 = Find( text, delimiter, false, pos1 );
-		if ( pos2 == INVALID_POSITION )
-			list.Append( text + pos1 );
-		else if ( pos2 == pos1 )
-			list.Append( "" ); // same pos, so just add an empty string
-		else {
-			byteLen = pos2-pos1;
-			// Count number of characters
-			len = 0;
-			for( int i=pos1; text[i] != '\0' && i<pos2; i++ ) {
-				if( (text[i] & MASK2BIT) != MASK1BIT )
-					len++;
-			}
-			list.Append( text+pos1, byteLen, len );
-		}
-		pos1 = pos2+1;
-	} while ( pos2 != INVALID_POSITION );
-}
-
-/*
-================
 String::Cmp
 ================
 */
@@ -1110,59 +1078,6 @@ void String::BothLengths( const char *text, size_t *byteLength, size_t *length )
 		if( (text[*byteLength] & MASK2BIT) != MASK1BIT )
 			(*length)++;
 	}
-}
-
-/*
-================
-String::GetEscapeColor
-================
-*/
-int String::GetEscapeColor( const char *str, Color &destColor, const Color &defaultColor ) {
-	if ( *str == '\0' )
-		return -1;
-
-	if ( *str == 'c' ) {
-		if ( str[1] == '\0' || str[2] == '\0' || str[3] == '\0' )
-			return -1;
-		destColor.r = SingleHexToFloat( str[1] );
-		destColor.g = SingleHexToFloat( str[2] );
-		destColor.b = SingleHexToFloat( str[3] );
-		return 4;
-	}
-	switch( *str ) {
-		default:
-		case '0':
-			destColor = defaultColor;
-			break;
-		case '1':
-			destColor = c_color::red;
-			break;
-		case '2':
-			destColor = c_color::green;
-			break;
-		case '3':
-			destColor = c_color::yellow;
-			break;
-		case '4':
-			destColor = c_color::blue;
-			break;
-		case '5':
-			destColor = c_color::cyan;
-			break;
-		case '6':
-			destColor = c_color::magenta;
-			break;
-		case '7':
-			destColor = c_color::white;
-			break;
-		case '8':
-			destColor = c_color::gray;
-			break;
-		case '9':
-			destColor = c_color::black;
-			break;
-	}
-	return 1;
 }
 
 /*
@@ -1496,7 +1411,7 @@ void String::FormatNumBytes( uLongLong bytes, int digits, fnbStyle style ) {
 	static const int total_units = sizeof(units) / sizeof(units[0]);
 
 	double bytesD = static_cast<double>(bytes);
-	int limit = Math::FtoiFast(Math::Pow(10.0f, static_cast<float>(digits)));
+	int limit = static_cast<int>(powf(10.0f, static_cast<float>(digits)));
 	double value = bytesD;
 	const double factor = 1.0f/1024.0f;
 	int floorValue;
@@ -1509,7 +1424,7 @@ void String::FormatNumBytes( uLongLong bytes, int digits, fnbStyle style ) {
 					digits--;
 				case FNB_FLOATEX:
 					if ( floorValue != value ) {
-						*this = Format( "$* $*") << SetPrecision( digits-Math::Digits(floorValue) ) << static_cast<float>(value) << units[i];
+						*this = Format( "$* $*") << SetPrecision( digits-NumDigits(floorValue) ) << static_cast<float>(value) << units[i];
 						return;
 					}
 				default:
@@ -1520,7 +1435,7 @@ void String::FormatNumBytes( uLongLong bytes, int digits, fnbStyle style ) {
 	}
 
 	// Should never get here
-	value = Math::FtoiFast(static_cast<float>(bytesD / Math::Pow(1024.0, static_cast<float>(total_units-1))));
+	value = static_cast<int>(static_cast<float>(bytesD / powf(1024.0, static_cast<float>(total_units-1))));
 	*this = Format("$* $*") << static_cast<float>(value) << units[total_units-1];
 }
 
@@ -1560,16 +1475,6 @@ int String::ToWide( const char *in, uInt numBytes, wchar_t *out, uInt outSize ) 
 	//! @todo	other platforms
 	#error "sorry, I was lazy"
 #endif
-}
-int String::ToWide( const char *in, DynBuffer<wchar_t> &buffer ) {
-	uInt numBytes = String::ByteLength( in ) + 1;
-	uInt size = Max( 1, String::ToWide( in, numBytes, NULL, 0 ) );
-	buffer.CheckSize( size );
-	if ( size == 1 )
-		buffer.data[0] = '\0';
-	else
-		String::ToWide( in, numBytes, buffer.data, buffer.size );
-	return size;
 }
 
 /*

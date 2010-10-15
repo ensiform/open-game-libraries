@@ -41,6 +41,7 @@ namespace og {
 	class Color {
 	public:
 		Color() { Set( 1.0f, 1.0f, 1.0f, 1.0f ); }
+		Color( const StringType &value ) { String::ToFloatArray( value, &r, 4 ); }
 		explicit Color( float r, float g, float b, float a=1.0f ) { Set( r, g, b, a ); }
 		Color( const Color &c ) { Set( c.r, c.g, c.b, c.a ); }
 
@@ -62,6 +63,9 @@ namespace og {
 		void			GetHSV( float &h, float &s, float &v ) const;
 		void			SetHSV( float h, float s, float v );
 #endif
+
+		// Escape Colors
+		static int		GetEscapeColor( const char *str, Color &destColor, const Color &defaultColor );
 
 		// operators
 		float			operator[]( int index ) const;

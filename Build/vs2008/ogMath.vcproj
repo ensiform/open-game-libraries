@@ -186,19 +186,6 @@
 						Name="Math"
 						Filter=""
 						>
-						<Filter
-							Name="Hash"
-							Filter=""
-							>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Math\Hash\Hash.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Include\og\Math\Hash\SecureHash.h"
-								>
-							</File>
-						</Filter>
 						<File
 							RelativePath="..\..\Libraries\Include\og\Math\Angles.h"
 							>
@@ -286,19 +273,6 @@
 						Name="Math"
 						Filter=""
 						>
-						<Filter
-							Name="Hash"
-							Filter=""
-							>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Math\Hash\Hash.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\..\Libraries\Source\og\Math\Hash\SecureHash.cpp"
-								>
-							</File>
-						</Filter>
 						<File
 							RelativePath="..\..\Libraries\Source\og\Math\Angles.cpp"
 							>

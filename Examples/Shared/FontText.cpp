@@ -48,8 +48,8 @@ ogFontText::ogFontText() {
 }
 ogFontText::ogFontText( int size, int align ) {
 	og::Dict dict;
-	dict.SetInt("fontAlign", align);
-	dict.SetInt("fontSize", size);
+	dict.Set("fontAlign", align);
+	dict.Set("fontSize", size);
 	Init( dict );
 }
 
@@ -59,12 +59,12 @@ ogFontText::Init
 ================
 */
 void ogFontText::Init( const og::Dict &dict ) {
-	align = static_cast<og::Font::Align>( og::Clamp( dict.GetInt("fontAlign", "0"), 0, 2) );
-	offset = dict.GetVec2("fontOffset");
+	align = static_cast<og::Font::Align>( og::Clamp( (int)dict.Get("fontAlign", "0"), 0, 2) );
+	offset = dict["fontOffset"];
 	xOffset = offset.x;
 	
-	og::Color color = dict.GetColor("fontColor");
-	font = og::Font::Create( dict.GetString("font", "Arial"), dict.GetFloat("fontSize", "12"), dict.GetFloat("fontSpacing", "1"),
+	og::Color color = dict.Get("fontColor", "1 1 1 1");
+	font = og::Font::Create( dict.Get("font", "Arial"), dict.Get("fontSize", "12"), dict.Get("fontSpacing", "1"),
 		color.r, color.g, color.b, color.a );
 }
 

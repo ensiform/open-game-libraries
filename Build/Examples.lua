@@ -29,7 +29,7 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { librariesPath .. "/Include" }
-		links { "ogShared", "ogMath" }
+		links { "ogShared" }
 		files { toolsPath .. "/SHaGen/**.h", toolsPath .. "/SHaGen/**.inl", toolsPath .. "/SHaGen/**.cpp" }
 		objdir( objectDir .. "/Examples/SHaGen" )
 
@@ -40,7 +40,7 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { librariesPath .. "/Include" }
-		links { "ogShared", "ogCommon", "ogMath", "ogFileSystem", "zLib", "winmm" }
+		links { "ogShared", "ogCommon", "ogFileSystem", "zLib", "winmm" }
 		files { examplesPath .. "/TestFS/**.h", examplesPath .. "/TestFS/**.inl", examplesPath .. "/TestFS/**.cpp" }
 		objdir( objectDir .. "/Examples/TestFS" )
 

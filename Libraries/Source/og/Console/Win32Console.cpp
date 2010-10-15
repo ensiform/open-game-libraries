@@ -199,7 +199,7 @@ bool ConsoleWindow::Init( void ) {
 		hBackBmp = NULL;
 	else {
 		DynBuffer<wchar_t> strFilename;
-		String::ToWide( logBgImage.c_str(), strFilename );
+		StringToWide( logBgImage.c_str(), strFilename );
 
 		// Use LoadImage() to get the image loaded into a DIBSection
 		hBackBmp = (HBITMAP)LoadImage( NULL, strFilename.data, IMAGE_BITMAP, 0, 0,
@@ -214,8 +214,8 @@ bool ConsoleWindow::Init( void ) {
 	}
 
 	DynBuffer<wchar_t> windowClass, windowTitle;
-	String::ToWide( Format("$* Console" ) << appTitle, windowClass );
-	String::ToWide( Format("$* WinConsole" ) << appTitle, windowTitle );
+	StringToWide( Format("$* Console" ) << appTitle, windowClass );
+	StringToWide( Format("$* WinConsole" ) << appTitle, windowTitle );
 
 	hInstance = GetModuleHandle(NULL);
 
@@ -503,7 +503,7 @@ LRESULT CALLBACK ConsoleWindow::WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		switch( cmd->type ) {
 			case CCMD_SETINPUT: {
 				DynBuffer<wchar_t> wideBuf;
-				String::ToWide( cmd->strValue.c_str(), wideBuf );
+				StringToWide( cmd->strValue.c_str(), wideBuf );
 				conWindow->SetInputText( wideBuf.data );
 				}
 				break;
@@ -530,7 +530,7 @@ void MenuOpenCallback( const char *name, const char *command ) {
 	OG_ASSERT( name != NULL && command != NULL );
 
 	DynBuffer<wchar_t> strName;
-	String::ToWide( name, strName );
+	StringToWide( name, strName );
 
 	wcd.menuEntries.Append( strName.data );
 	wcd.menuCommands.Append( command );
@@ -682,7 +682,7 @@ CompletionCallback
 */
 void CompletionCallback( const char *str ) {
 	DynBuffer<wchar_t> wstr;
-	String::ToWide( str, wstr );
+	StringToWide( str, wstr );
 	wcd.completionList.Append( wstr.data );
 }
 
@@ -801,7 +801,7 @@ LRESULT ConsoleWindow::EditWndProc( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 							wcd.completionCondition.Wait(INFINITE);
 
 							DynBuffer<wchar_t> wideBuf;
-							String::ToWide( wcd.completionText.c_str(), wideBuf );
+							StringToWide( wcd.completionText.c_str(), wideBuf );
 							conWindow->SetInputText( wideBuf.data );
 							conWindow->completionCursor = wcd.completionText.Length();
 							conWindow->completionPos = 0;
@@ -994,7 +994,7 @@ void Console::Print( const char *pMsg ) {
 		wcd.lastWasEndl = repl.StripTrailing("\n") > 0; // also remove last newline character
 		repl.Replace( "\n", "\r\n" );
 
-		String::ToWide( repl.c_str(), evt->message ); // Convert to utf16
+		StringToWide( repl.c_str(), evt->message ); // Convert to utf16
 		PostMessage( conWindow->hWndMain, WM_CON_PRINT, (WPARAM)evt, 0);
 	}
 }
@@ -1008,7 +1008,7 @@ void Console::FatalError( const char *pMsg ) {
 	if ( conWindow ) {
 		ConPrint *evt = new ConPrint( true, wcd.lastWasEndl );
 		evt->lastWasEndl = wcd.lastWasEndl;
-		String::ToWide( pMsg, evt->message ); // Convert to utf16
+		StringToWide( pMsg, evt->message ); // Convert to utf16
 		PostMessage( conWindow->hWndMain, WM_CON_PRINT, (WPARAM)evt, 0);
 	}
 }

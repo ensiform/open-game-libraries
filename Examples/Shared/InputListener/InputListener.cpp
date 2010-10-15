@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 */
 
 #include "InputListener.h"
+#include <og/Math/Math.h>
 
 const float	FABLE_AXIS_DETECTION_TRIGGER = 0.75f;
 const int	MOUSE_AXIS_DETECTION_TRIGGER = 100;
@@ -315,12 +316,12 @@ void ogInputListener::LoadConfig( const char *filename ) {
 		int key;
 		while( node ) {
 			const og::Dict &dict = node->GetDict();
-			if ( dict.GetString("id", "", id ) ) {
-				if ( dict.GetString("bind", "", bindName ) ) {
+			if ( dict.Get("id", "", id ) ) {
+				if ( dict.Get("bind", "", bindName ) ) {
 					bind = GetBindForName( bindName.c_str() );
 					key = og::Gloot::GetKeyId( id.c_str() );
 					if ( bind != NULL && key != -1 )
-						BindKey( key, bind, dict.GetBool("inverse") );
+						BindKey( key, bind, dict["inverse"] );
 				}
 			}
 			node = node->GetNextByName();
@@ -333,10 +334,10 @@ void ogInputListener::LoadConfig( const char *filename ) {
 		og::String bindName;
 		while( node ) {
 			const og::Dict &dict = node->GetDict();
-			if ( dict.GetString("bind", "", bindName ) ) {
+			if ( dict.Get("bind", "", bindName ) ) {
 				bind = GetBindForName( bindName.c_str() );
 				if ( bind != NULL )
-					BindMouseAxis( dict.GetInt("id"), bind, dict.GetBool("inverse") );
+					BindMouseAxis( dict["id"], bind, dict["inverse"] );
 			}
 			node = node->GetNextByName();
 		}
@@ -344,10 +345,10 @@ void ogInputListener::LoadConfig( const char *filename ) {
 		node = root->GetFirstChildByName("Button");
 		while( node ) {
 			const og::Dict &dict = node->GetDict();
-			if ( dict.GetString("bind", "", bindName ) ) {
+			if ( dict.Get("bind", "", bindName ) ) {
 				bind = GetBindForName( bindName.c_str() );
 				if ( bind != NULL )
-					BindMouseButton( dict.GetInt("id"), bind, dict.GetBool("inverse") );
+					BindMouseButton( dict["id"], bind, dict["inverse"] );
 			}
 			node = node->GetNextByName();
 		}
@@ -356,7 +357,7 @@ void ogInputListener::LoadConfig( const char *filename ) {
 	root = parser.GetFirstChildByName("Device");
 	while ( root ) {
 		og::String vendor;
-		root->GetDict().GetString( "vendor", "", vendor );
+		root->GetDict().Get( "vendor", "", vendor );
 
 		int max = fableDevices.Num();
 		int deviceId;
@@ -373,10 +374,10 @@ void ogInputListener::LoadConfig( const char *filename ) {
 		og::String bindName;
 		while( node ) {
 			const og::Dict &dict = node->GetDict();
-			if ( dict.GetString("bind", "", bindName ) ) {
+			if ( dict.Get("bind", "", bindName ) ) {
 				bind = GetBindForName( bindName.c_str() );
 				if ( bind != NULL )
-					BindDeviceAxis( deviceId, dict.GetInt("id"), bind, dict.GetBool("inverse") );
+					BindDeviceAxis( deviceId, dict["id"], bind, dict["inverse"] );
 			}
 			node = node->GetNextByName();
 		}
@@ -384,18 +385,18 @@ void ogInputListener::LoadConfig( const char *filename ) {
 		node = root->GetFirstChildByName("Button");
 		while( node ) {
 			const og::Dict &dict = node->GetDict();
-			if ( dict.GetString("bind", "", bindName ) ) {
+			if ( dict.Get("bind", "", bindName ) ) {
 				bind = GetBindForName( bindName.c_str() );
 				if ( bind != NULL )
-					BindDeviceButton( deviceId, dict.GetInt("id"), bind, dict.GetBool("inverse") );
+					BindDeviceButton( deviceId, dict["id"], bind, dict["inverse"] );
 			}
 			node = node->GetNextByName();
 		}
 
 		const og::XDeclNode *pov = root->GetFirstChildByName("POV");
 		while( pov ) {
-			int povid = pov->GetDict().GetInt("id");
-			bool axes = pov->GetDict().GetBool("axes");
+			int povid = pov->GetDict()["id"];
+			bool axes = pov->GetDict()["axes"];
 			if ( axes ) {
 				node = pov->GetFirstChildByName("Axis");
 				int numAxes = 0;
@@ -404,13 +405,13 @@ void ogInputListener::LoadConfig( const char *filename ) {
 				bool inversed[2];
 				while( node ) {
 					const og::Dict &dict = node->GetDict();
-					if ( dict.GetString("bind", "", bindName ) ) {
+					if ( dict.Get("bind", "", bindName ) ) {
 						if ( !bind ) {
 							bind = GetBindForName( bindName.c_str() );
-							inversed[0] = dict.GetBool("inverse");
+							inversed[0] = dict["inverse"];
 						} else {
 							bind2 = GetBindForName( bindName.c_str() );
-							inversed[1] = dict.GetBool("inverse");
+							inversed[1] = dict["inverse"];
 							break;
 						}
 					}

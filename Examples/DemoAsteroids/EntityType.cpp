@@ -95,7 +95,7 @@ ogEntity *ogEntityType::SpawnEntity( const char *className, const og::Dict *addi
 
 	const og::Dict &baseDict = demoWindow.game.entityDecls.declList[index];
 
-	const char *entityType = baseDict.GetString("entityType");
+	const char *entityType = baseDict["entityType"];
 
 	if ( entityType[0] == '\0' )
 		throw ogError( og::Format("Classname '$*' did not define an entityType!" ) << className );
@@ -112,7 +112,7 @@ ogEntity *ogEntityType::SpawnEntity( const char *className, const og::Dict *addi
 
 	if ( additionalSettings ) {
 		ent->settings.Append( *additionalSettings, true );
-		ent->name = additionalSettings->GetString( "name", og::Format( "unnamed_entity_$*" ) << demoWindow.game.spawnCount );
+		ent->name = additionalSettings->Get( "name", og::Format( "unnamed_entity_$*" ) << demoWindow.game.spawnCount );
 	}
 	else
 		ent->name = og::Format("unnamed_entity_$*") << demoWindow.game.spawnCount;

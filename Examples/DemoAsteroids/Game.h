@@ -82,7 +82,10 @@ public:
 	void	Reset( void );
 	void	StartAmbience( void );
 	void	ShowAsteroids( void );
-	OG_INLINE void	PlaySound( const char *name, const og::Vec2 &origin ) { soundManager.Play( name, origin-windowCenter ); }
+	OG_INLINE void	PlaySound( const char *name, const og::Vec2 &origin ) {
+		if ( name[0] != '\0' )
+			soundManager.Play( name, origin-windowCenter );
+	}
 
 public:
 	ogPlayer *	localPlayer;

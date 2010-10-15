@@ -383,7 +383,7 @@ Old list will be freed.
 template<class type>
 void List<type>::Resize( int newSize, bool keepContent ) {
 	OG_ASSERT( newSize > 0 );
-	size = Math::FtoiFast( ceil( static_cast<float>(newSize)/static_cast<float>(granularity) ) ) * granularity;
+	size = static_cast<int>( ceil( static_cast<float>(newSize)/static_cast<float>(granularity) ) ) * granularity;
 
 	type *newList = new type[ size ];
 

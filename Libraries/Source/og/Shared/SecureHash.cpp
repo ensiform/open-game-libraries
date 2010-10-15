@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Math/Math.h>
+#include <og/Shared/SecureHash.h>
 #include <stdio.h>
 
 namespace og {

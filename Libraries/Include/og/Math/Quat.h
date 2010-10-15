@@ -46,6 +46,7 @@ namespace og {
 		float		w;
 
 		Quat();
+		Quat( const StringType &value ) { String::ToFloatArray( value, &x, 4 ); }
 		explicit Quat( float x, float y, float z, float w );
 		explicit Quat( float qsrc[4] );
 

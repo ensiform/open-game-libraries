@@ -74,73 +74,12 @@ namespace og {
 		const KeyValue *GetKeyValue( int index ) const;
 
 		// String
-		void		SetString( const char *key, const char *value );
-		const char *GetString( const char *key, const char *defaultValue = "" ) const;
-		bool		GetString( const char *key, const char *defaultValue, const char **out ) const;
-		bool		GetString( const char *key, const char *defaultValue, String &out ) const;
-
-		// Bool
-		void		SetBool( const char *key, bool value );
-		bool		GetBool( const char *key, const char *defaultValue = "0" ) const;
-		bool		GetBool( const char *key, const char *defaultValue, bool &out ) const;
-
-		// Integer
-		void		SetInt( const char *key, int value );
-		int			GetInt( const char *key, const char *defaultValue = "0" ) const;
-		bool		GetInt( const char *key, const char *defaultValue, int &out ) const;
-
-		// Float
-		void		SetFloat( const char *key, float value );
-		float		GetFloat( const char *key, const char *defaultValue = "0" ) const;
-		bool		GetFloat( const char *key, const char *defaultValue, float &out ) const;
-
-		// Vec2
-		void		SetVec2( const char *key, const Vec2 &value );
-		void		SetVec2( const char *key, float x, float y );
-		Vec2		GetVec2( const char *key, const char *defaultValue = "0 0" ) const;
-		bool		GetVec2( const char *key, const char *defaultValue, Vec2 &out ) const;
-
-		// Vec3
-		void		SetVec3( const char *key, const Vec3 &value );
-		void		SetVec3( const char *key, float x, float y, float z );
-		Vec3		GetVec3( const char *key, const char *defaultValue = "0 0 0" ) const;
-		bool		GetVec3( const char *key, const char *defaultValue, Vec3 &out ) const;
-
-		// Vec4
-		void		SetVec4( const char *key, const Vec4 &value );
-		void		SetVec4( const char *key, float x, float y, float z, float w );
-		Vec4		GetVec4( const char *key, const char *defaultValue = "0 0 0 0" ) const;
-		bool		GetVec4( const char *key, const char *defaultValue, Vec4 &out ) const;
-
-		// ogRect
-		void		SetRect( const char *key, const Rect &value );
-		void		SetRect( const char *key, float x, float y, float w, float h );
-		Rect		GetRect( const char *key, const char *defaultValue = "0 0 0 0" ) const;
-		bool		GetRect( const char *key, const char *defaultValue, Rect &out ) const;
-
-		// Color
-		void		SetColor( const char *key, const Color &value );
-		void		SetColor( const char *key, float r, float g, float b, float a );
-		Color		GetColor( const char *key, const char *defaultValue = "1 1 1 1" ) const;
-		bool		GetColor( const char *key, const char *defaultValue, Color &out ) const;
-
-		// Angles
-		void		SetAngles( const char *key, const Angles &value );
-		void		SetAngles( const char *key, float pitch, float yaw, float roll );
-		Angles		GetAngles( const char *key, const char *defaultValue = "0 0 0" ) const;
-		bool		GetAngles( const char *key, const char *defaultValue, Angles &out ) const;
-
-		// Mat2
-		void		SetMat2( const char *key, const Mat2 &value );
-		void		SetMat2( const char *key, float xx, float xy, float yx, float yy );
-		Mat2		GetMat2( const char *key, const char *defaultValue = "1 0 0 1" ) const;
-		bool		GetMat2( const char *key, const char *defaultValue, Mat2 &out ) const;
-
-		// Mat3
-		void		SetMat3( const char *key, const Mat3 &value );
-		void		SetMat3( const char *key, float xx, float xy, float xz, float yx, float yy, float yz, float zx, float zy, float zz );
-		Mat3		GetMat3( const char *key, const char *defaultValue = "1 0 0 0 1 0 0 0 1" ) const;
-		bool		GetMat3( const char *key, const char *defaultValue, Mat3 &out ) const;
+		void		Set( const char *key, const char *value );
+		void		Set( const char *key, const Format &value );
+		void		Set( const char *key, const String &value );
+		template<class T> void Set( const char *key, const T &value );
+		template<class T> bool Get( const char *key, const char *defaultValue, T &value ) const;
+		StringType	Get( const char *key, const char *defaultValue ) const;
 
 		// Find functions
 		int			Find( const char *key ) const;
@@ -151,6 +90,8 @@ namespace og {
 
 		// operators
 		Dict &		operator=( const Dict &other );
+		StringType	operator[]( const char *key ) const;
+		StringType	operator[]( int index ) const;
 
 	private:
 		static TLS<StringPool>	keyPool;
@@ -204,20 +145,6 @@ namespace og {
 		ListEx<type>	entries;
 		StringList		names;
 		HashIndex		hashIndex;
-	};
-
-	/*
-	==============================================================================
-
-	  LanguageDict
-
-	==============================================================================
-	*/
-	//! @todo	make inheritance protected
-	//! @todo	add SetString, LoadFromFile, SaveToFile functions
-	class LanguageDict : public DictEx<String> {
-	public:
-		const char *GetString( const char *key );
 	};
 }
 

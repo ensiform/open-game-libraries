@@ -31,6 +31,7 @@ freely, subject to the following restrictions:
 #define __OG_FONT_TEXT_H__
 
 #include <og/Common/Common.h>
+#include <og/Math/Math.h>
 #include <og/Font/Font.h>
 
 /*

@@ -86,14 +86,14 @@ bool ogGame::Init( void ) {
 	lifeImage = og::Image::Find("gfx/asteroids/item_extralife.tga");
 
 	og::Dict test;
-	test.SetString("fontAlign", "1");
-	test.SetString("fontSize", "24");
+	test.Set("fontAlign", "1");
+	test.Set("fontSize", "24");
 	levelText.Init( test );
 	levelText.SetWidth( WINDOW_WIDTH-5 );
 	levelText.value = "Level: 0";
 
-	test.SetString("fontAlign", "2");
-	test.SetString("fontSize", "48");
+	test.Set("fontAlign", "2");
+	test.Set("fontSize", "48");
 
 	float width = static_cast<float>(WINDOW_WIDTH);
 	stateText[GS_GAMEOVER].Init( test );
@@ -185,7 +185,7 @@ void ogGame::Think( int frameTime ) {
 	if ( entityCount <= 1 && state == GS_PLAYING ) {
 		if ( !localPlayer ) {
 			og::Dict settings;
-			settings.SetVec2("origin", 400, 300);
+			settings.Set("origin", "400 300");
 			localPlayer = static_cast<ogPlayer *>( ogEntityType::SpawnEntity( "player", &settings ) );
 			localPlayer->Reset();
 			level = 0;
