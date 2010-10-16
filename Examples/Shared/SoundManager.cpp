@@ -64,7 +64,6 @@ bool ogSoundManager::Init( const char *defaultFilename ) {
 	parser.SolveInheritance();
 	og::FS->FreeFileList( files );
 
-	const char *value;
 	int num = soundDecls.declList.Num();
 	for( int i=0; i<num; i++ ) {
 		og::Dict &dict		= soundDecls.declList[i];
@@ -74,8 +73,8 @@ bool ogSoundManager::Init( const char *defaultFilename ) {
 		sound.volume		= dict["volume"];
 		sound.loop			= dict["loop"];
 		for( int j = dict.MatchPrefix( "sound", 5 ); j != -1; j = dict.MatchPrefix( "sound", 5, j ) ) {
-			value = dict.GetKeyValue(j)->GetValue().c_str();
-			if ( value[0] != '\0' )
+			const og::String &value = dict.GetKeyValue(j)->GetStringValue();
+			if ( !value.IsEmpty() )
 				sound.filenames.Append( value );
 		}
 		if ( sound.filenames.IsEmpty() )

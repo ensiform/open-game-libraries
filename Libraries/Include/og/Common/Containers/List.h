@@ -64,12 +64,6 @@ namespace og {
 		void		SetGranularity( int granularity );		// Set the granularity
 		int			GetGranularity( void );					// Get the granularity
 
-#if 0 // disabled until we need them and know how we want them to act
-		size_t		Allocated( void ) const;				// Returns total size of allocated memory
-		size_t		Size( void ) const;						// Returns total size of allocated memory including size of list type
-		size_t		MemoryUsed( void ) const;				// Returns size of the used elements in the list
-#endif
-
 		type&		Alloc( void );							// Get the next unused item, resize the list if needed.
 		void		Append( type value );					// Add a new item, resize the list if needed.
 		void		Remove( int index );					// Remove an item (list won't be resized).
@@ -138,12 +132,6 @@ namespace og {
 
 		void		SetGranularity( int granularity );		// Set the granularity
 		int			GetGranularity( void );					// Get the granularity
-
-#if 0 // disabled until we need them and know how we want them to act
-		size_t		Allocated( void ) const;				// Returns total size of allocated memory
-		size_t		Size( void ) const;						// Returns total size of allocated memory including size of list type
-		size_t		MemoryUsed( void ) const;				// Returns size of the used elements in the list
-#endif
 
 		type&		Alloc( void );							// Get the next unused item, resize the list if needed.
 		void		Append( const type &value );			// Add a new item, resize the list if needed.

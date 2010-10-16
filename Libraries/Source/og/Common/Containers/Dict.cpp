@@ -84,7 +84,7 @@ void Dict::Copy( const Dict &other ) {
 	Clear();
 	int num = other.entries.Num();
 	for ( int i = 0; i < num; i++ )
-		Set( other.entries[i].GetKey().c_str(), other.entries[i].GetValue().c_str() );
+		Set( other.entries[i].key->c_str(), other.entries[i].value->c_str() );
 }
 
 /*
@@ -95,8 +95,8 @@ Dict::Append
 void Dict::Append( const Dict &other, bool overWrite ) {
 	int num = other.entries.Num();
 	for ( int i = 0; i < num; i++ ) {
-		if ( overWrite || Find( other.entries[i].GetKey().c_str() ) == -1 )
-			Set( other.entries[i].GetKey().c_str(), other.entries[i].GetValue().c_str() );
+		if ( overWrite || Find( other.entries[i].key->c_str() ) == -1 )
+			Set( other.entries[i].key->c_str(), other.entries[i].value->c_str() );
 	}
 }
 
@@ -132,7 +132,7 @@ StringType Dict::Get( const char *key, const char *defaultValue ) const {
 	int index = Find( key );
 	if ( index == -1 )
 		return StringType( defaultValue );
-	return StringType( entries[index].GetValue().c_str() );
+	return entries[index].GetValue();
 }
 
 /*
@@ -183,7 +183,7 @@ void Dict::ReadFromFile( File *file ) {
 	for ( int i = 0; i < n; i++ ) {
 		key.ReadFromFile( file );
 		val.ReadFromFile( file );
-		Set(key.c_str(), val.c_str());
+		Set( key.c_str(), val.c_str() );
 	}
 }
 
@@ -196,8 +196,8 @@ void Dict::WriteToFile( File *file ) const {
 	int n = entries.Num();
 	file->WriteInt(n);
 	for ( int i = 0; i < n; i++ ) {
-		entries[i].GetKey().WriteToFile( file );
-		entries[i].GetValue().WriteToFile( file );
+		entries[i].key->WriteToFile( file );
+		entries[i].value->WriteToFile( file );
 	}
 }
 

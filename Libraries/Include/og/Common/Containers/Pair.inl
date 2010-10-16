@@ -45,8 +45,8 @@ namespace og {
 Pair::operator=
 ================
 */
-template<class t1, class t2>
-OG_INLINE Pair<t1, t2> &Pair<t1, t2>::operator=( const Pair<t1, t2> &other ) {
+template<class T1, class T2>
+OG_INLINE Pair<T1, T2> &Pair<T1, T2>::operator=( const Pair<T1, T2> &other ) {
 	first = other.first;
 	second = other.second;
 	return *this;
@@ -57,8 +57,8 @@ OG_INLINE Pair<t1, t2> &Pair<t1, t2>::operator=( const Pair<t1, t2> &other ) {
 Pair::operator==
 ================
 */
-template<class t1, class t2>
-OG_INLINE bool Pair<t1, t2>::operator==( const Pair<t1, t2> &other ) {
+template<class T1, class T2>
+OG_INLINE bool Pair<T1, T2>::operator==( const Pair<T1, T2> &other ) {
 	return (first == other.first) && (second == other.second);
 }
 
@@ -67,8 +67,8 @@ OG_INLINE bool Pair<t1, t2>::operator==( const Pair<t1, t2> &other ) {
 Pair::operator!=
 ================
 */
-template<class t1, class t2>
-OG_INLINE bool Pair<t1, t2>::operator!=( const Pair<t1, t2> &other ) {
+template<class T1, class T2>
+OG_INLINE bool Pair<T1, T2>::operator!=( const Pair<T1, T2> &other ) {
 	return (first != other.first) || (second != other.second);
 }
 

@@ -143,38 +143,6 @@ int List<type>::GetGranularity( void ) {
 	return granularity;
 }
 
-#if 0 // disabled until we need them and know how we want them to act
-/*
-================
-List::Allocated
-================
-*/
-template<class type>
-OG_INLINE size_t List<type>::Allocated( void ) const {
-	return size * sizeof( type );
-}
-
-/*
-================
-List::Size
-================
-*/
-template<class type>
-OG_INLINE size_t List<type>::Size( void ) const {
-	return sizeof( List<type> ) + Allocated();
-}
-
-/*
-================
-List::MemoryUsed
-================
-*/
-template<class type>
-OG_INLINE size_t List<type>::MemoryUsed( void ) const {
-	return num * sizeof( *list );
-}
-#endif
-
 /*
 ================
 List::operator[]
@@ -513,38 +481,6 @@ template<class type>
 int ListEx<type>::GetGranularity( void ) {
 	return granularity;
 }
-
-#if 0 // disabled until we need them and know how we want them to act
-/*
-================
-ListEx::Allocated
-================
-*/
-template<class type>
-OG_INLINE size_t ListEx<type>::Allocated( void ) const {
-	return size * sizeof( type );
-}
-
-/*
-================
-ListEx::Size
-================
-*/
-template<class type>
-OG_INLINE size_t ListEx<type>::Size( void ) const {
-	return sizeof( ListEx<type> ) + Allocated();
-}
-
-/*
-================
-ListEx::MemoryUsed
-================
-*/
-template<class type>
-OG_INLINE size_t ListEx<type>::MemoryUsed( void ) const {
-	return num * sizeof( **list );
-}
-#endif
 
 /*
 ================

@@ -30,6 +30,8 @@ freely, subject to the following restrictions:
 #ifndef __OG_STRING_H__
 #define __OG_STRING_H__
 
+#include <time.h>
+
 namespace og {
 	class File;
 	const int OG_STR_HARDBUFFER_SIZE = 20;
@@ -240,6 +242,7 @@ namespace og {
 		const char *value;
 
 		friend class Dict;
+		friend class KeyValue;
 	public:
 
 		// Conversion operators

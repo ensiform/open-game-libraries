@@ -78,18 +78,17 @@ DeclType::DoInheritance
 ================
 */
 void DeclType::DoInheritance( int index ) {
-	const char *value;
 	int inheritFrom;
 	for( int i = declList[index].MatchPrefix( "inherit", 7 ); i != -1; i = declList[index].MatchPrefix( "inherit", 7, i ) ) {
-		value = declList[index].GetKeyValue(i)->GetValue().c_str();
-		if ( inheritancePast.IFind( value ) != -1 ) {
-			User::Error(ERR_LEXER_FAILURE, "Inheritance Problem: declaration is inheriting from itself", value );
+		const String &value = declList[index].GetKeyValue(i)->GetStringValue();
+		if ( inheritancePast.IFind( value.c_str() ) != -1 ) {
+			User::Error(ERR_LEXER_FAILURE, "Inheritance Problem: declaration is inheriting from itself", value.c_str() );
 			return;
 		}
 
 		inheritancePast.Append( value );
 
-		inheritFrom = declList.Find( value );
+		inheritFrom = declList.Find( value.c_str() );
 		if ( inheritFrom == -1 ) { 
 			User::Error(ERR_LEXER_WARNING, Format("Could not find inheritance '$*' of type $*" ) << value << name, declList.GetKey(index).c_str() );
 			continue;
@@ -99,7 +98,7 @@ void DeclType::DoInheritance( int index ) {
 			DoInheritance( inheritFrom );
 
 		declList[index].Append( declList[inheritFrom], false );
-		inheritancePast.Remove( inheritancePast.IFind( value ) );
+		inheritancePast.Remove( inheritancePast.IFind( value.c_str() ) );
 	}
 	inheritanceSolved[index] = true;
 }

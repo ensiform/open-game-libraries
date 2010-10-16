@@ -32,14 +32,12 @@ freely, subject to the following restrictions:
 
 
 namespace og {
-#if defined(OG_WIN32)
 	#define OG_TLS_OUT_OF_INDEXES ((uLong)0xFFFFFFFF)
 
 	uLong ogTlsAlloc( void );
 	void ogTlsFree( uLong index );
 	void *ogTlsGetValue( uLong index );
 	void ogTlsSetValue( uLong index, void *data );
-#endif
 
 	struct TLS_Data {
 		TLS_Data( uLong index ) : previous(NULL), tlsIndex(index) { ogTlsSetValue( index, this ); }

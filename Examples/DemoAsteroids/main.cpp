@@ -550,9 +550,9 @@ og::User::Error
 */
 void og::User::Error( og::ErrorId id, const char *msg, const char *param ) {
 	// Todo: Throw an exception on the id's you think are important.
-	char *result = CreateErrorString( id, msg, param );
-	printf( "%s\n", result );
-	FreeErrorString( result );
+	og::String error;
+	CreateErrorString( id, msg, param, error );
+	printf( "%s\n", error.c_str() );
 }
 
 /*

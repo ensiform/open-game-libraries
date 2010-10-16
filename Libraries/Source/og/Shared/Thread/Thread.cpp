@@ -33,17 +33,48 @@ freely, subject to the following restrictions:
 #if defined(OG_WIN32)
 	#include <windows.h>
 	#include <process.h>
+#else
+	#include <pthread.h>
 #endif
+
 namespace og {
 
+uLong ogTlsAlloc( void ) {
+#ifdef OG_WIN32
+	return TlsAlloc();
+#else
+	uLong key;
+	if ( pthread_key_create( &key, NULL ) == 0 )
+		return key;
+	return OG_TLS_OUT_OF_INDEXES;
+#endif
+}
+
+void ogTlsFree( uLong index ) {
+#ifdef OG_WIN32
+	TlsFree( index );
+#else
+	pthread_key_delete( index );
+#endif
+}
+
+void *ogTlsGetValue( uLong index ) {
+#ifdef OG_WIN32
+	return TlsGetValue( index );
+#else
+	return pthread_getspecific(key)
+#endif
+}
+
+void ogTlsSetValue( uLong index, void *data ) {
+#ifdef OG_WIN32
+	TlsSetValue( index, data );
+#else
+	pthread_setspecific( index, ptr );
+#endif
+}
 
 #if defined(OG_WIN32)
-
-uLong ogTlsAlloc( void ) { return TlsAlloc(); }
-void ogTlsFree( uLong index ) { TlsFree( index ); }
-void *ogTlsGetValue( uLong index ) { return TlsGetValue( index ); }
-void ogTlsSetValue( uLong index, void *data ) { TlsSetValue( index, data ); }
-
 uLong lastTlsIndex = OG_TLS_OUT_OF_INDEXES;
 
 void RegisterTLS( TLS_Data *data ) {

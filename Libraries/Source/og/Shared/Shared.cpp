@@ -55,49 +55,59 @@ void Sleep( int msec ) {
 CreateErrorString
 =================
 */
-char *CreateErrorString( ErrorId id, const char *msg, const char *param ) {
+void CreateErrorString( ErrorId id, const char *msg, const char *param, String &result ) {
 	// Todo: Throw an exception on the id's you think are important.
 	switch( id ) {
 		// Generic Errors:
 		case ERR_SYSTEM_REQUIREMENTS:
-			return strdup( Format( "Your system is not suitable due to: $*." ) << msg );
+			result = Format( "Your system is not suitable due to: $*." ) << msg;
+			return;
 		case ERR_BUFFER_OVERFLOW:
-			return strdup( Format( "Buffer overflow in $*, size:$*." ) << msg << param );
+			result = Format( "Buffer overflow in $*, size:$*." ) << msg << param;
+			return;
 		case ERR_OUT_OF_MEMORY:
-			return strdup( Format( "'$*' returned NULL, size would be $*" ) << msg << param );
+			result = Format( "'$*' returned NULL, size would be $*" ) << msg << param;
+			return;
 
 		// File Errors
 		case ERR_BAD_FILE_FORMAT:
 		case ERR_FILE_CORRUPT:
 		case ERR_FILE_WRITEFAIL:
-			return strdup( Format( "$*: on file '$*'" ) << msg << param );
+			result = Format( "$*: on file '$*'" ) << msg << param;
+			return;
 
 		// Lexer Problems
 		case ERR_LEXER_WARNING:
-			return strdup( Format( "Lexer Warning('$*'): $*." ) << param << msg );
+			result = Format( "Lexer Warning('$*'): $*." ) << param << msg;
+			return;
 		case ERR_LEXER_FAILURE:
-			return strdup( Format( "Lexer Error('$*'): $*." ) << param << msg );
+			result = Format( "Lexer Error('$*'): $*." ) << param << msg;
+			return;
 
 		// zLib Errors:
 		case ERR_ZIP_CRC32:
-			return strdup( Format( "Crc32 corrupt for file: '$*' on zip: '$*'." ) << param << msg );
+			result = Format( "Crc32 corrupt for file: '$*' on zip: '$*'." ) << param << msg;
+			return;
 
 		// Filesystem Errors
 		case ERR_FS_FILE_OPENREAD:
 		case ERR_FS_FILE_OPENWRITE:
 		case ERR_FS_MAKEPATH:
-			return strdup( Format( "$*: '$*'" ) << msg << param );
+			result = Format( "$*: '$*'" ) << msg << param;
+			return;
 
 		// Console Errors
 		case ERR_CVAR_INIT:
 		case ERR_CVAR_LINK:
-			return strdup( Format( "$*: '$*'" ) << msg << param );
+			result = Format( "$*: '$*'" ) << msg << param;
+			return;
 
 		// Audio Errors
 		case ERR_AUDIO_INIT:
-			return strdup( Format( "Audio initialization failed: '$*'." ) << msg );
+			result = Format( "Audio initialization failed: '$*'." ) << msg;
+			return;
 	}
-	return strdup( Format( "Unknown Error($*): '$*' : '$*'." ) << id << msg << (param ? param : "NULL") );
+	result = Format( "Unknown Error($*): '$*' : '$*'." ) << id << msg << (param ? param : "NULL");
 }
 
 /*

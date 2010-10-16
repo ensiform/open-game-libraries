@@ -559,7 +559,7 @@ void CVarSystemEx::FromDict( const Dict *dict ) {
 	const KeyValue *kv;
 	for ( int i=0; i<num; i++ ) {
 		kv = dict->GetKeyValue(i);
-		SetString(kv->GetKey().c_str(), kv->GetValue().c_str());
+		SetString( kv->GetKey().c_str(), kv->GetValue() );
 	}
 }
 

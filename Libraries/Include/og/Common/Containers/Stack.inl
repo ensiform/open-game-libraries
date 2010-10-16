@@ -81,19 +81,6 @@ OG_INLINE type& Stack<type>::Top( void ) {
 
 /*
 ============
-Stack::Top
-
-Retrieves the last element in the stack
-============
-*/
-template<class type>
-OG_INLINE const type& Stack<type>::Top( void ) const {
-	OG_ASSERT( !IsEmpty() );
-	return stack.GetLastNode()->value;
-}
-
-/*
-============
 Stack::Clear
 
 Clears the stack and the elements allocated.
@@ -171,19 +158,6 @@ Retrieves the first element in the queue
 */
 template<class type>
 OG_INLINE type& Queue<type>::Front( void ) {
-	OG_ASSERT( !IsEmpty() );
-	return queue.GetFirstNode()->value;
-}
-
-/*
-============
-Queue::Front
-
-Retrieves the first element in the queue
-============
-*/
-template<class type>
-OG_INLINE const type& Queue<type>::Front( void ) const {
 	OG_ASSERT( !IsEmpty() );
 	return queue.GetFirstNode()->value;
 }

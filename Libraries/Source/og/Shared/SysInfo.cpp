@@ -27,7 +27,6 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <cstdio>
 #include <og/Shared/Thread/Thread.h>
 
 #ifdef OG_WIN32
@@ -93,8 +92,10 @@ AMD: http://www.amd.com/us-en/assets/content_type/white_papers_and_tech_docs/254
 #endif
 
 void RetrieveCPUInfo( void ) {
-	cpu.vendorName[12] = 0;
-	cpu.processorName[48] = 0;
+	char	pszVendor[13];
+	char	pszProcessorName[49];
+	pszVendor[12] = 0;
+	pszProcessorName[48] = 0;
 
 	// eax = 0 -> vendor_id
 	// eax = 0x80000000 -> largestExtFuncNr
@@ -103,9 +104,9 @@ void RetrieveCPUInfo( void ) {
 		mov		eax, 0
 		cpuid
 		mov		cpu.largestStdFuncNr, eax
-		mov		dw cpu.vendorName[0], ebx
-		mov		dw cpu.vendorName[4], edx
-		mov		dw cpu.vendorName[8], ecx
+		mov		dw pszVendor[0], ebx
+		mov		dw pszVendor[4], edx
+		mov		dw pszVendor[8], ecx
 
 		mov		eax, 80000000h
 		cpuid
@@ -119,7 +120,7 @@ void RetrieveCPUInfo( void ) {
 		"movl     %%edx,4(%%esi);"
 		"movl     %%ecx,8(%%esi);"
 		: "=a"(cpu.largestStdFuncNr)
-		: "S"(cpu.vendorName)
+		: "S"(pszVendor)
 	);
 	__asm__ __volatile__(
 		"movl      $0x80000000, %%eax;"
@@ -135,26 +136,26 @@ void RetrieveCPUInfo( void ) {
 	}
 
 	// Convert string to enum.
-	if ( strcmp(cpu.vendorName, "GenuineIntel") == 0 )
+	if ( String::Cmp (pszVendor, "GenuineIntel") == 0 )
 		cpu.vendorID = CPU::INTEL;
-	else if ( strcmp(cpu.vendorName, "AuthenticAMD") == 0 )
+	else if ( String::Cmp (pszVendor, "AuthenticAMD") == 0 )
 		cpu.vendorID = CPU::AMD;
-	else if ( strcmp(cpu.vendorName, "CyrixInstead") == 0 )
+	else if ( String::Cmp (pszVendor, "CyrixInstead") == 0 )
 		cpu.vendorID = CPU::CYRIX;
-	else if ( strcmp(cpu.vendorName, "CentaurHauls") == 0 )
+	else if ( String::Cmp (pszVendor, "CentaurHauls") == 0 )
 		cpu.vendorID = CPU::CENTAUR;
-	else if ( strcmp(cpu.vendorName, "SiS SiS SiS ") == 0 )
+	else if ( String::Cmp (pszVendor, "SiS SiS SiS ") == 0 )
 		cpu.vendorID = CPU::SIS;
-	else if ( strcmp(cpu.vendorName, "NexGenDriven") == 0 )
+	else if ( String::Cmp (pszVendor, "NexGenDriven") == 0 )
 		cpu.vendorID = CPU::NEXTGEN;
-	else if ( strcmp(cpu.vendorName, "GenuineTMx86") == 0
-		|| strcmp(cpu.vendorName, "TransmetaCPU") == 0 )
+	else if ( String::Cmp (pszVendor, "GenuineTMx86") == 0
+		|| String::Cmp (pszVendor, "TransmetaCPU") == 0 )
 		cpu.vendorID = CPU::TRANSMETA;
-	else if ( strcmp(cpu.vendorName, "RiseRiseRise") == 0 )
+	else if ( String::Cmp (pszVendor, "RiseRiseRise") == 0 )
 		cpu.vendorID = CPU::RISE;
-	else if ( strcmp(cpu.vendorName, "UMC UMC UMC ") == 0 )
+	else if ( String::Cmp (pszVendor, "UMC UMC UMC ") == 0 )
 		cpu.vendorID = CPU::UMC;
-	else if ( strcmp(cpu.vendorName, "Geode by NSC") == 0 )
+	else if ( String::Cmp (pszVendor, "Geode by NSC") == 0 )
 		cpu.vendorID = CPU::NSC;
 	else {
 		cpu.vendorID = CPU::UNKNOWN;
@@ -238,7 +239,7 @@ void RetrieveCPUInfo( void ) {
 		__asm {
 			// Get the first 16 bytes of the processor name
 			mov		eax, 80000002h
-			lea		edi, cpu.processorName
+			lea		edi, pszProcessorName
 			cpuid
 			call save_string
 
@@ -291,19 +292,20 @@ end:
 			"addl     $16, %%esi;"
 			"ret;"
 "end:;"
-				 : /* no output */ : "S" (cpu.processorName)
+				: /* no output */ : "S" (pszProcessorName)
 		);
 #endif
 	}
 
-//	cpu.vendorName.StripLeadingWhitespaces();
-//	cpu.vendorName.StripTrailingWhitespaces();
-	if( cpu.processorName[0] )
-		strcpy( cpu.processorName, cpu.vendorName );
-	else {
-//		cpu.processorName.StripLeadingWhitespaces();
-//		cpu.processorName.StripTrailingWhitespaces();
-	}
+	cpu.vendorName = pszVendor;
+	cpu.vendorName.StripLeadingWhitespaces();
+	cpu.vendorName.StripTrailingWhitespaces();
+	if(pszProcessorName[0]) {
+		cpu.processorName = pszProcessorName;
+		cpu.processorName.StripLeadingWhitespaces();
+		cpu.processorName.StripTrailingWhitespaces();
+	} else
+		cpu.processorName = cpu.vendorName.c_str();
 }
 /*
 ================
@@ -434,7 +436,7 @@ OSInfo *SysInfo::GetOSInfo( void ) {
 
 		// Failed ?
 		if( !GetVersionEx( &osInfo ) ) {
-			strcpy( data.name, "Not identified" );
+			data.name = "Not identified";
 			User::Error(ERR_SYSTEM_REQUIREMENTS, "Couldn't get OS version info" );
 		} else {
 			data.majorVersion = osInfo.dwMajorVersion;
@@ -444,26 +446,26 @@ OSInfo *SysInfo::GetOSInfo( void ) {
 			// We require Win2K minimum
 			if( osInfo.dwPlatformId == VER_PLATFORM_WIN32_NT && osInfo.dwMajorVersion >= 5 ) {
 				if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 0 )
-					strcpy( data.name, "Win2K" );
+					data.name = "Win2K";
 				else if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 1 )
-					strcpy( data.name, "WinXP" );
+					data.name = "WinXP";
 				else if( osInfo.dwMajorVersion == 6 ) {
 					if( osInfo.dwMinorVersion == 0 )
-						strcpy( data.name, "WinVista" );
+						data.name = "WinVista";
 					else
-						strcpy( data.name, "Win7" );
+						data.name = "Win7";
 				}
 
 				if ( strnicmp(osInfo.szCSDVersion, "Service Pack ", 13) == 0 ) {
-					strcat( data.name, " SP" );
-					strcat( data.name, osInfo.szCSDVersion+13 );
+					data.name += " SP";
+					data.name += (osInfo.szCSDVersion+13);
 				} else {
-					strcat( data.name, " " );
-					strcat( data.name, osInfo.szCSDVersion );
+					data.name += " ";
+					data.name += osInfo.szCSDVersion;
 				}
 			}
-			if ( data.name[0] == '\0' ) {
-				sprintf( data.name, "Win %d.%d", osInfo.dwMajorVersion, osInfo.dwMinorVersion );
+			if ( data.name.IsEmpty() ) {
+				data.name = Format("Win $*.$*") << (uInt)osInfo.dwMajorVersion << (uInt)osInfo.dwMinorVersion;
 				User::Error(ERR_SYSTEM_REQUIREMENTS, "Requires Windows 2000 or greater" );
 			}
 		}

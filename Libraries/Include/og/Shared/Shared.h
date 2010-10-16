@@ -33,7 +33,12 @@
 #define __OG_SHARED_H__
 
 #include <og/Setup.h>
-#include <og/Shared/SysInfo.h>
+
+// Public Library Includes
+#include "String.h"
+#include "Format.h"
+#include "SysInfo.h"
+#include "Timer.h"
 
 //! Open Game
 namespace og {
@@ -153,21 +158,9 @@ namespace og {
 	//! @param	id		The error id
 	//! @param	msg		The error message
 	//! @param	param	The error param
-	//!
-	//! @return	Allocated c-string, you need to free it when you're done!
-	//!
-	//! @see	FreeErrorString
+	//! @param	result	Where to store the result
 	// ==============================================================================
-	char *	CreateErrorString( ErrorId id, const char *msg, const char *param );
-	
-	// ==============================================================================
-	//! Free an error string
-	//!
-	//! @param	str		The error string
-	//!
-	//! @see	CreateErrorString
-	// ==============================================================================
-	void	FreeErrorString( char *str );
+	void	CreateErrorString( ErrorId id, const char *msg, const char *param, String &result );
 
 	// ==============================================================================
 	//! Minimum
@@ -222,12 +215,6 @@ namespace og {
 	// ==============================================================================
 	uLongLong	FNV64( const char *value, bool caseSensitive );
 }
-
-// Public Library Includes
-#include "String.h"
-#include "Format.h"
-#include "SysInfo.h"
-#include "Timer.h"
 
 // We include .inl files last, so we can access all classes here.
 #include "String.inl"

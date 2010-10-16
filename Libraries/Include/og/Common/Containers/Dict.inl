@@ -99,7 +99,7 @@ bool Dict::Get( const char *key, const char *defaultValue, T &out ) const {
 		out = StringType( defaultValue );
 		return false;
 	}
-	out = StringType( entries[index].GetValue().c_str() );
+	out = entries[index].GetValue();
 	return true;
 }
 
@@ -113,7 +113,7 @@ OG_INLINE StringType Dict::operator[]( const char *key ) const {
 }
 OG_INLINE StringType Dict::operator[]( int index ) const {
 	OG_ASSERT( index >= 0 && index <= entries.Num() );
-	return StringType( entries[index].GetValue().c_str() );
+	return entries[index].GetValue();
 }
 
 /*
