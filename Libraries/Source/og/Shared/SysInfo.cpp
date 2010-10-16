@@ -38,8 +38,10 @@ freely, subject to the following restrictions:
 
 namespace og {
 namespace SysInfo {
+#ifdef OG_WIN32
 static LARGE_INTEGER frequency;
 static double		pfcMultiplier;
+#endif
 
 CPU::Features	cpu;
 uLongLong		ramB; // in bytes
@@ -500,8 +502,10 @@ OSInfo *SysInfo::GetOSInfo( void ) {
 // Init SysInfo
 struct Initializer {
 	Initializer() {
+#ifdef OG_WIN32
 		QueryPerformanceFrequency(&frequency);
 		pfcMultiplier = 1000000.0/static_cast<double>(frequency.QuadPart);
+#endif
 
 		RetrieveCPUInfo();
 		RetrieveCPUSpeed();

@@ -38,43 +38,6 @@ freely, subject to the following restrictions:
 #endif
 
 namespace og {
-
-uLong ogTlsAlloc( void ) {
-#ifdef OG_WIN32
-	return TlsAlloc();
-#else
-	uLong key;
-	if ( pthread_key_create( &key, NULL ) == 0 )
-		return key;
-	return OG_TLS_OUT_OF_INDEXES;
-#endif
-}
-
-void ogTlsFree( uLong index ) {
-#ifdef OG_WIN32
-	TlsFree( index );
-#else
-	pthread_key_delete( index );
-#endif
-}
-
-void *ogTlsGetValue( uLong index ) {
-#ifdef OG_WIN32
-	return TlsGetValue( index );
-#else
-	return pthread_getspecific(key)
-#endif
-}
-
-void ogTlsSetValue( uLong index, void *data ) {
-#ifdef OG_WIN32
-	TlsSetValue( index, data );
-#else
-	pthread_setspecific( index, ptr );
-#endif
-}
-
-#if defined(OG_WIN32)
 uLong lastTlsIndex = OG_TLS_OUT_OF_INDEXES;
 
 void RegisterTLS( TLS_Data *data ) {
@@ -97,6 +60,43 @@ void CleanupTLS( void ) {
 		ogTlsSetValue( lastTlsIndex, NULL );
 	}
 }
+
+uLong ogTlsAlloc( void ) {
+#ifdef OG_WIN32
+	return TlsAlloc();
+#else
+	pthread_key_t key;
+	if ( pthread_key_create( &key, NULL ) == 0 )
+		return static_cast<uLong>( key );
+	return OG_TLS_OUT_OF_INDEXES;
+#endif
+}
+
+void ogTlsFree( uLong index ) {
+#ifdef OG_WIN32
+	TlsFree( index );
+#else
+	pthread_key_delete( static_cast<pthread_key_t>(index) );
+#endif
+}
+
+void *ogTlsGetValue( uLong index ) {
+#ifdef OG_WIN32
+	return TlsGetValue( index );
+#else
+	return pthread_getspecific( static_cast<pthread_key_t>(index) )
+#endif
+}
+
+void ogTlsSetValue( uLong index, void *data ) {
+#ifdef OG_WIN32
+	TlsSetValue( index, data );
+#else
+	pthread_setspecific( static_cast<pthread_key_t>(index), data );
+#endif
+}
+
+#if defined(OG_WIN32)
 
 Mutex::Mutex() {
 	CRITICAL_SECTION *pCrit = new CRITICAL_SECTION;
