@@ -64,35 +64,51 @@ void CleanupTLS( void ) {
 uLong ogTlsAlloc( void ) {
 #ifdef OG_WIN32
 	return TlsAlloc();
-#else
+#elif defined(OG_LINUX)
 	pthread_key_t key;
 	if ( pthread_key_create( &key, NULL ) == 0 )
 		return static_cast<uLong>( key );
 	return OG_TLS_OUT_OF_INDEXES;
+#elif defined(OG_MACOS_X)
+    #error Not Done yet!
+#else
+    #error Invalid OS!
 #endif
 }
 
 void ogTlsFree( uLong index ) {
 #ifdef OG_WIN32
 	TlsFree( index );
-#else
+#elif defined(OG_LINUX)
 	pthread_key_delete( static_cast<pthread_key_t>(index) );
+#elif defined(OG_MACOS_X)
+    #error Not Done yet!
+#else
+    #error Invalid OS!
 #endif
 }
 
 void *ogTlsGetValue( uLong index ) {
 #ifdef OG_WIN32
 	return TlsGetValue( index );
+#elif defined(OG_LINUX)
+	return pthread_getspecific( static_cast<pthread_key_t>(index) );
+#elif defined(OG_MACOS_X)
+    #error Not done yet!
 #else
-	return pthread_getspecific( static_cast<pthread_key_t>(index) )
+    #error Invalid OS!
 #endif
 }
 
 void ogTlsSetValue( uLong index, void *data ) {
 #ifdef OG_WIN32
 	TlsSetValue( index, data );
-#else
+#elif defined(OG_LINUX)
 	pthread_setspecific( static_cast<pthread_key_t>(index), data );
+#elif defined(OG_MACOS_X)
+    #error Not done yet!
+#else
+    #error Invalid OS!
 #endif
 }
 
