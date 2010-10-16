@@ -77,7 +77,7 @@ in release mode it calls og::User::AssertFailed()
 #if defined( WIN32 ) || defined( _WIN32 ) || defined( _WINDOWS ) || defined( __WIN32__ )
 	#define OG_WIN32
 #elif defined ( __linux__ )
-	#error "Sorry, Linux Build is not done yet"
+	//#error "Sorry, Linux Build is not done yet"
 	#define OG_LINUX
 #elif defined( MACOS_X )
 	#error "Sorry, Mac Build is not done yet"
@@ -99,11 +99,11 @@ in release mode it calls og::User::AssertFailed()
 		//#pragma warning( default: 4710 )	// function '...' not inlined
 		#pragma warning( default: 4711 )	// function '...' selected for automatic inline expansion
 
-#ifndef OG_SHOW_MORE_WARNINGS
-		#pragma warning( disable : 4389 )	// signed/unsigned mismatch
-		#pragma warning( disable : 4018 )	// signed/unsigned mismatch
-		#pragma warning( disable : 4996 )	// 'function': was declared deprecated
-#endif
+		#ifndef OG_SHOW_MORE_WARNINGS
+			#pragma warning( disable : 4389 )	// signed/unsigned mismatch
+			#pragma warning( disable : 4018 )	// signed/unsigned mismatch
+			#pragma warning( disable : 4996 )	// 'function': was declared deprecated
+		#endif
 	#endif
 
 	#define OG_LITTLE_ENDIAN 1
@@ -125,6 +125,8 @@ in release mode it calls og::User::AssertFailed()
 
 #if defined(_MSC_VER)
 	#define OG_INLINE __forceinline
+#elif defined(__GNUC__)
+	#define OG_INLINE __inline__
 #else
 	#define OG_INLINE inline
 #endif

@@ -34,6 +34,14 @@ freely, subject to the following restrictions:
 #ifdef OG_WIN32
 	#include <windows.h>
 #endif
+#ifdef OG_LINUX
+    #include <unistd.h>
+    #include <ctype.h>
+#endif
+
+#ifdef OG_MACOS_X
+    #warning Need MacOS here FIXME
+#endif
 
 namespace og {
 
@@ -108,15 +116,6 @@ void CreateErrorString( ErrorId id, const char *msg, const char *param, String &
 			return;
 	}
 	result = Format( "Unknown Error($*): '$*' : '$*'." ) << id << msg << (param ? param : "NULL");
-}
-
-/*
-=================
-FreeErrorString
-=================
-*/
-void FreeErrorString( char *str ) {
-	free( str );
 }
 
 /*

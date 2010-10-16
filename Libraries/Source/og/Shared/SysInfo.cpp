@@ -27,17 +27,25 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
+#include <cstdio>
 #include <og/Shared/Thread/Thread.h>
 
 #ifdef OG_WIN32
 	#include <windows.h>
-#else
+#endif
+
+#ifdef OG_LINUX
 	#include <dlfcn.h>
 	#include <sys/time.h>
 #endif
 
+#ifdef OG_MACOS_X
+    #error Need MacOS here FIXME
+#endif
+
 namespace og {
 namespace SysInfo {
+
 #ifdef OG_WIN32
 static LARGE_INTEGER frequency;
 static double		pfcMultiplier;
@@ -414,7 +422,8 @@ void RetrieveMemorySize( void ) {
 		}
 	}
 
-	ram = 0;
+	ramB = 0;
+	ramMB = 0;
 #else
 #endif
 }
@@ -424,7 +433,7 @@ void RetrieveMemorySize( void ) {
 SysInfo::GetOSInfo
 ================
 */
-OSInfo *SysInfo::GetOSInfo( void ) {
+OSInfo *GetOSInfo( void ) {
 	static OSInfo data;
 	static bool initialized = false;
 	static Mutex writeLock;
@@ -486,7 +495,7 @@ OSInfo *SysInfo::GetOSInfo( void ) {
 				data.name = buffer;
 				data.name.StripTrailingWhitespaces();
 				// caplength here maybe ? just in case..
-				return;
+				return &data;
 			}
 		}
 		data.name = "unknown unix";

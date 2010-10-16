@@ -33,7 +33,17 @@ freely, subject to the following restrictions:
 #include <vector>
 
 #ifdef OG_WIN32
-	#include<windows.h>
+	#include <windows.h>
+#endif
+
+#ifdef OG_LINUX
+    #include <unistd.h>
+    #include <ctype.h>
+    #include <wctype.h>
+#endif
+
+#ifdef OG_MACOS_X
+    #warning Need MacOS here FIXME
 #endif
 
 namespace og {
@@ -1092,7 +1102,7 @@ int String::GetEscapeColorLength( const char *str ) {
 		return 2;
 	if ( str[1] != 'c')
 		return 0;
-	
+
 	for( int i=2; i<5; i++ ) {
 		if ( !IsDigit(str[i]) && !( str[i] <= 'f' && str[i] >= 'a' ) && !( str[i] <= 'F' && str[i] >= 'A' ) )
 			return 0;
@@ -1450,12 +1460,12 @@ void String::FromWide( const wchar_t *in ) {
 	int outLen = WideCharToMultiByte( CP_UTF8, 0, in, inLen, NULL, 0, NULL, NULL );
 	CheckSize( outLen, false );
 	WideCharToMultiByte( CP_UTF8, 0,  in, inLen, data, outLen, NULL, NULL );
-	
+
 	length = inLen;
 	byteLength = outLen;
 #else
 	//! @todo	other platforms
-	#error "sorry, I was lazy"
+	#warning "sorry, I was lazy"
 #endif
 }
 
@@ -1473,7 +1483,7 @@ int String::ToWide( const char *in, uInt numBytes, wchar_t *out, uInt outSize ) 
 	return MultiByteToWideChar( CP_UTF8, 0,  in, numBytes, out, outSize );
 #else
 	//! @todo	other platforms
-	#error "sorry, I was lazy"
+	#warning "sorry, I was lazy"
 #endif
 }
 
