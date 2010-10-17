@@ -30,7 +30,7 @@ freely, subject to the following restrictions:
 
 #include "../Platform.h"
 
-#ifdef OG_WIN32
+#if OG_WIN32
 
 #include <math.h>
 #include <algorithm>

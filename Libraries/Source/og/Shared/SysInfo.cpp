@@ -30,23 +30,19 @@ freely, subject to the following restrictions:
 #include <cstdio>
 #include <og/Shared/Thread/Thread.h>
 
-#ifdef OG_WIN32
+#if OG_WIN32
 	#include <windows.h>
-#endif
-
-#ifdef OG_LINUX
+#elif OG_LINUX
 	#include <dlfcn.h>
 	#include <sys/time.h>
-#endif
-
-#ifdef OG_MACOS_X
-    #error Need MacOS here FIXME
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 
 namespace og {
 namespace SysInfo {
 
-#ifdef OG_WIN32
+#if OG_WIN32
 static LARGE_INTEGER frequency;
 static double		pfcMultiplier;
 #endif
@@ -61,7 +57,7 @@ SysInfo::GetHiResTime
 ================
 */
 uLongLong GetHiResTime( void ) {
-#ifdef OG_WIN32
+#if OG_WIN32
 	LARGE_INTEGER count;
 	QueryPerformanceCounter(&count);
 	return static_cast<uLongLong>(count.QuadPart*pfcMultiplier);
@@ -78,7 +74,7 @@ SysInfo::GetTime
 ================
 */
 uLong GetTime( void ) {
-#ifdef OG_WIN32
+#if OG_WIN32
 	return timeGetTime();
 #else
 	struct timeval tp;
@@ -322,7 +318,7 @@ end:
 RDTSC
 ================
 */
-#if defined(OG_WIN32)
+#if OG_WIN32
 uLongLong RDTSC( void ) {
 	uInt timeLow, timeHigh;
 	uLongLong result = 0;
@@ -351,7 +347,7 @@ SysInfo::RetrieveCPUSpeed
 ================
 */
 void RetrieveCPUSpeed( void ) {
-#if defined(OG_WIN32)
+#if OG_WIN32
 	if ( cpu.general.TSC ) {
 		const int measureTime = 5; // 5ms should be enough to determine the speed.
 		LARGE_INTEGER ulTicks;
@@ -368,7 +364,7 @@ void RetrieveCPUSpeed( void ) {
 		cpu.speed = static_cast<int>(static_cast<float>(RDTSC() - start) * 0.001f/measureTime);
 	}
 
-#elif defined(OG_LINUX)
+#elif OG_LINUX
 	FILE *file = fopen("/proc/cpuinfo", "r");
 	if( file != NULL ) {
 		char buffer[1024];
@@ -385,7 +381,8 @@ void RetrieveCPUSpeed( void ) {
 			}
 		}
 	}
-#else
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 }
 
@@ -395,7 +392,7 @@ SysInfo::RetrieveMemorySize
 ================
 */
 void RetrieveMemorySize( void ) {
-#if defined(OG_WIN32)
+#if OG_WIN32
 	MEMORYSTATUSEX stat;
 	stat.dwLength = sizeof(stat);
 	GlobalMemoryStatusEx( &stat );
@@ -403,7 +400,7 @@ void RetrieveMemorySize( void ) {
 	ramB = stat.ullTotalPhys;
 	ramMB = stat.ullTotalPhys/(1024*1024);
 
-#elif defined(OG_LINUX)
+#elif OG_LINUX
 	FILE *file = fopen("/proc/meminfo", "r");
 	if( file != NULL ) {
 		char buffer[1024];
@@ -424,7 +421,8 @@ void RetrieveMemorySize( void ) {
 
 	ramB = 0;
 	ramMB = 0;
-#else
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 }
 
@@ -441,7 +439,7 @@ OSInfo *GetOSInfo( void ) {
 	// We only need to get it once, it wont change..
 	writeLock.Lock();
 	if ( !initialized ) {
-#if defined(OG_WIN32)
+#if OG_WIN32
 		OSVERSIONINFO osInfo;
 		osInfo.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
 
@@ -480,7 +478,7 @@ OSInfo *GetOSInfo( void ) {
 				User::Error(ERR_SYSTEM_REQUIREMENTS, "Requires Windows 2000 or greater" );
 			}
 		}
-#elif defined(OG_LINUX)
+#elif OG_LINUX
 		FILE *file = fopen("/proc/version", "r");
 		if( file != NULL ) {
 			char buffer[256];
@@ -499,7 +497,8 @@ OSInfo *GetOSInfo( void ) {
 			}
 		}
 		data.name = "unknown unix";
-#else
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 		initialized = true;
 	}
@@ -511,7 +510,7 @@ OSInfo *GetOSInfo( void ) {
 // Init SysInfo
 struct Initializer {
 	Initializer() {
-#ifdef OG_WIN32
+#if OG_WIN32
 		QueryPerformanceFrequency(&frequency);
 		pfcMultiplier = 1000000.0/static_cast<double>(frequency.QuadPart);
 #endif

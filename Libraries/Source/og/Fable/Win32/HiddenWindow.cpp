@@ -31,7 +31,7 @@
 #include <Dbt.h>
 #include <og/Shared/Thread/Thread.h>
 
-#ifdef OG_WIN32
+#if OG_WIN32
 
 namespace og {
 namespace Fable {

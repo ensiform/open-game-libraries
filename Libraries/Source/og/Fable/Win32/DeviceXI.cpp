@@ -30,7 +30,7 @@
 #include <og/Shared/Shared.h>
 #include <og/Math/Math.h>
 
-#ifdef OG_WIN32
+#if OG_WIN32
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>

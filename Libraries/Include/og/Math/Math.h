@@ -33,7 +33,6 @@ freely, subject to the following restrictions:
 #include <og/Shared/Shared.h>
 #include <float.h>
 #include <math.h>
-
 #include <stdarg.h>
 
 #ifdef INFINITY

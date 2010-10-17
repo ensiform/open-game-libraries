@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #define __OG_FS_UTILITIES_H__
 
 namespace og {
-#ifdef OG_WIN32
+#if OG_WIN32
 	FILE *fopenwin32( const char *filename, const char *mode );
  #define fopen fopenwin32
 #endif

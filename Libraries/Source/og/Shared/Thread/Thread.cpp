@@ -30,7 +30,7 @@ freely, subject to the following restrictions:
 #include <og/Shared/Thread/Thread.h>
 #include <og/Shared/Thread/ThreadLocalStorage.h>
 
-#if defined(OG_WIN32)
+#if OG_WIN32
 	#include <windows.h>
 	#include <process.h>
 #else
@@ -62,57 +62,49 @@ void CleanupTLS( void ) {
 }
 
 uLong ogTlsAlloc( void ) {
-#ifdef OG_WIN32
+#if OG_WIN32
 	return TlsAlloc();
-#elif defined(OG_LINUX)
+#elif OG_LINUX
 	pthread_key_t key;
 	if ( pthread_key_create( &key, NULL ) == 0 )
 		return static_cast<uLong>( key );
 	return OG_TLS_OUT_OF_INDEXES;
-#elif defined(OG_MACOS_X)
-    #error Not Done yet!
-#else
-    #error Invalid OS!
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 }
 
 void ogTlsFree( uLong index ) {
-#ifdef OG_WIN32
+#if OG_WIN32
 	TlsFree( index );
-#elif defined(OG_LINUX)
+#elif OG_LINUX
 	pthread_key_delete( static_cast<pthread_key_t>(index) );
-#elif defined(OG_MACOS_X)
-    #error Not Done yet!
-#else
-    #error Invalid OS!
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 }
 
 void *ogTlsGetValue( uLong index ) {
-#ifdef OG_WIN32
+#if OG_WIN32
 	return TlsGetValue( index );
-#elif defined(OG_LINUX)
+#elif OG_LINUX
 	return pthread_getspecific( static_cast<pthread_key_t>(index) );
-#elif defined(OG_MACOS_X)
-    #error Not done yet!
-#else
-    #error Invalid OS!
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 }
 
 void ogTlsSetValue( uLong index, void *data ) {
-#ifdef OG_WIN32
+#if OG_WIN32
 	TlsSetValue( index, data );
-#elif defined(OG_LINUX)
+#elif OG_LINUX
 	pthread_setspecific( static_cast<pthread_key_t>(index), data );
-#elif defined(OG_MACOS_X)
-    #error Not done yet!
-#else
-    #error Invalid OS!
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 }
 
-#if defined(OG_WIN32)
+#if OG_WIN32
 
 Mutex::Mutex() {
 	CRITICAL_SECTION *pCrit = new CRITICAL_SECTION;

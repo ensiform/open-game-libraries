@@ -30,7 +30,7 @@
 #include "DeviceDI.h"
 #include "XInputChecker.h"
 
-#ifdef OG_WIN32
+#if OG_WIN32
 
 namespace og {
 namespace Fable {

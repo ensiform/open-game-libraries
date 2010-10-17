@@ -32,18 +32,14 @@ freely, subject to the following restrictions:
 #include <math.h>
 #include <vector>
 
-#ifdef OG_WIN32
+#if OG_WIN32
 	#include <windows.h>
-#endif
-
-#ifdef OG_LINUX
+#elif OG_LINUX
     #include <unistd.h>
     #include <ctype.h>
     #include <wctype.h>
-#endif
-
-#ifdef OG_MACOS_X
-    #warning Need MacOS here FIXME
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 
 namespace og {
@@ -1455,7 +1451,7 @@ String::FromWide
 ================
 */
 void String::FromWide( const wchar_t *in ) {
-#ifdef OG_WIN32
+#if OG_WIN32
 	int inLen = wcslen(in)+1;
 	int outLen = WideCharToMultiByte( CP_UTF8, 0, in, inLen, NULL, 0, NULL, NULL );
 	CheckSize( outLen, false );
@@ -1463,9 +1459,10 @@ void String::FromWide( const wchar_t *in ) {
 
 	length = inLen;
 	byteLength = outLen;
-#else
-	//! @todo	other platforms
-	#warning "sorry, I was lazy"
+#elif OG_LINUX
+    #warning "Need Linux here FIXME"
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 }
 
@@ -1475,15 +1472,16 @@ String::ToWide
 ================
 */
 int String::ToWide( const char *in, uInt numBytes, wchar_t *out, uInt outSize ) {
-#ifdef OG_WIN32
+#if OG_WIN32
 	if ( out == NULL )
 		return MultiByteToWideChar( CP_UTF8, 0, in, numBytes, NULL, 0 );
 
 	out[0] = L'\0';
 	return MultiByteToWideChar( CP_UTF8, 0,  in, numBytes, out, outSize );
-#else
-	//! @todo	other platforms
-	#warning "sorry, I was lazy"
+#elif OG_LINUX
+    #warning "Need Linux here FIXME"
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 }
 

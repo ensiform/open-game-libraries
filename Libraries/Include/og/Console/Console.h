@@ -62,7 +62,7 @@ namespace og {
 	struct ConsoleParams_t {
 		const char *appTitle;			//!< Your application name
 		int		minWaitTime;			//!< Wait at least this long(ms) when a wait command was called.
-#ifdef OG_WIN32
+#if OG_WIN32
 		int		width, height;			//!< Width and height of the console window
 		int		minWidth, minHeight;	//!< Minimum width/height, resizing below this value is not possible.
 		int		fadeTime;				//!< Time(ms) to fade window alpha from 0 to 255
@@ -74,6 +74,10 @@ namespace og {
 		byte	colorErrorBgFlash[3];	//!< Background flash color of the error window text
 		byte	colorErrorText[3];		//!< Color of the error window text
 		byte	colorErrorTextFlash[3];	//!< Flash color of the error window text
+#elif OG_LINUX
+    #warning "Need Linux here FIXME"
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 	};
 

@@ -30,7 +30,7 @@
 
 #include <og/Common/Common.h>
 
-#ifdef OG_WIN32
+#if OG_WIN32
 
 #include "XInputChecker.h"
 #include <wbemidl.h>

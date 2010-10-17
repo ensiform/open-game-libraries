@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #ifndef __GLOOT_WINDOW_H__
 #define __GLOOT_WINDOW_H__
 
-#if defined( OG_WIN32 )
+#if OG_WIN32
 	#define GLOOT_WNDCLASSNAME L"GLOOT"
 #endif
 
@@ -105,7 +105,7 @@ namespace og {
 		int			oldMouseLock;	// Old mouse-lock flag (used for remembering mouse-lock state when iconifying)
 
 		// Rest is platform specific
-#if defined( OG_WIN32 )
+#if OG_WIN32
 		HDC			hDC;			// Private GDI device context
 		HGLRC		hRC;			// Permanent rendering context
 		HWND		hWnd;			// Window handle
@@ -124,7 +124,10 @@ namespace og {
 		friend class WindowEvent;
 	public:
 		HWND		GetHWND( void ) { return hWnd; }
-#elif defined( OG_LINUX )
+#elif OG_LINUX
+    #warning "Need Linux here FIXME"
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 	};
 }

@@ -416,7 +416,7 @@ bool InitConsole( void ) {
 	og::ConsoleParams_t conParms;
 	conParms.appTitle = "Open Game";
 
-#ifdef OG_WIN32
+#if OG_WIN32
 	conParms.width = 600;
 	conParms.height = 380;
 	conParms.minWidth = 400;

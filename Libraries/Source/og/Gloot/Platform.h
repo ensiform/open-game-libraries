@@ -33,10 +33,9 @@ freely, subject to the following restrictions:
 
 #include <og/Shared/Shared.h>
 
-#if defined( OG_WIN32 )
+#if OG_WIN32
 	#include <windows.h>
-#elif defined ( OG_LINUX )
-	#define OG_LINUX
+#elif OG_LINUX
 	#include <unistd.h>
 	#include <signal.h>
 	#include <X11/Xlib.h>
@@ -45,8 +44,8 @@ freely, subject to the following restrictions:
 	#include <X11/keysym.h>
 	#include <X11/Xatom.h>
 	#include <GL/glx.h>
-#elif defined( OG_MACOS_X )
-	//! @todo	add mac support
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 
 #include <og/Common/Common.h>
@@ -61,7 +60,7 @@ freely, subject to the following restrictions:
 
 namespace og {
 // Some platform specific OpenGL extensions we need
-#if defined( OG_WIN32 )
+#if OG_WIN32
 	// wglSwapIntervalEXT typedef (Win32 buffer-swap interval control)
 	typedef int (APIENTRY * WGLSWAPINTERVALEXT_T) (int);
 	// wglChoosePixelFormatARB typedef
@@ -74,14 +73,15 @@ namespace og {
 	typedef const char *(APIENTRY * WGLGETEXTENSIONSSTRINGARB_T)( HDC ); 
 	typedef HGLRC (APIENTRY * WGLCREATECONTEXTATTRIBSARB_T)( HDC, HGLRC, const int * ); 
 
-#elif defined ( OG_LINUX )
+#elif OG_LINUX
 	// glXSwapIntervalSGI typedef (X11 buffer-swap interval control)
 	typedef int (* GLXSWAPINTERVALSGI_T) ( int interval );
 	// glxGetExtensionStringARB typedef
 	typedef GLXContext (* GLXCREATECONTEXTATTRIBSARB_T)( Display *dpy, GLXFBConfig config, GLXContext share_context, Bool direct, const int *attrib_list );
 	typedef std::map<xcb_window_t, WindowEx *> WinEvtMap;
 	typedef std::pair<xcb_window_t, WindowEx *> WinEvtPair;
-#elif defined( OG_MACOS_X )
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 
 	typedef std::map<WPARAM, int> KeyMap;
@@ -104,7 +104,7 @@ namespace og {
 		uInt		msg, wParam, lParam;
 	};
 
-#if defined( OG_WIN32 )
+#if OG_WIN32
 	class Win32MessageThread : public Thread {
 	public:
 		Win32MessageThread() {}
@@ -153,7 +153,7 @@ namespace og {
 		short		storedGammaRamp[3][256];
 
 		// Rest is platform specific
-#if defined( OG_WIN32 )
+#if OG_WIN32
 		bool		DoSilentVideoTest( void );
 		bool		wglExtensionSupported( HDC hDC, const char *extension );
 		bool		wglInitExtensions( HDC hDC );
@@ -177,7 +177,7 @@ namespace og {
 		WGLGETEXTENSIONSSTRINGEXT_T		wglGetExtensionsStringEXT;
 		WGLGETEXTENSIONSSTRINGARB_T		wglGetExtensionsStringARB;
 		WGLCREATECONTEXTATTRIBSARB_T	wglCreateContextAttribsARB;
-#elif defined( OG_LINUX )
+#elif OG_LINUX
  		WinEvtMap		windowEventMap;
 		int		eventBase;
 		int		errorBase;
@@ -190,6 +190,8 @@ namespace og {
 		// Platform specific extensions (context specific)
 		GLXSWAPINTERVALSGI_T			glXSwapIntervalSGI;
 		GLXCREATECONTEXTATTRIBSARB_T	glXCreateContextAttribsARB;
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 	};
 	extern Platform Mgr;

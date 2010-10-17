@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #include <stdarg.h>
 #include "FileSystemEx.h"
 
-#ifdef OG_WIN32
+#if OG_WIN32
 	#include <windows.h>
 	#include <io.h>
 #else
@@ -50,7 +50,7 @@ namespace og {
 class FileFinder {
 public:
 	FileFinder( const char *_baseDir, const char *_extension, StringList *_list, int flags ) {
-#ifdef OG_WIN32
+#if OG_WIN32
 		StringToWide( _baseDir, baseDir );
 		StringToWide( _extension, extension );
 #else
@@ -62,7 +62,7 @@ public:
 		addFiles	= (flags & LF_FILES) != 0;
 		recursive	= (flags & LF_CHECK_SUBDIRS) != 0;
 	}
-#ifdef OG_WIN32
+#if OG_WIN32
 	bool	SearchDir( const wchar_t *dir ) {
 		WIN32_FIND_DATA findData;
 		DWORD dwError=0;
@@ -180,7 +180,7 @@ private:
 	bool			recursive;
 	StringList *	list;
 
-#ifdef OG_WIN32
+#if OG_WIN32
 	DynBuffer<wchar_t>	baseDir;
 	DynBuffer<wchar_t>	extension;
 #else
@@ -196,7 +196,7 @@ LocalFileSearch
 bool LocalFileSearch( const char *baseDir, const char *dir, const char *extension, StringList *list, int flags ) {
 	FileFinder finder( baseDir, extension, list, flags );
 
-#ifdef OG_WIN32
+#if OG_WIN32
 	DynBuffer<wchar_t> strDir;
 	StringToWide( dir, strDir );
 	return finder.SearchDir( strDir.data );
@@ -226,7 +226,7 @@ bool FileListEx::GetNext( void ) {
 }
 
 // Win32 needs help to open utf-8 filenames.
-#ifdef OG_WIN32
+#if OG_WIN32
 /*
 ================
 fopenwin32

@@ -33,7 +33,7 @@
 #define OG_FINAL 0						//!< Set this to 1 to disable all OG_ASSERT's
 #define OG_FTOI_USE_SSE					//!< Use SSE extensions for Math::Ftoi
 // #define OG_SHOW_MORE_WARNINGS		//!< Uncomment this if you want to see the warnings we disabled
-#define OG_VISUAL_LEAK_DETECTOR			//!< Uncomment to exclude the visual leak detector ( visual c++ only )
+#define OG_VISUAL_LEAK_DETECTOR 1		//!< Uncomment to exclude the visual leak detector ( visual c++ only )
 
 typedef unsigned char byte;				//!< unsigned char
 typedef unsigned short uShort;			//!< unsigned short
@@ -75,16 +75,19 @@ in release mode it calls og::User::AssertFailed()
 
 // Operating System
 #if defined( WIN32 ) || defined( _WIN32 ) || defined( _WINDOWS ) || defined( __WIN32__ )
-	#define OG_WIN32
+	#define OG_WIN32 1
 #elif defined ( __linux__ )
-	//#error "Sorry, Linux Build is not done yet"
-	#define OG_LINUX
+	#warning "Linux build is not done yet, but we're working on it."
+	#define OG_LINUX 1
 #elif defined( MACOS_X )
-	#error "Sorry, Mac Build is not done yet"
-	#define OG_MACOS_X
+	#error "Sorry, we don't have MAC code yet, if you are interested in helping out, contact us."
+	#define OG_MACOS_X 1
+#else
+    #error "Invalid OS!"
 #endif
 
-#ifdef OG_WIN32
+// Win32 Specific
+#if OG_WIN32
 	// Pragma warnings for msvc
 	#if defined(_MSC_VER)
 		#pragma warning(   error : 4002 )	// Too many actual parameters for macro: promoted to be an error
@@ -106,9 +109,14 @@ in release mode it calls og::User::AssertFailed()
 		#endif
 	#endif
 
-	#define OG_LITTLE_ENDIAN 1
-// (Mac OSX && PPC) = big endian
-#elif defined(OG_MACOS_X) && defined(__ppc__)
+	// Visual Leak Detector 2.0a
+	#if OG_VISUAL_LEAK_DETECTOR && defined(_DEBUG)
+		#include <vld.h>
+	#endif
+#endif
+
+// (Mac OSX && PPC) = big endian, rest = little endian
+#if OG_MACOS_X && defined(__ppc__)
 	#define OG_LITTLE_ENDIAN 0
 #else
 	#define OG_LITTLE_ENDIAN 1
@@ -131,12 +139,13 @@ in release mode it calls og::User::AssertFailed()
 	#define OG_INLINE inline
 #endif
 
+// define OG_ASSERT()
 #ifdef _DEBUG
-	#ifdef OG_WIN32
+	#if OG_WIN32
 		#define OG_ASSERT(x) { if ( !(x) ) __debugbreak(); }
-	#elif defined( OG_LINUX )
+	#elif OG_LINUX
 		#define OG_ASSERT(x) { if ( !(x) ) __asm__ __volatile__ ("int $0x03"); }
-	#elif defined( OG_MACOS_X )
+	#elif OG_MACOS_X
 		#define OG_ASSERT(x) { if ( !(x) ) kill( getpid(), SIGINT ); }
 	#endif
 #else
@@ -152,12 +161,7 @@ in release mode it calls og::User::AssertFailed()
 #endif
 
 #ifndef NULL
-  #define NULL 0
-#endif
-
-// Visual Leak Detector 2.0a
-#if defined(OG_VISUAL_LEAK_DETECTOR) && defined(OG_WIN32) && defined(_DEBUG)
-	#include <vld.h>
+	#define NULL 0
 #endif
 
 #endif

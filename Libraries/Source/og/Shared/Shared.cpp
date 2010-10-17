@@ -31,16 +31,13 @@ freely, subject to the following restrictions:
 
 #include <og/Shared/Shared.h>
 
-#ifdef OG_WIN32
+#if OG_WIN32
 	#include <windows.h>
-#endif
-#ifdef OG_LINUX
+#elif OG_LINUX
     #include <unistd.h>
     #include <ctype.h>
-#endif
-
-#ifdef OG_MACOS_X
-    #warning Need MacOS here FIXME
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 
 namespace og {
@@ -51,7 +48,7 @@ Sleep
 =================
 */
 void Sleep( int msec ) {
-#ifdef OG_WIN32
+#if OG_WIN32
 	::Sleep(msec);
 #else
 	usleep(msec * 1000);

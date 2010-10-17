@@ -30,7 +30,7 @@
 #include <og/Common/Common.h>
 #include <og/Fable/Fable.h>
 
-#ifdef OG_WIN32
+#if OG_WIN32
 
 #include <XInput.h>
 

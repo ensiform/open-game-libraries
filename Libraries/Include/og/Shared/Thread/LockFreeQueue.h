@@ -33,7 +33,7 @@ freely, subject to the following restrictions:
 
 #include <og/Shared/Thread/Thread.h>
 
-#if defined(OG_WIN32)
+#if OG_WIN32
 	#include <windows.h>
 #endif
 

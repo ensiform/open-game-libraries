@@ -244,7 +244,7 @@ FileSystemEx::IsDir
 ================
 */
 bool FileSystemEx::IsDir( const char *path ) {
-#ifdef OG_WIN32
+#if OG_WIN32
 	DynBuffer<wchar_t> strPath;
 	StringToWide( path, strPath );
 	struct _stat stat_Info;
@@ -267,7 +267,7 @@ FileSystemEx::MakeDir
 bool FileSystemEx::MakeDir( const char *path ) {
 	if ( IsDir( path ) )
 		return true;
-#ifdef OG_WIN32
+#if OG_WIN32
 	DynBuffer<wchar_t> strPath;
 	StringToWide( path, strPath );
 	return _wmkdir( strPath.data ) == 0;
@@ -295,10 +295,12 @@ bool FileSystemEx::MakePath( const char *path, bool pure ) {
 		if ( path[i] == '/' || path[i] == '\\' ) {
 			newPath.data[i] = '\0';
 			// Ignore root
-#ifdef OG_WIN32
+#if OG_WIN32
 			if ( i > 2  || (i == 2 && newPath.data[1] != ':') ) {
-#else
+#elif OG_LINUX
 			if ( i != 0 ) {
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 				if ( !MakeDir( newPath.data ) ) {
 					User::Error( ERR_FS_MAKEPATH, "Can't create path", path );
@@ -653,7 +655,7 @@ time_t FileSystemEx::FileTime( const char *filename, bool pure ) {
 		*notFoundWarning = true;
 		return time;
 	}
-#ifdef OG_WIN32
+#if OG_WIN32
 	DynBuffer<wchar_t> strFilename;
 	StringToWide( filename, strFilename );
 	struct _stat fileStat;

@@ -68,10 +68,12 @@ bool WindowEx::ExtensionSupported( const char *extension ) const {
 		return true;
 
 	// Additional platform specific extension checking (e.g. WGL)
-#if defined( OG_WIN32 )
+#if OG_WIN32
 	return Mgr.wglExtensionSupported( hDC, extension );
-#elif defined( OG_LINUX )
+#elif OG_LINUX
 	return Mgr.glxExtensionSupported( extension );
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 }
 

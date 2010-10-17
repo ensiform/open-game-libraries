@@ -29,9 +29,6 @@ freely, subject to the following restrictions:
 
 
 #include<gl/glew.h>
-#ifdef OG_WIN32
-  #include <windows.h>
-#endif
 #include <og/Gloot/glmin.h>
 
 #include <og/Console/Console.h>

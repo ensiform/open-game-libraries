@@ -77,7 +77,7 @@ namespace og {
 		float		desiredGamma;
 
 		// Rest is platform specific
-#if defined( OG_WIN32 )
+#if OG_WIN32
 		MONITORINFOEX	monInfo;
 		HMONITOR		hMonitor;
 		const char *	szDevice;
@@ -88,11 +88,13 @@ namespace og {
 	public:
 		bool		Init( HMONITOR hMon );
 		bool		IsHMonitor( HMONITOR other ) { return hMonitor == other; }
-#elif defined( OG_LINUX )
+#elif OG_LINUX
 		bool		hasGammaRamp;
 		XF86VidModeGamma storedGamma;
 		
 		bool	Init( int screenId );
+#elif OG_MACOS_X
+    #warning "Need MacOS here FIXME"
 #endif
 	};
 }

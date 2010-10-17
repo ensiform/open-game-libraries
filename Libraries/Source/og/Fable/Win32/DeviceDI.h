@@ -33,7 +33,7 @@
 #ifndef __OG_DEVICE_DI_H__
 #define __OG_DEVICE_DI_H__
 
-#ifdef OG_WIN32
+#if OG_WIN32
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>

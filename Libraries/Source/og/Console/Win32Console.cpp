@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 
 #include "Win32Console.h"
 
-#ifdef OG_WIN32
+#if OG_WIN32
 #include <windows.h>
 #include <RichEdit.h>
 

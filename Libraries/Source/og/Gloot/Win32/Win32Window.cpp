@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #include "../Platform.h"
 
 //! @todo: handle pos, size, etc calls from the user while in fullscreen
-#ifdef OG_WIN32
+#if OG_WIN32
 
 #include <math.h>
 
