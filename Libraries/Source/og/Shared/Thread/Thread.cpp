@@ -289,6 +289,7 @@ void SingleWriterMultiReader::UnlockRead( void ) {
 void SingleWriterMultiReader::LockWrite( void ) {
 }
 void SingleWriterMultiReader::UnlockWrite( void ) {
+}
 #elif defined(OG_MACOS_X)
 #else
     #error Unsupported Operating System!
