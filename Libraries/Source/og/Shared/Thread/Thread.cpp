@@ -265,6 +265,41 @@ void SingleWriterMultiReader::UnlockWrite( void ) {
 	mtx.Unlock();
 }
 
+#elif defined(OG_LINUX)
+Mutex::Mutex(){
+}
+Mutex::~Mutex(){
+}
+void Mutex::Lock( void ){
+}
+void Mutex::Unlock( void ){
+}
+Condition::Condition( void ){
+}
+Condition::~Condition( void ){
+}
+void Condition::Signal( void ){
+}
+bool Condition::Wait ( int delay ){
+}
+Thread::Thread(){
+}
+bool Thread::Start ( const char * name , bool waitForInit ){
+}
+void Thread::RunThread( void * param ){
+}
+void Thread::Stop( bool blocking ){
+}
+void SingleWriterMultiReader::LockRead( void ) {
+}
+void SingleWriterMultiReader::UnlockRead( void ) {
+}
+void SingleWriterMultiReader::LockWrite( void ) {
+}
+void SingleWriterMultiReader::UnlockWrite( void ) {
+#elif defined(OG_MACOS_X)
+#else
+    #error Unsupported Operating System!
 #endif
 
 }

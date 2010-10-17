@@ -34,6 +34,8 @@ freely, subject to the following restrictions:
 #include <float.h>
 #include <math.h>
 
+#include <stdarg.h>
+
 #ifdef INFINITY
 	#undef INFINITY
 #endif
