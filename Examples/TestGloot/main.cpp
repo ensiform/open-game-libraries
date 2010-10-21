@@ -28,7 +28,10 @@ freely, subject to the following restrictions:
 */
 
 #include <stdio.h>
+#include <math.h>
+#include <string.h>
 
+#define APP_TITLE "Hello OpenGL world"
 #define DEMO_OPENGL3
 #ifdef DEMO_OPENGL3
  #include <gl/glew.h>
@@ -38,9 +41,6 @@ freely, subject to the following restrictions:
 #endif
 
 #include "main.h"
-
-#include <math.h>
-#include <string.h>
 
 /*
 ==============================================================================
@@ -427,7 +427,7 @@ void og::User::Error( og::ErrorId id, const char *msg, const char *param ) {
 	// Todo: Throw an exception on the id's you think are important.
 	og::String error;
 	CreateErrorString( id, msg, param, error );
-	fprintf( stderr, "%s\n", error.c_str() );
+	og::ErrorDialog( error.c_str(), APP_TITLE );
 }
 
 /*
@@ -436,5 +436,5 @@ og::User::AssertFailed
 ================
 */
 void og::User::AssertFailed( const char *code, const char *function ) {
-	fprintf( stderr, "Assert(%s) failed in %s!", code, function );
+	og::ErrorDialog( og::Format("Assert($*) failed in $*!") << code << function, APP_TITLE );
 }

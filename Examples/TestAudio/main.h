@@ -32,6 +32,8 @@ freely, subject to the following restrictions:
 #include "../Shared/SoundManager.h"
 #include "../Shared/FontText.h"
 
+#define APP_TITLE "Hello OpenAL world"
+
 /*
 ==============================================================================
 

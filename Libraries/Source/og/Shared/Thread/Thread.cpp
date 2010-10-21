@@ -221,7 +221,7 @@ void SingleWriterMultiReader::LockRead( void ) {
 		else
 			lastWaiter = lastWaiter->next = waiter;
 		mtx.Unlock();
-		waiter->Wait(INFINITE);
+		waiter->Wait(OG_INFINITE);
 		LockRead();
 		return;
 	}

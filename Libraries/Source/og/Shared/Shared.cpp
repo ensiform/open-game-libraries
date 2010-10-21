@@ -158,4 +158,51 @@ uLongLong FNV64( const char *value, bool caseSensitive ) {
 	}
 	return hval;
 }
+
+#if OG_WIN32
+#include <windows.h>
+static wchar_t *SharedToWString( const char *string ) {
+	uInt numBytes = String::ByteLength( string ) + 1;
+	uInt size = Max( 1, String::ToWide( string, numBytes, NULL, 0 ) );
+	wchar_t *buffer = new wchar_t[size];
+	if ( size == 1 )
+		buffer[0] = L'\0';
+	else
+		String::ToWide( string, numBytes, buffer, size );
+	return buffer;
+}
+void MessageDialog( const char *message, const char *title ) {
+	wchar_t *messageW = SharedToWString( message );
+	wchar_t *titleW = SharedToWString( title );
+	MessageBoxW( GetForegroundWindow(), messageW, titleW, MB_OK|MB_ICONWARNING );
+	delete[] messageW;
+	delete[] titleW;
+}
+void ErrorDialog( const char *message, const char *title ) {
+	wchar_t *messageW = SharedToWString( message );
+	wchar_t *titleW = SharedToWString( title );
+	MessageBoxW( GetForegroundWindow(), messageW, titleW, MB_OK|MB_ICONERROR );
+	delete[] messageW;
+	delete[] titleW;
+}
+#elif OG_LINUX
+#warning "Need Linux here FIXME"
+void MessageDialog( const char *message, const char *title ) {
+	//! @todo	is there a nice way to do a messagebox/alert dialog on linux ?
+	printf( "%s\n", message );			//! @todo	does linux printf support direct UTF-8 ?
+}
+void ErrorDialog( const char *message, const char *title ) {
+	fprintf( stderr, "%s\n", message );	//! @todo	does linux fprintf support direct UTF-8 ?
+}
+#elif OG_MACOS_X
+#warning "Need MacOS here FIXME"
+void MessageDialog( const char *message, const char *title ) {
+	//! @todo	is there a nice way to do a messagebox/alert dialog on mac ?
+	printf( "%s\n", message );			//! @todo	does mac printf support direct UTF-8 ?
+}
+void ErrorDialog( const char *message, const char *title ) {
+	fprintf( stderr, "%s\n", message );	//! @todo	does mac fprintf support direct UTF-8 ?
+}
+#endif
+
 }

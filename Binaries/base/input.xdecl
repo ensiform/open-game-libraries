@@ -1,4 +1,4 @@
-Keyboard {
+﻿Keyboard {
 	Key( id='SPACE', bind='Attack' );
 	Key( id='UP', bind='Accelerate' );
 	Key( id='DOWN', bind='Accelerate', inverse='1' );

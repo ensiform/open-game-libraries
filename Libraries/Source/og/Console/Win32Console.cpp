@@ -593,7 +593,7 @@ LRESULT ConsoleWindow::MainWndProc( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 
 				ConCommand *cmd = new ConCommand(CCMD_USERMENU);
 				wcd.cmdQueue.Produce( cmd );
-				wcd.menuCondition.Wait(INFINITE);
+				wcd.menuCondition.Wait( OG_INFINITE );
 
 				if ( !wcd.menuEntries.IsEmpty() ) {
 					AppendMenu( hmenu, MF_SEPARATOR, 0, 0);
@@ -798,7 +798,7 @@ LRESULT ConsoleWindow::EditWndProc( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 							ConCommand *cmd = new ConCommand(CCMD_COMPLETION);
 							cmd->strValue.FromWide( GetInputText() );
 							wcd.cmdQueue.Produce( cmd );
-							wcd.completionCondition.Wait(INFINITE);
+							wcd.completionCondition.Wait( OG_INFINITE );
 
 							DynBuffer<wchar_t> wideBuf;
 							StringToWide( wcd.completionText.c_str(), wideBuf );

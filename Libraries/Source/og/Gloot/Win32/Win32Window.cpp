@@ -138,7 +138,7 @@ WindowEx *WindowEx::NewWindow( const WindowConfig *windowCfg ) {
 
 	OG_ASSERT( Mgr.messageThread != NULL );
 	PostThreadMessage( Mgr.messageThread->GetId(), WM_CREATE_NEW_WINDOW, (WPARAM)wnd, 0 );
-	Mgr.newWindowEndEvent.Wait( INFINITE );
+	Mgr.newWindowEndEvent.Wait( OG_INFINITE );
 	return wnd;
 }
 

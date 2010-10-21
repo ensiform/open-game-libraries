@@ -30,7 +30,7 @@
 #ifndef __OG_SETUP_H__
 #define __OG_SETUP_H__
 
-#define OG_FINAL 0						//!< Set this to 1 to disable all OG_ASSERT's
+#define OG_HAS_USER_ASSERT_FAILED 1		//!< Set this to 1 to forward failed asserts in release mode to the user
 #define OG_FTOI_USE_SSE					//!< Use SSE extensions for Math::Ftoi
 // #define OG_SHOW_MORE_WARNINGS		//!< Uncomment this if you want to see the warnings we disabled
 #define OG_VISUAL_LEAK_DETECTOR 1		//!< Uncomment to exclude the visual leak detector ( visual c++ only )
@@ -67,7 +67,7 @@ typedef unsigned long long uLongLong;	//!< unsigned long long
 @brief		Make sure a condition is met
 @details	In debug mode it triggers a breakpoint,
 in release mode it calls og::User::AssertFailed()
-@see		OG_FINAL
+@see		OG_HAS_USER_ASSERT_FAILED
 
 @def		BIT(num)
 @brief		returns an integer with just one specified bit set
@@ -152,19 +152,10 @@ in release mode it calls og::User::AssertFailed()
 // define OG_ASSERT()
 #ifdef _DEBUG
 	#define OG_ASSERT(x) { if ( !(x) ) OG_DEBUG_BREAK() }
-#elif OG_FINAL
-	#define OG_ASSERT(x) {}
-#else
+#elif OG_HAS_USER_ASSERT_FAILED
 	#define OG_ASSERT(x) { if ( !(x) ) og::User::AssertFailed( #x, __FUNCTION__ ); }
-#endif
-
-// define OG_ASSERT_VALID/FAILED()
-#if OG_FINAL && !defined(_DEBUG)
-	#define OG_ASSERT_VALID(x) (x)
-	#define OG_ASSERT_FAILED(x) ( !(x) )
 #else
-	#define OG_ASSERT_VALID(x) ( (x) ? true : og::InternalAssertFailed( #x, __FUNCTION__ ) )
-	#define OG_ASSERT_FAILED(x) ( ( !(x) ) ? false : !og::InternalAssertFailed( #x, __FUNCTION__ ) )
+	#define OG_ASSERT(x) {}
 #endif
 
 #ifndef BIT

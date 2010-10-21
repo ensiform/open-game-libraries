@@ -157,7 +157,7 @@ void Format::Reset( bool keep, const char *fmt ) {
 						w = r;
 						continue;
 					}
-					OG_ASSERT( false );
+					OG_DEBUG_BREAK()
 					//! @todo	error ?
 				}
 			}

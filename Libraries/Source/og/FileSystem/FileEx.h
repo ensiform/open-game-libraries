@@ -120,11 +120,11 @@ namespace og {
 		void	Seek( long offset, int origin );			// Jump to a position
 		long	Tell( void ) { return position; }			// Returns read/write position
 		void	Rewind( void ) { position = 0; }			// Rewind to the beginning
-		void	Flush( void ) { OG_ASSERT(0); }				// Buffered write data will be written to the file.
+		void	Flush( void ) { OG_DEBUG_BREAK(); }			// Buffered write data will be written to the file.
 		bool	Eof( void ) { return position >= size; }	// Tests for end-of-file
 
 		void	Read( void *buffer, uInt len );				// Read data
-		void	Write( const void *buffer, uInt len ) { OG_ASSERT(0); }	// Write data
+		void	Write( const void *buffer, uInt len ) { OG_DEBUG_BREAK(); }	// Write data
 
 		// ---------------------- Internal FileBuffered Members -------------------
 
@@ -151,11 +151,11 @@ namespace og {
 		void	Seek( long offset, int origin );					// Jump to a position
 		long	Tell( void ) { return static_cast<long>(stream.total_out); }	// Returns read/write position
 		void	Rewind( void );										// Rewind to the beginning
-		void	Flush( void ) { OG_ASSERT(0); }						// Buffered write data will be written to the file.
+		void	Flush( void ) { OG_DEBUG_BREAK(); }					// Buffered write data will be written to the file.
 		bool	Eof( void ) { return atEOF; }						// Tests for end-of-file
 
 		void	Read( void *buffer, uInt len );						// Read data
-		void	Write( const void *buffer, uInt len ) { OG_ASSERT(0); }	// Write data
+		void	Write( const void *buffer, uInt len ) { OG_DEBUG_BREAK(); }	// Write data
 
 		// ---------------------- Internal FileInPak Members -------------------
 

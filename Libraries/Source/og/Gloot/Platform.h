@@ -100,7 +100,7 @@ namespace og {
 		}
 		void Execute( void );
 	private:
-		WindowEx *window;
+		WindowEx *	window;
 		uInt		msg, wParam, lParam;
 	};
 

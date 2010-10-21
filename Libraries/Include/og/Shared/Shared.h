@@ -135,12 +135,14 @@ namespace og {
 		void	Warning( const char *msg );
 
 		// ==============================================================================
-		//! Called whenever an assert failed.
+		//! Called whenever an assert failed in release mode
 		//!
 		//! @param	code		The expression that failed
 		//! @param	function	The function name in which it failed
 		// ==============================================================================
+#if OG_HAS_USER_ASSERT_FAILED
 		void	AssertFailed( const char *code, const char *function );
+#endif
 	//! @}
 	}
 //! @}
@@ -219,18 +221,20 @@ namespace og {
 	uLongLong	FNV64( const char *value, bool caseSensitive );
 
 	// ==============================================================================
-	//! Internal Assert Failed ( do not call directly )
+	//! Show a simple message dialog ( might just be send to stdout on linux )
 	//!
-	//! @param	code		The expression that failed
-	//! @param	function	The function name in which it failed
-	//!
-	//! @return	always true
+	//! @param	message	The message
+	//! @param	title	The title of the dialog ( not displayed if send to stdout )
 	// ==============================================================================
-	OG_INLINE bool InternalAssertFailed( const char *code, const char *function ) {
-		OG_DEBUG_BREAK()
-		User::AssertFailed( code, function );
-		return true;
-	}
+	void		MessageDialog( const char *message, const char *title );
+
+	// ==============================================================================
+	//! Show a simple error dialog ( might just be send to stderr on linux )
+	//!
+	//! @param	message	The message
+	//! @param	title	The title of the dialog ( not displayed if send to stderr )
+	// ==============================================================================
+	void ErrorDialog( const char *message, const char *title );
 }
 
 // We include .inl files last, so we can access all classes here.

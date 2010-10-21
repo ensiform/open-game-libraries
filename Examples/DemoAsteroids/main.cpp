@@ -552,7 +552,7 @@ void og::User::Error( og::ErrorId id, const char *msg, const char *param ) {
 	// Todo: Throw an exception on the id's you think are important.
 	og::String error;
 	CreateErrorString( id, msg, param, error );
-	printf( "%s\n", error.c_str() );
+	og::ErrorDialog( error.c_str(), APP_TITLE );
 }
 
 /*
@@ -561,7 +561,7 @@ og::User::Warning
 ================
 */
 void og::User::Warning( const char *msg ) {
-	printf( msg );
+	og::MessageDialog( og::Format("Warning: $*") << msg, APP_TITLE );
 }
 
 /*
@@ -570,6 +570,6 @@ og::User::AssertFailed
 ================
 */
 void og::User::AssertFailed( const char *code, const char *function ) {
-	printf( "Assert(%s) failed in %s!", code, function );
+	og::ErrorDialog( og::Format("Assert($*) failed in $*!") << code << function, APP_TITLE );
 }
 

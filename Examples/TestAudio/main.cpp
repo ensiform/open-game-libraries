@@ -28,14 +28,14 @@ freely, subject to the following restrictions:
 */
 
 #include <stdio.h>
+#include <math.h>
+#include <string.h>
+
 #include <og/Gloot/glmin.h>
 #include <og/Image/Image.h>
 #include <og/FileSystem/FileSystem.h>
 
 #include "main.h"
-
-#include <math.h>
-#include <string.h>
 
 const int WINDOW_SIZE = 400;
 const og::Vec3 windowCenter(WINDOW_SIZE/2, WINDOW_SIZE/2, 0.0f);
@@ -108,7 +108,7 @@ bool ogDemoWindow::Init( void ) {
 		og::glContext::MINOR_VERSION, 1,
 		0
 	};
-	if ( !SetupWindow( 0, 0, 0, "Hello OpenAL world", contextAttribs ) )
+	if ( !SetupWindow( 0, 0, 0, APP_TITLE, contextAttribs ) )
 		return false;
 
 	og::StringList deviceList;
@@ -303,7 +303,7 @@ void og::User::Error( og::ErrorId id, const char *msg, const char *param ) {
 	// Todo: Throw an exception on the id's you think are important.
 	og::String error;
 	CreateErrorString( id, msg, param, error );
-	fprintf( stderr, "%s\n", error.c_str() );
+	og::ErrorDialog( error.c_str(), APP_TITLE );
 }
 
 /*
@@ -312,7 +312,7 @@ og::User::Warning
 ================
 */
 void og::User::Warning( const char *msg ) {
-	printf( msg );
+	og::MessageDialog( og::Format("Warning: $*") << msg, APP_TITLE );
 }
 
 /*
@@ -321,5 +321,5 @@ og::User::AssertFailed
 ================
 */
 void og::User::AssertFailed( const char *code, const char *function ) {
-	fprintf( stderr, "Assert(%s) failed in %s!", code, function );
+	og::ErrorDialog( og::Format("Assert($*) failed in $*!") << code << function, APP_TITLE );
 }

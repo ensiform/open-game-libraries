@@ -47,7 +47,7 @@ int StringToWide( const char *in, DynBuffer<wchar_t> &buffer ) {
 	uInt size = Max( 1, String::ToWide( in, numBytes, NULL, 0 ) );
 	buffer.CheckSize( size );
 	if ( size == 1 )
-		buffer.data[0] = '\0';
+		buffer.data[0] = L'\0';
 	else
 		String::ToWide( in, numBytes, buffer.data, buffer.size );
 	return size;

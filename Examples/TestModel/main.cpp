@@ -27,9 +27,9 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Console/Console.h>
-#include<gl/glew.h>
 #include <stdio.h>
+#include <gl/glew.h>
+#include <og/Console/Console.h>
 #include <og/Image/Image.h>
 #include "main.h"
 
