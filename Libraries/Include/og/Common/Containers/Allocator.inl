@@ -45,8 +45,8 @@ namespace og {
 Allocator::Allocator
 ================
 */
-template<class type>
-OG_INLINE Allocator<type>::Allocator( int _granularity ) : granularity(_granularity) {
+template<class T>
+OG_INLINE Allocator<T>::Allocator( int _granularity ) : granularity(_granularity) {
 	CreateChunk();
 }
 
@@ -55,8 +55,8 @@ OG_INLINE Allocator<type>::Allocator( int _granularity ) : granularity(_granular
 Allocator::~Allocator
 ================
 */
-template<class type>
-OG_INLINE Allocator<type>::~Allocator() {
+template<class T>
+OG_INLINE Allocator<T>::~Allocator() {
 	int num = allocationList.Num();
 	for( int i=0; i<num; i++ )
 		delete[] allocationList[i].list;
@@ -68,11 +68,11 @@ OG_INLINE Allocator<type>::~Allocator() {
 Allocator::Free
 ================
 */
-template<class type>
-OG_INLINE void Allocator<type>::CreateChunk( void ) {
+template<class T>
+OG_INLINE void Allocator<T>::CreateChunk( void ) {
 	allocChunk_t &chunk = allocationList.Alloc();
 	chunk.last = 0;
-	chunk.list = new type[granularity];
+	chunk.list = new T[granularity];
 }
 
 /*
@@ -81,10 +81,10 @@ Allocator::Alloc
 ================
 */
 
-template<class type>
-OG_INLINE type *Allocator<type>::Alloc( void ) {
+template<class T>
+OG_INLINE T *Allocator<T>::Alloc( void ) {
 	allocChunk_t &chunk = allocationList[allocationList.Num()-1];
-	type *ret = &chunk.list[chunk.last];
+	T *ret = &chunk.list[chunk.last];
 	chunk.last++;
 	if ( chunk.last >= granularity )
 		CreateChunk();

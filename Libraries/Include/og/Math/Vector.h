@@ -309,16 +309,6 @@ namespace og {
 		bool			Cmp( const Vec5 &vec ) const;
 		bool			Cmp( const Vec5 &vec, float epsilon ) const;
 
-		//! @todo	do we need two? I guess, since someone may want
-		//!			to get a const version instead of a modifiable one
-		//!			Using reinterpret_cast is faster than creating a new
-		//!			temp object of conversion type to direct values.
-		const Vec2 &	ToVec2( void ) const;
-		Vec2 &			ToVec2( void );
-
-		const Vec3 &	ToVec3( void ) const;
-		Vec3 &			ToVec3( void );
-
 		// operators
 		Vec5			operator-() const;
 		float			operator[]( int index ) const;

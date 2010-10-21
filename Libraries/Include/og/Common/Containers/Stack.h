@@ -36,13 +36,10 @@ namespace og {
 //! @defgroup Common Common (Library)
 //! @{
 
-//! @defgroup CommonContainers Containers
-//! @{
-
 	// ==============================================================================
 	//! Stack list
 	// ==============================================================================
-	template<class type>
+	template<class T>
 	class Stack {
 	public:
 		// ==============================================================================
@@ -50,7 +47,7 @@ namespace og {
 		//!
 		//! @param	element	The element to push onto the stack
 		// ==============================================================================
-		void		Push( const type& element );
+		void		Push( const T& element );
 
 		// ==============================================================================
 		//! Remove the top entry of the stack
@@ -62,7 +59,7 @@ namespace og {
 		//!
 		//! @return	The top entry of the stack
 		// ==============================================================================
-		type&		Top( void );
+		T &			Top( void );
 
 		// ==============================================================================
 		//! Remove all entries from the list
@@ -84,13 +81,13 @@ namespace og {
 		int			Num( void ) const;
 
 	private:
-		LinkedList<type>	stack;
+		LinkedList<T>	stack;
 	};
 
 	// ==============================================================================
 	//! Queue list
 	// ==============================================================================
-	template<class type>
+	template<class T>
 	class Queue {
 	public:
 		// ==============================================================================
@@ -98,7 +95,7 @@ namespace og {
 		//!
 		//! @param	element	The element to push onto the queue
 		// ==============================================================================
-		void		Push( const type& element );
+		void		Push( const T& element );
 		
 		// ==============================================================================
 		//! Remove the front entry of the queue
@@ -110,7 +107,7 @@ namespace og {
 		//!
 		//! @return	The first entry of the queue
 		// ==============================================================================
-		type&		Front( void );
+		T &			Front( void );
 
 		// ==============================================================================
 		//! Remove all entries from the list
@@ -132,9 +129,8 @@ namespace og {
 		int			Num( void ) const;
 
 	private:
-		LinkedList<type>	queue;
+		LinkedList<T>	queue;
 	};
-//! @}
 //! @}
 }
 

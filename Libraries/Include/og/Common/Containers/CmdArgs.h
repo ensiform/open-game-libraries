@@ -35,9 +35,6 @@ namespace og {
 //! @defgroup Common Common (Library)
 //! @{
 
-//! @defgroup CommonContainers Containers
-//! @{
-
 	// ==============================================================================
 	//! Console command arguments
 	// ==============================================================================
@@ -87,7 +84,6 @@ namespace og {
 		static const int	MAX_CMD_ARGUMENTS	= 64;	//!< The maximum number of command arguments
 		static const int	MAX_CMD_STRING		= 2048;	//!< The maximum number of bytes one argument can hold
 	};
-//! @}
 //! @}
 }
 

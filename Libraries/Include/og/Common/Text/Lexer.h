@@ -35,9 +35,6 @@ namespace og {
 //! @defgroup Common Common (Library)
 //! @{
 
-//! @defgroup CommonText Text
-//! @{
-
 	class Lexer;
 
 	// ==============================================================================
@@ -356,8 +353,6 @@ namespace og {
 		String		lineComment;		//!< The line comment string
 		String		blockComment[2];	//!< The block comment strings
 	};
-
-//! @}
 //! @}
 }
 

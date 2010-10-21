@@ -170,7 +170,8 @@ namespace og {
 	//!
 	//! @return	The smaller one of a and b
 	// ==============================================================================
-	template<class type> type Min( type a, type b ) { return (a < b) ? a : b; }
+	template<class T>
+	OG_INLINE T Min( T a, T b ) { return (a < b) ? a : b; }
 
 	// ==============================================================================
 	//! Maximum
@@ -180,7 +181,8 @@ namespace og {
 	//!
 	//! @return	The greater one of a and b
 	// ==============================================================================
-	template<class type> type Max( type a, type b ) { return (a > b) ? a : b; }
+	template<class T>
+	OG_INLINE T Max( T a, T b ) { return (a > b) ? a : b; }
 
 	// ==============================================================================
 	//! Clamp
@@ -191,7 +193,8 @@ namespace og {
 	//!
 	//! @return	The value limited to min and max
 	// ==============================================================================
-	template<class type> type Clamp( type value, type min, type max ) {
+	template<class T>
+	OG_INLINE T Clamp( T value, T min, T max ) {
 		return (value>max) ? max : ((value<min) ? min : value);
 	}
 
@@ -214,6 +217,20 @@ namespace og {
 	//! @return	64 bit hash value
 	// ==============================================================================
 	uLongLong	FNV64( const char *value, bool caseSensitive );
+
+	// ==============================================================================
+	//! Internal Assert Failed ( do not call directly )
+	//!
+	//! @param	code		The expression that failed
+	//! @param	function	The function name in which it failed
+	//!
+	//! @return	always true
+	// ==============================================================================
+	OG_INLINE bool InternalAssertFailed( const char *code, const char *function ) {
+		OG_DEBUG_BREAK()
+		User::AssertFailed( code, function );
+		return true;
+	}
 }
 
 // We include .inl files last, so we can access all classes here.

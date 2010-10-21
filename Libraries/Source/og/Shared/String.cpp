@@ -84,7 +84,9 @@ wchar_t Utf8ToWChar( const char *data, int *numBytes ) {
 		*numBytes = 3;
 		return ((data[0] & 0x0F) << 12) | ( (data[1] & MASKBITS) << 6) | (data[2] & MASKBITS);
 	}
-#if 0 //! @todo	if sizof(wchar_t) == 4
+
+	// wchar_t == 4
+#if OG_LINUX || OG_MACOS_X
 	else if( (data[0] & MASK5BIT) == MASK4BIT ) {
 		*numBytes = 4;
 		return ((data[0] & 0x07) << 18) | ((data[1] & MASKBITS) << 12) |
@@ -122,7 +124,9 @@ void WCharToUtf8( wchar_t ch, char *dest ) {
 		dest[2] = (char)(MASK1BIT | ch & MASKBITS);
 		dest[3] = '\0';
 	}
-#if 0 //! @todo	if sizof(wchar_t) == 4
+
+	// wchar_t == 4
+#if OG_LINUX || OG_MACOS_X
 	else if( ch < 0x200000 ) {
 		dest[0] = (char)(MASK4BIT | ch >> 18);
 		dest[1] = (char)(MASK1BIT | ch >> 12 & MASKBITS);

@@ -35,15 +35,12 @@ namespace og {
 //! @defgroup Common Common (Library)
 //! @{
 
-//! @defgroup CommonContainers Containers
-//! @{
-
 	// ==============================================================================
 	//! Allocator
 	//! 
 	//! Allocates a list of objects instead of manually allocating each object
 	// ==============================================================================
-	template<class type>
+	template<class T>
 	class Allocator {
 	public:
 		// ==============================================================================
@@ -66,7 +63,7 @@ namespace og {
 		//! Gets the first free object in the allocation chunk,
 		//! and creates a new chunk if no free objects are left
 		// ==============================================================================
-		type *Alloc( void );
+		T *Alloc( void );
 
 	private:
 
@@ -76,17 +73,15 @@ namespace og {
 		void CreateChunk( void );
 
 		// ==============================================================================
-		//! Holds an array of type with the size of granularity
+		//! Holds an array of T with the size of granularity
 		// ==============================================================================
 		struct allocChunk_t {
-			type *	list;
-			int		last;
+			T *	list;
+			int	last;
 		};
 		List<allocChunk_t>allocationList;	//!< List of all chunks
 		int granularity;					//!< The granularity
 	};
-
-//! @}
 //! @}
 }
 

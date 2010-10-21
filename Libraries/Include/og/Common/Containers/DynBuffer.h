@@ -35,13 +35,10 @@ namespace og {
 //! @defgroup Common Common (Library)
 //! @{
 
-//! @defgroup CommonContainers Containers
-//! @{
-
 	// ==============================================================================
 	//! Dynamic buffer, clears itself
 	// ==============================================================================
-	template<class type>
+	template<class T>
 	class DynBuffer {
 	public:
 		// ==============================================================================
@@ -68,10 +65,9 @@ namespace og {
 		// ==============================================================================
 		void	CheckSize( int newSize );
 
-		type *	data;	//!< The buffer
+		T *		data;	//!< The buffer
 		int		size;	//!< The buffer size
 	};
-//! @}
 //! @}
 }
 

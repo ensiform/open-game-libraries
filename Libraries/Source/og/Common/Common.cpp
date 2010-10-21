@@ -38,6 +38,10 @@ Format &operator << ( Format &fmt, const String &value ) {
 	return fmt.Finish();
 }
 
+void CommonSetFileSystem( FileSystemCore *fileSystem ) {
+	commonFS = fileSystem;
+}
+
 int StringToWide( const char *in, DynBuffer<wchar_t> &buffer ) {
 	uInt numBytes = String::ByteLength( in ) + 1;
 	uInt size = Max( 1, String::ToWide( in, numBytes, NULL, 0 ) );

@@ -36,9 +36,6 @@ namespace og {
 //! @defgroup Common Common (Library)
 //! @{
 
-//! @defgroup CommonContainers Containers
-//! @{
-
 	// ==============================================================================
 	//! Pair
 	// ==============================================================================
@@ -89,7 +86,6 @@ namespace og {
 		T1				first;		//!< The first element
 		T2				second;		//!< The second element
 	};
-//! @}
 //! @}
 }
 

@@ -79,7 +79,7 @@ uInt Utf8ToCharId( const char *data, uInt *numBytes ) {
 		return ((data[0] & 0x01) << 30) | ((data[1] & MASKBITS) << 24) | ((data[2] & MASKBITS) << 18) |
 				((data[3] & MASKBITS) << 12) | ((data[4] & MASKBITS) << 6) | (data[5] & MASKBITS);
 	}
-	OG_ASSERT(0);
+	OG_DEBUG_BREAK();
 	*numBytes = 1;
 	return '\0';
 }

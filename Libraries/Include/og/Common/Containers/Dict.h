@@ -36,9 +36,6 @@ namespace og {
 //! @defgroup Common Common (Library)
 //! @{
 
-//! @defgroup CommonContainers Containers
-//! @{
-
 	// ==============================================================================
 	//! Key/Value for a Dict
 	// ==============================================================================
@@ -222,7 +219,7 @@ namespace og {
 		// ==============================================================================
 		//! Get a value by its index
 		//!
-		//! @param	key	The key
+		//! @param	index	Zero-based index
 		//!
 		//! @return	A temporary object to use for conversion to other types
 		// ==============================================================================
@@ -241,7 +238,7 @@ namespace og {
 	//!
 	//! Accesses values via a key string
 	// ==============================================================================
-	template<class type>
+	template<class T>
 	class DictEx {
 	public:
 		// ==============================================================================
@@ -288,7 +285,7 @@ namespace og {
 		//!
 		//! @param	other	Another instance to copy. 
 		// ==============================================================================
-		void		Copy( const DictEx<type> &other );
+		void		Copy( const DictEx<T> &other );
 
 		// ==============================================================================
 		//! Copy all KeyValues from another DictEx ( keeps existing entries )
@@ -296,7 +293,7 @@ namespace og {
 		//! @param	other		The other dictionary
 		//! @param	overWrite	true to overwrite values of existing keys
 		// ==============================================================================
-		void		Append( const DictEx<type> &other, bool overWrite );
+		void		Append( const DictEx<T> &other, bool overWrite );
 
 		// ==============================================================================
 		//! Get the key string of the specified index
@@ -321,7 +318,7 @@ namespace og {
 		//!
 		//! @return	Zero-based index of the value, -1 if not found.
 		// ==============================================================================
-		int			FindByValue( const type &value ) const;
+		int			FindByValue( const T &value ) const;
 
 		// ==============================================================================
 		//! Find all entries that start with a prefix
@@ -342,7 +339,7 @@ namespace og {
 		//!
 		//! @return	A reference to this object
 		// ==============================================================================
-		DictEx<type> &operator=( const DictEx<type> &other );
+		DictEx<T> &	operator=( const DictEx<T> &other );
 
 		// ==============================================================================
 		//! Get a value by its key ( creates one if it does not exist )
@@ -351,8 +348,8 @@ namespace og {
 		//!
 		//! @return	A reference to the object
 		// ==============================================================================
-		const type &operator[]( const char *key ) const;
-		type &		operator[]( const char *key );
+		const T &	operator[]( const char *key ) const;
+		T &			operator[]( const char *key );
 
 		// ==============================================================================
 		//! Get a value by its index
@@ -361,14 +358,15 @@ namespace og {
 		//!
 		//! @return	A reference to the object
 		// ==============================================================================
-		const type &operator[]( int index ) const;
-		type &		operator[]( int index );
+		const T &	operator[]( int index ) const;
+		T &			operator[]( int index );
 
 	protected:
-		ListEx<type>	entries;	//!< The entries list
-		StringList		names;		//!< The key names list
-		HashIndex		hashIndex;	//!< Hash index for faster key access
+		ListEx<T>	entries;	//!< The entries list
+		StringList	names;		//!< The key names list
+		HashIndex	hashIndex;	//!< Hash index for faster key access
 	};
+//! @}
 }
 
 #endif

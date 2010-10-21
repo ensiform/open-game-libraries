@@ -140,8 +140,8 @@ OG_INLINE Dict &Dict::operator=( const Dict &other ) {
 DictEx::DictEx
 ================
 */
-template<class type>
-OG_INLINE DictEx<type>::DictEx() {
+template<class T>
+OG_INLINE DictEx<T>::DictEx() {
 	SetGranularity(16);
 }
 
@@ -150,8 +150,8 @@ OG_INLINE DictEx<type>::DictEx() {
 DictEx::Clear
 ================
 */
-template<class type>
-void DictEx<type>::Clear( void ) {
+template<class T>
+void DictEx<T>::Clear( void ) {
 	entries.Clear();
 	names.Clear();
 	hashIndex.Clear();
@@ -162,8 +162,8 @@ void DictEx<type>::Clear( void ) {
 DictEx::SetGranularity
 ================
 */
-template<class type>
-OG_INLINE void DictEx<type>::SetGranularity( int granularity ) {
+template<class T>
+OG_INLINE void DictEx<T>::SetGranularity( int granularity ) {
 	entries.SetGranularity( granularity );
 	names.SetGranularity( granularity );
 }
@@ -173,8 +173,8 @@ OG_INLINE void DictEx<type>::SetGranularity( int granularity ) {
 DictEx::Num
 ================
 */
-template<class type>
-OG_INLINE int DictEx<type>::Num( void ) const {
+template<class T>
+OG_INLINE int DictEx<T>::Num( void ) const {
 	return entries.Num();
 }
 
@@ -183,8 +183,8 @@ OG_INLINE int DictEx<type>::Num( void ) const {
 DictEx::Remove
 ================
 */
-template<class type>
-void DictEx<type>::Remove( const char *key ) {
+template<class T>
+void DictEx<T>::Remove( const char *key ) {
 	int hash = hashIndex.GenerateKey( key, false );
 	for( int i=hashIndex.First(hash); i!=-1; i=hashIndex.Next() ) {
 		if ( names[i].Icmp( key ) == 0 ) {
@@ -201,8 +201,8 @@ void DictEx<type>::Remove( const char *key ) {
 DictEx::Remove
 ================
 */
-template<class type>
-void DictEx<type>::Remove( int index ) {
+template<class T>
+void DictEx<T>::Remove( int index ) {
 	OG_ASSERT( index >= 0 && index <= entries.Num() );
 
 	hashIndex.Remove( hashIndex.GenerateKey( names[index].c_str(), false ), index );
@@ -215,8 +215,8 @@ void DictEx<type>::Remove( int index ) {
 DictEx::Copy
 ================
 */
-template<class type>
-void DictEx<type>::Copy( const DictEx<type> &other ) {
+template<class T>
+void DictEx<T>::Copy( const DictEx<T> &other ) {
 	Clear();
 	int num = other.entries.Num();
 	for ( int i = 0; i < num; i++ ) {
@@ -232,8 +232,8 @@ void DictEx<type>::Copy( const DictEx<type> &other ) {
 DictEx::Append
 ================
 */
-template<class type>
-void DictEx<type>::Append( const DictEx<type> &other, bool overWrite ) {
+template<class T>
+void DictEx<T>::Append( const DictEx<T> &other, bool overWrite ) {
 	const char *key;
 	int index;
 	int num = other.entries.Num();
@@ -256,8 +256,8 @@ void DictEx<type>::Append( const DictEx<type> &other, bool overWrite ) {
 DictEx::GetKey
 ================
 */
-template<class type>
-OG_INLINE const String &DictEx<type>::GetKey( int index ) const {
+template<class T>
+OG_INLINE const String &DictEx<T>::GetKey( int index ) const {
 	OG_ASSERT( index >= 0 && index <= entries.Num() );
 	return names[index];
 }
@@ -267,8 +267,8 @@ OG_INLINE const String &DictEx<type>::GetKey( int index ) const {
 DictEx::Find
 ================
 */
-template<class type>
-int DictEx<type>::Find( const char *key ) const {
+template<class T>
+int DictEx<T>::Find( const char *key ) const {
 	if ( key == NULL || key[0] == '\0' )
 		return -1;
 
@@ -286,8 +286,8 @@ int DictEx<type>::Find( const char *key ) const {
 DictEx::FindByValue
 ================
 */
-template<class type>
-int DictEx<type>::FindByValue( const type &value ) const {
+template<class T>
+int DictEx<T>::FindByValue( const T &value ) const {
 	return entries.Find( value );
 }
 
@@ -296,8 +296,8 @@ int DictEx<type>::FindByValue( const type &value ) const {
 DictEx::MatchPrefix
 ================
 */
-template<class type>
-int DictEx<type>::MatchPrefix( const char *prefix, int length, int prevMatch ) const {
+template<class T>
+int DictEx<T>::MatchPrefix( const char *prefix, int length, int prevMatch ) const {
 	if ( prefix == NULL || prefix[0] == '\0' )
 		return -1;
 
@@ -314,8 +314,8 @@ int DictEx<type>::MatchPrefix( const char *prefix, int length, int prevMatch ) c
 DictEx::operator[const char *]
 ================
 */
-template<class type>
-OG_INLINE const type &DictEx<type>::operator[]( const char *key ) const {
+template<class T>
+OG_INLINE const T &DictEx<T>::operator[]( const char *key ) const {
 	int index = Find( key );
 	if ( index != -1 )
 		return entries[index];
@@ -325,8 +325,8 @@ OG_INLINE const type &DictEx<type>::operator[]( const char *key ) const {
 	names.Append(key);
 	return entries.Alloc();
 }
-template<class type>
-OG_INLINE type &DictEx<type>::operator[]( const char *key ) {
+template<class T>
+OG_INLINE T &DictEx<T>::operator[]( const char *key ) {
 	int index = Find( key );
 	if ( index != -1 )
 		return entries[index];
@@ -342,13 +342,13 @@ OG_INLINE type &DictEx<type>::operator[]( const char *key ) {
 DictEx::operator[int]
 ================
 */
-template<class type>
-OG_INLINE const type &DictEx<type>::operator[]( int index ) const {
+template<class T>
+OG_INLINE const T &DictEx<T>::operator[]( int index ) const {
 	OG_ASSERT( index >= 0 && index <= entries.Num() );
 	return entries[index];
 }
-template<class type>
-OG_INLINE type &DictEx<type>::operator[]( int index ) {
+template<class T>
+OG_INLINE T &DictEx<T>::operator[]( int index ) {
 	OG_ASSERT( index >= 0 && index <= entries.Num() );
 	return entries[index];
 }
@@ -358,8 +358,8 @@ OG_INLINE type &DictEx<type>::operator[]( int index ) {
 DictEx::operator=
 ================
 */
-template<class type>
-OG_INLINE DictEx<type> &DictEx<type>::operator=( const DictEx<type> &other ) {
+template<class T>
+OG_INLINE DictEx<T> &DictEx<T>::operator=( const DictEx<T> &other ) {
 	Copy( other );
 	return *this;
 }

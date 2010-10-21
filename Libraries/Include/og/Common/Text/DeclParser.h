@@ -35,9 +35,6 @@ namespace og {
 //! @defgroup Common Common (Library)
 //! @{
 
-//! @defgroup CommonText Text
-//! @{
-
 	// ==============================================================================
 	//! Decl type
 	//!
@@ -176,8 +173,6 @@ namespace og {
 		int					lexerFlags;	//!< Flags passed to the lexer
 		DictEx<DeclType *>	declTypes;	//!< All DeclTypes to look for / fill with data
 	};
-
-//! @}
 //! @}
 }
 

@@ -1132,29 +1132,6 @@ OG_INLINE bool Vec5::Cmp( const Vec5 &vec, float epsilon ) const {
 		&& Math::Fabs( t - vec.t ) <= epsilon );
 }
 
-/*
-================
-Vec5::ToVec2
-================
-*/
-OG_INLINE const Vec2 &Vec5::ToVec2( void ) const {
-	return *reinterpret_cast<const Vec2 *>(&s);
-}
-OG_INLINE Vec2 &Vec5::ToVec2( void ) {
-	return *reinterpret_cast<Vec2 *>(&s);
-}
-
-/*
-================
-Vec5::ToVec3
-================
-*/
-OG_INLINE const Vec3 &Vec5::ToVec3( void ) const {
-	return *reinterpret_cast<const Vec3 *>(this);
-}
-OG_INLINE Vec3 &Vec5::ToVec3( void ) {
-	return *reinterpret_cast<Vec3 *>(this);
-}
 
 /*
 ================

@@ -35,9 +35,6 @@ namespace og {
 //! @defgroup Common Common (Library)
 //! @{
 
-//! @defgroup CommonContainers Containers
-//! @{
-
 	class StringPool;
 
 	// ==============================================================================
@@ -136,7 +133,6 @@ namespace og {
 		HashIndex			hashIndex;		//!< Hash index
 		bool				caseSensitive;	//!< true to be case sensitive
 	};
-//! @}
 //! @}
 }
 

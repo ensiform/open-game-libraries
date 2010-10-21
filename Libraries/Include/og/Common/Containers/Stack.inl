@@ -48,8 +48,8 @@ Allocates a new element on the stack
 and sets it to element
 ============
 */
-template<class type>
-OG_INLINE void Stack<type>::Push( const type &element ) {
+template<class T>
+OG_INLINE void Stack<T>::Push( const T &element ) {
 	stack.AddToEnd(element);
 }
 
@@ -60,8 +60,8 @@ Stack::Pop
 Removes the last element in the stack
 ============
 */
-template<class type>
-OG_INLINE void Stack<type>::Pop( void ) {
+template<class T>
+OG_INLINE void Stack<T>::Pop( void ) {
 	OG_ASSERT( !IsEmpty() );
 	stack.Remove( stack.GetLastNode() );
 }
@@ -73,8 +73,8 @@ Stack::Top
 Retrieves the last element in the stack
 ============
 */
-template<class type>
-OG_INLINE type& Stack<type>::Top( void ) {
+template<class T>
+OG_INLINE T& Stack<T>::Top( void ) {
 	OG_ASSERT( !IsEmpty() );
 	return stack.GetLastNode()->value;
 }
@@ -86,8 +86,8 @@ Stack::Clear
 Clears the stack and the elements allocated.
 ============
 */
-template<class type>
-OG_INLINE void Stack<type>::Clear( void ) {
+template<class T>
+OG_INLINE void Stack<T>::Clear( void ) {
 	stack.Clear();
 }
 
@@ -98,8 +98,8 @@ Stack::IsEmpty
 Checks to see if stack is empty
 ============
 */
-template<class type>
-OG_INLINE bool Stack<type>::IsEmpty( void ) const {
+template<class T>
+OG_INLINE bool Stack<T>::IsEmpty( void ) const {
 	return stack.IsEmpty();
 }
 
@@ -110,8 +110,8 @@ Stack::Num
 Number of used elements in stack
 ============
 */
-template<class type>
-OG_INLINE int Stack<type>::Num( void ) const {
+template<class T>
+OG_INLINE int Stack<T>::Num( void ) const {
 	return stack.Num();
 }
 
@@ -131,8 +131,8 @@ Allocates a new element on the queue
 and sets it to element
 ============
 */
-template<class type>
-OG_INLINE void Queue<type>::Push( const type &element ) {
+template<class T>
+OG_INLINE void Queue<T>::Push( const T &element ) {
 	queue.AddToEnd(element);
 }
 
@@ -143,8 +143,8 @@ Queue::Pop
 Removes the last element in the queue
 ============
 */
-template<class type>
-OG_INLINE void Queue<type>::Pop( void ) {
+template<class T>
+OG_INLINE void Queue<T>::Pop( void ) {
 	OG_ASSERT( !IsEmpty() );
 	queue.Remove( queue.GetFirstNode() );
 }
@@ -156,8 +156,8 @@ Queue::Front
 Retrieves the first element in the queue
 ============
 */
-template<class type>
-OG_INLINE type& Queue<type>::Front( void ) {
+template<class T>
+OG_INLINE T& Queue<T>::Front( void ) {
 	OG_ASSERT( !IsEmpty() );
 	return queue.GetFirstNode()->value;
 }
@@ -169,8 +169,8 @@ Queue::Clear
 Clears the queue and the elements allocated.
 ============
 */
-template<class type>
-OG_INLINE void Queue<type>::Clear( void ) {
+template<class T>
+OG_INLINE void Queue<T>::Clear( void ) {
 	queue.Clear();
 }
 
@@ -181,8 +181,8 @@ Queue::IsEmpty
 Checks to see if queue is empty
 ============
 */
-template<class type>
-OG_INLINE bool Queue<type>::IsEmpty( void ) const {
+template<class T>
+OG_INLINE bool Queue<T>::IsEmpty( void ) const {
 	return queue.IsEmpty();
 }
 
@@ -193,8 +193,8 @@ Queue::Num
 Number of used elements in queue
 ============
 */
-template<class type>
-OG_INLINE int Queue<type>::Num( void ) const {
+template<class T>
+OG_INLINE int Queue<T>::Num( void ) const {
 	return queue.Num();
 }
 

@@ -139,21 +139,32 @@ in release mode it calls og::User::AssertFailed()
 	#define OG_INLINE inline
 #endif
 
+
+// define OG_DEBUG_BREAK
+#if OG_WIN32
+	#define OG_DEBUG_BREAK() { __debugbreak(); }
+#elif OG_LINUX
+	#define OG_DEBUG_BREAK() { __asm__ __volatile__ ("int $0x03"); }
+#elif OG_MACOS_X
+	#define OG_DEBUG_BREAK() { kill( getpid(), SIGINT ); }
+#endif
+
 // define OG_ASSERT()
 #ifdef _DEBUG
-	#if OG_WIN32
-		#define OG_ASSERT(x) { if ( !(x) ) __debugbreak(); }
-	#elif OG_LINUX
-		#define OG_ASSERT(x) { if ( !(x) ) __asm__ __volatile__ ("int $0x03"); }
-	#elif OG_MACOS_X
-		#define OG_ASSERT(x) { if ( !(x) ) kill( getpid(), SIGINT ); }
-	#endif
+	#define OG_ASSERT(x) { if ( !(x) ) OG_DEBUG_BREAK() }
+#elif OG_FINAL
+	#define OG_ASSERT(x) {}
 #else
-	#if OG_FINAL
-		#define OG_ASSERT(x) {}
-	#else
-		#define OG_ASSERT(x) { if ( !(x) ) og::User::AssertFailed( #x, __FUNCTION__ ); }
-	#endif
+	#define OG_ASSERT(x) { if ( !(x) ) og::User::AssertFailed( #x, __FUNCTION__ ); }
+#endif
+
+// define OG_ASSERT_VALID/FAILED()
+#if OG_FINAL && !defined(_DEBUG)
+	#define OG_ASSERT_VALID(x) (x)
+	#define OG_ASSERT_FAILED(x) ( !(x) )
+#else
+	#define OG_ASSERT_VALID(x) ( (x) ? true : og::InternalAssertFailed( #x, __FUNCTION__ ) )
+	#define OG_ASSERT_FAILED(x) ( ( !(x) ) ? false : !og::InternalAssertFailed( #x, __FUNCTION__ ) )
 #endif
 
 #ifndef BIT

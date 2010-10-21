@@ -35,9 +35,6 @@ namespace og {
 //! @defgroup Common Common (Library)
 //! @{
 
-//! @defgroup CommonText Text
-//! @{
-
 	// ==============================================================================
 	//! XDecl node
 	// ==============================================================================
@@ -211,8 +208,6 @@ namespace og {
 		XDeclNode rootNode;				//!< The root node
 		Allocator<XDeclNode> allocator;	//!< An allocator
 	};
-
-//! @}
 //! @}
 }
 

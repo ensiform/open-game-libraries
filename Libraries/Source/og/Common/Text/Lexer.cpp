@@ -31,6 +31,7 @@ freely, subject to the following restrictions:
 #include <stdarg.h>
 
 namespace og {
+extern FileSystemCore *commonFS;
 
 /*
 ==============================================================================

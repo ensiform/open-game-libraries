@@ -30,6 +30,7 @@ freely, subject to the following restrictions:
 #include <og/Common/Common.h>
 
 namespace og {
+extern FileSystemCore *commonFS;
 
 #define DECL_DESCRIPTOR_STR "BinDecl"
 const int DECL_DESCRIPTOR_LENGTH = 7;

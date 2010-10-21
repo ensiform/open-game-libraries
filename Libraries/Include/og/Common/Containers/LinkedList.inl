@@ -39,15 +39,15 @@ namespace og {
 
 ==============================================================================
 */
-template<class type> TLS<typename LinkedList<type>::cmpData_t> LinkedList<type>::cmpData;
+template<class T> TLS<typename LinkedList<T>::cmpData_t> LinkedList<T>::cmpData;
 
 /*
 ================
 LinkedList::LinkedList
 ================
 */
-template<class type>
-OG_INLINE LinkedList<type>::LinkedList( void ) {
+template<class T>
+OG_INLINE LinkedList<T>::LinkedList( void ) {
 	start		= NULL;
 	end			= NULL;
 	num			= 0;
@@ -58,8 +58,8 @@ OG_INLINE LinkedList<type>::LinkedList( void ) {
 LinkedList::LinkedList
 ================
 */
-template<class type>
-OG_INLINE LinkedList<type>::LinkedList( const LinkedList<type> &other ) {
+template<class T>
+OG_INLINE LinkedList<T>::LinkedList( const LinkedList<T> &other ) {
 	start		= NULL;
 	end			= NULL;
 	Copy(other);
@@ -70,8 +70,8 @@ OG_INLINE LinkedList<type>::LinkedList( const LinkedList<type> &other ) {
 LinkedList::~LinkedList
 ================
 */
-template<class type>
-OG_INLINE LinkedList<type>::~LinkedList() {
+template<class T>
+OG_INLINE LinkedList<T>::~LinkedList() {
 	Clear();
 }
 
@@ -80,8 +80,8 @@ OG_INLINE LinkedList<type>::~LinkedList() {
 LinkedList::Clear
 ================
 */
-template<class type>
-void LinkedList<type>::Clear( void ) {
+template<class T>
+void LinkedList<T>::Clear( void ) {
 	if ( start ) {
 		nodeType *node = start;
 		nodeType *nextNode;
@@ -103,9 +103,19 @@ LinkedList::IsEmpty
 Checks to see if list is empty
 ================
 */
-template<class type>
-bool LinkedList<type>::IsEmpty( void ) const {
+template<class T>
+bool LinkedList<T>::IsEmpty( void ) const {
 	return num == 0;
+}
+
+/*
+================
+LinkedList::Num
+================
+*/
+template<class T>
+int LinkedList<T>::Num( void ) const {
+	return num;
 }
 
 /*
@@ -116,8 +126,8 @@ Clear the list and
 copy all items from the other list.
 ================
 */
-template<class type>
-OG_INLINE void LinkedList<type>::Copy( const LinkedList<type> &other ) {
+template<class T>
+OG_INLINE void LinkedList<T>::Copy( const LinkedList<T> &other ) {
 	Clear();
 	for( nodeType *node = other.start; node != NULL; node = node->next )
 		AddToEnd(node->value);
@@ -130,8 +140,8 @@ LinkedList::operator=
 Synonym for Copy
 ================
 */
-template<class type>
-OG_INLINE LinkedList<type> &LinkedList<type>::operator=( const LinkedList<type> &other ) {
+template<class T>
+OG_INLINE LinkedList<T> &LinkedList<T>::operator=( const LinkedList<T> &other ) {
 	Copy(other);
 	return *this;
 }
@@ -143,8 +153,8 @@ LinkedList::AddToStart
 Insert an Item to the start of the list.
 ================
 */
-template<class type>
-void LinkedList<type>::AddToStart( const type &value ) {
+template<class T>
+void LinkedList<T>::AddToStart( const T &value ) {
 	Alloc( NULL, true ) = value;
 }
 
@@ -155,8 +165,8 @@ LinkedList::AddToEnd
 Insert an Item to the end of the list.
 ================
 */
-template<class type>
-void LinkedList<type>::AddToEnd( const type &value ) {
+template<class T>
+void LinkedList<T>::AddToEnd( const T &value ) {
 	Alloc() = value;
 }
 
@@ -167,8 +177,8 @@ LinkedList::InsertBefore
 Insert an Item right before the specified one.
 ================
 */
-template<class type>
-void LinkedList<type>::InsertBefore( nodeType *node, const type &value ) {
+template<class T>
+void LinkedList<T>::InsertBefore( nodeType *node, const T &value ) {
 	Alloc( node, true ) = value;
 }
 
@@ -179,8 +189,8 @@ LinkedList::InsertAfter
 Insert an item right after the specified one.
 ================
 */
-template<class type>
-void LinkedList<type>::InsertAfter( nodeType *node, const type &value ) {
+template<class T>
+void LinkedList<T>::InsertAfter( nodeType *node, const T &value ) {
 	Alloc( node, false ) = value;
 }
 
@@ -191,8 +201,8 @@ LinkedList::Alloc
 Allocate an item at the specified position.
 ================
 */
-template<class type>
-type &LinkedList<type>::Alloc( nodeType *baseNode, bool before ) {
+template<class T>
+T &LinkedList<T>::Alloc( nodeType *baseNode, bool before ) {
 	nodeType *newNode = new nodeType;
 	if ( start == NULL ) {
 		start = end = newNode;
@@ -227,8 +237,8 @@ LinkedList::Remove
 Removes an item from the list.
 ================
 */
-template<class type>
-void LinkedList<type>::Remove( nodeType *node ) {
+template<class T>
+void LinkedList<T>::Remove( nodeType *node ) {
 	OG_ASSERT( node != NULL );
 
 	if ( node == start ) {
@@ -257,8 +267,8 @@ Returns the index of the searched item.
 -1 if no item with this value was found.
 ================
 */
-template<class type>
-Node<type> *LinkedList<type>::Find( const type &value ) const {
+template<class T>
+Node<T> *LinkedList<T>::Find( const T &value ) const {
 	nodeType *node = start;
 	for( int i=0; node != NULL; i++ ) {
 		if ( node->value == value )
@@ -276,8 +286,8 @@ Returns the index of the searched item.
 -1 if no item with this value was found.
 ================
 */
-template<class type>
-Node<type> *LinkedList<type>::FindByAddress( const type *value ) const {
+template<class T>
+Node<T> *LinkedList<T>::FindByAddress( const T *value ) const {
 	nodeType *node = start;
 	for( int i=0; node != NULL; i++ ) {
 		if ( &node->value == value )
@@ -294,8 +304,8 @@ LinkedList::Sort
 Sorts the list and removes duplicates.
 ================
 */
-template<class type>
-void LinkedList<type>::Sort( cmpFunc_t compare, bool removeDupes ) {
+template<class T>
+void LinkedList<T>::Sort( cmpFunc_t compare, bool removeDupes ) {
 	if ( num < 2 )
 		return;
 	
@@ -336,8 +346,8 @@ LinkedList::SortEx
 Sorts the list and removes duplicates.
 ================
 */
-template<class type>
-void LinkedList<type>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupes ) {
+template<class T>
+void LinkedList<T>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupes ) {
 	if ( num < 2 )
 		return;
 	
@@ -377,8 +387,8 @@ void LinkedList<type>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupe
 LinkedList::CompareCallback
 ================
 */
-template<class type>
-int LinkedList<type>::CompareCallback( const void *a, const void *b ) {
+template<class T>
+int LinkedList<T>::CompareCallback( const void *a, const void *b ) {
 	const nodeType *pa = *(const nodeType **)a;
 	const nodeType *pb = *(const nodeType **)b;
 	return cmpData->func( pa->value, pb->value );
@@ -389,8 +399,8 @@ int LinkedList<type>::CompareCallback( const void *a, const void *b ) {
 LinkedList::CompareCallbackEx
 ================
 */
-template<class type>
-int LinkedList<type>::CompareCallbackEx( const void *a, const void *b ) {
+template<class T>
+int LinkedList<T>::CompareCallbackEx( const void *a, const void *b ) {
 	const nodeType *pa = *(const nodeType **)a;
 	const nodeType *pb = *(const nodeType **)b;
 	return cmpData->funcEx( pa->value, pb->value, cmpData->param );
