@@ -159,11 +159,9 @@ Condition::~Condition
 ================
 */
 Condition::~Condition() {
-	//pthread_cond_t * condition = static_cast<pthread_cond_t *>(data);
-	//pthread_cond_destroy(condition);
-	//delete condition;
-	pthread_cond_destroy(static_cast<pthread_cond_t *>(data));
-	delete static_cast<pthread_cond_t *>(data);
+	pthread_cond_t * condition = static_cast<pthread_cond_t *>(data);
+	pthread_cond_destroy(condition);
+	delete condition;
 }
 
 /*
@@ -182,8 +180,8 @@ Condition::Wait
 */
 bool Condition::Wait( int ms ) {
 	timespec temp;
-	temp.tv_sec = ms;
-	temp.tv_nsec = 0;
+	temp.tv_sec = 0;
+	temp.tv_nsec = ms * 1000000; //1 Nanosec = 10^-6 mSec
 	#warning ----FIXME----
 	pthread_mutex_t mutex;
 	if( ! pthread_cond_timedwait(static_cast<pthread_cond_t *>(data), &mutex, &temp))
