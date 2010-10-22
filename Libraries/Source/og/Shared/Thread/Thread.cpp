@@ -257,39 +257,39 @@ void SingleWriterMultiReader::UnlockWrite( void ) {
 	mtx.Unlock();
 }
 
-#elif defined(OG_LINUX)
-Mutex::Mutex(){
+#elif OG_LINUX || OG_MACOS_X
+Mutex::Mutex()
+{
+    pthread_mutex_t * mutex  = new pthread_mutex_t;
+    data = mutex;
+    pthread_mutex_init( mutex , NULL);
 }
 Mutex::~Mutex(){
+    pthread_mutex_t * mutex  = static_cast<pthread_mutex_t*>(data);
+    pthread_mutex_destroy(mutex);
+    delete mutex;
 }
-void Mutex::Lock( void ){
+void Mutex::Lock( void )
+{
+    pthread_mutex_lock(static_cast<pthread_mutex_t*>(data));
 }
-void Mutex::Unlock( void ){
+void Mutex::Unlock( void )
+{
+    pthread_mutex_unlock(static_cast<pthread_mutex_t*>(data));
 }
-Condition::Condition( void ){
-}
-Condition::~Condition( void ){
-}
-void Condition::Signal( void ){
-}
-bool Condition::Wait ( int delay ){
-}
-Thread::Thread(){
-}
-bool Thread::Start ( const char * name , bool waitForInit ){
-}
-void Thread::RunThread( void * param ){
-}
-void Thread::Stop( bool blocking ){
-}
-void SingleWriterMultiReader::LockRead( void ) {
-}
-void SingleWriterMultiReader::UnlockRead( void ) {
-}
-void SingleWriterMultiReader::LockWrite( void ) {
-}
-void SingleWriterMultiReader::UnlockWrite( void ) {
-}
+
+Condition::Condition( void ){}
+Condition::~Condition( void ){}
+void Condition::Signal( void ){}
+bool Condition::Wait ( int delay ){}
+Thread::Thread(){}
+bool Thread::Start ( const char * name , bool waitForInit ){}
+void Thread::RunThread( void * param ){}
+void Thread::Stop( bool blocking ){}
+void SingleWriterMultiReader::LockRead( void ){}
+void SingleWriterMultiReader::UnlockRead( void ){}
+void SingleWriterMultiReader::LockWrite( void ){}
+void SingleWriterMultiReader::UnlockWrite( void ){}
 #elif defined(OG_MACOS_X)
 #else
     #error Unsupported Operating System!

@@ -34,6 +34,7 @@ freely, subject to the following restrictions:
 #if OG_WIN32
 	#include <windows.h>
 #elif OG_LINUX
+    #include <stdio.h>
     #include <unistd.h>
     #include <ctype.h>
 #elif OG_MACOS_X
