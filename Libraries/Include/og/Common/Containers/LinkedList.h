@@ -43,7 +43,7 @@ namespace og {
 	private:
 		Node<T> *prev;	//!< The previous node
 		Node<T> *next;	//!< The next node
-		template<class T> friend class LinkedList;
+		template<class> friend class LinkedList;
 
 	public:
 		// ==============================================================================

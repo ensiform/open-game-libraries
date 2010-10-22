@@ -49,7 +49,7 @@ namespace og {
 	void RegisterTLS( TLS_Data *data );
 	void CleanupTLS( void );
 
-	template <typename type>
+	template<typename type>
 	class TLS {
 	public:
 		struct TLS_DataEx : public TLS_Data {

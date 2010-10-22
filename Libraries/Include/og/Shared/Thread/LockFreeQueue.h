@@ -39,7 +39,7 @@ freely, subject to the following restrictions:
 
 namespace og {
 	// use for single producer and single consumer only
-	template <typename type>
+	template<typename type>
 	class LockFreeQueue {
 	private:
 		struct Node {
@@ -86,7 +86,7 @@ namespace og {
 	};
 
 	// multiple producer + multiple consumer
-	template <typename type>
+	template<typename type>
 	class LowLockQueue {
 	private:
 		LockFreeQueue<type> queue;

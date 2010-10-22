@@ -1213,7 +1213,7 @@ OG_INLINE Vec5 &Vec5::operator=( const Vec3 &other ) {
 VecX::VecX
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE VecX<dim>::VecX( float vec, ... ) {
 	v[0] = vec;
 	OG_ASSERT( dim >= 2 );
@@ -1231,12 +1231,12 @@ OG_INLINE VecX<dim>::VecX( float vec, ... ) {
 VecX::Set
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::Set( const VecX<dim> &vec ) {
 	for(int i=0; i<dim; i++)
 		v[i] = vec[i];
 }
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::Set( const float *vec ) {
 	*v = NULL;
 	memcpy( v, vec, dim * sizeof( float ) );
@@ -1247,7 +1247,7 @@ OG_INLINE void VecX<dim>::Set( const float *vec ) {
 VecX::Zero
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::Zero( void ) {
 	for(int i=0; i<dim; i++ )
 		v[i] = 0.0f;
@@ -1258,7 +1258,7 @@ OG_INLINE void VecX<dim>::Zero( void ) {
 VecX::IsZero
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE bool VecX<dim>::IsZero( void ) const {
 	const uInt *iv = reinterpret_cast<const uInt *>(v);
 	for(int i=0; i<dim; i++) {
@@ -1273,7 +1273,7 @@ OG_INLINE bool VecX<dim>::IsZero( void ) const {
 VecX::Length
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE float VecX<dim>::Length( void ) const {
 	return Math::Sqrt( LengthSqr() );
 }
@@ -1283,7 +1283,7 @@ OG_INLINE float VecX<dim>::Length( void ) const {
 VecX::LengthFast
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE float VecX<dim>::LengthFast( void ) const {
 	float lenSqr = LengthSqr();
 	return lenSqr * Math::RSqrt( lenSqr );
@@ -1294,7 +1294,7 @@ OG_INLINE float VecX<dim>::LengthFast( void ) const {
 VecX::LengthSqr
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE float VecX<dim>::LengthSqr( void ) const {
 	float ret = 0.0f;
 	for(int i=0; i<dim; i++ )
@@ -1307,7 +1307,7 @@ OG_INLINE float VecX<dim>::LengthSqr( void ) const {
 VecX::Normalize
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE float VecX<dim>::Normalize( void ) {
 	float lenSqr = LengthSqr();
 	float lenInv = Math::InvSqrt( lenSqr );
@@ -1321,7 +1321,7 @@ OG_INLINE float VecX<dim>::Normalize( void ) {
 VecX::NormalizeFast
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE float VecX<dim>::NormalizeFast( void ) {
 	float lenSqr = LengthSqr();
 	float lenInv = Math::RSqrt( lenSqr );
@@ -1335,7 +1335,7 @@ OG_INLINE float VecX<dim>::NormalizeFast( void ) {
 VecX::Snap
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE VecX<dim> VecX<dim>::Snap( void ) const {
 	VecX<dim> vec = *this;
 	vec.SnapSelf();
@@ -1347,7 +1347,7 @@ OG_INLINE VecX<dim> VecX<dim>::Snap( void ) const {
 VecX::SnapSelf
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::SnapSelf( void ) {
 	for(int i=0; i<dim; i++ )
 		v[i] = Math::Floor( v[i] + 0.5f );
@@ -1358,7 +1358,7 @@ OG_INLINE void VecX<dim>::SnapSelf( void ) {
 VecX::Floor
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::Floor( void ) {
 	for(int i=0; i<dim; i++ )
 		v[i] = Math::Floor( v[i] );
@@ -1369,7 +1369,7 @@ OG_INLINE void VecX<dim>::Floor( void ) {
 VecX::Ceil
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::Ceil( void ) {
 	for(int i=0; i<dim; i++ )
 		v[i] = Math::Ceil( v[i] );
@@ -1380,7 +1380,7 @@ OG_INLINE void VecX<dim>::Ceil( void ) {
 VecX::CapLength
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::CapLength( float length ) {
 	if ( length == 0 )
 		Zero();
@@ -1396,7 +1396,7 @@ OG_INLINE void VecX<dim>::CapLength( float length ) {
 VecX::Cmp
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE bool VecX<dim>::Cmp( const VecX<dim> &vec ) const {
 	for(int i=0; i<dim; i++ ) {
 		if ( v[i] != vec[i] )
@@ -1410,7 +1410,7 @@ OG_INLINE bool VecX<dim>::Cmp( const VecX<dim> &vec ) const {
 VecX::Cmp
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE bool VecX<dim>::Cmp( const VecX<dim> &vec, float epsilon ) const {
 	for(int i=0; i<dim; i++ ) {
 		if ( Math::Fabs( v[i] - vec[i] ) <= epsilon )
@@ -1424,7 +1424,7 @@ OG_INLINE bool VecX<dim>::Cmp( const VecX<dim> &vec, float epsilon ) const {
 VecX::operator-
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE VecX<dim> VecX<dim>::operator-() const {
 	VecX<dim> vec(*this);
 	vec *= -1.0f;
@@ -1436,7 +1436,7 @@ OG_INLINE VecX<dim> VecX<dim>::operator-() const {
 VecX::operator[]
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE float VecX<dim>::operator[]( int index ) const {
 	OG_ASSERT( index >= 0 && index < dim );
 	return v[index];
@@ -1447,7 +1447,7 @@ OG_INLINE float VecX<dim>::operator[]( int index ) const {
 VecX::operator[]
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE float &VecX<dim>::operator[]( int index ) {
 	OG_ASSERT( index >= 0 && index < dim );
 	return v[index];
@@ -1458,7 +1458,7 @@ OG_INLINE float &VecX<dim>::operator[]( int index ) {
 VecX::operator==
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE bool VecX<dim>::operator==( const VecX<dim> &other ) const {
 	return Cmp(other);
 }
@@ -1468,7 +1468,7 @@ OG_INLINE bool VecX<dim>::operator==( const VecX<dim> &other ) const {
 VecX::operator!=
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE bool VecX<dim>::operator!=( const VecX<dim> &other ) const {
 	return !Cmp(other);
 }
@@ -1478,7 +1478,7 @@ OG_INLINE bool VecX<dim>::operator!=( const VecX<dim> &other ) const {
 VecX::operator=
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE VecX<dim> &VecX<dim>::operator=( const VecX<dim> &other ) {
 	Set(other);
 	return *this;
@@ -1489,7 +1489,7 @@ OG_INLINE VecX<dim> &VecX<dim>::operator=( const VecX<dim> &other ) {
 VecX::operator+=
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::operator+=( const VecX<dim> &vec ) {
 	for( int i=0; i<dim; i++ )
 		v[i] += vec[i];
@@ -1500,7 +1500,7 @@ OG_INLINE void VecX<dim>::operator+=( const VecX<dim> &vec ) {
 VecX::operator-=
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::operator-=( const VecX<dim> &vec ) {
 	for( int i=0; i<dim; i++ )
 		v[i] -= vec[i];
@@ -1511,12 +1511,12 @@ OG_INLINE void VecX<dim>::operator-=( const VecX<dim> &vec ) {
 VecX::operator*=
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::operator*=( const VecX<dim> &vec ) {
 	for( int i=0; i<dim; i++ )
 		v[i] *= vec[i];
 }
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::operator*=( float f ) {
 	for( int i=0; i<dim; i++ )
 		v[i] *= f;
@@ -1527,12 +1527,12 @@ OG_INLINE void VecX<dim>::operator*=( float f ) {
 VecX::operator/=
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::operator/=( const VecX<dim> &vec ) {
 	for( int i=0; i<dim; i++ )
 		v[i] /= vec[i];
 }
-template< int dim >
+template<int dim>
 OG_INLINE void VecX<dim>::operator/=( float f ) {
 	*this *= 1.0f/f; // multiplication is faster than division, so we just reverse the process.
 }
@@ -1542,20 +1542,20 @@ OG_INLINE void VecX<dim>::operator/=( float f ) {
 VecX::operator*
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE float VecX<dim>::operator*( const VecX<dim> &vec ) const {
 	float ret = 0.0f;
 	for(int i=0; i<dim; i++ )
 		ret += v[i] * vec[i];
 	return ret;
 }
-template< int dim >
+template<int dim>
 OG_INLINE VecX<dim> VecX<dim>::operator*( float f ) const {
 	VecX<dim> vec(*this);
 	vec *= f;
 	return vec;
 }
-template< int dim >
+template<int dim>
 OG_INLINE VecX<dim> operator*( float f, const VecX<dim> &vec ) {
 	VecX<dim> _vec(vec);
 	_vec *= f;
@@ -1567,14 +1567,14 @@ OG_INLINE VecX<dim> operator*( float f, const VecX<dim> &vec ) {
 VecX::operator/
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE float VecX<dim>::operator/( const VecX<dim> &vec ) const {
 	float ret = 0.0f;
 	for(int i=0; i<dim; i++ )
 		ret += v[i] / vec[i];
 	return ret;
 }
-template< int dim >
+template<int dim>
 OG_INLINE VecX<dim> VecX<dim>::operator/( float f ) const {
 	VecX<dim> vec(*this);
 	vec /= f;
@@ -1586,7 +1586,7 @@ OG_INLINE VecX<dim> VecX<dim>::operator/( float f ) const {
 VecX::operator+
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE VecX<dim> VecX<dim>::operator+( const VecX<dim> &vec ) const {
 	VecX<dim> _vec(*this);
 	_vec += vec;
@@ -1598,7 +1598,7 @@ OG_INLINE VecX<dim> VecX<dim>::operator+( const VecX<dim> &vec ) const {
 VecX::operator-
 ================
 */
-template< int dim >
+template<int dim>
 OG_INLINE VecX<dim> VecX<dim>::operator-( const VecX<dim> &vec ) const {
 	VecX<dim> _vec(*this);
 	_vec -= vec;
