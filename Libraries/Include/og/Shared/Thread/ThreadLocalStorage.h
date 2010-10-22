@@ -30,6 +30,7 @@ freely, subject to the following restrictions:
 #ifndef __OG_THREAD_LOCAL_STORAGE_H__
 #define __OG_THREAD_LOCAL_STORAGE_H__
 
+#include <og/Shared/Shared.h>
 
 namespace og {
 	#define OG_TLS_OUT_OF_INDEXES ((uLong)0xFFFFFFFF)

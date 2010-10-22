@@ -270,6 +270,14 @@
 								RelativePath="..\..\Libraries\Source\og\Shared\Thread\Thread.cpp"
 								>
 							</File>
+							<File
+								RelativePath="..\..\Libraries\Source\og\Shared\Thread\ThreadPosix.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Libraries\Source\og\Shared\Thread\ThreadWin32.cpp"
+								>
+							</File>
 						</Filter>
 						<File
 							RelativePath="..\..\Libraries\Source\og\Shared\File.cpp"

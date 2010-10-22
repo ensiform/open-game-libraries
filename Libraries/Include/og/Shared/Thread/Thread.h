@@ -50,7 +50,8 @@ namespace og {
 	// Mutex management (thread data protection)
 	class Mutex {
 	private:
-        void *data;
+		void *data;
+
 	public:
 		Mutex();
 		~Mutex();
@@ -61,6 +62,7 @@ namespace og {
 	class Condition {
 	private:
 		void *data;
+
 	public:
 		Condition();
 		~Condition();
@@ -112,7 +114,6 @@ namespace og {
 	private:
 		Condition	*initEvent;
 		bool		initResult;
-
 
 	protected:
 		virtual bool	Init( void ) { return true; }

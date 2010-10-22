@@ -30,16 +30,14 @@ freely, subject to the following restrictions:
 #include <og/Shared/Thread/Thread.h>
 #include <og/Shared/Thread/ThreadLocalStorage.h>
 
-#if OG_WIN32
-	#include <windows.h>
-	#include <process.h>
-#else
-	#include <pthread.h>
-#endif
-
 namespace og {
 uLong lastTlsIndex = OG_TLS_OUT_OF_INDEXES;
 
+/*
+================
+RegisterTLS
+================
+*/
 void RegisterTLS( TLS_Data *data ) {
 	if ( lastTlsIndex == OG_TLS_OUT_OF_INDEXES )
 		lastTlsIndex = ogTlsAlloc();
@@ -50,6 +48,11 @@ void RegisterTLS( TLS_Data *data ) {
 	ogTlsSetValue( lastTlsIndex, data );
 }
 
+/*
+================
+CleanupTLS
+================
+*/
 void CleanupTLS( void ) {
 	if ( lastTlsIndex == OG_TLS_OUT_OF_INDEXES )
 		return;
@@ -61,157 +64,11 @@ void CleanupTLS( void ) {
 	}
 }
 
-uLong ogTlsAlloc( void ) {
-#if OG_WIN32
-	return TlsAlloc();
-#elif OG_LINUX
-	pthread_key_t key;
-	if ( pthread_key_create( &key, NULL ) == 0 )
-		return static_cast<uLong>( key );
-	return OG_TLS_OUT_OF_INDEXES;
-#elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
-#endif
-}
-
-void ogTlsFree( uLong index ) {
-#if OG_WIN32
-	TlsFree( index );
-#elif OG_LINUX
-	pthread_key_delete( static_cast<pthread_key_t>(index) );
-#elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
-#endif
-}
-
-void *ogTlsGetValue( uLong index ) {
-#if OG_WIN32
-	return TlsGetValue( index );
-#elif OG_LINUX
-	return pthread_getspecific( static_cast<pthread_key_t>(index) );
-#elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
-#endif
-}
-
-void ogTlsSetValue( uLong index, void *data ) {
-#if OG_WIN32
-	TlsSetValue( index, data );
-#elif OG_LINUX
-	pthread_setspecific( static_cast<pthread_key_t>(index), data );
-#elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
-#endif
-}
-
-#if OG_WIN32
-
-Mutex::Mutex() {
-	CRITICAL_SECTION *pCrit = new CRITICAL_SECTION;
-	data = pCrit;
-	OG_ASSERT( (int)data != 0xcdcdcdcd );
-	::InitializeCriticalSection( pCrit );
-}
-Mutex::~Mutex() {
-	CRITICAL_SECTION *pCrit = static_cast<CRITICAL_SECTION *>(data);
-	::DeleteCriticalSection( pCrit );
-	delete pCrit;
-}
-void Mutex::Lock( void ) {
-	::EnterCriticalSection( static_cast<CRITICAL_SECTION *>(data) );
-}
-void Mutex::Unlock( void ) {
-	::LeaveCriticalSection( static_cast<CRITICAL_SECTION *>(data) );
-}
-
-Condition::Condition() {
-	data = ::CreateEvent( NULL, FALSE, FALSE, NULL );
-}
-Condition::~Condition() {
-	if ( data )
-		::CloseHandle( data );
-}
-void Condition::Signal( void ) {
-	SetEvent( data );
-}
-bool Condition::Wait( int ms ) {
-	return ::WaitForSingleObject( data, ms ) == WAIT_OBJECT_0;
-}
-
-class SetThreadName {
-public:
-	SetThreadName( LPCSTR name, DWORD id ) : dwType(0x1000), szName(name), dwThreadID(id), dwFlags(0) {
-		__try { RaiseException( 0x406D1388, 0, sizeof(*this)/sizeof(DWORD), (DWORD*)this ); }
-		__except( EXCEPTION_CONTINUE_EXECUTION ) { }
-	}
-
-private:
-	DWORD	dwType;
-	LPCSTR	szName;
-	DWORD	dwThreadID;
-	DWORD	dwFlags;
-};
-
-Thread::Thread() {
-	selfDestruct	= false;
-	id				= 0;
-	handle			= 0;
-	initEvent		= NULL;
-	initResult		= false;
-}
-
-bool Thread::Start( const char *name, bool waitForInit ) {
-	if ( handle )
-		return true;
-	if ( waitForInit )
-		initEvent = new Condition();
-
-	handle = (HANDLE)::_beginthreadex( 0, 0, (unsigned (__stdcall *)(void *))RunThread, this, 0, &id );
-	if( !handle ) {
-		User::Error( ERR_SYSTEM_REQUIREMENTS, "Couldn't create message thread" );
-		return false;
-	}
-
-	SetThreadName( name, id );
-	if ( waitForInit ) {
-		initEvent->Wait( OG_INFINITE );
-		delete initEvent;
-		initEvent = NULL;
-		return initResult;
-	}
-	return true;
-}
-
-void Thread::RunThread( void *param ) {
-	Thread *thread = static_cast<Thread *>(param);
-
-	thread->initResult = thread->Init();
-	if ( thread->initEvent )
-		thread->initEvent->Signal();
-
-	thread->Run();
-
-	if ( thread->selfDestruct )
-		delete thread;
-	else
-		thread->handle = NULL;
-
-	CleanupTLS();
-	_endthread();
-}
-
-void Thread::Stop( bool blocking ) {
-	if ( handle == NULL )
-		delete this;
-	else {
-		selfDestruct = true;
-		WakeUp();
-
-		if ( blocking )
-			WaitForSingleObject( handle, INFINITE );
-	}
-}
-
+/*
+================
+SingleWriterMultiReader::LockRead
+================
+*/
 void SingleWriterMultiReader::LockRead( void ) {
 	mtx.Lock();
 	if ( writeRequest ) {
@@ -228,6 +85,12 @@ void SingleWriterMultiReader::LockRead( void ) {
 	readers++;
 	mtx.Unlock();
 }
+
+/*
+================
+SingleWriterMultiReader::UnlockRead
+================
+*/
 void SingleWriterMultiReader::UnlockRead( void ) {
 	mtx.Lock();
 	readers--;
@@ -235,6 +98,12 @@ void SingleWriterMultiReader::UnlockRead( void ) {
 		unlockedRead.Signal();
 	mtx.Unlock();
 }
+
+/*
+================
+SingleWriterMultiReader::LockWrite
+================
+*/
 void SingleWriterMultiReader::LockWrite( void ) {
 	mtx.Lock();
 	writeRequest = true;
@@ -245,6 +114,12 @@ void SingleWriterMultiReader::LockWrite( void ) {
 	mtx.Lock();
 	writeRequest = false;
 }
+
+/*
+================
+SingleWriterMultiReader::UnlockWrite
+================
+*/
 void SingleWriterMultiReader::UnlockWrite( void ) {
 	Waiter *temp;
 	while( firstWaiter != NULL ) {
@@ -256,44 +131,6 @@ void SingleWriterMultiReader::UnlockWrite( void ) {
 	lastWaiter = NULL;
 	mtx.Unlock();
 }
-
-#elif OG_LINUX || OG_MACOS_X
-Mutex::Mutex()
-{
-    pthread_mutex_t * mutex  = new pthread_mutex_t;
-    data = mutex;
-    pthread_mutex_init( mutex , NULL);
-}
-Mutex::~Mutex(){
-    pthread_mutex_t * mutex  = static_cast<pthread_mutex_t*>(data);
-    pthread_mutex_destroy(mutex);
-    delete mutex;
-}
-void Mutex::Lock( void )
-{
-    pthread_mutex_lock(static_cast<pthread_mutex_t*>(data));
-}
-void Mutex::Unlock( void )
-{
-    pthread_mutex_unlock(static_cast<pthread_mutex_t*>(data));
-}
-
-Condition::Condition( void ){}
-Condition::~Condition( void ){}
-void Condition::Signal( void ){}
-bool Condition::Wait ( int delay ){}
-Thread::Thread(){}
-bool Thread::Start ( const char * name , bool waitForInit ){}
-void Thread::RunThread( void * param ){}
-void Thread::Stop( bool blocking ){}
-void SingleWriterMultiReader::LockRead( void ){}
-void SingleWriterMultiReader::UnlockRead( void ){}
-void SingleWriterMultiReader::LockWrite( void ){}
-void SingleWriterMultiReader::UnlockWrite( void ){}
-#elif defined(OG_MACOS_X)
-#else
-    #error Unsupported Operating System!
-#endif
 
 }
 

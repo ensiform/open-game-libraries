@@ -1220,7 +1220,7 @@ OG_INLINE VecX<dim>::VecX( float vec, ... ) {
 	va_list argptr;
 	va_start( argptr, vec );
 
-	for(int i=1; i<dim; i++)
+	for( int i=1; i<dim; i++)
 		v[i] = static_cast<float>(va_arg(argptr, double));
 
 	va_end(argptr);
@@ -1233,7 +1233,7 @@ VecX::Set
 */
 template<int dim>
 OG_INLINE void VecX<dim>::Set( const VecX<dim> &vec ) {
-	for(int i=0; i<dim; i++)
+	for( int i=0; i<dim; i++)
 		v[i] = vec[i];
 }
 template<int dim>
@@ -1249,7 +1249,7 @@ VecX::Zero
 */
 template<int dim>
 OG_INLINE void VecX<dim>::Zero( void ) {
-	for(int i=0; i<dim; i++ )
+	for( int i=0; i<dim; i++ )
 		v[i] = 0.0f;
 }
 
@@ -1261,7 +1261,7 @@ VecX::IsZero
 template<int dim>
 OG_INLINE bool VecX<dim>::IsZero( void ) const {
 	const uInt *iv = reinterpret_cast<const uInt *>(v);
-	for(int i=0; i<dim; i++) {
+	for( int i=0; i<dim; i++) {
 		if( iv[i] & Math::MASK_SIGNED )
 			return false;
 	}
@@ -1297,7 +1297,7 @@ VecX::LengthSqr
 template<int dim>
 OG_INLINE float VecX<dim>::LengthSqr( void ) const {
 	float ret = 0.0f;
-	for(int i=0; i<dim; i++ )
+	for( int i=0; i<dim; i++ )
 		ret += v[i] * v[i];
 	return ret;
 }
@@ -1349,7 +1349,7 @@ VecX::SnapSelf
 */
 template<int dim>
 OG_INLINE void VecX<dim>::SnapSelf( void ) {
-	for(int i=0; i<dim; i++ )
+	for( int i=0; i<dim; i++ )
 		v[i] = Math::Floor( v[i] + 0.5f );
 }
 
@@ -1360,7 +1360,7 @@ VecX::Floor
 */
 template<int dim>
 OG_INLINE void VecX<dim>::Floor( void ) {
-	for(int i=0; i<dim; i++ )
+	for( int i=0; i<dim; i++ )
 		v[i] = Math::Floor( v[i] );
 }
 
@@ -1371,7 +1371,7 @@ VecX::Ceil
 */
 template<int dim>
 OG_INLINE void VecX<dim>::Ceil( void ) {
-	for(int i=0; i<dim; i++ )
+	for( int i=0; i<dim; i++ )
 		v[i] = Math::Ceil( v[i] );
 }
 
@@ -1398,7 +1398,7 @@ VecX::Cmp
 */
 template<int dim>
 OG_INLINE bool VecX<dim>::Cmp( const VecX<dim> &vec ) const {
-	for(int i=0; i<dim; i++ ) {
+	for( int i=0; i<dim; i++ ) {
 		if ( v[i] != vec[i] )
 			return false;
 	}
@@ -1412,7 +1412,7 @@ VecX::Cmp
 */
 template<int dim>
 OG_INLINE bool VecX<dim>::Cmp( const VecX<dim> &vec, float epsilon ) const {
-	for(int i=0; i<dim; i++ ) {
+	for( int i=0; i<dim; i++ ) {
 		if ( Math::Fabs( v[i] - vec[i] ) <= epsilon )
 			return false;
 	}
@@ -1545,7 +1545,7 @@ VecX::operator*
 template<int dim>
 OG_INLINE float VecX<dim>::operator*( const VecX<dim> &vec ) const {
 	float ret = 0.0f;
-	for(int i=0; i<dim; i++ )
+	for( int i=0; i<dim; i++ )
 		ret += v[i] * vec[i];
 	return ret;
 }
@@ -1570,7 +1570,7 @@ VecX::operator/
 template<int dim>
 OG_INLINE float VecX<dim>::operator/( const VecX<dim> &vec ) const {
 	float ret = 0.0f;
-	for(int i=0; i<dim; i++ )
+	for( int i=0; i<dim; i++ )
 		ret += v[i] / vec[i];
 	return ret;
 }

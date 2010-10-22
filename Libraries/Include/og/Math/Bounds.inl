@@ -103,7 +103,7 @@ Bounds::ContainsPoint
 ================
 */
 OG_INLINE bool Bounds::ContainsPoint( const Vec3 &v ) const {
-	for(int i=0; i<3; i++) {
+	for( int i=0; i<3; i++) {
 		if (v[i] < bounds[MINS][i] || v[i] > bounds[MAXS][i])
 			return false;
 	}
@@ -116,7 +116,7 @@ Bounds::Intersects
 ================
 */
 OG_INLINE bool Bounds::Intersects( const Bounds &b ) const {
-	for(int i=0; i<3; i++) {
+	for( int i=0; i<3; i++) {
 		if (b.bounds[MAXS][i] < bounds[MINS][i] || b.bounds[MINS][i] > bounds[MAXS][i])
 			return false;
 	}

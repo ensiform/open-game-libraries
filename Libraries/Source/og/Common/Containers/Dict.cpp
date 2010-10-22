@@ -49,7 +49,7 @@ Dict::Clear
 */
 void Dict::Clear( void ) {
 	int num = entries.Num();
-	for(int i=0; i<num; i++ ) {
+	for( int i=0; i<num; i++ ) {
 		keyPool->Free(entries[i].key);
 		valuePool->Free(entries[i].value);
 	}
