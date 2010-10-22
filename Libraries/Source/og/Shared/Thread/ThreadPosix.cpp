@@ -148,6 +148,9 @@ Condition::Condition
 ================
 */
 Condition::Condition() {
+	pthread_cond_t * condition = new pthread_cond_t;
+	pthread_cond_init (condition, NULL);
+	data = condition;
 }
 
 /*
@@ -156,6 +159,11 @@ Condition::~Condition
 ================
 */
 Condition::~Condition() {
+	//pthread_cond_t * condition = static_cast<pthread_cond_t *>(data);
+	//pthread_cond_destroy(condition);
+	//delete condition;
+	pthread_cond_destroy(static_cast<pthread_cond_t *>(data));
+	delete static_cast<pthread_cond_t *>(data);
 }
 
 /*
@@ -164,6 +172,7 @@ Condition::Signal
 ================
 */
 void Condition::Signal( void ) {
+	pthread_cond_signal(static_cast<pthread_cond_t *>(data));
 }
 
 /*
@@ -172,7 +181,14 @@ Condition::Wait
 ================
 */
 bool Condition::Wait( int ms ) {
-	return false;
+	timespec temp;
+	temp.tv_sec = ms;
+	temp.tv_nsec = 0;
+	#warning ----FIXME----
+	pthread_mutex_t mutex;
+	if( ! pthread_cond_timedwait(static_cast<pthread_cond_t *>(data), &mutex, &temp))
+		return true;
+	else return false;
 }
 
 
