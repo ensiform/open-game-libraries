@@ -238,7 +238,7 @@ File *PakFileEx::OpenFile( const char *filename ) {
 		fileEx->size = centralDir[index].unCompressedSize;
 		fileEx->fullpath = centralDir.GetKey( index );
 		int i = fileEx->fullpath.ReverseFind("/");
-		fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i);
+		fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i+1);
 
 		static_cast<FileSystemEx *>(FS)->AddFileEvent( new FileEvent( FileEvent::OPEN, fileEx ) );
 		return fileEx;

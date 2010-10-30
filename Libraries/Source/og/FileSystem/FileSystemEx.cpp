@@ -471,7 +471,7 @@ FileEx *FileSystemEx::OpenLocalFileRead( const char *filename, int *size ) {
 				fileEx->fullpath = filename;
 				fileEx->fullpath.ToForwardSlashes();
 				int i = fileEx->fullpath.ReverseFind("/");
-				fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i);
+				fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i+1);
 
 				if ( size != NULL )
 					*size = fileEx->size;
@@ -510,7 +510,7 @@ File *FileSystemEx::OpenRead( const char *filename, bool pure, bool buffered ) {
 		fileEx->fullpath = filename;
 		fileEx->fullpath.ToForwardSlashes();
 		int i = fileEx->fullpath.ReverseFind("/");
-		fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i);
+		fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i+1);
 
 		AddFileEvent( new FileEvent( FileEvent::OPEN, fileEx ) );
 		return fileEx;
@@ -597,7 +597,7 @@ File *FileSystemEx::OpenWrite( const char *filename, bool pure ) {
 	fileEx->fullpath = filename;
 	fileEx->fullpath.ToForwardSlashes();
 	int i = fileEx->fullpath.ReverseFind("/");
-	fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i);
+	fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i+1);
 
 	static_cast<FileSystemEx *>(FS)->AddFileEvent( new FileEvent( FileEvent::OPEN, fileEx ) );
 
