@@ -101,10 +101,14 @@ bool ImageFileTGA::Open( const char *filename ) {
 		bool topDown = (imageDescriptor & TGA_FLAG_TOPDOWN) != 0;
 
 		if ( imageTypeCode == 2 )
-			return ReadType2( file, topDown );
+			ReadType2( file, topDown );
 		else if ( imageTypeCode == 3 )
-			return ReadType3( file, topDown );
-		return ReadType10( file, topDown );
+			ReadType3( file, topDown );
+		else
+			ReadType10( file, topDown );
+
+		file->Close();
+		return true;
 	}
 	catch( FileReadWriteError &err ) {
 		file->Close();
@@ -120,7 +124,7 @@ ImageFileTGA::ReadType2
 RGB and RGBA
 ================
 */
-bool ImageFileTGA::ReadType2( File *file, bool topDown ) {
+void ImageFileTGA::ReadType2( File *file, bool topDown ) {
 	int size = width * height * ( hasAlpha ? 4 : 3 );
 	dynBuffers[curBuffer].CheckSize( size );
 	byte *dst_data = dynBuffers[curBuffer].data;
@@ -172,8 +176,6 @@ bool ImageFileTGA::ReadType2( File *file, bool topDown ) {
 			}
 		}
 	}
-	file->Close();
-	return true;
 }
 
 /*
@@ -183,7 +185,7 @@ ImageFileTGA::ReadType3
 Grayscale
 ================
 */
-bool ImageFileTGA::ReadType3( File *file, bool topDown ) {
+void ImageFileTGA::ReadType3( File *file, bool topDown ) {
 	int size = width * height * 3;
 	dynBuffers[curBuffer].CheckSize( size );
 	byte *dst_data = dynBuffers[curBuffer].data;
@@ -203,8 +205,6 @@ bool ImageFileTGA::ReadType3( File *file, bool topDown ) {
 				dst_pixel[0] = dst_pixel[1] = dst_pixel[2] = file->ReadByte();
 		}
 	}
-	file->Close();
-	return true;
 }
 
 /*
@@ -214,7 +214,7 @@ ImageFileTGA::ReadType10
 Run Length Encoded
 ================
 */
-bool ImageFileTGA::ReadType10( File *file, bool topDown ) {
+void ImageFileTGA::ReadType10( File *file, bool topDown ) {
 	int pixelSize = hasAlpha ? 4 : 3;
 	int size = width * height * pixelSize;
 	dynBuffers[curBuffer].CheckSize( size );
@@ -298,7 +298,6 @@ bool ImageFileTGA::ReadType10( File *file, bool topDown ) {
 			}
 		}
 	}
-	return true;
 }
 
 /*

@@ -137,9 +137,9 @@ namespace og {
 
 	private:
 		bool	Open( const char *filename );
-		bool	ReadType2( File *file, bool topDown );
-		bool	ReadType3( File *file, bool topDown );
-		bool	ReadType10( File *file, bool topDown );
+		void	ReadType2( File *file, bool topDown );
+		void	ReadType3( File *file, bool topDown );
+		void	ReadType10( File *file, bool topDown );
 	};
 
 	/*
