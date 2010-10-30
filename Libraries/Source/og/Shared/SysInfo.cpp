@@ -93,7 +93,7 @@ AMD: http://www.amd.com/us-en/assets/content_type/white_papers_and_tech_docs/254
 ================
 */
 
-#if defined(OG_ASM_MSVC)
+#if OG_ASM_MSVC
 	#define  dw  dword ptr
 #endif
 
@@ -105,7 +105,7 @@ void RetrieveCPUInfo( void ) {
 
 	// eax = 0 -> vendor_id
 	// eax = 0x80000000 -> largestExtFuncNr
-#if defined(OG_ASM_MSVC)
+#if OG_ASM_MSVC
 	__asm {
 		mov		eax, 0
 		cpuid
@@ -118,7 +118,7 @@ void RetrieveCPUInfo( void ) {
 		cpuid
 		mov		cpu.largestExtFuncNr, eax
 	}
-#elif defined(OG_ASM_GNU)
+#elif OG_ASM_GNU
 	__asm__ __volatile__(
 		"movl      $0, %%eax;"
 		"cpuid;"
@@ -170,7 +170,7 @@ void RetrieveCPUInfo( void ) {
 
 	// eax = 4 -> Multicore support
 	if ( cpu.largestStdFuncNr >= 4 ) {
-#if defined(OG_ASM_MSVC)
+#if OG_ASM_MSVC
 		__asm {
 			mov eax, 4
 			cpuid
@@ -181,7 +181,7 @@ void RetrieveCPUInfo( void ) {
 			add eax, 1
 			mov cpu.coresPerSocket, eax
 		}
-#elif defined(OG_ASM_GNU)
+#elif OG_ASM_GNU
 		__asm__ __volatile__(
 			"movl      $4, %%eax;"
 			"cpuid;"
@@ -197,7 +197,7 @@ void RetrieveCPUInfo( void ) {
 	}
 
 	// eax = 1 -> signature & features
-#if defined(OG_ASM_MSVC)
+#if OG_ASM_MSVC
 	__asm {
 		mov		eax, 1
 		cpuid
@@ -206,7 +206,7 @@ void RetrieveCPUInfo( void ) {
 		mov		dw cpu.general, edx
 		mov		dw cpu.extended, ecx
 	}
-#elif defined(OG_ASM_GNU)
+#elif OG_ASM_GNU
 	__asm__ __volatile__(
 		"movl      $1, %%eax;"
 		"cpuid;"
@@ -219,7 +219,7 @@ void RetrieveCPUInfo( void ) {
 
 	// eax = 80000001h -> AMD features
 	if ( cpu.vendorID == CPU::AMD ) {
-#if defined(OG_ASM_MSVC)
+#if OG_ASM_MSVC
 		__asm {
 			mov		eax, 80000001h
 			cpuid
@@ -227,7 +227,7 @@ void RetrieveCPUInfo( void ) {
 			mov		dw cpu.AMD_general, edx
 			mov		dw cpu.AMD_extended, ecx
 		}
-#elif defined(OG_ASM_GNU)
+#elif OG_ASM_GNU
 		__asm__ __volatile__(
 			"movl      $0x80000001, %%eax;"
 			"cpuid;"
@@ -241,7 +241,7 @@ void RetrieveCPUInfo( void ) {
 	// Check if extended functions are supported
 	if ( cpu.largestExtFuncNr >= 0x80000004 ) {
 		// eax = 80000002h/80000003h/80000004h -> CPU Name/Brand String
-#if defined(OG_ASM_MSVC)
+#if OG_ASM_MSVC
 		__asm {
 			// Get the first 16 bytes of the processor name
 			mov		eax, 80000002h
@@ -270,7 +270,7 @@ save_string:
 			ret
 end:
 		}
-#elif defined(OG_ASM_GNU)
+#elif OG_ASM_GNU
 		__asm__ __volatile__(
 			// Get the first 16 bytes of the processor name
 			"movl      $0x80000002, %%eax;"
@@ -323,13 +323,13 @@ uLongLong RDTSC( void ) {
 	uInt timeLow, timeHigh;
 	uLongLong result = 0;
 
-#if defined(OG_ASM_MSVC)
+#if OG_ASM_MSVC
 	_asm {
 		rdtsc
 		mov [timeLow], eax
 		mov [timeHigh], edx
 	}
-#elif defined(OG_ASM_GNU)
+#elif OG_ASM_GNU
 	__asm__ __volatile__( "rdtsc" : "=a"(timeLow), "=d"(timeHigh) );
 #endif
 

@@ -124,9 +124,9 @@ in release mode it calls og::User::AssertFailed()
 
 // Which Assembler to use
 #if defined(_MSC_VER)
-	#define OG_ASM_MSVC
+	#define OG_ASM_MSVC 1
 #elif defined(__GNUC__)
-	#define OG_ASM_GNU
+	#define OG_ASM_GNU 1
 #else
 	#error "could not find suitable assembler"
 #endif

@@ -111,7 +111,7 @@ SSE extensions perfectly. I'll find the link and send it to you when you're onli
 OG_INLINE int Math::Ftoi( float f ) {
 	//! @todo	needs testing
 	// note: sse function cvttss2si
-#if defined(OG_ASM_MSVC)
+#if OG_ASM_MSVC
 	int i;
 #if defined(OG_FTOI_USE_SSE)
 	if( SysInfo::cpu.general.SSE ) {
@@ -126,7 +126,7 @@ OG_INLINE int Math::Ftoi( float f ) {
 		//__asm mov eax, i // do we need this ? O_o
 	}
 	return i;
-#elif defined(OG_ASM_GNU)
+#elif OG_ASM_GNU
 	int i;
 #if defined(OG_FTOI_USE_SSE)
 	if( SysInfo::cpu.general.SSE ) {
@@ -156,13 +156,13 @@ Math::FtoiFast
 ================
 */
 OG_INLINE int Math::FtoiFast( float f ) {
-#if defined(OG_ASM_MSVC)
+#if OG_ASM_MSVC
 	int i;
 	__asm fld		f
 	__asm fistp		i
 	//__asm mov eax, i // do we need this ? O_o
 	return i;
-#elif defined(OG_ASM_GNU)
+#elif OG_ASM_GNU
 	int i;
 	__asm__ __volatile__( "flds %1    \n\t"
 						  "fistpl %0  \n\t"
@@ -182,13 +182,13 @@ Math::Ftol
 ================
 */
 OG_INLINE long Math::Ftol( float f ) {
-#if defined(OG_ASM_MSVC)
+#if OG_ASM_MSVC
 	long i;
 	__asm fld		f
 	__asm fistp		i
 	//__asm mov eax, i // do we need this ? O_o
 	return i;
-#elif defined(OG_ASM_GNU)
+#elif OG_ASM_GNU
 	long i;
 	__asm__ __volatile__( "flds %1    \n\t"
 						  "fistpl %0  \n\t"
@@ -453,7 +453,7 @@ Math::SinCos
 ================
 */
 OG_INLINE void Math::SinCos( float f, float &s, float &c ) {
-#if defined(OG_ASM_MSVC)
+#if OG_ASM_MSVC
 	// sometimes assembler is just waaayy faster
 	_asm {
 		fld		f
@@ -463,7 +463,7 @@ OG_INLINE void Math::SinCos( float f, float &s, float &c ) {
 		fstp	dword ptr [ecx]
 		fstp	dword ptr [edx]
 	}
-#elif defined(OG_ASM_GNU)
+#elif OG_ASM_GNU
 	asm ("fsincos" : "=t" (c), "=u" (s) : "0" (f));
 #else
 	s = Sin(f);
