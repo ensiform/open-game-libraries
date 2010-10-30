@@ -30,8 +30,10 @@
 #include <og/Common/Common.h>
 #include <og/Fable/Fable.h>
 
-#if OG_WIN32
+#ifndef __OG_DEVICE_XI_H__
+#define __OG_DEVICE_XI_H__
 
+#if OG_WIN32
 #include <XInput.h>
 
 namespace og {
@@ -79,4 +81,5 @@ private:
 }
 }
 
+#endif
 #endif

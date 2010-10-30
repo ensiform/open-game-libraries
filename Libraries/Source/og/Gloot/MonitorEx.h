@@ -94,7 +94,7 @@ namespace og {
 		
 		bool	Init( int screenId );
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 	};
 }

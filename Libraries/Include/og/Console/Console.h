@@ -75,9 +75,9 @@ namespace og {
 		byte	colorErrorText[3];		//!< Color of the error window text
 		byte	colorErrorTextFlash[3];	//!< Flash color of the error window text
 #elif OG_LINUX
-    #warning "Need Linux here FIXME"
+	#warning "Need Linux here FIXME"
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 	};
 

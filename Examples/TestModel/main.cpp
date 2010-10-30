@@ -112,7 +112,7 @@ bool ogDemoWindow::Init( void ) {
 	if( !window )
 		return false;
 	
-    // Enable vertical sync (on cards that support it)
+	// Enable vertical sync (on cards that support it)
 	window->MakeCurrent();
 	window->SetSwapinterval( true );
 
@@ -487,7 +487,7 @@ int og::User::Main( int argc, char *argv[] ) {
 		}
 		og::Console::Shutdown();
 	}
-    return 0;
+	return 0;
 }
 
 /*

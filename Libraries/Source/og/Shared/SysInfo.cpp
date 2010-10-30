@@ -36,7 +36,7 @@ freely, subject to the following restrictions:
 	#include <dlfcn.h>
 	#include <sys/time.h>
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 
 namespace og {
@@ -382,7 +382,7 @@ void RetrieveCPUSpeed( void ) {
 		}
 	}
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 }
 
@@ -422,7 +422,7 @@ void RetrieveMemorySize( void ) {
 	ramB = 0;
 	ramMB = 0;
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 }
 
@@ -500,7 +500,7 @@ OSInfo *GetOSInfo( void ) {
 	}
 	data.name = "unknown unix";
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 
 	initialized = true;

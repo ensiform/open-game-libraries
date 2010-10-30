@@ -36,6 +36,8 @@ freely, subject to the following restrictions:
 #endif
 
 namespace og {
+	class MonitorEx;
+
 	class WindowEx : public Window {
 	public:
 		// ---------------------- Public Window Interface -------------------
@@ -114,7 +116,7 @@ namespace og {
 		int			oldSize[2];
 		int			oldPos[2];
 		bool		ignoreSizeMove;
-		
+
 		int			ChoosePixelFormat( PIXELFORMATDESCRIPTOR *pfd );
 		int			ChoosePixelFormatARB( void );
 		static LRESULT CALLBACK WndCallback( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
@@ -125,9 +127,9 @@ namespace og {
 	public:
 		HWND		GetHWND( void ) { return hWnd; }
 #elif OG_LINUX
-    #warning "Need Linux here FIXME"
+	#warning "Need Linux here FIXME"
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 	};
 }

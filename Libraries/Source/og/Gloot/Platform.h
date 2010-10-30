@@ -45,7 +45,7 @@ freely, subject to the following restrictions:
 	#include <X11/Xatom.h>
 	#include <GL/glx.h>
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 
 #include <og/Common/Common.h>
@@ -70,8 +70,8 @@ namespace og {
 	// wglGetExtensionStringEXT typedef
 	typedef const char *(APIENTRY * WGLGETEXTENSIONSSTRINGEXT_T)( void );
 	// wglGetExtensionStringARB typedef
-	typedef const char *(APIENTRY * WGLGETEXTENSIONSSTRINGARB_T)( HDC ); 
-	typedef HGLRC (APIENTRY * WGLCREATECONTEXTATTRIBSARB_T)( HDC, HGLRC, const int * ); 
+	typedef const char *(APIENTRY * WGLGETEXTENSIONSSTRINGARB_T)( HDC );
+	typedef HGLRC (APIENTRY * WGLCREATECONTEXTATTRIBSARB_T)( HDC, HGLRC, const int * );
 
 #elif OG_LINUX
 	// glXSwapIntervalSGI typedef (X11 buffer-swap interval control)
@@ -81,7 +81,7 @@ namespace og {
 	typedef std::map<xcb_window_t, WindowEx *> WinEvtMap;
 	typedef std::pair<xcb_window_t, WindowEx *> WinEvtPair;
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 
 	typedef std::map<WPARAM, int> KeyMap;
@@ -191,7 +191,7 @@ namespace og {
 		GLXSWAPINTERVALSGI_T			glXSwapIntervalSGI;
 		GLXCREATECONTEXTATTRIBSARB_T	glXCreateContextAttribsARB;
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 	};
 	extern Platform Mgr;

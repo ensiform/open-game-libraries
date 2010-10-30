@@ -43,7 +43,7 @@
 #endif
 
 #ifndef NULL
-  #define NULL 0
+	#define NULL 0
 #endif
 
 #if !defined(WINGDIAPI) && defined(_WIN32)

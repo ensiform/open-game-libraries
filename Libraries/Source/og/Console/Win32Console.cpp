@@ -33,6 +33,11 @@ freely, subject to the following restrictions:
 #include <windows.h>
 #include <RichEdit.h>
 
+#ifndef CFM_OUTLINE
+	#define	CFM_OUTLINE  0x0200
+	#define	CFE_OUTLINE  CFM_OUTLINE
+#endif
+
 namespace og {
 
 static ConsoleWindow *conWindow = NULL;
@@ -41,7 +46,7 @@ static WinConsoleData_t wcd;
 enum {
 	WM_CON_PRINT = WM_USER,
 	WM_CON_COMMAND,
-	
+
 	WM_WAKE_UP
 };
 enum {
@@ -162,7 +167,7 @@ ConsoleWindow::ConsoleWindow( const ConsoleParams_t *_params ) {
 	hWndErrorMessage = NULL;
 	hWndButtonOptions = NULL;
 	completionCursor = 0;
-	
+
 	dwStyle = WS_POPUPWINDOW | WS_CAPTION | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SIZEBOX;
 	dwExStyle = WS_EX_WINDOWEDGE|WS_EX_TOOLWINDOW|WS_EX_APPWINDOW;
 }

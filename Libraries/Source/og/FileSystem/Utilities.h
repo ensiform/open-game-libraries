@@ -33,7 +33,7 @@ freely, subject to the following restrictions:
 namespace og {
 #if OG_WIN32
 	FILE *fopenwin32( const char *filename, const char *mode );
- #define fopen fopenwin32
+	#define fopen fopenwin32
 #endif
 
 	/*

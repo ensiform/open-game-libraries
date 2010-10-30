@@ -195,18 +195,18 @@ Convert Dos Time & Date to time_t
 ================
 */
 time_t ConvertDosTime( short DosTime, short DosDate ) {
-	time_t clock = time(NULL);  
-	struct tm *t = localtime(&clock);  
+	time_t clock = time(NULL);
+	struct tm *t = localtime(&clock);
 	t->tm_isdst = -1;
-	t->tm_sec  = (DosTime <<  1) & 0x3e;  
-	t->tm_min  = (DosTime >>  5) & 0x3f;  
-	t->tm_hour = (DosTime >> 11) & 0x1f;  
-	t->tm_mday = DosDate & 0x1f;  
-	t->tm_mon  = (DosDate >>  5) & 0x0f;  
-	t->tm_year = ((DosDate >>  9) & 0x7f) + 1980;  
+	t->tm_sec  = (DosTime <<  1) & 0x3e;
+	t->tm_min  = (DosTime >>  5) & 0x3f;
+	t->tm_hour = (DosTime >> 11) & 0x1f;
+	t->tm_mday = DosDate & 0x1f;
+	t->tm_mon  = (DosDate >>  5) & 0x0f;
+	t->tm_year = ((DosDate >>  9) & 0x7f) + 1980;
 
-	return mktime(t);  
-}  
+	return mktime(t);
+}
 
 /*
 ==============================================================================
@@ -312,6 +312,9 @@ int PakFileEx::ReadCentralDir( FILE *file, uLong zipfileOffset, uLong Offset, in
 	uLong PosInZip;		// Position of the current file in the zipfile
 
 	FileHeader fh;		// Storrage for the current fileheader
+#ifndef _MSC_VER
+	#error "this way of converting from OCP to unicode seems to be MS specific, FIXME"
+#endif
 	_locale_t locale = _create_locale( LC_ALL, ".OCP" ); // Zip file format uses the OEM codepage
 
 	// Read all entries

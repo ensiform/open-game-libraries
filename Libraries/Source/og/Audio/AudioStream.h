@@ -32,7 +32,7 @@
 
 namespace og {
 	class AudioSource;
-	
+	class AudioStream;
 
 	class AudioStreamData {
 	public:

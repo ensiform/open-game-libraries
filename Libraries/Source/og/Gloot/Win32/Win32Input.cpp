@@ -34,24 +34,30 @@ freely, subject to the following restrictions:
 
 namespace og {
 
+#ifdef __MINGW32__
+	#define MAPVK_VK_TO_VSC  0x00
+	#define MAPVK_VSC_TO_VK  0x01
+	#define MAPVK_VK_TO_CHAR 0x02
+	#define VK_OEM_NEC_EQUAL 0x92
+#endif
 #ifndef WM_MOUSEWHEEL
- #define WM_MOUSEWHEEL 0x020A
+	#define WM_MOUSEWHEEL 0x020A
 #endif
 #ifndef WHEEL_DELTA
- #define WHEEL_DELTA 120
+	#define WHEEL_DELTA 120
 #endif
 
 #ifndef WM_XBUTTONDOWN
- #define WM_XBUTTONDOWN 0x020B
+	#define WM_XBUTTONDOWN 0x020B
 #endif
 #ifndef WM_XBUTTONUP
- #define WM_XBUTTONUP 0x020C
+	#define WM_XBUTTONUP 0x020C
 #endif
 #ifndef XBUTTON1
- #define XBUTTON1 1
+	#define XBUTTON1 1
 #endif
 #ifndef XBUTTON2
- #define XBUTTON2 2
+	#define XBUTTON2 2
 #endif
 
 const int VK_EXTENDED_FLAG = 0x01000000;

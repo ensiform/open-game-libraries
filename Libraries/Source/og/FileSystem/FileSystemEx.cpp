@@ -311,7 +311,7 @@ bool FileSystemEx::MakePath( const char *path, bool pure ) {
 #elif OG_LINUX
 			if ( i != 0 ) {
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 				if ( !MakeDir( newPath.data ) ) {
 					User::Error( ERR_FS_MAKEPATH, "Can't create path", path );

@@ -31,15 +31,15 @@ freely, subject to the following restrictions:
 #include <og/Shared/File.h>
 #include <math.h>
 #include <vector>
+#include <ctype.h>
+#include <wctype.h>
 
 #if OG_WIN32
 	#include <windows.h>
 #elif OG_LINUX
-    #include <unistd.h>
-    #include <ctype.h>
-    #include <wctype.h>
+	#include <unistd.h>
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 
 namespace og {
@@ -1464,9 +1464,9 @@ void String::FromWide( const wchar_t *in ) {
 	length = inLen;
 	byteLength = outLen;
 #elif OG_LINUX
-    #warning "Need Linux here FIXME"
+	#warning "Need Linux here FIXME"
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 }
 
@@ -1483,9 +1483,9 @@ int String::ToWide( const char *in, uInt numBytes, wchar_t *out, uInt outSize ) 
 	out[0] = L'\0';
 	return MultiByteToWideChar( CP_UTF8, 0,  in, numBytes, out, outSize );
 #elif OG_LINUX
-    #warning "Need Linux here FIXME"
+	#warning "Need Linux here FIXME"
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 }
 

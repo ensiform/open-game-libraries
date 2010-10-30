@@ -30,7 +30,10 @@
 #include <og/Shared/Shared.h>
 #include <og/Math/Math.h>
 
-#if OG_WIN32
+#if defined(__MINGW32__)
+#warning "XInputChecker is not working with MinGW, fix it"
+#endif
+#if OG_WIN32 && !defined(__MINGW32__)
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>

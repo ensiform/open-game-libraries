@@ -73,7 +73,7 @@ bool WindowEx::ExtensionSupported( const char *extension ) const {
 #elif OG_LINUX
 	return Mgr.glxExtensionSupported( extension );
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 }
 

@@ -30,7 +30,10 @@
 
 #include <og/Common/Common.h>
 
-#if OG_WIN32
+#if defined(__MINGW32__)
+#warning "XInputChecker is not working with MinGW, fix it"
+#endif
+#if OG_WIN32 && !defined(__MINGW32__)
 
 #include "XInputChecker.h"
 #include <wbemidl.h>
@@ -80,7 +83,7 @@ XInputChecker::XInputChecker() {
 		bstrDeviceID = SysAllocString( L"DeviceID" );				if( bstrDeviceID == NULL )	break;
 		bstrClassName = SysAllocString( L"Win32_PNPEntity" );		if( bstrClassName == NULL )	break;
 
-		// Connect to WMI 
+		// Connect to WMI
 		hr = pIWbemLocator->ConnectServer( bstrNamespace, NULL, NULL, 0L, 0L, NULL, NULL, &pIWbemServices );
 		if( FAILED( hr ) || pIWbemServices == NULL )
 			break;
@@ -108,7 +111,7 @@ XInputChecker::XInputChecker() {
 				hr = pDevices[i]->Get( bstrDeviceID, 0L, &var, NULL, NULL );
 				if( SUCCEEDED( hr ) && var.vt == VT_BSTR && var.bstrVal != NULL ) {
 					// Check if the device ID contains "IG_".  If it does, then it’s an XInput device
-					// Unfortunately this information can not be found by just using DirectInput 
+					// Unfortunately this information can not be found by just using DirectInput
 					if( wcsstr( var.bstrVal, L"IG_" ) ) {
 						// If it does, then get the VID/PID from var.bstrVal
 						DWORD dwPid = 0, dwVid = 0;
@@ -140,7 +143,7 @@ XInputChecker::XInputChecker() {
 	SAFE_RELEASE( pEnumDevices );
 	SAFE_RELEASE( pIWbemLocator );
 	SAFE_RELEASE( pIWbemServices );
-	
+
 	if( bCleanupCOM )
 		CoUninitialize();
 }

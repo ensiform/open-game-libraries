@@ -64,7 +64,7 @@ namespace og {
 	//! @see	glContext
 	// ==============================================================================
 	namespace glContextFlags {
-		const int DEBUG						= 0x0001;		//!< Debug features, see GL 3 spec
+		const int DEBUG_FEATURES			= 0x0001;		//!< Debug features, see GL 3 spec
 		const int FORWARD_COMPATIBLE		= 0x0002;		//!< Ignore deprecated features of the specified GL version ( >= 3.0 )
 		const int ROBUST_ACCESS				= 0x00000004;	//!< Robust buffer access
 	}
@@ -110,14 +110,14 @@ namespace og {
 		//!
 		//! @param	forced	true if there is no avoiding it
 		//!
-		//! @return	true if you want to allow this close command 
+		//! @return	true if you want to allow this close command
 		// ==============================================================================
 		virtual bool		OnClose( bool forced ) { return true; }
 
 		// ==============================================================================
 		//! Whenever the window loses or regains focus.
 		//!
-		//! @param	hasFocus	The new status 
+		//! @param	hasFocus	The new status
 		// ==============================================================================
 		virtual void		OnFocusChange( bool hasFocus ) {}
 
@@ -148,7 +148,7 @@ namespace og {
 		//! @param	y	The new y coordinate
 		// ==============================================================================
 		virtual void		OnMove( int x, int y ) {}
-		
+
 	// Keyboard Events
 		// ==============================================================================
 		//! A key has been pressed or released

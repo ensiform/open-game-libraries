@@ -84,7 +84,7 @@ in release mode it calls og::User::AssertFailed()
 	#error "Sorry, we don't have MAC code yet, if you are interested in helping out, contact us."
 	#define OG_MACOS_X 1
 #else
-    #error "Invalid OS!"
+	#error "Invalid OS!"
 #endif
 
 // Win32 Specific
@@ -114,6 +114,16 @@ in release mode it calls og::User::AssertFailed()
 	#if OG_VISUAL_LEAK_DETECTOR && defined(_DEBUG)
 		#include <vld.h>
 	#endif
+
+	// Fix for MinGW
+	#if !defined(_WIN32_WINNT) || (_WIN32_WINNT < 0x0501)
+		#undef _WIN32_WINNT
+		#define _WIN32_WINNT 0x0501
+	#endif
+	#if !defined(WINVER) || (WINVER < 0x0501)
+		#undef WINVER
+		#define WINVER 0x0501
+	#endif
 #endif
 
 // (Mac OSX && PPC) = big endian, rest = little endian
@@ -142,11 +152,11 @@ in release mode it calls og::User::AssertFailed()
 
 
 // define OG_DEBUG_BREAK
-#if OG_WIN32
+#if _MSC_VER
 	#define OG_DEBUG_BREAK() { __debugbreak(); }
-#elif OG_LINUX
+#elif __GNUC__
 	#define OG_DEBUG_BREAK() { __asm__ __volatile__ ("int $0x03"); }
-#elif OG_MACOS_X
+#elif OG_MACOS_X //! @todo	compiler specific ?
 	#define OG_DEBUG_BREAK() { kill( getpid(), SIGINT ); }
 #endif
 

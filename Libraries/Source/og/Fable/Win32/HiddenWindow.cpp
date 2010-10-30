@@ -169,7 +169,12 @@ bool PlatformInit( void ) {
 			hiddenWnd = NULL;
 			return false;
 		}
+#ifdef __MINGW32__
+#warning "XInputChecker is not working with MinGW, fix it"
+		if ( !InitDirectInput() ) {
+#else
 		if ( !InitXInput() || !InitDirectInput() ) {
+#endif
 			hiddenWnd->Stop();
 			hiddenWnd = NULL;
 			return false;

@@ -379,7 +379,7 @@ int WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR, int ) {
 	ParseCommandLine( strCommandLine.raw_ptr(), argv );
 
 	int result = main( argc, argv );
-    delete[] argv;
+	delete[] argv;
 	return result;
 }
 

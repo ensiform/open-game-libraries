@@ -103,8 +103,12 @@ Thread::PlatformInit
 */
 void Thread::PlatformInit( void ) {
 	// Get native id
-	nativeId = GetThreadId( thread.native_handle() );
+	nativeId = GetCurrentThreadId();
 
+	//! @todo   Not sure if this is microsoft specific or if just mingw needs something different
+#ifdef __MINGW32__
+	#warning "Need MinGW here FIXME"
+#else
 	// Set thread name
 	struct tnData {
 		DWORD	dwType;
@@ -119,6 +123,7 @@ void Thread::PlatformInit( void ) {
 	data.dwFlags	= 0;
 	__try { RaiseException( 0x406D1388, 0, sizeof(data)/sizeof(DWORD), (DWORD*)&data ); }
 	__except( EXCEPTION_CONTINUE_EXECUTION ) { }
+#endif
 }
 
 

@@ -30,15 +30,15 @@ freely, subject to the following restrictions:
 */
 
 #include <og/Shared/Shared.h>
+#include <ctype.h>
 
 #if OG_WIN32
 	#include <windows.h>
 #elif OG_LINUX
-    #include <stdio.h>
-    #include <unistd.h>
-    #include <ctype.h>
+	#include <stdio.h>
+	#include <unistd.h>
 #elif OG_MACOS_X
-    #warning "Need MacOS here FIXME"
+	#warning "Need MacOS here FIXME"
 #endif
 
 namespace og {

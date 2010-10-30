@@ -84,7 +84,7 @@ namespace og {
 			lock cmpxchg [edx], ecx;
 			mov old, eax;
 		}
-#elif OG_ASM_GNU(
+#elif OG_ASM_GNU
 		__asm__ __volatile__(
 			"lock cmpxchg %3,%1"
 			: "=a" (old), "=m" (*(target))
