@@ -68,7 +68,7 @@ solution "Thirdparty"
 		targetdir( libDir )
 		files { vorbisPath .. "/*.h", vorbisPath .. "/*.c" }
 		objdir( objectDir .. "/vorbis" )
-		includedirs { thirdPartyPath }
+		includedirs { thirdPartyPath, vorbisPath }
 		excludes { vorbisPath .. "/psytune.c", vorbisPath .. "/tone.c" }
 		
 	-- soft_oal Static Library

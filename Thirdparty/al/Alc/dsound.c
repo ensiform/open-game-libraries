@@ -26,6 +26,9 @@
 #include <stdio.h>
 #include <memory.h>
 
+#if defined(__MINGW32__)
+  #define _IDirectSoundFullDuplex_
+#endif
 #include <dsound.h>
 #include <mmreg.h>
 #ifndef _WAVEFORMATEXTENSIBLE_
