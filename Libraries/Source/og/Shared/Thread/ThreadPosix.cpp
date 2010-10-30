@@ -46,42 +46,57 @@ namespace og {
 */
 
 /*
+==============================================================================
+
+  TLS_Index
+
+==============================================================================
+*/
+/*
 ================
-ogTlsAlloc
+TLS_Index::TLS_Index
 ================
 */
-uLong ogTlsAlloc( void ) {
+TLS_Index::TLS_Index() : data(NULL) {
 	pthread_key_t key;
-	if ( pthread_key_create( &key, NULL ) == 0 )
-		return static_cast<uLong>( key );
-	return OG_TLS_OUT_OF_INDEXES;
+	int result = pthread_key_create( &key, NULL ) == 0;
+	OG_ASSERT( result == 0 );
+
+	if ( result == 0 )
+		data = new pthread_key_t(key);
 }
 
 /*
 ================
-ogTlsFree
+TLS_Index::~TLS_Index
 ================
 */
-void ogTlsFree( uLong index ) {
-	pthread_key_delete( static_cast<pthread_key_t>(index) );
+TLS_Index::~TLS_Index() {
+	if ( data ) {
+		pthread_key_t *key = static_cast<pthread_key_t *>(data);
+		pthread_key_delete( *key );
+		delete key;
+	}
 }
 
 /*
 ================
-ogTlsGetValue
+TLS_Index::GetValue
 ================
 */
-void *ogTlsGetValue( uLong index ) {
-	return pthread_getspecific( static_cast<pthread_key_t>(index) );
+void *TLS_Index::GetValue( void ) const {
+	OG_ASSERT( data != NULL );
+	return pthread_getspecific( *static_cast<pthread_key_t *>(data) );
 }
 
 /*
 ================
-ogTlsSetValue
+TLS_Index::SetValue
 ================
 */
-void ogTlsSetValue( uLong index, void *data ) {
-	pthread_setspecific( static_cast<pthread_key_t>(index), data );
+void TLS_Index::SetValue( void *value ) const {
+	OG_ASSERT( data != NULL );
+	pthread_setspecific( *static_cast<pthread_key_t *>(data), data );
 }
 
 /*

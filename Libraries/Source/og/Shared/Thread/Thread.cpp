@@ -31,44 +31,79 @@ freely, subject to the following restrictions:
 #include <og/Shared/thread/ThreadLocalStorage.h>
 
 namespace og {
-uLong lastTlsIndex = OG_TLS_OUT_OF_INDEXES;
+TLS_Index * lastTlsIndex = NULL;
+
+/*
+================
+TLS_AtExit
+================
+*/
+void TLS_AtExit( void ) {
+	if ( lastTlsIndex ) {
+		TLS_Data::Cleanup();
+		delete lastTlsIndex;
+		lastTlsIndex = NULL;
+	}
+}
 
 /*
 ==============================================================================
 
-  TLS Helpers
+  TLS_Data
 
 ==============================================================================
 */
-
 /*
 ================
-RegisterTLS
+TLS_Data::TLS_Data
 ================
 */
-void RegisterTLS( TLS_Data *data ) {
-	if ( lastTlsIndex == OG_TLS_OUT_OF_INDEXES )
-		lastTlsIndex = ogTlsAlloc();
-	OG_ASSERT( lastTlsIndex != OG_TLS_OUT_OF_INDEXES );
-
-	TLS_Data *lastTLS = static_cast<TLS_Data *>( ogTlsGetValue( lastTlsIndex ) );
-	data->previous = lastTLS;
-	ogTlsSetValue( lastTlsIndex, data );
+TLS_Data::TLS_Data( const TLS_Index *index ) : previous(NULL), tlsIndex(index) {
+	tlsIndex->SetValue(this);
+	Register(this);
 }
 
 /*
 ================
-CleanupTLS
+TLS_Data::~TLS_Data
 ================
 */
-void CleanupTLS( void ) {
-	if ( lastTlsIndex == OG_TLS_OUT_OF_INDEXES )
+TLS_Data::~TLS_Data() {
+	tlsIndex->SetValue(NULL);
+	if ( previous )
+		delete previous;
+}
+
+/*
+================
+TLS_Data::Register
+================
+*/
+void TLS_Data::Register( TLS_Data *data ) {
+	if ( !lastTlsIndex ) {
+		lastTlsIndex = new TLS_Index;
+		OG_ASSERT( lastTlsIndex->IsValid() );
+		atexit( TLS_AtExit );
+	}
+
+	TLS_Data *lastTLS = static_cast<TLS_Data *>( lastTlsIndex->GetValue() );
+	data->previous = lastTLS;
+	lastTlsIndex->SetValue( data );
+}
+
+/*
+================
+TLS_Data::Cleanup
+================
+*/
+void TLS_Data::Cleanup( void ) {
+	if ( lastTlsIndex == NULL )
 		return;
 
-	TLS_Data *lastTLS = static_cast<TLS_Data *>( ogTlsGetValue( lastTlsIndex ) );
+	TLS_Data *lastTLS = static_cast<TLS_Data *>( lastTlsIndex->GetValue() );
 	if ( lastTLS != NULL ) {
 		delete lastTLS;
-		ogTlsSetValue( lastTlsIndex, NULL );
+		lastTlsIndex->SetValue( NULL );
 	}
 }
 
@@ -190,7 +225,7 @@ void Thread::RunThread( Condition *initCondition ) {
 
 	isRunning = false;
 
-	CleanupTLS();
+	TLS_Data::Cleanup();
 
 	if ( selfDestruct )
 		delete this;

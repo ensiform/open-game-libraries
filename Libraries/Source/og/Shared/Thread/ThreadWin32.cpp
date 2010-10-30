@@ -38,45 +38,54 @@ namespace og {
 /*
 ==============================================================================
 
-  TLS Helpers
+  TLS_Index
 
 ==============================================================================
 */
-
 /*
 ================
-ogTlsAlloc
+TLS_Index::TLS_Index
 ================
 */
-uLong ogTlsAlloc( void ) {
-	return TlsAlloc();
+TLS_Index::TLS_Index() : data(NULL) {
+	uLong index = TlsAlloc();
+	OG_ASSERT( index != TLS_OUT_OF_INDEXES );
+
+	if ( index != TLS_OUT_OF_INDEXES )
+		data = new uLong(index);
 }
 
 /*
 ================
-ogTlsFree
+TLS_Index::~TLS_Index
 ================
 */
-void ogTlsFree( uLong index ) {
-	TlsFree( index );
+TLS_Index::~TLS_Index() {
+	if ( data ) {
+		uLong *index = static_cast<uLong *>(data);
+		TlsFree( *index );
+		delete index;
+	}
 }
 
 /*
 ================
-ogTlsGetValue
+TLS_Index::GetValue
 ================
 */
-void *ogTlsGetValue( uLong index ) {
-	return TlsGetValue( index );
+void *TLS_Index::GetValue( void ) const {
+	OG_ASSERT( data != NULL );
+	return TlsGetValue( *static_cast<uLong *>(data) );
 }
 
 /*
 ================
-ogTlsSetValue
+TLS_Index::SetValue
 ================
 */
-void ogTlsSetValue( uLong index, void *data ) {
-	TlsSetValue( index, data );
+void TLS_Index::SetValue( void *value ) const {
+	OG_ASSERT( data != NULL );
+	TlsSetValue( *static_cast<uLong *>(data), value );
 }
 
 /*
