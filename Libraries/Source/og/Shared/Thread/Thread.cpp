@@ -4,7 +4,7 @@ The Open Game Libraries.
 Copyright (C) 2007-2010 Lusito Software
 
 Author:  Santo Pfingsten (TTK-Bandit)
-Purpose: Thread & Mutex classes, just until c++0x threads are ready to be used.
+Purpose: Thread helper classes, using boost just until c++0x threads are ready to be used.
 -----------------------------------------
 
 This software is provided 'as-is', without any express or implied
@@ -27,11 +27,19 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Shared/Thread/Thread.h>
-#include <og/Shared/Thread/ThreadLocalStorage.h>
+#include <og/Shared/thread/thread.h>
+#include <og/Shared/thread/ThreadLocalStorage.h>
 
 namespace og {
 uLong lastTlsIndex = OG_TLS_OUT_OF_INDEXES;
+
+/*
+==============================================================================
+
+  TLS Helpers
+
+==============================================================================
+*/
 
 /*
 ================
@@ -65,71 +73,149 @@ void CleanupTLS( void ) {
 }
 
 /*
+==============================================================================
+
+  SharedMutex
+
+==============================================================================
+*/
+/*
 ================
-SingleWriterMultiReader::LockRead
+SharedMutex::lock_shared
 ================
 */
-void SingleWriterMultiReader::LockRead( void ) {
-	mtx.Lock();
-	if ( writeRequest ) {
-		Waiter *waiter = new Waiter;
-		if ( firstWaiter == NULL )
-			firstWaiter = lastWaiter = waiter;
-		else
-			lastWaiter = lastWaiter->next = waiter;
-		mtx.Unlock();
-		waiter->Wait(OG_INFINITE);
-		LockRead();
-		return;
+void SharedMutex::lock_shared( void ) {
+	ogst::unique_lock<ogst::mutex> lock(mutex);
+	while( exclusiveRequests )
+		sharedCond.wait(lock);
+	numShared++;
+}
+
+/*
+================
+SharedMutex::unlock_shared
+================
+*/
+void SharedMutex::unlock_shared( void ) {
+	mutex.lock();
+	numShared--;
+	if ( exclusiveRequests && numShared == 0 )
+		exclusiveCond.notify_one();
+	mutex.unlock();
+}
+
+/*
+================
+SharedMutex::lock
+================
+*/
+void SharedMutex::lock( void ) {
+	ogst::unique_lock<ogst::mutex> lock(mutex);
+	exclusiveRequests++;
+	while( exclusive )
+		exclusiveCond.wait(lock);
+	exclusiveRequests--;
+	exclusive = true;
+	lock.release();
+}
+
+/*
+================
+SharedMutex::unlock
+================
+*/
+void SharedMutex::unlock( void ) {
+	if ( exclusiveRequests > 0 )
+		exclusiveCond.notify_one();
+	else
+		sharedCond.notify_all();
+	mutex.unlock();
+}
+
+/*
+==============================================================================
+
+  Thread
+
+==============================================================================
+*/
+
+/*
+================
+Thread::Thread
+================
+*/
+Thread::Thread() {
+	selfDestruct	= false;
+	initResult		= false;
+	isRunning		= false;
+	keepRunning		= true;
+	nativeId		= 0;
+}
+
+/*
+================
+Thread::Start
+================
+*/
+bool Thread::Start( const char *_name, bool waitForInit ) {
+	name = _name;
+	if ( !waitForInit ) {
+		thread = ogst::thread( &Thread::RunThread, this, (Condition *)NULL );
+		return true;
 	}
-	readers++;
-	mtx.Unlock();
+	Condition initCondition;
+	initCondition.Lock();
+	thread = ogst::thread( &Thread::RunThread, this, &initCondition );
+	initCondition.Wait();
+	initCondition.Unlock();
+	return initResult;
 }
 
 /*
 ================
-SingleWriterMultiReader::UnlockRead
+Thread::RunThread
 ================
 */
-void SingleWriterMultiReader::UnlockRead( void ) {
-	mtx.Lock();
-	readers--;
-	if ( writeRequest )
-		unlockedRead.Signal();
-	mtx.Unlock();
+void Thread::RunThread( Condition *initCondition ) {
+	isRunning = true;
+
+	PlatformInit();
+
+	initResult = Init();
+	if ( initCondition )
+		initCondition->Signal();
+
+	Run();
+
+	isRunning = false;
+
+	CleanupTLS();
+
+	if ( selfDestruct )
+		delete this;
+	else
+		isRunning = false;
 }
 
 /*
 ================
-SingleWriterMultiReader::LockWrite
+Thread::Stop
 ================
 */
-void SingleWriterMultiReader::LockWrite( void ) {
-	mtx.Lock();
-	writeRequest = true;
-	mtx.Unlock();
-	while( readers > 0 )
-		unlockedRead.Wait(200);
+void Thread::Stop( bool blocking ) {
+	if ( !isRunning )
+		delete this;
+	else {
+		keepRunning = false;
+		selfDestruct = !blocking;
+		WakeUp();
 
-	mtx.Lock();
-	writeRequest = false;
-}
-
-/*
-================
-SingleWriterMultiReader::UnlockWrite
-================
-*/
-void SingleWriterMultiReader::UnlockWrite( void ) {
-	Waiter *temp;
-	while( firstWaiter != NULL ) {
-		firstWaiter->Signal();
-		temp = firstWaiter;
-		firstWaiter = firstWaiter->next;
-		delete temp;
+		if ( blocking ) {
+			thread.join();
+			delete this;
+		}
 	}
-	lastWaiter = NULL;
-	mtx.Unlock();
 }
 
 }

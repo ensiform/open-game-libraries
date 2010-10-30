@@ -31,9 +31,7 @@ freely, subject to the following restrictions:
 #include <og/Shared/Thread/ThreadLocalStorage.h>
 
 #if OG_WIN32
-
 #include <windows.h>
-#include <process.h>
 
 namespace og {
 
@@ -81,125 +79,6 @@ void ogTlsSetValue( uLong index, void *data ) {
 	TlsSetValue( index, data );
 }
 
-
-/*
-==============================================================================
-
-  Mutex
-
-==============================================================================
-*/
-
-/*
-================
-Mutex::Mutex
-================
-*/
-Mutex::Mutex() {
-	CRITICAL_SECTION *pCrit = new CRITICAL_SECTION;
-	data = pCrit;
-	OG_ASSERT( (int)data != 0xcdcdcdcd );
-	::InitializeCriticalSection( pCrit );
-}
-
-/*
-================
-Mutex::~Mutex
-================
-*/
-Mutex::~Mutex() {
-	CRITICAL_SECTION *pCrit = static_cast<CRITICAL_SECTION *>(data);
-	::DeleteCriticalSection( pCrit );
-	delete pCrit;
-}
-
-/*
-================
-Mutex::Lock
-================
-*/
-void Mutex::Lock( void ) {
-	::EnterCriticalSection( static_cast<CRITICAL_SECTION *>(data) );
-}
-
-/*
-================
-Mutex::Unlock
-================
-*/
-void Mutex::Unlock( void ) {
-	::LeaveCriticalSection( static_cast<CRITICAL_SECTION *>(data) );
-}
-
-
-/*
-==============================================================================
-
-  Condition
-
-==============================================================================
-*/
-
-/*
-================
-Condition::Condition
-================
-*/
-Condition::Condition() {
-	data = ::CreateEvent( NULL, FALSE, FALSE, NULL );
-}
-
-/*
-================
-Condition::~Condition
-================
-*/
-Condition::~Condition() {
-	if ( data )
-		::CloseHandle( data );
-}
-
-/*
-================
-Condition::Signal
-================
-*/
-void Condition::Signal( void ) {
-	SetEvent( data );
-}
-
-/*
-================
-Condition::Wait
-================
-*/
-bool Condition::Wait( int ms ) {
-	return ::WaitForSingleObject( data, ms ) == WAIT_OBJECT_0;
-}
-
-
-/*
-==============================================================================
-
-  SetThreadName
-
-==============================================================================
-*/
-class SetThreadName {
-public:
-	SetThreadName( LPCSTR name, DWORD id ) : dwType(0x1000), szName(name), dwThreadID(id), dwFlags(0) {
-		__try { RaiseException( 0x406D1388, 0, sizeof(*this)/sizeof(DWORD), (DWORD*)this ); }
-		__except( EXCEPTION_CONTINUE_EXECUTION ) { }
-	}
-
-private:
-	DWORD	dwType;
-	LPCSTR	szName;
-	DWORD	dwThreadID;
-	DWORD	dwFlags;
-};
-
-
 /*
 ==============================================================================
 
@@ -210,83 +89,29 @@ private:
 
 /*
 ================
-Thread::Thread
+Thread::PlatformInit
 ================
 */
-Thread::Thread() {
-	selfDestruct	= false;
-	id				= 0;
-	handle			= 0;
-	initEvent		= NULL;
-	initResult		= false;
+void Thread::PlatformInit( void ) {
+	// Get native id
+	nativeId = GetThreadId( thread.native_handle() );
+
+	// Set thread name
+	struct tnData {
+		DWORD	dwType;
+		LPCSTR	szName;
+		DWORD	dwThreadID;
+		DWORD	dwFlags;
+	};
+	tnData data;
+	data.dwType		= 0x1000;
+	data.szName		= name.c_str();
+	data.dwThreadID	= nativeId;
+	data.dwFlags	= 0;
+	__try { RaiseException( 0x406D1388, 0, sizeof(data)/sizeof(DWORD), (DWORD*)&data ); }
+	__except( EXCEPTION_CONTINUE_EXECUTION ) { }
 }
 
-/*
-================
-Thread::Start
-================
-*/
-bool Thread::Start( const char *name, bool waitForInit ) {
-	if ( handle )
-		return true;
-	if ( waitForInit )
-		initEvent = new Condition();
-
-	handle = (HANDLE)::_beginthreadex( 0, 0, (unsigned (__stdcall *)(void *))RunThread, this, 0, &id );
-	if( !handle ) {
-		User::Error( ERR_SYSTEM_REQUIREMENTS, Format("Couldn't create thread '$*'") << name );
-		return false;
-	}
-
-	SetThreadName( name, id );
-	if ( waitForInit ) {
-		initEvent->Wait( OG_INFINITE );
-		delete initEvent;
-		initEvent = NULL;
-		return initResult;
-	}
-	return true;
-}
-
-/*
-================
-Thread::RunThread
-================
-*/
-void Thread::RunThread( void *param ) {
-	Thread *thread = static_cast<Thread *>(param);
-
-	thread->initResult = thread->Init();
-	if ( thread->initEvent )
-		thread->initEvent->Signal();
-
-	thread->Run();
-
-	if ( thread->selfDestruct )
-		delete thread;
-	else
-		thread->handle = NULL;
-
-	CleanupTLS();
-	_endthread();
-}
-
-/*
-================
-Thread::Stop
-================
-*/
-void Thread::Stop( bool blocking ) {
-	if ( handle == NULL )
-		delete this;
-	else {
-		selfDestruct = true;
-		WakeUp();
-
-		if ( blocking )
-			WaitForSingleObject( handle, INFINITE );
-	}
-}
 
 }
 

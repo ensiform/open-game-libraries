@@ -78,6 +78,24 @@ bool CheckAlErrors( void ) {
 	return true;
 }
 
+/*
+================
+AudioThread::ConsumeEvents
+================
+*/
+void AudioThread::ConsumeEvents( void ) {
+	EmitterEvent *evt = NULL;
+	while( (evt = eventQueue.Consume()) != NULL ) {
+		evt->emitter->OnEvent( evt );
+		delete evt;
+	}
+}
+
+/*
+================
+AudioThread::Run
+================
+*/
 void AudioThread::Run( void ) {
 	AudioSource *source = NULL;
 	uInt alSourceNum;
@@ -93,14 +111,10 @@ void AudioThread::Run( void ) {
 		Shutdown();
 		return false;
 	}*/
-	while( !selfDestruct ) {
-		wakeUpEvent.Wait(20);
+	wakeUpEvent.Lock();
+	while( keepRunning ) {
+		ConsumeEvents();
 
-		EmitterEvent *evt = NULL;
-		while( (evt = eventQueue.Consume()) != NULL ) {
-			evt->emitter->OnEvent( evt );
-			delete evt;
-		}
 		// update audio sources
 		for( AudioSource *source = firstAudioSource; source != NULL; source = source->next ) {
 			if ( source->IsActive() )
@@ -119,7 +133,15 @@ void AudioThread::Run( void ) {
 				audioSystemObject.focusVolume = 0.0f;
 			audioSystemObject.SetVolume( audioSystemObject.volume );
 		}
+
+		// Wait for an event or 20ms passed
+		wakeUpEvent.Wait(20);
 	}
+	wakeUpEvent.Unlock();
+
+	// Consume remaining events
+	ConsumeEvents();
+
 	if ( firstAudioSource ) {
 		delete firstAudioSource;
 		firstAudioSource = NULL;
@@ -302,9 +324,9 @@ AudioSystemEx::CreateAudioEmitter
 ================
 */
 AudioEmitter *AudioSystemEx::CreateAudioEmitter( int channels ) {
-	emitterLock.Lock();
+	emitterLock.lock();
 	AudioEmitter *emt = &audioEmitters.Alloc();
-	emitterLock.Unlock();
+	emitterLock.unlock();
 
 	if ( channels > 0 )
 		emt->Init( channels );
@@ -319,13 +341,13 @@ AudioSystemEx::FreeAudioEmitter
 void AudioSystemEx::FreeAudioEmitter( AudioEmitter *emitter ) {
 	OG_ASSERT( emitter != NULL );
 	
-	emitterLock.Lock();
+	emitterLock.lock();
 	LinkedList<AudioEmitterEx>::nodeType *node = audioEmitters.FindByAddress( static_cast<AudioEmitterEx *>(emitter) );
 	if ( node != NULL )
 		audioEmitters.Remove( node );
 	else
 		User::Warning("Trying to free a AudioEmitter, which has not been allocated or already been freed!");
-	emitterLock.Unlock();
+	emitterLock.unlock();
 }
 
 /*

@@ -125,10 +125,10 @@ public:
 	}
 
 protected:
-	void	WakeUp( void ) { PostThreadMessage( id, WM_WAKE_UP, 0, 0 ); }
+	void	WakeUp( void ) { PostThreadMessage( nativeId, WM_WAKE_UP, 0, 0 ); }
 	void	Run( void ) {
 		MSG msg;
-		while( !selfDestruct ) {
+		while( keepRunning ) {
 			while( GetMessage( &msg, NULL, 0, 0 ) ) {
 				if ( msg.message == WM_WAKE_UP )
 					break;

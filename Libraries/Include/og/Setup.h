@@ -33,7 +33,8 @@
 #define OG_HAS_USER_ASSERT_FAILED 1		//!< Set this to 1 to forward failed asserts in release mode to the user
 #define OG_FTOI_USE_SSE					//!< Use SSE extensions for Math::Ftoi
 // #define OG_SHOW_MORE_WARNINGS		//!< Uncomment this if you want to see the warnings we disabled
-#define OG_VISUAL_LEAK_DETECTOR 1		//!< Uncomment to exclude the visual leak detector ( visual c++ only )
+#define OG_VISUAL_LEAK_DETECTOR 1		//!< Uncomment to use the visual leak detector ( has only effect on visual c++ )
+//#define OG_HAVE_STD_THREAD			//!< Uncomment if you have c++0x threads available.
 
 typedef unsigned char byte;				//!< unsigned char
 typedef unsigned short uShort;			//!< unsigned short

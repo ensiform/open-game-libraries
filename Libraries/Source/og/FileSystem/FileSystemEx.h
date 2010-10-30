@@ -102,6 +102,7 @@ namespace og {
 
 	protected:
 		void	Run( void );
+		void	ConsumeEvents( void );
 
 	private:
 		friend class FileSystem;
@@ -127,7 +128,7 @@ namespace og {
 	private:
 		static TLS<bool> notFoundWarning;
 
-		SingleWriterMultiReader swmrLock;
+		SharedMutex		sharedMutex;
 		String			pakExtension;				// Pakfile extension, for example "gpk"
 		String			basePath;					// Base path, normally the working directory.
 		String			userPath;					// User path(for storing configs, downloads, ..)
@@ -144,7 +145,6 @@ namespace og {
 		LinkedList<FileEx *>	openFiles;			// Keeps track of opened filed to close them later
 		List<byte *>			openFilesLoaded;	// Same as above for file buffers
 		LowLockQueue<FileEvent> eventQueue;			// File event queue
-		Mutex	fileLock;							// Locks the open file lists (not sure if still needed, swmrLock might already protect them enough)
 	};
 }
 

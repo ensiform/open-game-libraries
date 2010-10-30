@@ -40,8 +40,8 @@ namespace og {
 		bool		SetGamma( float value );
 		void		RestoreGamma( void );
 
-		void		Lock( void ) { modeMutex.Lock(); }
-		void		Unlock( void ) { modeMutex.Unlock(); }
+		void		Lock( void ) { modeMutex.lock(); }
+		void		Unlock( void ) { modeMutex.unlock(); }
 		bool		IsReserved( void ) { return fsWindow != NULL; }	// if a window has reserved this monitor for fullscreen mode (also true when the window is iconified)
 
 		int			NumVideoModes( void ) const { return videoModeList.Num(); }
@@ -68,7 +68,7 @@ namespace og {
 		void		Revert( void );
 
 	private:
-		Mutex		modeMutex, gammaMutex;
+		ogst::mutex	modeMutex, gammaMutex;
 		bool		modified, iconified;
 		List<VideoMode> videoModeList;
 		VideoMode	userMode;

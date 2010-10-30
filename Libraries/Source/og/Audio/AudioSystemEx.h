@@ -55,6 +55,7 @@ namespace og {
 
 	protected:
 		void	Run( void );
+		void	ConsumeEvents( void );
 
 	private:
 		LowLockQueue<EmitterEvent> eventQueue;
@@ -99,7 +100,7 @@ namespace og {
 		float		volume;
 		int			maxVariations;
 		LinkedList<AudioEmitterEx> audioEmitters;
-		Mutex		emitterLock;
+		ogst::mutex	emitterLock;
 
 		ALCcontext	*context;
 		ALCdevice	*device;

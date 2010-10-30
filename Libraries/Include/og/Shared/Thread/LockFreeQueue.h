@@ -33,11 +33,43 @@ freely, subject to the following restrictions:
 
 #include <og/Shared/Thread/Thread.h>
 
-#if OG_WIN32
-	#include <windows.h>
-#endif
-
 namespace og {
+	OG_INLINE void AtomicExchangePointer( void **target, void *value ) {
+#if OG_ASM_MSVC
+		__asm {
+			mov eax, value;
+			mov edx, target;
+			lock xchg [edx], eax;
+		}
+#elif OG_ASM_GNU
+		void *old;
+		__asm__ __volatile__(
+			"lock xchg %0,%1"
+			: "=r" old, "=m" (*target)
+			:  "0" val
+		);
+#endif
+	}
+	OG_INLINE void *AtomicCompareExchangePointer( void **target, void *value, void *comparand ) {
+		void *old = value;
+#if OG_ASM_MSVC
+		__asm {
+			mov eax, comparand;
+			mov ecx, value;
+			mov edx, target;
+			lock cmpxchg [edx], ecx;
+		}
+#elif OG_ASM_GNU(
+		__asm__ __volatile__(
+			"lock cmpxchg %3,%1"
+			: "=a" old, "=m" (*target)
+			:  "0" old, "r" comparand
+		);
+#endif
+		return old;
+	}
+
+
 	// use for single producer and single consumer only
 	template<typename type>
 	class LockFreeQueue {
@@ -63,10 +95,10 @@ namespace og {
 
 		void Produce( type *t ) {
 			last->next = new Node(t);
-			InterlockedExchangePointer( &last, last->next );
+			AtomicExchangePointer( (void **)&last, last->next );
 
 			// remove consumed
-			for( void *p = first; InterlockedCompareExchangePointer( &p, NULL, divider ) && p; p = first ) {
+			for( void *p = first; AtomicCompareExchangePointer( (void **)&p, NULL, divider ) && p; p = first ) {
 				Node* tmp = first;
 				first = first->next;
 				delete tmp;
@@ -74,11 +106,11 @@ namespace og {
 		}
 		type *Consume( void ) {
 			void *p = divider;
-			InterlockedCompareExchangePointer( &p, NULL, last );
+			AtomicCompareExchangePointer( (void **)&p, NULL, last );
 
 			if( p ) {
 				type *result = divider->next->value;
-				InterlockedExchangePointer( &divider, divider->next );
+				AtomicExchangePointer( (void **)&divider, divider->next );
 				return result;
 			}
 			return NULL;
@@ -90,20 +122,18 @@ namespace og {
 	class LowLockQueue {
 	private:
 		LockFreeQueue<type> queue;
-		Mutex	producerLock;
-		Mutex	consumerLock;
+		ogst::mutex	producerLock;
+		ogst::mutex	consumerLock;
 
 	public:
 		void Produce( type *t ) {
-			producerLock.Lock();
+			producerLock.lock();
 			queue.Produce( t );
-			producerLock.Unlock();
+			producerLock.unlock();
 		}
 		type *Consume( void ) {
-			consumerLock.Lock();
-			type *ret = queue.Consume();
-			consumerLock.Unlock();
-			return ret;
+			ogst::unique_lock<ogst::mutex> lock(consumerLock);
+			return queue.Consume();
 		}
 	};
 }

@@ -4,7 +4,7 @@ The Open Game Libraries.
 Copyright (C) 2007-2010 Lusito Software
 
 Author:  Santo Pfingsten (TTK-Bandit)
-Purpose: Thread & Mutex classes, just until c++0x threads are ready to be used.
+Purpose: Thread helper classes, using boost just until c++0x threads are ready to be used.
 -----------------------------------------
 
 This software is provided 'as-is', without any express or implied
@@ -43,82 +43,113 @@ If not specified otherwise, the object has thread safety class single.
 #define __OG_THREAD_H__
 
 #include <og/Shared/Shared.h>
+#if OG_HAVE_STD_THREAD
+	#include <thread>
+	#include <condition_variable>
+	#include <mutex>
+	namespace ogst { using namespace std; }
+#else
+	#include <boost/thread/thread.hpp>
+	#include <boost/thread/condition_variable.hpp>
+	#include <boost/thread/mutex.hpp>
+	#include <boost/thread/locks.hpp>
+	namespace ogst { using namespace boost; }
+#endif
 
 namespace og {
-	const int OG_INFINITE = 0xFFFFFFFF;
-
-	// Mutex management (thread data protection)
-	class Mutex {
-	private:
-		void *data;
-
-	public:
-		Mutex();
-		~Mutex();
-		void	Lock( void );
-		void	Unlock( void );
-	};
-
 	class Condition {
 	private:
-		void *data;
+		ogst::mutex						mutex;
+		ogst::condition_variable_any	condition;
 
 	public:
-		Condition();
-		~Condition();
-		void Signal( void );
-		bool Wait( int ms );
+		void	Lock( void ) {
+			mutex.lock();
+		}
+		void	Unlock( void ) {
+			mutex.unlock();
+		}
+		void	Wait( void ) {
+			condition.wait( mutex );
+		}
+		void	Wait( int ms ) {
+#if OG_HAVE_STD_THREAD
+			condition.wait_for(mutex, ms);
+#else
+			// Crazy boost guys don't seem to like simple 'wait for x ms' type functions.
+			int secs = 0;
+			if ( ms >= 1000 ) {
+				secs = ms / 1000;
+				ms -= 1000 * secs;
+			}
+			int count = static_cast<int>(double(ms)* (double(boost::posix_time::time_duration::ticks_per_second())/double(1000.0)));
+			boost::posix_time::ptime cur = boost::posix_time::microsec_clock::universal_time();
+			condition.timed_wait(mutex, cur +  boost::posix_time::time_duration(0, 0, secs, count));
+#endif
+		}
+		void	Signal( void ) {
+			ogst::lock_guard<ogst::mutex> lock2(mutex);
+			condition.notify_one();
+		}
 	};
 
-	class Waiter : public Condition {
-	public:
-		Waiter() : next(NULL) {}
-		Waiter *next;
-	};
-
-	class SingleWriterMultiReader {
+	class SharedMutex {
 	private:
-		Mutex	mtx;
-		bool	writeRequest;
-		int		readers;
-		Waiter *firstWaiter;
-		Waiter *lastWaiter;
-		Condition	unlockedRead;
+		ogst::mutex	mutex;
+		bool	exclusive;
+		int		numShared, exclusiveRequests;
+		ogst::condition_variable exclusiveCond;
+		ogst::condition_variable sharedCond;
 
 	public:
-		SingleWriterMultiReader() : writeRequest(false), readers(0), firstWaiter(NULL), lastWaiter(NULL) {}
+		SharedMutex() : exclusive(false), exclusiveRequests(0), numShared(0) {}
 
-		void LockRead( void );
-		void UnlockRead( void );
-		void LockWrite( void );
-		void UnlockWrite( void );
+		void lock_shared( void );
+		void unlock_shared( void );
+		void lock( void );
+		void unlock( void );
+	};
+
+	class SharedLock {
+	public:
+		SharedLock( SharedMutex &mtx ) : mutex(mtx) {
+			mutex.lock_shared();
+		}
+		~SharedLock() {
+			mutex.unlock_shared();
+		}
+		
+	private:
+		SharedMutex &mutex;
 	};
 
 	class Thread {
 	public:
 		Thread();
 		virtual ~Thread() {}
-		uInt GetId( void ) { return id; }
-		bool IsRunning( void ) { return handle != NULL; }
+		uInt GetNativeId( void ) { return nativeId; }
+		bool IsRunning( void ) { return isRunning; }
 
 		bool			Start( const char *name, bool waitForInit=false );
 		virtual void	Stop( bool blocking=true );
 		virtual void	WakeUp( void ) { wakeUpEvent.Signal(); }
 
 	protected:
-		bool		selfDestruct;
+		uInt		nativeId;
+		ogst::thread thread;
+		bool		isRunning, keepRunning;
 		Condition	wakeUpEvent;	// Time to wake up and do stuff
-		void		*handle;
-		uInt		id;
 
 	private:
-		Condition	*initEvent;
+		String		name;
 		bool		initResult;
+		bool		selfDestruct;
+		void		RunThread( Condition *initCondition );
+		void		PlatformInit( void );
 
 	protected:
 		virtual bool	Init( void ) { return true; }
 		virtual void	Run( void ) = 0;
-		static void		RunThread( void *param );
 	};
 }
 

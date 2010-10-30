@@ -141,6 +141,54 @@ bool FileSystemEx::Init( const char *_pakExtension, const char *_basePath, const
 	return ret;
 }
 
+/*
+================
+FileSystemEx::ConsumeEvents
+================
+*/
+void FileSystemEx::ConsumeEvents( void ) {
+	int index;
+	FileEx *file;
+	FileBuffered *fileBuffered;
+	byte *buffer;
+	FileEvent *evt = NULL;
+	while( (evt = eventQueue.Consume()) != NULL ) {
+		switch( evt->fileAction ) {
+			case FileEvent::OPEN:
+				file = static_cast<FileEx *>(evt->fileParam);
+				openFiles.AddToEnd( file );
+				file->node = openFiles.GetLastNode();
+				break;
+			case FileEvent::CLOSE:
+				file = static_cast<FileEx *>(evt->fileParam);
+				openFiles.Remove( file->node );
+				fileBuffered = dynamic_cast<FileBuffered *>(file);
+				if ( fileBuffered ) {
+					buffer = fileBuffered->data;
+					index = openFilesLoaded.Find( buffer );
+					OG_ASSERT( index != -1 );
+					if ( index != -1 ) {
+						delete[] buffer;
+						openFilesLoaded.Remove( index );
+					}
+				}
+				delete file;
+				break;
+			case FileEvent::BUFFER_LOAD:
+				openFilesLoaded.Append( static_cast<byte *>(evt->fileParam) );
+				break;
+			case FileEvent::BUFFER_FREE:
+				buffer = static_cast<byte *>(evt->fileParam);
+				index = openFilesLoaded.Find( buffer );
+				if ( index != -1 ) {
+					delete[] buffer;
+					openFilesLoaded.Remove( index );
+				}
+				break;
+		}
+		delete evt;
+	}
+}
 
 /*
 ================
@@ -148,49 +196,16 @@ FileSystemEx::Run
 ================
 */
 void FileSystemEx::Run( void ) {
-	Sleep(100);
-
 	// All this does is watch the open/close file events and on shutdown clear all files that where still open.
-	int index;
-	FileEx *file;
-	FileBuffered *fileBuffered;
-	byte *buffer;
-	while( !selfDestruct ) {
-		wakeUpEvent.Wait(OG_INFINITE);
-
-		fileLock.Lock();
-		FileEvent *evt = NULL;
-		while( (evt = eventQueue.Consume()) != NULL ) {
-			switch( evt->fileAction ) {
-				case FileEvent::OPEN:
-					file = static_cast<FileEx *>(evt->fileParam);
-					openFiles.AddToEnd( file );
-					file->node = openFiles.GetLastNode();
-					break;
-				case FileEvent::CLOSE:
-					file = static_cast<FileEx *>(evt->fileParam);
-					openFiles.Remove( file->node );
-					fileBuffered = dynamic_cast<FileBuffered *>(file);
-					if ( fileBuffered )
-						FreeFile( fileBuffered->data );
-					delete file;
-					break;
-				case FileEvent::BUFFER_LOAD:
-					openFilesLoaded.Append( static_cast<byte *>(evt->fileParam) );
-					break;
-				case FileEvent::BUFFER_FREE:
-					buffer = static_cast<byte *>(evt->fileParam);
-					index = openFilesLoaded.Find( buffer );
-					if ( index != -1 ) {
-						delete[] buffer;
-						openFilesLoaded.Remove( index );
-					}
-					break;
-			}
-			delete evt;
-		}
-		fileLock.Unlock();
+	wakeUpEvent.Lock();
+	while( keepRunning ) {
+		ConsumeEvents();
+		wakeUpEvent.Wait();
 	}
+	wakeUpEvent.Unlock();
+
+	// Consume remaining events
+	ConsumeEvents();
 
 	// Elvis has left the building, clear all evidence
 	CloseAllFiles();
@@ -217,7 +232,6 @@ FileSystemEx::CloseAllFiles
 ================
 */
 void FileSystemEx::CloseAllFiles( void ) {
-	fileLock.Lock();
 	//! @todo	The user should be notified if he left files open
 	LinkedList<FileEx *>::nodeType *node = openFiles.GetFirstNode();
 	while( node != NULL ) {
@@ -226,7 +240,6 @@ void FileSystemEx::CloseAllFiles( void ) {
 	}
 	for( int i=openFilesLoaded.Num()-1; i >= 0; i-- )
 		delete[] openFilesLoaded[i];
-	fileLock.Unlock();
 }
 
 /*
@@ -283,10 +296,8 @@ FileSystemEx::MakePath
 */
 bool FileSystemEx::MakePath( const char *path, bool pure ) {
 	if ( pure ) {
-		swmrLock.LockRead();
-		bool ret = MakePath( Format("$*/$*/$*" ) << userPath << modPath << path, false );
-		swmrLock.UnlockRead();
-		return ret;
+		SharedLock lock(sharedMutex);
+		return MakePath( Format("$*/$*/$*" ) << userPath << modPath << path, false );
 	}
 	int len = String::ByteLength(path);
 	DynBuffer<char> newPath(len+1);
@@ -319,9 +330,9 @@ FileSystemEx::AddPureExtension
 ================
 */
 void FileSystemEx::AddPureExtension( const char *ext ) {
-	swmrLock.LockWrite();
+	sharedMutex.lock();
 	pureExtensions.Append( ext[0] == '.' ? ext+1 : ext );
-	swmrLock.UnlockWrite();
+	sharedMutex.unlock();
 }
 
 /*
@@ -330,11 +341,11 @@ FileSystemEx::RemovePureExtension
 ================
 */
 void FileSystemEx::RemovePureExtension( const char *ext ) {
-	swmrLock.LockWrite();
+	sharedMutex.lock();
 	int index = pureExtensions.Find( ext[0] == '.' ? ext+1 : ext );
 	if ( index != -1 )
 		pureExtensions.Remove( index );
-	swmrLock.UnlockWrite();
+	sharedMutex.unlock();
 }
 
 /*
@@ -393,10 +404,10 @@ Calls AddResourceDir() if the new moddir is not an IsEmpty string
 ================
 */
 bool FileSystemEx::ChangeMod( const char *dir ) {
-	if ( dir[0] == '\0' ) {
-		swmrLock.LockWrite();
+	ogst::unique_lock<SharedMutex> lock(sharedMutex);
+	if ( dir[0] == '\0' )
 		modPath = baseDir;
-	} else {
+	else {
 		bool found = false;
 		// Check if the mod exists
 		ModList *mods = GetModList();
@@ -404,7 +415,6 @@ bool FileSystemEx::ChangeMod( const char *dir ) {
 			do {
 				// Found it ?
 				if ( String::Icmp( mods->GetPath(), dir ) == 0 ) {
-					swmrLock.LockWrite();
 					modPath = mods->GetPath();
 					found = true;
 					break;
@@ -434,8 +444,6 @@ bool FileSystemEx::ChangeMod( const char *dir ) {
 	// If we have a mod, add its resources.
 	if ( dir[0] != '\0' )
 		AddResourceDir( modPath.c_str(), PFLIST_MOD );
-
-	swmrLock.UnlockWrite();
 	return true;
 }
 
@@ -514,7 +522,8 @@ File *FileSystemEx::OpenRead( const char *filename, bool pure, bool buffered ) {
 		if ( fileEx )
 			return fileEx;
 	} else {
-		swmrLock.LockRead();
+		SharedLock lock(sharedMutex);
+
 		// Can the extension be loaded in pure mode ?
 		bool unpureFileAllowed = false;
 		if ( pureMode && !pureExtensions.IsEmpty() ) {
@@ -531,10 +540,8 @@ File *FileSystemEx::OpenRead( const char *filename, bool pure, bool buffered ) {
 				for( int j=resourceDirs.Num()-1; j >= 0; j-- ) {
 					// Try to open it.
 					FileEx *fileEx = OpenLocalFileRead( path << searchPaths[i] << resourceDirs[j] << filename );
-					if ( fileEx ) {
-						swmrLock.UnlockRead();
+					if ( fileEx )
 						return fileEx;
-					}
 					path.Reset();
 				}
 			}
@@ -548,13 +555,10 @@ File *FileSystemEx::OpenRead( const char *filename, bool pure, bool buffered ) {
 				// Search for the file in the pakfile.
 				fileEx = static_cast<FileEx *>( pakFiles[i][j]->OpenFile( filename ) );
 				// Found it!
-				if ( fileEx != NULL ) {
-					swmrLock.UnlockRead();
+				if ( fileEx != NULL )
 					return fileEx;
-				}
 			}
 		}
-		swmrLock.UnlockRead();
 	}
 
 	if ( *notFoundWarning )
@@ -569,10 +573,8 @@ FileSystemEx::OpenWrite
 */
 File *FileSystemEx::OpenWrite( const char *filename, bool pure ) {
 	if ( pure ) {
-		swmrLock.LockRead();
-		File *ret = OpenWrite( Format( "$*/$*/$*" ) << userPath << modPath << filename, false );
-		swmrLock.UnlockRead();
-		return ret;
+		SharedLock lock(sharedMutex);
+		return OpenWrite( Format( "$*/$*/$*" ) << userPath << modPath << filename, false );
 	}
 
 	// If the path doesn't exist and can not be created, fail.
@@ -732,7 +734,7 @@ See the LS_* flags in FileSystem.h for options
 ================
 */
 FileList *FileSystemEx::GetFileList( const char *dir, const char *extension, int flags ) {
-	swmrLock.LockRead();
+	sharedMutex.lock_shared();
 	FileListEx *fileList = new FileListEx;
 	if ( flags & LF_CHECK_LOCAL ) {
 		// Can the extension be loaded in pure mode ?
@@ -758,7 +760,7 @@ FileList *FileSystemEx::GetFileList( const char *dir, const char *extension, int
 	if ( flags & LF_CHECK_ARCHIVED )
 		GetArchivedFileList( dir, extension, fileList->files, flags );
 
-	swmrLock.UnlockRead();
+	sharedMutex.unlock_shared();
 
 	// No files found, return
 	if ( fileList->files.IsEmpty() ) {

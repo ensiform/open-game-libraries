@@ -80,12 +80,12 @@ enum {
 LRESULT CALLBACK glootKeyboardHook( int nCode, WPARAM wParam, LPARAM lParam );
 
 void Win32MessageThread::WakeUp( void ) {
-	PostThreadMessage( id, WM_WAKE_UP, 0, 0 );
+	PostThreadMessage( nativeId, WM_WAKE_UP, 0, 0 );
 }
 
 void Win32MessageThread::Run( void ) {
 	Mgr.keyboardHook = SetWindowsHookEx( WH_KEYBOARD_LL, glootKeyboardHook, Mgr.hInstance, 0 );
-	while( !selfDestruct ) {
+	while( keepRunning ) {
 		// Check for new window messages
 		MSG msg;
 		while( GetMessage( &msg, NULL, 0, 0 ) ) {
@@ -137,8 +137,10 @@ WindowEx *WindowEx::NewWindow( const WindowConfig *windowCfg ) {
 	wnd->SetWindowConfig( windowCfg );
 
 	OG_ASSERT( Mgr.messageThread != NULL );
-	PostThreadMessage( Mgr.messageThread->GetId(), WM_CREATE_NEW_WINDOW, (WPARAM)wnd, 0 );
-	Mgr.newWindowEndEvent.Wait( OG_INFINITE );
+	Mgr.newWindowEndEvent.Lock();
+	PostThreadMessage( Mgr.messageThread->GetNativeId(), WM_CREATE_NEW_WINDOW, (WPARAM)wnd, 0 );
+	Mgr.newWindowEndEvent.Wait();
+	Mgr.newWindowEndEvent.Unlock();
 	return wnd;
 }
 

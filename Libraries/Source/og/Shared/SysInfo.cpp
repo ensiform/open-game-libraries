@@ -434,75 +434,76 @@ SysInfo::GetOSInfo
 OSInfo *GetOSInfo( void ) {
 	static OSInfo data;
 	static bool initialized = false;
-	static Mutex writeLock;
+	static ogst::mutex writeLock;
 
 	// We only need to get it once, it wont change..
-	writeLock.Lock();
-	if ( !initialized ) {
+	ogst::unique_lock<ogst::mutex> lock(writeLock);
+	if ( initialized )
+		return &data;
+
 #if OG_WIN32
-		OSVERSIONINFO osInfo;
-		osInfo.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
+	OSVERSIONINFO osInfo;
+	osInfo.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
 
-		// Failed ?
-		if( !GetVersionEx( &osInfo ) ) {
-			data.name = "Not identified";
-			User::Error(ERR_SYSTEM_REQUIREMENTS, "Couldn't get OS version info" );
-		} else {
-			data.majorVersion = osInfo.dwMajorVersion;
-			data.minorVersion = osInfo.dwMinorVersion;
-			data.buildNumber = osInfo.dwBuildNumber;
+	// Failed ?
+	if( !GetVersionEx( &osInfo ) ) {
+		data.name = "Not identified";
+		User::Error(ERR_SYSTEM_REQUIREMENTS, "Couldn't get OS version info" );
+	} else {
+		data.majorVersion = osInfo.dwMajorVersion;
+		data.minorVersion = osInfo.dwMinorVersion;
+		data.buildNumber = osInfo.dwBuildNumber;
 
-			// We require Win2K minimum
-			if( osInfo.dwPlatformId == VER_PLATFORM_WIN32_NT && osInfo.dwMajorVersion >= 5 ) {
-				if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 0 )
-					data.name = "Win2K";
-				else if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 1 )
-					data.name = "WinXP";
-				else if( osInfo.dwMajorVersion == 6 ) {
-					if( osInfo.dwMinorVersion == 0 )
-						data.name = "WinVista";
-					else
-						data.name = "Win7";
-				}
-
-				if ( strnicmp(osInfo.szCSDVersion, "Service Pack ", 13) == 0 ) {
-					data.name += " SP";
-					data.name += (osInfo.szCSDVersion+13);
-				} else {
-					data.name += " ";
-					data.name += osInfo.szCSDVersion;
-				}
+		// We require Win2K minimum
+		if( osInfo.dwPlatformId == VER_PLATFORM_WIN32_NT && osInfo.dwMajorVersion >= 5 ) {
+			if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 0 )
+				data.name = "Win2K";
+			else if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 1 )
+				data.name = "WinXP";
+			else if( osInfo.dwMajorVersion == 6 ) {
+				if( osInfo.dwMinorVersion == 0 )
+					data.name = "WinVista";
+				else
+					data.name = "Win7";
 			}
-			if ( data.name.IsEmpty() ) {
-				data.name = Format("Win $*.$*") << (uInt)osInfo.dwMajorVersion << (uInt)osInfo.dwMinorVersion;
-				User::Error(ERR_SYSTEM_REQUIREMENTS, "Requires Windows 2000 or greater" );
+
+			if ( strnicmp(osInfo.szCSDVersion, "Service Pack ", 13) == 0 ) {
+				data.name += " SP";
+				data.name += (osInfo.szCSDVersion+13);
+			} else {
+				data.name += " ";
+				data.name += osInfo.szCSDVersion;
 			}
 		}
+		if ( data.name.IsEmpty() ) {
+			data.name = Format("Win $*.$*") << (uInt)osInfo.dwMajorVersion << (uInt)osInfo.dwMinorVersion;
+			User::Error(ERR_SYSTEM_REQUIREMENTS, "Requires Windows 2000 or greater" );
+		}
+	}
 #elif OG_LINUX
-		FILE *file = fopen("/proc/version", "r");
-		if( file != NULL ) {
-			char buffer[256];
-			int len = fread (buffer, 1, 255, file);
-			fclose( file );
-			if ( len != 0 ) {
-				buffer[len] = '\0';
-				char *p = strchr( buffer, '(' );
-				if ( p != NULL || (p = strchr( buffer, '\n' )) != NULL )
-					*p = '\0';
+	FILE *file = fopen("/proc/version", "r");
+	if( file != NULL ) {
+		char buffer[256];
+		int len = fread (buffer, 1, 255, file);
+		fclose( file );
+		if ( len != 0 ) {
+			buffer[len] = '\0';
+			char *p = strchr( buffer, '(' );
+			if ( p != NULL || (p = strchr( buffer, '\n' )) != NULL )
+				*p = '\0';
 
-				data.name = buffer;
-				data.name.StripTrailingWhitespaces();
-				// caplength here maybe ? just in case..
-				return &data;
-			}
+			data.name = buffer;
+			data.name.StripTrailingWhitespaces();
+			// caplength here maybe ? just in case..
+			return &data;
 		}
-		data.name = "unknown unix";
+	}
+	data.name = "unknown unix";
 #elif OG_MACOS_X
     #warning "Need MacOS here FIXME"
 #endif
-		initialized = true;
-	}
-	writeLock.Unlock();
+
+	initialized = true;
 	return &data;
 }
 

@@ -35,6 +35,7 @@ freely, subject to the following restrictions:
 #include <og/Console/Console.h>
 #include <og/Shared/Thread/LockFreeQueue.h>
 #include "CmdSystemEx.h"
+#include <windows.h>
 
 namespace og {
 typedef List<std::wstring> WStringList;

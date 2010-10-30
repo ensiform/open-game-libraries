@@ -350,12 +350,12 @@ bool ConsoleWindow::Init( void ) {
 }
 
 void ConsoleWindow::WakeUp( void ) {
-	PostThreadMessage( id, WM_WAKE_UP, 0, 0 );
+	PostThreadMessage( nativeId, WM_WAKE_UP, 0, 0 );
 }
 
 void ConsoleWindow::Run( void ) {
 	MSG msg;
-	while( !selfDestruct ) {
+	while( keepRunning ) {
 		while( GetMessage( &msg, NULL, 0, 0 ) ) {
 			if ( msg.message == WM_WAKE_UP )
 				break;
@@ -591,9 +591,10 @@ LRESULT ConsoleWindow::MainWndProc( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 				AppendMenu( hmenu, MF_STRING, CON_ID_MENU_SAVE, L"Save log to file");
 				AppendMenu( hmenu, MF_STRING, CON_ID_MENU_CLEAR, L"Clear log");
 
-				ConCommand *cmd = new ConCommand(CCMD_USERMENU);
-				wcd.cmdQueue.Produce( cmd );
-				wcd.menuCondition.Wait( OG_INFINITE );
+				wcd.menuCondition.Lock();
+				wcd.cmdQueue.Produce( new ConCommand(CCMD_USERMENU) );
+				wcd.menuCondition.Wait();
+				wcd.menuCondition.Unlock();
 
 				if ( !wcd.menuEntries.IsEmpty() ) {
 					AppendMenu( hmenu, MF_SEPARATOR, 0, 0);
@@ -797,8 +798,10 @@ LRESULT ConsoleWindow::EditWndProc( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 						if ( completionCursor <= 0 ) {
 							ConCommand *cmd = new ConCommand(CCMD_COMPLETION);
 							cmd->strValue.FromWide( GetInputText() );
+							wcd.completionCondition.Lock();
 							wcd.cmdQueue.Produce( cmd );
-							wcd.completionCondition.Wait( OG_INFINITE );
+							wcd.completionCondition.Wait();
+							wcd.completionCondition.Unlock();
 
 							DynBuffer<wchar_t> wideBuf;
 							StringToWide( wcd.completionText.c_str(), wideBuf );

@@ -147,6 +147,9 @@ namespace og {
 	}
 //! @}
 
+//! @defgroup Shared Shared (Library)
+//! @{
+
 	// ==============================================================================
 	//! Sleeps for a specified time
 	//!
@@ -235,6 +238,7 @@ namespace og {
 	//! @param	title	The title of the dialog ( not displayed if send to stderr )
 	// ==============================================================================
 	void ErrorDialog( const char *message, const char *title );
+//! @}
 }
 
 // We include .inl files last, so we can access all classes here.
