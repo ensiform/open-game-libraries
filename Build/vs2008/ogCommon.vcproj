@@ -284,6 +284,10 @@
 							RelativePath="..\..\Libraries\Include\og\Common\Common.h"
 							>
 						</File>
+						<File
+							RelativePath="..\..\Libraries\Include\og\Common\JobManager.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -343,6 +347,10 @@
 						</Filter>
 						<File
 							RelativePath="..\..\Libraries\Source\og\Common\Common.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Common\JobManager.cpp"
 							>
 						</File>
 					</Filter>
