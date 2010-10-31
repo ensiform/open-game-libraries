@@ -119,6 +119,8 @@ namespace og {
 
 	// ==============================================================================
 	//! Thread Local Storage
+	//!
+	//! @warning	Only use together with og::Thread
 	// ==============================================================================
 	template<typename type>
 	class TLS {
