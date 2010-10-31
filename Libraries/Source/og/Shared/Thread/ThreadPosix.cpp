@@ -34,6 +34,7 @@ freely, subject to the following restrictions:
 #if OG_LINUX || OG_MACOS_X
 
 #include <pthread.h>
+#include <sys/prctl.h>
 
 namespace og {
 
@@ -114,16 +115,14 @@ Thread::PlatformInit
 */
 void Thread::PlatformInit( void ) {
 #if OG_LINUX
-#warning "Need Linux here FIXME"
 	// Get native id ?
 	nativeId = 0;
 
-	// To Muggen: you'll need to test this
 	// Set thread name ( may only be max 16 bytes total including the termination )
 	for( int i=15; name.ByteLength() > 15; i-- )
 		name.CapLength( i );
 
-	prctl(PR_SET_NAME, threadName.c_str(), 0, 0, 0, 0) ;
+	prctl(PR_SET_NAME, name.c_str(), 0, 0, 0, 0) ;
 #elif OG_MACOS_X
 #warning "Need MacOS here FIXME"
 #endif

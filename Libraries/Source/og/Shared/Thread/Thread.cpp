@@ -27,8 +27,8 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Shared/thread/thread.h>
-#include <og/Shared/thread/ThreadLocalStorage.h>
+#include <og/Shared/Thread/Thread.h>
+#include <og/Shared/Thread/ThreadLocalStorage.h>
 
 namespace og {
 TLS_Index * lastTlsIndex = NULL;
