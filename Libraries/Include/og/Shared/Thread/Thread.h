@@ -53,7 +53,10 @@ If not specified otherwise, the object has thread safety class single.
 	#include <boost/thread/condition_variable.hpp>
 	#include <boost/thread/mutex.hpp>
 	#include <boost/thread/locks.hpp>
-	namespace ogst { using namespace boost; }
+	namespace ogst { 
+		using namespace boost;
+		using namespace ogst::this_thread;
+	}
 #endif
 
 //! Open Game Libraries
@@ -205,8 +208,9 @@ namespace og {
 		//!
 		//! @return	The native thread id
 		// ==============================================================================
+		#warning FixMe!! What if someone invokes GetNativeId before Start() happens ?
 		uInt GetNativeId( void ) { return nativeId; }
-
+		
 		// ==============================================================================
 		//! Get the result of Init()
 		//!
