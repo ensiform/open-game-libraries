@@ -53,10 +53,7 @@ If not specified otherwise, the object has thread safety class single.
 	#include <boost/thread/condition_variable.hpp>
 	#include <boost/thread/mutex.hpp>
 	#include <boost/thread/locks.hpp>
-	namespace ogst { 
-		using namespace boost;
-		using namespace ogst::this_thread;
-	}
+	namespace ogst { using namespace boost; }
 #endif
 
 //! Open Game Libraries
@@ -208,9 +205,11 @@ namespace og {
 		//!
 		//! @return	The native thread id
 		// ==============================================================================
-		#warning FixMe!! What if someone invokes GetNativeId before Start() happens ?
+		#if OG_WIN32
 		uInt GetNativeId( void ) { return nativeId; }
-		
+		#else
+		int GetNativeId( void ) { return nativeId; }
+		#endif
 		// ==============================================================================
 		//! Get the result of Init()
 		//!
@@ -261,7 +260,12 @@ namespace og {
 		virtual void	WakeUp( void ) { wakeUpEvent.Signal(); }
 
 	protected:
+		#if OG_WIN32
 		uInt		nativeId;		//!< The native thread id
+		#else
+		int nativeId;
+		#endif
+		
 		ogst::thread thread;		//!< The thread object
 		bool		isRunning;		//!< true if the thread is still running
 		bool		keepRunning;	//!< when this is false, the thread needs to break out of its loop

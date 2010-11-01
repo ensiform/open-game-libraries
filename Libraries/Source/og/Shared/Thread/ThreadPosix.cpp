@@ -35,6 +35,9 @@ freely, subject to the following restrictions:
 
 #include <pthread.h>
 #include <sys/prctl.h>
+//#include <sys/types.h>
+#include <sys/syscall.h>
+
 
 namespace og {
 
@@ -116,25 +119,7 @@ Thread::PlatformInit
 void Thread::PlatformInit( void ) {
 #if OG_LINUX
 	// Get native id
-	
-	//nativeId = (uInt)ogst::get_id();
-	//nativeId = (uInt)pthread_self();
-
-	//--------------------------------------------
-	//-- Warning ---------------------------------
-	//-- Dangerous Material ----------------------
-	//--------------------------------------------
-	
-	#warning Take a Look at me!!
-	std::stringstream ios;
-	void * numericId;	
-	ios << ogst::get_id();
-    ios >> numericId;
-    nativeId = (uInt)numericId;
-    
-    //Source : http://groups.google.com/group/boost-list/browse_thread/thread/0d78a2ec4dde3a63?pli=1
-    //--------------------------------------------
-    //--------------------------------------------
+	nativeId = (int)syscall(SYS_gettid);
     
 	// Set thread name ( may only be max 16 bytes total including the termination )
 	for( int i=15; name.ByteLength() > 15; i-- )
