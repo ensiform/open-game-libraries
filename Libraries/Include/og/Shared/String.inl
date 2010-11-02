@@ -4,7 +4,7 @@ The Open Game Libraries.
 Copyright (C) 2007-2010 Lusito Software
 
 Author:  Santo Pfingsten (TTK-Bandit)
-Purpose: String (UTF-8) interaction
+Purpose: String interaction (UTF-8)
 -----------------------------------------
 
 This software is provided 'as-is', without any express or implied

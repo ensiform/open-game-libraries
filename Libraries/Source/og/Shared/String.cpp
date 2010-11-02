@@ -4,7 +4,7 @@ The Open Game Libraries.
 Copyright (C) 2007-2010 Lusito Software
 
 Author:  Santo Pfingsten (TTK-Bandit)
-Purpose: String (UTF-8) interaction
+Purpose: String interaction (UTF-8)
 -----------------------------------------
 
 This software is provided 'as-is', without any express or implied
@@ -261,7 +261,7 @@ String::Init
 void String::Init( void ) {
 	length = 0;
 	byteLength = 0;
-	size = OG_STR_HARDBUFFER_SIZE;
+	size = HARDBUFFER_SIZE;
 	data = hardBuffer;
 	data[0] = '\0';
 }
@@ -273,7 +273,7 @@ String::Resize
 */
 void String::Resize( int newSize, bool keepContent ) {
 	OG_ASSERT( newSize > 0 );
-	size = static_cast<int>( ceil( static_cast<float>(newSize)/static_cast<float>(OG_STR_GRANULARITY) ) ) * OG_STR_GRANULARITY;
+	size = static_cast<int>( ceil( static_cast<float>(newSize)/static_cast<float>(GRANULARITY) ) ) * GRANULARITY;
 
 	char *newData = new char[ size ];
 
@@ -476,7 +476,7 @@ int String::Replace( const char *a, const char *b, int start ) {
 			} else {
 				oldData = data;
 				data = hardBuffer;
-				size = OG_STR_HARDBUFFER_SIZE;
+				size = HARDBUFFER_SIZE;
 			}
 			length = 0;
 			byteLength = 0;
@@ -1181,8 +1181,8 @@ String::ReadFromFile
 void String::ReadFromFile( File *f ) {
 	uShort byteLen = f->ReadUshort();
 	uShort len = f->ReadUshort();
-	if ( byteLen > OG_STR_FILE_MAX_BYTES )
-		byteLen = OG_STR_FILE_MAX_BYTES;
+	if ( byteLen > FILE_MAX_BYTES )
+		byteLen = FILE_MAX_BYTES;
 
 	CheckSize( byteLen + 1, false );
 	f->Read( data, len );
@@ -1197,7 +1197,7 @@ String::WriteToFile
 ================
 */
 void String::WriteToFile( File *f ) const {
-	int byteLen = Min( byteLength, OG_STR_FILE_MAX_BYTES );
+	int byteLen = Min( byteLength, FILE_MAX_BYTES );
 	f->WriteUshort(static_cast<uShort>( byteLen ));
 	f->WriteUshort(static_cast<uShort>(length));
 	f->Write( data, byteLen );
