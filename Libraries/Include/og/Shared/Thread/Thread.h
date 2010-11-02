@@ -205,11 +205,11 @@ namespace og {
 		//!
 		//! @return	The native thread id
 		// ==============================================================================
-		#if OG_WIN32
-		uInt GetNativeId( void ) { return nativeId; }
-		#else
-		int GetNativeId( void ) { return nativeId; }
-		#endif
+#if OG_WIN32
+		uInt		GetNativeId( void ) { return nativeId; }
+#else
+		int			GetNativeId( void ) { return nativeId; }
+#endif
 		// ==============================================================================
 		//! Get the result of Init()
 		//!
@@ -217,7 +217,7 @@ namespace og {
 		//!
 		//! @return	true if Init() has finished
 		// ==============================================================================
-		bool GetInitResult( bool &result ) {
+		bool		GetInitResult( bool &result ) {
 			if ( initIsDone )
 				result = initResult;
 			return initIsDone;
@@ -228,7 +228,7 @@ namespace og {
 		//!
 		//! @return	true if running, false if not
 		// ==============================================================================
-		bool IsRunning( void ) { return isRunning; }
+		bool		IsRunning( void ) { return isRunning; }
 
 		// ==============================================================================
 		//! Starts the thread
@@ -240,7 +240,7 @@ namespace og {
 		//!
 		//! @note	Linux only supports 15 bytes long names, it will automaticly be truncated
 		// ==============================================================================
-		bool			Start( const char *name, bool waitForInit=false );
+		bool		Start( const char *name, bool waitForInit=false );
 
 		// ==============================================================================
 		//! Stop the thread
@@ -260,11 +260,11 @@ namespace og {
 		virtual void	WakeUp( void ) { wakeUpEvent.Signal(); }
 
 	protected:
-		#if OG_WIN32
+#if OG_WIN32
 		uInt		nativeId;		//!< The native thread id
-		#else
-		int nativeId;
-		#endif
+#else
+		int			nativeId;		//!< The native thread id
+#endif
 		
 		ogst::thread thread;		//!< The thread object
 		bool		isRunning;		//!< true if the thread is still running
