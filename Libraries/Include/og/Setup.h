@@ -30,11 +30,7 @@
 #ifndef __OG_SETUP_H__
 #define __OG_SETUP_H__
 
-#define OG_HAS_USER_ASSERT_FAILED 1		//!< Set this to 1 to forward failed asserts in release mode to the user
-#define OG_FTOI_USE_SSE					//!< Use SSE extensions for Math::Ftoi
-// #define OG_SHOW_MORE_WARNINGS		//!< Uncomment this if you want to see the warnings we disabled
-#define OG_VISUAL_LEAK_DETECTOR 1		//!< Uncomment to use the visual leak detector ( has only effect on visual c++ )
-//#define OG_HAVE_STD_THREAD			//!< Uncomment if you have c++0x threads available.
+#include <og/Config.h>
 
 typedef unsigned char byte;				//!< unsigned char
 typedef unsigned short uShort;			//!< unsigned short
@@ -68,7 +64,7 @@ typedef unsigned long long uLongLong;	//!< unsigned long long
 @brief		Make sure a condition is met
 @details	In debug mode it triggers a breakpoint,
 in release mode it calls og::User::AssertFailed()
-@see		OG_HAS_USER_ASSERT_FAILED
+@see		OG_HAVE_USER_ASSERT_FAILED
 
 @def		BIT(num)
 @brief		returns an integer with just one specified bit set
@@ -103,7 +99,7 @@ in release mode it calls og::User::AssertFailed()
 		//#pragma warning( default: 4710 )	// function '...' not inlined
 		#pragma warning( default: 4711 )	// function '...' selected for automatic inline expansion
 
-		#ifndef OG_SHOW_MORE_WARNINGS
+		#if OG_SHOW_MORE_WARNINGS == 0
 			#pragma warning( disable : 4389 )	// signed/unsigned mismatch
 			#pragma warning( disable : 4018 )	// signed/unsigned mismatch
 			#pragma warning( disable : 4996 )	// 'function': was declared deprecated
@@ -111,7 +107,7 @@ in release mode it calls og::User::AssertFailed()
 	#endif
 
 	// Visual Leak Detector 2.0a
-	#if OG_VISUAL_LEAK_DETECTOR && defined(_DEBUG)
+	#if OG_HAVE_VISUAL_LEAK_DETECTOR && defined(_DEBUG)
 		#include <vld.h>
 	#endif
 
@@ -163,7 +159,7 @@ in release mode it calls og::User::AssertFailed()
 // define OG_ASSERT()
 #ifdef _DEBUG
 	#define OG_ASSERT(x) { if ( !(x) ) OG_DEBUG_BREAK() }
-#elif OG_HAS_USER_ASSERT_FAILED
+#elif OG_HAVE_USER_ASSERT_FAILED
 	#define OG_ASSERT(x) { if ( !(x) ) og::User::AssertFailed( #x, __FUNCTION__ ); }
 #else
 	#define OG_ASSERT(x) {}

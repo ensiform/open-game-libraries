@@ -29,7 +29,7 @@ solution "Libraries"
 		language "C++"
 		targetdir( libDir )
 		includedirs { librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/Setup.h", librariesPath .. "/Include/og/Shared/**.h", librariesPath .. "/Include/og/Shared/**.inl", librariesPath .. "/Source/og/Shared/**.cpp" }
+		files { librariesPath .. "/Include/og/Setup.h", librariesPath .. "/Include/og/Config.h", librariesPath .. "/Include/og/Shared/**.h", librariesPath .. "/Include/og/Shared/**.inl", librariesPath .. "/Source/og/Shared/**.cpp" }
 		objdir( objectDir .. "/ogShared" )
 
 	-- ogCommon Static Library
