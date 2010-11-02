@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\Thirdparty"
+				AdditionalIncludeDirectories="..\..\Thirdparty;..\..\Thirdparty\vorbis"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -57,7 +57,7 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
-				AdditionalIncludeDirectories="..\..\Thirdparty"
+				AdditionalIncludeDirectories="..\..\Thirdparty;..\..\Thirdparty\vorbis"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -116,7 +116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
-				AdditionalIncludeDirectories="..\..\Thirdparty"
+				AdditionalIncludeDirectories="..\..\Thirdparty;..\..\Thirdparty\vorbis"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -132,7 +132,7 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
-				AdditionalIncludeDirectories="..\..\Thirdparty"
+				AdditionalIncludeDirectories="..\..\Thirdparty;..\..\Thirdparty\vorbis"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
