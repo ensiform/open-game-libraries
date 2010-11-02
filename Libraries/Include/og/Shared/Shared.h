@@ -140,7 +140,7 @@ namespace og {
 		//! @param	code		The expression that failed
 		//! @param	function	The function name in which it failed
 		// ==============================================================================
-#if OG_HAS_USER_ASSERT_FAILED
+#if OG_HAVE_USER_ASSERT_FAILED
 		void	AssertFailed( const char *code, const char *function );
 #endif
 	//! @}
