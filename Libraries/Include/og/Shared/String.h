@@ -34,7 +34,7 @@
 
 //! Open Game Libraries
 namespace og {
-//! @defgroup FileSystem FileSystem (Library)
+//! @defgroup Shared Shared (Library)
 //! @{
 
 	class File;
@@ -107,11 +107,34 @@ namespace og {
 		int				Length( void ) const;
 
 		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	text	The string to check
+		// ==============================================================================
+		static size_t	Length( const char *text );
+
+		// ==============================================================================
 		//! The string byte length
 		//!
 		//! @return	Number of bytes used ( not counting the termination byte )
 		// ==============================================================================
 		int				ByteLength( void ) const;
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	text	The string to check
+		// ==============================================================================
+		static size_t	ByteLength( const char *text );
+
+		// ==============================================================================
+		//! Get both the string length as well as the byte length
+		//!
+		//! @param	text		The string to check
+		//! @param	byteLength	Where to store the byte length result
+		//! @param	length		Where to store the string length result
+		// ==============================================================================
+		static void		BothLengths( const char *text, size_t *byteLength, size_t *length );
 
 		// ==============================================================================
 		//! Find out if the string is empty
@@ -128,15 +151,24 @@ namespace og {
 		bool			IsNumeric( void ) const;
 
 		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	text	The string to check
+		// ==============================================================================
+		static bool		IsNumeric( const char *text );
+
+		// ==============================================================================
 		//! Find out if the string only consists of the characters '0'-'9', 'a'-'z', 'A'-'Z', '_'
 		//!
 		//! @return	true if it's a word, false if not
 		// ==============================================================================
 		bool			IsWord( void ) const;
 
-
-		// fixme: how to not double the documentation with the non-static functions ?
-		static bool		IsNumeric( const char *text );
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	text	The string to check
+		// ==============================================================================
 		static bool		IsWord( const char *text );
 
 		// ==============================================================================
@@ -158,7 +190,7 @@ namespace og {
 		static bool		IsAlpha( char c );
 
 		// ==============================================================================
-		//! Find out if a character is a whitespace ( ' ', '\f', '\n', '\r', '\t', '\v', 0x0D, 0x0A )
+		//! Find out if a character is a whitespace ( ' ', '\\f', '\\n', '\\r', '\\t', '\\v', 0x0D, 0x0A )
 		//!
 		//! @param	c	The character
 		//!
@@ -167,7 +199,7 @@ namespace og {
 		static bool		IsSpace( char c );
 
 		// ==============================================================================
-		//! Find out if a character is a newline ( '\n', '\r', '\v' )
+		//! Find out if a character is a newline ( '\\n', '\\r', '\\v' )
 		//!
 		//! @param	c	The character
 		//!
@@ -234,6 +266,8 @@ namespace og {
 		//! Initialize from a wide string
 		//!
 		//! @param	in	The unicode string to convert.
+		//!
+		//! @todo	Linux / Mac Support
 		// ==============================================================================
 		void			FromWide( const wchar_t *in );
 
@@ -248,6 +282,8 @@ namespace og {
 		//! @return	The output buffer size needed to store this string as a widestring ( including the termination )
 		//!
 		//! @note	Call once with out=NULL to get the size and once to convert it
+		//!
+		//! @todo	Linux / Mac Support
 		// ==============================================================================
 		static int		ToWide( const char *in, uInt numBytes, wchar_t *out, uInt outSize );
 
@@ -286,22 +322,15 @@ namespace og {
 		//! @see	ReverseFind
 		//! @see	FindOneOf
 		//! @see	Replace
+		//!
+		//! @todo	test this..
 		// ==============================================================================
 		int				Find( const char *text, bool caseSensitive=true, int start=0 ) const;
 
 		// ==============================================================================
-		//! Find a string ( static method )
+		//! @overload
 		//!
-		//! @param	str				The string to search in
-		//! @param	text			The string to look for
-		//! @param	caseSensitive	true to use case sensitive searching
-		//! @param	start			The starting position ( in characters, not bytes )
-		//!
-		//! @return	The position of the first occurence, INVALID_POSITION if not found
-		//!
-		//! @see	ReverseFind
-		//! @see	FindOneOf
-		//! @see	Replace
+		//! @param	str		The string to search in
 		// ==============================================================================
 		static int		Find( const char *str, const char *text, bool caseSensitive=true, int start=0 );
 
@@ -317,22 +346,15 @@ namespace og {
 		//! @see	Find
 		//! @see	ReverseFind
 		//! @see	Replace
+		//!
+		//! @todo	Needs to be written for UTF-8 support
 		// ==============================================================================
 		int				FindOneOf( const char *text, bool caseSensitive=true, int start=0 ) const;
 
 		// ==============================================================================
-		//! Find the first occurence of one of the specified characters ( static method )
+		//! @overload
 		//!
-		//! @param	str				The string to search in
-		//! @param	text			The characters to look for
-		//! @param	caseSensitive	true to use case sensitive searching
-		//! @param	start			The starting position ( in characters, not bytes )
-		//!
-		//! @return	The position of the first occurence, INVALID_POSITION if not found
-		//!
-		//! @see	Find
-		//! @see	ReverseFind
-		//! @see	Replace
+		//! @param	str		The string to search in
 		// ==============================================================================
 		static int		FindOneOf( const char *str, const char *text, bool caseSensitive=true, int start=0 );
 
@@ -347,21 +369,15 @@ namespace og {
 		//! @see	Find
 		//! @see	FindOneOf
 		//! @see	Replace
+		//!
+		//! @todo	test this..
 		// ==============================================================================
 		int				ReverseFind( const char *text, bool caseSensitive=true ) const;
 		
 		// ==============================================================================
-		//! Find a string ( static method )
+		//! @overload
 		//!
-		//! @param	str				The string to search in
-		//! @param	text			The string to look for
-		//! @param	caseSensitive	true to use case sensitive searching
-		//!
-		//! @return	The position of the last occurence, INVALID_POSITION if not found
-		//!
-		//! @see	Find
-		//! @see	FindOneOf
-		//! @see	Replace
+		//! @param	str		The string to search in
 		// ==============================================================================
 		static int		ReverseFind( const char *str, const char *text, bool caseSensitive=true );
 
@@ -464,133 +480,557 @@ namespace og {
 		// ==============================================================================
 		int				StripTrailingWhitespaces( void );
 
-		// File Extension
+	// File Extension
+		// ==============================================================================
+		//! Strip file extension
+		//!
+		//! Searches in reverse for a slash or a dot
+		//! If a dot was found before(after) a slash, everything after ( and including ) the dot will be removed
+		// ==============================================================================
 		void			StripFileExtension( void );
+
+		// ==============================================================================
+		//! Change the file extension ( calls StripFileExtension and then adds the new one )
+		//!
+		//! @param	ext	The new file extension ( should include the dot, but will be automaticly added if not )
+		// ==============================================================================
 		void			SetFileExtension( const char *ext );
+
+		// ==============================================================================
+		//! Add a file extension if none is present
+		//!
+		//! @param	ext	The new file extension ( should include the dot, but will be automaticly added if not )
+		// ==============================================================================
 		void			DefaultFileExtension( const char *ext );
+
+		// ==============================================================================
+		//! Check for a file extension ( case insensitive )
+		//!
+		//! @param	ext	The file extension ( should include the dot! )
+		//!
+		//! @return	true if it was found, false if not
+		// ==============================================================================
 		bool			CheckFileExtension( const char *ext ) const;
+
+		// ==============================================================================
+		//! Get the file extension of this string
+		//!
+		//! @param	str	The string to store the file extension in
+		// ==============================================================================
 		void			GetFileExtension( String &str ) const;
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @return	The file extension
+		// ==============================================================================
 		String			GetFileExtension( void ) const;
+
+		// ==============================================================================
+		//! Get the file extension from the specified string
+		//!
+		//! @param	text		The string to search for the file extension
+		//! @param	byteLen		Byte length of text
+		//! @param	str	The string to store the file extension in
+		// ==============================================================================
 		static void		GetFileExtension( const char *text, int byteLen, String &str );
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @return	The file extension
+		// ==============================================================================
 		static String	GetFileExtension( const char *text, int byteLen );
 
-		// Filename & Path
+	// Filename & Path
+		// ==============================================================================
+		//! Strip filename from this string
+		// ==============================================================================
 		void			StripFilename( void );
+
+		// ==============================================================================
+		//! Get the filename without it's path
+		//!
+		//! @param	str	The string to store the filename in
+		// ==============================================================================
 		void			GetFilename( String &str ) const;
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @return	The filename
+		// ==============================================================================
 		String			GetFilename( void ) const;
+
+		// ==============================================================================
+		//! Strip the path from this string
+		// ==============================================================================
 		void			StripPath( void );
+
+		// ==============================================================================
+		//! Gets the path from this string
+		//!
+		//! @param	str	The string to store the path in
+		// ==============================================================================
 		void			GetPath( String &str ) const;
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @return	The path
+		// ==============================================================================
 		String			GetPath( void ) const;
 
-		// Partial Strings
-		String			Left( int len ) const;
+	// Partial Strings
+		// ==============================================================================
+		//! Get the first n characters as a string
+		//!
+		//! @param	len	The number of characters to get
+		//! @param	str	The string to store the first n characters in
+		// ==============================================================================
 		void			Left( int len, String &str ) const;
 
-		String			Right( int len ) const;
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @return	The string consisting of the first n characters
+		// ==============================================================================
+		String			Left( int len ) const;
+
+		// ==============================================================================
+		//! Get the last n characters as a string
+		//!
+		//! @param	len	The number of characters to get
+		//! @param	str	The string to store the last n characters in
+		// ==============================================================================
 		void			Right( int len, String &str ) const;
 
-		String			Mid( int start, int len ) const;
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @return	The string consisting of the last n characters
+		// ==============================================================================
+		String			Right( int len ) const;
+
+		// ==============================================================================
+		//! Get a sub string
+		//!
+		//! @param	start	The starting position ( characters, not bytes )
+		//! @param	len	The number of characters to get
+		//! @param	str	The string to store the result in
+		// ==============================================================================
 		void			Mid( int start, int len, String &str ) const;
 
-		// String Comparison (len is considered character count, not byte count)
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @return	The sub string
+		// ==============================================================================
+		String			Mid( int start, int len ) const;
+
+	// String Comparison (len is considered character count, not byte count)
+		// ==============================================================================
+		//! Compare this string to another (case sensitive)
+		//!
+		//! @param	text	The string to compare to
+		//!
+		//! @return	<0 if text is less than this, 0 if equal, >0 if text is greater than this
+		// ==============================================================================
 		int				Cmp( const char *text ) const;
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	text1	The base string
+		// ==============================================================================
+		static int		Cmp( const char *text1, const char *text2 );
+
+		// ==============================================================================
+		//! Compare the first n characters of this string to another (case sensitive)
+		//!
+		//! @param	text	The string to compare to
+		//! @param	len		The number of characters to compare
+		//!
+		//! @return	<0 if text is less than this, 0 if equal, >0 if text is greater than this
+		// ==============================================================================
 		int				Cmpn( const char *text, int len ) const;
-		int				CmpPrefix( const char *text ) const;
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	text1	The base string
+		// ==============================================================================
+		static int		Cmpn( const char *text1, const char *text2, int len );
+
+		// ==============================================================================
+		//! Compare the first Length(text) characters of this string to another (case sensitive)
+		//!
+		//! @param	text	The string to compare to
+		//!
+		//! @return	<0 if text is less than this, 0 if equal, >0 if text is greater than this
+		// ==============================================================================
+		int				CmpPrefix( const char *prefix ) const;
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	text1	The base string
+		// ==============================================================================
+		static int		CmpPrefix( const char *text1, const char *text2 );
+
+		// ==============================================================================
+		//! Compare this string to another (case insensitive)
+		//!
+		//! @param	text	The string to compare to
+		//!
+		//! @return	<0 if text is less than this, 0 if equal, >0 if text is greater than this
+		// ==============================================================================
 		int				Icmp( const char *text ) const;
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	text1	The base string
+		// ==============================================================================
+		static int		Icmp( const char *text1, const char *text2 );
+
+		// ==============================================================================
+		//! Compare the first n characters of this string to another (case insensitive)
+		//!
+		//! @param	text	The string to compare to
+		//! @param	len		The number of characters to compare
+		//!
+		//! @return	<0 if text is less than this, 0 if equal, >0 if text is greater than this
+		// ==============================================================================
 		int				Icmpn( const char *text, int len ) const;
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	text1	The base string
+		// ==============================================================================
+		static int		Icmpn( const char *text1, const char *text2, int len );
+
+		// ==============================================================================
+		//! Compare the first Length(text) characters of this string to another (case insensitive)
+		//!
+		//! @param	text	The string to compare to
+		//!
+		//! @return	<0 if text is less than this, 0 if equal, >0 if text is greater than this
+		// ==============================================================================
 		int				IcmpPrefix( const char *text ) const;
 
-		// Static ones :P
-		static int		Cmp( const char *text1, const char *text2 );
-		static int		Cmpn( const char *text1, const char *text2, int len );
-		static int		CmpPrefix( const char *text1, const char *text2 );
-		static int		Icmp( const char *text1, const char *text2 );
-		static int		Icmpn( const char *text1, const char *text2, int len );
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	text1	The base string
+		// ==============================================================================
 		static int		IcmpPrefix( const char *text1, const char *text2 );
 
-		static size_t	Length( const char *text );
-		static size_t	ByteLength( const char *text );
-		static void		BothLengths( const char *text, size_t *byteLength, size_t *length );
-
-		// Escape Colors
+	// Escape Colors
+		// ==============================================================================
+		//! Get the length of an escape color sequence
+		//!
+		//! @param	str	The start of the escape color ( first char is '^' )
+		//!
+		//! @return	The number of bytes/characters this color escape sequence is long, 0 if it's an invalid sequence
+		// ==============================================================================
 		static int		GetEscapeColorLength( const char *str );
-		static size_t	StripEscapeColor( char *str );	// Returns how many bytes have been removed.
-		void			StripEscapeColor( void );
 
-		// Moved here from Utilities.h
+		// ==============================================================================
+		//! Strip all escape color sequences from the string
+		//!
+		//! @return	Number of bytes/characters removed
+		// ==============================================================================
+		size_t			StripEscapeColor( void );
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	str	The string to clean
+		// ==============================================================================
+		static size_t	StripEscapeColor( char *str );
+
+	// Moved here from Utilities.h
+		// ==============================================================================
+		//! Convert a string to an integer
+		//!
+		//! @param	str	The string
+		//!
+		//! @return	The string converted to an integer
+		// ==============================================================================
 		static int		ToInt( const char *str );
+
+		// ==============================================================================
+		//! Convert a string to a long
+		//!
+		//! @param	str	The string
+		//!
+		//! @return	The string converted to a long
+		// ==============================================================================
 		static long		ToLong( const char *str );
+
+		// ==============================================================================
+		//! Convert a string to a floating point value
+		//!
+		//! @param	str	The string
+		//!
+		//! @return	The string converted to a floating point value
+		// ==============================================================================
 		static float	ToFloat( const char *str );
+
+		// ==============================================================================
+		//! Convert a string to a floating point array
+		//!
+		//! @param	str	The string
+		//! @param	fp	The float array
+		//! @param	dim	The number of entries in fp
+		//!
+		//! @return	true on success, otherwise false
+		// ==============================================================================
 		static bool		ToFloatArray( const char *str, float *fp, int dim );
+
+		// ==============================================================================
+		//! Convert a string to a double
+		//!
+		//! @param	str	The string
+		//!
+		//! @return	The string converted to a double
+		// ==============================================================================
 		static double	ToDouble( const char *str );
+
+		// ==============================================================================
+		//! Convert a string to a double array
+		//!
+		//! @param	str	The string
+		//! @param	dp	The double array
+		//! @param	dim	The number of entries in dp
+		//!
+		//! @return	true on success, otherwise false
+		// ==============================================================================
 		static bool		ToDoubleArray( const char *str, double *dp, int dim );
 
-		// operators
+	// operators
+		// ==============================================================================
+		//! Compare one string to another ( case sensitive )
+		//!
+		//! @param	other	The other string
+		//!
+		//! @return	true if this string is equal to the other one
+		// ==============================================================================
 		bool			operator==( const String &other ) const;
+
+		// ==============================================================================
+		//! @overload
+		// ==============================================================================
 		bool			operator==( const char *text ) const;
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	str		The base string
+		// ==============================================================================
 		friend bool		operator==( const char *text, const String &str );
 
+		// ==============================================================================
+		//! Compare one string to another ( case sensitive )
+		//!
+		//! @param	other	The other string
+		//!
+		//! @return	false if this string is equal to the other one
+		// ==============================================================================
 		bool			operator!=( const String &other ) const;
+
+		// ==============================================================================
+		//! @overload
+		// ==============================================================================
 		bool			operator!=( const char *text ) const;
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	str		The base string
+		// ==============================================================================
 		friend bool		operator!=( const char *text, const String &str );
 
+		// ==============================================================================
+		//! Initialize from another string
+		//!
+		//! @param	text	The string to copy
+		//!
+		//! @return	A shallow copy of this object. 
+		// ==============================================================================
 		String &		operator=( const char *text );
+
+		// ==============================================================================
+		//! @overload
+		// ==============================================================================
 		String &		operator=( const String &str );
 
+		// ==============================================================================
+		//! Append a string to this one
+		//!
+		//! @param	text	The string to append
+		// ==============================================================================
 		void			operator+=( const char *text );
+
+		// ==============================================================================
+		//! @overload
+		// ==============================================================================
 		void			operator+=( const String &str );
 
+		// ==============================================================================
+		//! Concatenate this string with another one
+		//!
+		//! @param	str	The second string
+		//!
+		//! @return	Both strings concatenated
+		// ==============================================================================
 		String			operator+( const String &str );
+
+		// ==============================================================================
+		//! @overload
+		// ==============================================================================
 		String			operator+( const char *text );
+
+		// ==============================================================================
+		//! @overload
+		//!
+		//! @param	str		The base string
+		// ==============================================================================
 		friend String	operator+( const char *text, const String &str );
 
-		void			ReadFromFile( File *f );
-		void			WriteToFile( File *f ) const;
+		// ==============================================================================
+		//! Read the string data from a binary file
+		//!
+		//! @param	file	The file to read from
+		// ==============================================================================
+		void			ReadFromFile( File *file );
+
+		// ==============================================================================
+		//! Write the string data to a binary file
+		//!
+		//! @param	file	The file to write to
+		// ==============================================================================
+		void			WriteToFile( File *file ) const;
 
 	protected:
 		friend class	StringList;
 
-		int				size;
-		int				length;
-		int				byteLength;
-		char *			data;
-		char			hardBuffer[HARDBUFFER_SIZE];
+		int				size;							//!< The current buffer size
+		int				length;							//!< How many characters the string consists of ( excluding the termination )
+		int				byteLength;						//!< How many bytes the string consists of ( excluding the termination )
+		char *			data;							//!< The pointer to the buffer ( can point to hardBuffer )
+		char			hardBuffer[HARDBUFFER_SIZE];	//!< Hard buffer: if string is below HARDBUFFER_SIZE it will use the hardbuffer
+														//!  Otherwise dynamic memory will be allocated.
 
+		// ==============================================================================
+		//! Initialize the string with the hardBuffer
+		// ==============================================================================
 		void			Init( void );
+
+		// ==============================================================================
+		//! Free the dynamic memory used
+		// ==============================================================================
 		void			Free( void );
+
+		// ==============================================================================
+		//! Resize the buffer to the new size ( must be greater than the current size )
+		//!
+		//! @param	newSize		The new size
+		//! @param	keepContent	true to keep the old content
+		// ==============================================================================
 		void			Resize( int newSize, bool keepContent );
+
+		// ==============================================================================
+		//! Make sure the buffer is at least the specified size
+		//!
+		//! @param	newSize		The size needed
+		//! @param	keepContent	true to keep content
+		// ==============================================================================
 		void			CheckSize( int newSize, bool keepContent=true );
 
+		// ==============================================================================
+		//! Copy data from the specified input
+		//!
+		//! @param	text		The text to copy
+		//! @param	byteLength	The bytelength of the string
+		//! @param	length		The length of the string
+		// ==============================================================================
 		void			SetData( const char *text, int byteLength, int length );
+
+		// ==============================================================================
+		//! Append data from the specified input
+		//!
+		//! @param	text		The text to append
+		//! @param	byteLength	The bytelength of the string
+		//! @param	length		The length of the string
+		// ==============================================================================
 		void			AppendData( const char *text, int byteLength, int length );
 	};
 
-	/*
-	==============================================================================
-
-	  StringType
-
-	  Helper for dict return value conversion
-
-	==============================================================================
-	*/
+	// ==============================================================================
+	//! StringType - A helper for Dict return value conversion
+	// ==============================================================================
 	class StringType {
 	private:
+
+		// ==============================================================================
+		//! Constructor
+		//!
+		//! @param	val	The return value as c-string
+		// ==============================================================================
 		StringType( const char *val ) : value(val) {}
-		StringType( const StringType & ) {} // not copyable
-		const char *value;
+
+		// ==============================================================================
+		//! Can not be copied
+		// ==============================================================================
+		StringType( const StringType & ) {}
+
+		const char *value;	//!< The value, might be deleted once out of scope, so do not store the raw pointer
 
 		friend class Dict;
 		friend class KeyValue;
 	public:
 
-		// Conversion operators
+	// Conversion operators
+		// ==============================================================================
+		//! Returns the raw string, do not store as const char *, rather copy the string
+		//!
+		//! @return	The string value
+		//!
+		//! @warning	The pointer might get invalid once out of scope, so do not store the raw pointer.
+		// ==============================================================================
 		operator const char *() const { return value; }
+
+		// ==============================================================================
+		//! Convert to a boolean value
+		// ==============================================================================
 		operator bool	() const { return String::ToInt( value ) != 0; }
+
+		// ==============================================================================
+		//! Convert to an integer
+		// ==============================================================================
 		operator int	() const { return String::ToInt( value ); }
+
+		// ==============================================================================
+		//! Convert to an unsigned integer
+		// ==============================================================================
 		operator uInt	() const { return String::ToInt( value ); }
+
+		// ==============================================================================
+		//! Convert to a long
+		// ==============================================================================
 		operator long	() const { return String::ToInt( value ); }
+
+		// ==============================================================================
+		//! Convert to an unsigned long
+		// ==============================================================================
 		operator uLong	() const { return String::ToInt( value ); }
+
+		// ==============================================================================
+		//! Convert to a floating point value
+		// ==============================================================================
 		operator float	() const { return String::ToFloat( value ); }
 	};
 	//! @}

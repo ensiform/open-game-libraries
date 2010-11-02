@@ -2,7 +2,7 @@
 //! @file
 //! @brief	Shared Parts (used by all Open Game Libraries)
 //! @author	Santo Pfingsten (TTK-Bandit)
-//! @author	chongo <Landon Curt Noll> ( Fowler/Noll/Vo Hash algorithm )
+//! @author	chongo [Landon Curt Noll] ( Fowler/Noll/Vo Hash algorithm )
 //! @note	Copyright (C) 2007-2010 Lusito Software
 //! @see	http://www.isthe.com/chongo/tech/comp/fnv/
 // ==============================================================================

@@ -237,7 +237,10 @@ String::CmpPrefix
 ================
 */
 OG_INLINE int String::CmpPrefix( const char *text ) const {
-	return Cmpn( data, text, ByteLength(text) );
+	return Cmpn( data, text, Length(text) );
+}
+OG_INLINE int String::CmpPrefix( const char *text1, const char *text2 ) {
+	return Cmpn( text1, text2, Length(text2) );
 }
 
 /*

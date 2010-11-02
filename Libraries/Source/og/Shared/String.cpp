@@ -396,7 +396,6 @@ String::Find
 ================
 */
 int String::Find( const char *str, const char *text, bool caseSensitive, int start ) {
-	//! @todo	test this..
 	int findLen = Length(text);
 	if ( caseSensitive ) {
 		for( int i=0; str[i] != 0; i++ ) {
@@ -418,7 +417,6 @@ String::FindOneOf
 ================
 */
 int String::FindOneOf( const char *str, const char *text, bool caseSensitive, int start ) {
-	//! @todo	unicode
 	return -1;
 }
 
@@ -428,7 +426,6 @@ String::ReverseFind
 ================
 */
 int String::ReverseFind( const char *str, const char *text, bool caseSensitive ) {
-	//! @todo	test this..
 	int byteLength = ByteLength(str);
 	int findLen = Length(text);
 	if ( caseSensitive ) {
@@ -1034,15 +1031,6 @@ int String::Icmpn( const char *text1, const char *text2, int len ) {
 }
 
 /*
-================
-String::CmpPrefix
-================
-*/
-int String::CmpPrefix( const char *text1, const char *text2 ) {
-	return Cmpn( text1, text2, ByteLength(text2) );
-}
-
-/*
 =============
 String::Length
 =============
@@ -1145,10 +1133,11 @@ size_t String::StripEscapeColor( char *str ) {
 String::StripEscapeColor
 ================
 */
-void String::StripEscapeColor( void ) {
+size_t String::StripEscapeColor( void ) {
 	int removed = StripEscapeColor( data );
 	byteLength -= removed;
 	length -= removed;
+	return removed;
 }
 
 /*
@@ -1178,14 +1167,14 @@ void String::SetData( const char *text, int byteLen, int len ) {
 String::ReadFromFile
 ================
 */
-void String::ReadFromFile( File *f ) {
-	uShort byteLen = f->ReadUshort();
-	uShort len = f->ReadUshort();
+void String::ReadFromFile( File *file ) {
+	uShort byteLen = file->ReadUshort();
+	uShort len = file->ReadUshort();
 	if ( byteLen > FILE_MAX_BYTES )
 		byteLen = FILE_MAX_BYTES;
 
 	CheckSize( byteLen + 1, false );
-	f->Read( data, len );
+	file->Read( data, len );
 	data[len] = '\0';
 	length = len;
 	byteLength = byteLen;
@@ -1196,11 +1185,11 @@ void String::ReadFromFile( File *f ) {
 String::WriteToFile
 ================
 */
-void String::WriteToFile( File *f ) const {
+void String::WriteToFile( File *file ) const {
 	int byteLen = Min( byteLength, FILE_MAX_BYTES );
-	f->WriteUshort(static_cast<uShort>( byteLen ));
-	f->WriteUshort(static_cast<uShort>(length));
-	f->Write( data, byteLen );
+	file->WriteUshort(static_cast<uShort>( byteLen ));
+	file->WriteUshort(static_cast<uShort>(length));
+	file->Write( data, byteLen );
 }
 
 /*
