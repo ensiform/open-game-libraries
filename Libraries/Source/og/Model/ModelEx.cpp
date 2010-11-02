@@ -37,38 +37,6 @@ const int GMA_VERSION = 1;	//!< The animation file version
 FileSystemCore *modelFS = NULL;
 
 /*
-================
-FileReadString
-================
-*/
-int FileReadString( File *f, String &str ) {
-	uShort len = f->ReadUshort();
-	if ( len > OG_STR_FILE_MAX_BYTES )
-		len = OG_STR_FILE_MAX_BYTES;
-	DynBuffer<char> in(len+1);
-	f->Read(in.data, len);
-	in.data[len] = '\0';
-	str = in.data;
-	return len;
-}
-/*
-================
-FileWriteString
-================
-*/
-int FileWriteString( File *f, const char *string, int len=-1 ) {
-	if ( len == -1 )
-		len = String::Length( string );
-
-	if ( len > OG_STR_FILE_MAX_BYTES )
-		len = OG_STR_FILE_MAX_BYTES;
-
-	f->WriteUshort(static_cast<uShort>(len));
-	f->Write(string, len);
-	return len;
-}
-
-/*
 ==============================================================================
 
   Vertex
@@ -197,9 +165,9 @@ Model *Model::Load( const char *filename ) {
 			throw FileReadWriteError( Format( "Wrong Version($*), should be ($*)'" ) << version << GMD_VERSION );
 
 		String modelName, author, appName;
-		FileReadString( file, modelName );
-		FileReadString( file, author );
-		FileReadString( file, appName );
+		modelName.ReadFromFile( file );
+		author.ReadFromFile( file );
+		appName.ReadFromFile( file );
 
 		uInt numBones = file->ReadUint();
 		uInt numMeshes = file->ReadUint();
@@ -210,7 +178,7 @@ Model *Model::Load( const char *filename ) {
 		uInt size, entries;
 		String name;
 		for( int i=0; i<numChunks; i++ ) {
-			FileReadString( file, name );
+			name.ReadFromFile( file );
 			size  = file->ReadUint();
 			entries = file->ReadUint();
 			if ( name.Icmp("Bones") == 0 ) {
@@ -220,7 +188,7 @@ Model *Model::Load( const char *filename ) {
 				// Read Bones
 				for ( int j=0; j<entries; j++ ) {
 					Bone &bone = model->bones.Alloc();
-					FileReadString( file, bone.name );
+					bone.name.ReadFromFile( file );
 					bone.idParent = file->ReadInt();
 					file->ReadFloatArray( &bone.origin.x, 3 );
 					file->ReadFloatArray( &bone.quat.x, 4 );
@@ -234,8 +202,8 @@ Model *Model::Load( const char *filename ) {
 					MeshAnimated *mesh = new MeshAnimated; //! @todo non-animated
 					model->meshes.Append(mesh);
 
-					FileReadString( file, mesh->name );
-					FileReadString( file, mesh->material );
+					mesh->name.ReadFromFile( file );
+					mesh->material.ReadFromFile( file );
 
 					mesh->flags = file->ReadInt();
 					mesh->detailLevel = file->ReadInt();
@@ -282,8 +250,8 @@ Model *Model::Load( const char *filename ) {
 StartChunk
 ================
 */
-OG_INLINE long StartChunk( File *file, const char *name, uInt entries ) {
-	FileWriteString( file, name );
+OG_INLINE long StartChunk( File *file, String name, uInt entries ) {
+	name.WriteToFile( file );
 	long sizePos = file->Tell();
 	file->WriteUint( 0 );
 	file->WriteUint( entries );
@@ -315,6 +283,10 @@ bool Model::Save( Model *model, const char *filename ) {
 	if ( !file )
 		return false;
 
+	// fixme:
+	String author("Unknown");
+	String appName("ogTools");
+
 	try {
 		// Write header
 		file->Write( "GMD", 4 );
@@ -324,9 +296,10 @@ bool Model::Save( Model *model, const char *filename ) {
 		String modelName = filename;
 		modelName.StripFileExtension();
 		modelName.StripPath();
-		FileWriteString( file, modelName.c_str() );
-		FileWriteString( file, "Unknown" );
-		FileWriteString( file, "ogTools" );
+
+		modelName.WriteToFile( file );
+		author.WriteToFile( file );
+		appName.WriteToFile( file );
 
 		uInt numBones = model->bones.Num();
 		uInt numMeshes = model->meshes.Num();
@@ -338,7 +311,7 @@ bool Model::Save( Model *model, const char *filename ) {
 		long sizePos = StartChunk( file, "Bones", numBones );
 		for( int i=0; i<numBones; i++ ) {
 			const Bone &bone = model->bones[i];
-			FileWriteString( file, bone.name.c_str() );
+			bone.name.WriteToFile( file );
 			file->WriteInt( bone.idParent );
 			file->WriteFloatArray( &bone.origin.x, 3 );
 			file->WriteFloatArray( &bone.quat.x, 4 );
@@ -350,8 +323,8 @@ bool Model::Save( Model *model, const char *filename ) {
 		for ( int i=0; i<numMeshes; i++ ) {
 			const MeshAnimated *mesh = static_cast<MeshAnimated *>(model->meshes[i]);
 			// Write Mesh Info
-			FileWriteString( file, mesh->name.c_str() );
-			FileWriteString( file, mesh->material.c_str() );
+			mesh->name.WriteToFile( file );
+			mesh->material.WriteToFile( file );
 			file->WriteInt( mesh->flags );
 			file->WriteInt( mesh->detailLevel );
 			file->WriteUint( mesh->numVerts );
