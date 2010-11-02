@@ -119,7 +119,7 @@ Thread::PlatformInit
 void Thread::PlatformInit( void ) {
 #if OG_LINUX
 	// Get native id
-	nativeId = (int)syscall(SYS_gettid);
+	nativeId = syscall(SYS_gettid);
     
 	// Set thread name ( may only be max 16 bytes total including the termination )
 	for( int i=15; name.ByteLength() > 15; i-- )
