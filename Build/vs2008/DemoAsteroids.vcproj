@@ -285,6 +285,10 @@
 					RelativePath="..\..\Examples\Shared\SoundManager.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\..\Examples\Shared\User.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

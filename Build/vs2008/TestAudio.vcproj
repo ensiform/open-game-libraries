@@ -224,6 +224,10 @@
 					RelativePath="..\..\Examples\Shared\FontText.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\Examples\Shared\User.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

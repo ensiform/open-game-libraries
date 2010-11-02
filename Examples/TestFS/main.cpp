@@ -35,35 +35,18 @@ freely, subject to the following restrictions:
 
 og::StringList allowedPakFiles;
 
-namespace og {
-namespace User {
-	bool	IsPakFileAllowed( PakFile *pakFile ) {
-		static SecureHash sha;
-		if ( !sha.ComputeFile( pakFile->GetFilename() ) )
-			return false;
-
-		const char *checksum = sha.GetHexResult();
-		if ( allowedPakFiles.Find( checksum ) != -1 ) {
-			printf( "Adding file '%s'\n", pakFile->GetFilename() );
-			return true;
-		}
-		printf( "Skipping file '%s'\n", pakFile->GetFilename() );
+bool og::User::IsPakFileAllowed( og::PakFile *pakFile ) {
+	static og::SecureHash sha;
+	if ( !sha.ComputeFile( pakFile->GetFilename() ) )
 		return false;
-	}
 
-	void	Error( ErrorId id, const char *msg, const char *param ) {
-		// Todo: Throw an exception on the id's you think are important.
-		og::String error;
-		CreateErrorString( id, msg, param, error );
-		printf( "%s\n", error.c_str() );
+	const char *checksum = sha.GetHexResult();
+	if ( allowedPakFiles.Find( checksum ) != -1 ) {
+		printf( "Adding file '%s'\n", pakFile->GetFilename() );
+		return true;
 	}
-	void	Warning( const char *msg ) {
-		printf( msg );
-	}
-	void	AssertFailed( const char *code, const char *function ) {
-		printf( "Assert(%s) failed in %s!", code, function );
-	}
-}
+	printf( "Skipping file '%s'\n", pakFile->GetFilename() );
+	return false;
 }
 
 bool ReadPureList( const char *filename ) {

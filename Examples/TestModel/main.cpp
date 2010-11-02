@@ -502,36 +502,6 @@ bool og::User::IsPakFileAllowed( og::PakFile *pakFile ) {
 
 /*
 ================
-og::User::Error
-================
-*/
-void og::User::Error( og::ErrorId id, const char *msg, const char *param ) {
-	// Todo: Throw an exception on the id's you think are important.
-	og::String error;
-	CreateErrorString( id, msg, param, error );
-	og::Console::FatalError( og::Format( "Error: $*\n" ) << error );
-}
-
-/*
-================
-og::User::Warning
-================
-*/
-void og::User::Warning( const char *msg ) {
-	og::Console::Print( og::Format( "$*\n" ) << msg );
-}
-
-/*
-================
-og::User::AssertFailed
-================
-*/
-void og::User::AssertFailed( const char *code, const char *function ) {
-	og::Console::FatalError( og::Format( "Assert($*) failed in $*!\n" ) << code << function );
-}
-
-/*
-================
 og::User::OnConsoleMenuOpen
 ================
 */

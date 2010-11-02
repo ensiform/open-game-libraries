@@ -293,33 +293,3 @@ og::User::IsPakFileAllowed
 bool og::User::IsPakFileAllowed( og::PakFile *pakFile ) {
 	return true;
 }
-
-/*
-================
-og::User::Error
-================
-*/
-void og::User::Error( og::ErrorId id, const char *msg, const char *param ) {
-	// Todo: Throw an exception on the id's you think are important.
-	og::String error;
-	CreateErrorString( id, msg, param, error );
-	og::ErrorDialog( error.c_str(), APP_TITLE );
-}
-
-/*
-================
-og::User::Warning
-================
-*/
-void og::User::Warning( const char *msg ) {
-	og::MessageDialog( og::Format("Warning: $*") << msg, APP_TITLE );
-}
-
-/*
-================
-og::User::AssertFailed
-================
-*/
-void og::User::AssertFailed( const char *code, const char *function ) {
-	og::ErrorDialog( og::Format("Assert($*) failed in $*!") << code << function, APP_TITLE );
-}

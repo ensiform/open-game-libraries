@@ -41,7 +41,7 @@ solution "Examples"
 		targetdir( binaryDir )
 		includedirs { librariesPath .. "/Include" }
 		links { "ogShared", "ogCommon", "ogFileSystem", "zLib", "winmm" }
-		files { examplesPath .. "/TestFS/**.h", examplesPath .. "/TestFS/**.inl", examplesPath .. "/TestFS/**.cpp" }
+		files { examplesPath .. "/TestFS/**.h", examplesPath .. "/TestFS/**.inl", examplesPath .. "/TestFS/**.cpp", examplesPath .. "/Shared/User.cpp" }
 		objdir( objectDir .. "/Examples/TestFS" )
 
 	-- TestGloot Executable
@@ -52,7 +52,7 @@ solution "Examples"
 		targetdir( binaryDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
 		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "opengl32", "winmm" }
-		files { examplesPath .. "/TestGloot/**.h", examplesPath .. "/TestGloot/**.inl", examplesPath .. "/TestGloot/**.cpp" }
+		files { examplesPath .. "/TestGloot/**.h", examplesPath .. "/TestGloot/**.inl", examplesPath .. "/TestGloot/**.cpp", examplesPath .. "/Shared/User.cpp" }
 		objdir( objectDir .. "/Examples/TestGloot" )
 
 	-- TestAudio Executable
@@ -64,7 +64,7 @@ solution "Examples"
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
 		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogAudio", "ogImage", "ogFileSystem", "ogFont", "soft_oal", "ogg", "vorbis", "jpeg", "png", "zLib", "opengl32", "winmm" }
 		files { examplesPath .. "/TestAudio/**.h", examplesPath .. "/TestAudio/**.inl", examplesPath .. "/TestAudio/**.cpp" }
-		files { examplesPath .. "/Shared/SoundManager.*", examplesPath .. "/Shared/FontText.*" }
+		files { examplesPath .. "/Shared/SoundManager.*", examplesPath .. "/Shared/FontText.*", examplesPath .. "/Shared/User.cpp" }
 		objdir( objectDir .. "/Examples/TestAudio" )
 
 	-- TestModel Executable
@@ -75,7 +75,7 @@ solution "Examples"
 		targetdir( binaryDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
 		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogModel", "ogImage", "ogFileSystem", "jpeg", "png", "zLib", "ogConsole", "opengl32", "winmm" }
-		files { examplesPath .. "/TestModel/**.h", examplesPath .. "/TestModel/**.inl", examplesPath .. "/TestModel/**.cpp" }
+		files { examplesPath .. "/TestModel/**.h", examplesPath .. "/TestModel/**.inl", examplesPath .. "/TestModel/**.cpp", examplesPath .. "/Shared/User.cpp" }
 		objdir( objectDir .. "/Examples/TestModel" )
 
 	-- DemoAsteroids Executable

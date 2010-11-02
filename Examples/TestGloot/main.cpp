@@ -417,24 +417,3 @@ int og::User::Main( int argc, char *argv[] ) {
 	Gloot::DisableSystemKeys( false );
 	return 0;
 }
-
-/*
-================
-og::User::Error
-================
-*/
-void og::User::Error( og::ErrorId id, const char *msg, const char *param ) {
-	// Todo: Throw an exception on the id's you think are important.
-	og::String error;
-	CreateErrorString( id, msg, param, error );
-	og::ErrorDialog( error.c_str(), APP_TITLE );
-}
-
-/*
-================
-og::User::AssertFailed
-================
-*/
-void og::User::AssertFailed( const char *code, const char *function ) {
-	og::ErrorDialog( og::Format("Assert($*) failed in $*!") << code << function, APP_TITLE );
-}

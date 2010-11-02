@@ -212,6 +212,15 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Shared"
+				Filter=""
+				>
+				<File
+					RelativePath="..\..\Examples\Shared\User.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
