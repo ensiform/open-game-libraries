@@ -29,6 +29,12 @@ freely, subject to the following restrictions:
 
 #include "FileSystemEx.h"
 
+#if OG_WIN32
+	#include <windows.h>
+#elif OG_LINUX || OG_MACOS_X
+	#include <iconv.h>
+#endif
+
 // Check for correct short and long sizes
 #if USHRT_MAX != 0xffff || ULONG_MAX != 0xffffffffUL
 	#error "short must be 2 bytes and long must be 4 bytes to work correctly.."
@@ -211,6 +217,67 @@ time_t ConvertDosTime( short DosTime, short DosDate ) {
 /*
 ==============================================================================
 
+  Ocp2Utf8 ( OEM Codepage 437 to UTF-8 Conversion )
+
+==============================================================================
+*/
+class Ocp2Utf8 {
+public:
+	Ocp2Utf8() {}
+	~Ocp2Utf8() {
+#if OG_LINUX || OG_MACOS_X
+		if ( cd != (iconv_t)-1 )
+			iconv_close(cd);
+#endif
+	}
+
+	bool Init( void ) {
+#if OG_WIN32
+		return true;
+#elif OG_LINUX || OG_MACOS_X
+		iconv_t cd = iconv_open("UTF8", "437");
+		return cd != (iconv_t)-1;
+#endif
+	}
+
+	const char *Convert( char *input, int numBytes ) {
+#if OG_WIN32
+		// Convert from OEM codepage to unicode first
+		int length = MultiByteToWideChar( 437, 0, input, numBytes, NULL, 0 );
+		wideBuffer.CheckSize( length + 1 );
+		wideBuffer.data[0] = L'\0';
+		MultiByteToWideChar( 437, 0,  input, numBytes, wideBuffer.data, length+1 );
+
+		// Convert unicode to UTF-8
+		utf8Buffer.FromWide( wideBuffer.data );
+		return utf8Buffer.c_str();
+#elif OG_LINUX || OG_MACOS_X
+		int inBytes = numBytes;
+		utf8Buffer.CheckSize( inBytes );
+		int outBytes = inBytes;
+
+		byte *inchar = static_cast<byte *>( input );
+		byte *outchar = static_cast<byte *>( utf8Buffer.data );
+		if ( iconv(cd, &inchar, &inBytes, &outchar, &outBytes) == -1 )
+			return NULL;
+		utf8Buffer.data[numBytes-1] = '\0';
+		return utf8Buffer.data;
+#endif
+}
+
+private:
+#if OG_WIN32
+	DynBuffer<wchar_t>	wideBuffer;
+	String				utf8Buffer;
+#elif OG_LINUX || OG_MACOS_X
+	iconv_t				cd;
+	DynBuffer<char>		utf8Buffer;
+#endif
+};
+
+/*
+==============================================================================
+
   PakFileEx
 
 ==============================================================================
@@ -304,18 +371,16 @@ int PakFileEx::ReadCentralDir( FILE *file, uLong zipfileOffset, uLong Offset, in
 	// Get the first file in the pakfile.
 	uLong posInCentralDir = Offset;
 
-	DynBuffer<wchar_t> wFilenameBuf;
 	DynBuffer<char> filenameBuf;
-	String		utf8FilenameBuf;
 	const char *pszFilename;
 	bool isDir;			// Is a directory
 	uLong PosInZip;		// Position of the current file in the zipfile
 
 	FileHeader fh;		// Storrage for the current fileheader
-#ifndef _MSC_VER
-	#error "this way of converting from OCP to unicode seems to be MS specific, FIXME"
-#endif
-	_locale_t locale = _create_locale( LC_ALL, ".OCP" ); // Zip file format uses the OEM codepage
+
+	Ocp2Utf8 converter;
+	if ( !converter.Init() )
+		return UNZ_ERRNO;
 
 	// Read all entries
 	for ( int i=0; i<TotalEntries; i++ ) {
@@ -355,13 +420,10 @@ int PakFileEx::ReadCentralDir( FILE *file, uLong zipfileOffset, uLong Offset, in
 		if ( fh.flag & BIT(11) )
 			pszFilename = filenameBuf.data;
 		else {
-			// Convert from OEM codepage to unicode first
-			wFilenameBuf.CheckSize( fh.filenameLength + 1 );
-			_mbstowcs_l( wFilenameBuf.data, filenameBuf.data, fh.filenameLength + 1, locale );
-
-			// Convert unicode to UTF-8
-			utf8FilenameBuf.FromWide( wFilenameBuf.data );
-			pszFilename = utf8FilenameBuf.c_str();
+			// Convert from CP437 to UTF-8
+			pszFilename = converter.Convert( filenameBuf.data, fh.filenameLength+1 );
+			if ( pszFilename == NULL )
+				return UNZ_ERRNO;
 		}
 
 		// Compare file headers
@@ -382,8 +444,6 @@ int PakFileEx::ReadCentralDir( FILE *file, uLong zipfileOffset, uLong Offset, in
 		posInCentralDir += SIZE_CENTRALDIRITEM + fh.filenameLength +
 				fh.extraFieldLength + fh.fileCommentLength;
 	}
-
-	_free_locale( locale );
 	return UNZ_OK;
 }
 
