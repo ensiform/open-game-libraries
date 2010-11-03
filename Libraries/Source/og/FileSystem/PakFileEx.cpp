@@ -68,7 +68,7 @@ const byte	MASK2BYTES	= 0xC0;
 LocalFileHeader
 ================
 */
-const char *RS_LOCALFILEHEADER_FORMAT = "lssssslllss";
+#pragma pack(1)
 struct LocalFileHeader {
 	uLong	signature;			// Local file header signature (SIGNATURE_LOC_FH)
 
@@ -91,7 +91,6 @@ struct LocalFileHeader {
 FileHeader
 ================
 */
-const char *RS_FILEHEADER_FORMAT = "lsssssslllsssssll";
 struct FileHeader {
 	uLong	signature;			// Central file header signature (SIGNATURE_CD_FH)
 
@@ -121,7 +120,6 @@ struct FileHeader {
 CentralDirEnd
 ================
 */
-const char *RS_CENTRALDIREND_FORMAT = "lsssslls";
 struct CentralDirEnd {
 	uLong	signature;			// End of central dir signature (SIGNATURE_CD_END)
 
@@ -141,57 +139,7 @@ struct CentralDirEnd {
 	short	commentLength;		// Comment length
 };
 
-/*
-================
-fReadStruct
-
-wrote this little function to read the structs(fileheaders,..) out of the zip file
-it takes a pointer to the struct (buf), a format string and a filepointer.
-the format string tells the function of what kind of dataypes the struct is build of.
-'l' stands for a 4 byte long and 's' for a 2 byte short.
-================
-*/
-int fReadStruct( byte *buf, const char *fmt, FILE *file ) {
-	int BytesRead = 0;
-#if OG_LITTLE_ENDIAN == 0
-	byte temp[4];
-#endif
-	while ( *fmt != '\0' ) {
-		switch ( *fmt ) {
-			case 'l':
-				if ( BytesRead%4 != 0 )
-					BytesRead += 2;
-#if OG_LITTLE_ENDIAN
-				if ( fread( buf+BytesRead, 4, 1, file ) != 1 )
-					return UNZ_ERRNO;
-				BytesRead += 4;
-#else
-				if ( fread( temp, 4, 1, file ) != 1 )
-					return UNZ_ERRNO;
-				buf[BytesRead++] = temp[3];
-				buf[BytesRead++] = temp[2];
-				buf[BytesRead++] = temp[1];
-				buf[BytesRead++] = temp[0];
-#endif
-				break;
-			case 's':
-#if OG_LITTLE_ENDIAN
-				if ( fread( buf+BytesRead, 2, 1, file ) != 1 )
-					return UNZ_ERRNO;
-				BytesRead += 2;
-#else
-				if ( fread( temp, 2, 1, file ) != 1 )
-					return UNZ_ERRNO;
-				buf[BytesRead++] = temp[1];
-				buf[BytesRead++] = temp[0];
-#endif
-				break;
-		}
-		fmt++;
-	}
-	return UNZ_OK;
-}
-
+#pragma pack()
 
 /*
 ================
@@ -328,7 +276,8 @@ int PakFileEx::CompareFileHeader( FILE *file, uLong zipfileOffset, FileHeader *p
 
 	// Read in the local file header
 	LocalFileHeader localFH;
-	if ( fReadStruct( reinterpret_cast<byte *>(&localFH), RS_LOCALFILEHEADER_FORMAT, file ) != UNZ_OK )
+	
+	if ( fread( &localFH, sizeof(localFH), 1, file ) != 1 )
 		return UNZ_ERRNO;
 
 	// Check the signature
@@ -389,7 +338,7 @@ int PakFileEx::ReadCentralDir( FILE *file, uLong zipfileOffset, uLong Offset, in
 			return UNZ_ERRNO;
 
 		// Read the current file header
-		if ( fReadStruct( reinterpret_cast<byte *>(&fh), RS_FILEHEADER_FORMAT, file ) != UNZ_OK )
+		if ( fread( &fh, sizeof(fh), 1, file ) != 1 )
 			return UNZ_ERRNO;
 
 		// Check the signature
@@ -531,7 +480,7 @@ PakFileEx *PakFileEx::OpenZip( const char *path ) {
 		fseek( file, central_pos, SEEK_SET ) == 0 &&
 
 		// Load the central dir end
-		fReadStruct( reinterpret_cast<byte *>(&cde), RS_CENTRALDIREND_FORMAT, file ) == UNZ_OK &&
+		fread( &cde, sizeof(cde), 1, file ) == 1 &&
 
 		// Do not add empty or splitted files.
 		cde.numEntries > 0 && cde.numEntriesCD == cde.numEntries && cde.numDiskWithCD == 0 && cde.numDisk == 0 &&
