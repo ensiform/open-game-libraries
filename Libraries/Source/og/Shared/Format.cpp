@@ -27,7 +27,8 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Common/Common.h>
+#include <og/Shared/Shared.h>
+#include <stdio.h>
 #include <stdarg.h>
 
 namespace og {
