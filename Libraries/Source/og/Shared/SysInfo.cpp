@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 */
 
 #include <cstdio>
-#include <og/Shared/Thread/Thread.h>
+#include <og/Shared/Shared.h>
 
 #if OG_WIN32
 	#include <windows.h>
@@ -431,16 +431,7 @@ void RetrieveMemorySize( void ) {
 SysInfo::GetOSInfo
 ================
 */
-OSInfo *GetOSInfo( void ) {
-	static OSInfo data;
-	static bool initialized = false;
-	static ogst::mutex writeLock;
-
-	// We only need to get it once, it wont change..
-	ogst::unique_lock<ogst::mutex> lock(writeLock);
-	if ( initialized )
-		return &data;
-
+bool GetOSInfo( OSInfo &data ) {
 #if OG_WIN32
 	OSVERSIONINFO osInfo;
 	osInfo.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
@@ -456,16 +447,20 @@ OSInfo *GetOSInfo( void ) {
 
 		// We require Win2K minimum
 		if( osInfo.dwPlatformId == VER_PLATFORM_WIN32_NT && osInfo.dwMajorVersion >= 5 ) {
-			if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 0 )
-				data.name = "Win2K";
-			else if( osInfo.dwMajorVersion == 5 && osInfo.dwMinorVersion == 1 )
-				data.name = "WinXP";
+			if( osInfo.dwMajorVersion == 5 ) {
+				if ( osInfo.dwMinorVersion == 0 )
+					data.name = "Win2K";
+				else
+					data.name = "WinXP";
+			}
 			else if( osInfo.dwMajorVersion == 6 ) {
 				if( osInfo.dwMinorVersion == 0 )
 					data.name = "WinVista";
 				else
 					data.name = "Win7";
 			}
+			else
+				data.name = "Win++"; // unknown but higher than Win7
 
 			if ( strnicmp(osInfo.szCSDVersion, "Service Pack ", 13) == 0 ) {
 				data.name += " SP";
@@ -474,11 +469,11 @@ OSInfo *GetOSInfo( void ) {
 				data.name += " ";
 				data.name += osInfo.szCSDVersion;
 			}
+			return true;
 		}
-		if ( data.name.IsEmpty() ) {
-			data.name = Format("Win $*.$*") << (uInt)osInfo.dwMajorVersion << (uInt)osInfo.dwMinorVersion;
-			User::Error(ERR_SYSTEM_REQUIREMENTS, "Requires Windows 2000 or greater" );
-		}
+
+		data.name = Format("Win $*.$*") << (uInt)osInfo.dwMajorVersion << (uInt)osInfo.dwMinorVersion;
+		User::Error(ERR_SYSTEM_REQUIREMENTS, "Requires Windows 2000 or greater" );
 	}
 #elif OG_LINUX
 	FILE *file = fopen("/proc/version", "r");
@@ -495,7 +490,7 @@ OSInfo *GetOSInfo( void ) {
 			data.name = buffer;
 			data.name.StripTrailingWhitespaces();
 			// caplength here maybe ? just in case..
-			return &data;
+			return true;
 		}
 	}
 	data.name = "unknown unix";
@@ -503,8 +498,7 @@ OSInfo *GetOSInfo( void ) {
 	#warning "Need MacOS here FIXME"
 #endif
 
-	initialized = true;
-	return &data;
+	return false;
 }
 
 

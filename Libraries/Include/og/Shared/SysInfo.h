@@ -233,7 +233,7 @@ namespace og {
 		//!
 		//!	@note	Resolution: 1-6 microseconds (depending on cpu)
 		// ==============================================================================
-		uLongLong		GetHiResTime( void );
+		uLongLong	GetHiResTime( void );
 
 		// ==============================================================================
 		//! Get the OS time
@@ -242,14 +242,16 @@ namespace og {
 		//!
 		//!	@note	Resolution: resolution: 10ms
 		// ==============================================================================
-		uLong			GetTime( void );
+		uLong		GetTime( void );
 
 		// ==============================================================================
 		//! Get information about the Operating System
 		//!
-		//! @return	Pointer to an OSInfo object
+		//! @param data	An OSInfo object to store the result in.
+		//!
+		//! @return	true on success
 		// ==============================================================================
-		OSInfo *		GetOSInfo( void );
+		bool		GetOSInfo( OSInfo &data );
 
 		extern CPU::Features	cpu;	//!< CPU information
 		extern uLongLong		ramB;	//!< Available RAM in bytes
