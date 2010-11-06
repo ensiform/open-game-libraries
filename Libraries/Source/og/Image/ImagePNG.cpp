@@ -101,6 +101,7 @@ ImageFilePNG::Open
 ================
 */
 bool ImageFilePNG::Open( const char *filename ) {
+	isLoaded = false;
 	if ( imageFS == NULL )
 		return false;
 
@@ -149,6 +150,7 @@ bool ImageFilePNG::Open( const char *filename ) {
 		png_destroy_read_struct(&png_ptr, &info_ptr, png_infopp_NULL);
 
 		file->Close();
+		isLoaded = true;
 		return true;
 	}
 	catch( FileReadWriteError &err ) {
@@ -162,10 +164,10 @@ bool ImageFilePNG::Open( const char *filename ) {
 
 /*
 ================
-ImageFilePNG::SaveFile
+ImageFilePNG::Save
 ================
 */
-bool ImageFilePNG::SaveFile( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
+bool ImageFilePNG::Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
 	if ( imageFS == NULL )
 		return false;
 

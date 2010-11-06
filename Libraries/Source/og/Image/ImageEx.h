@@ -64,7 +64,7 @@ namespace og {
 		friend class Image;
 
 		bool	UploadImage( const char *filename );
-		bool	ReloadImage( bool force );
+		bool	ReloadImage( bool force, bool usePreloader );
 
 		String	fullpath;
 		uInt	glTextureNum;
@@ -90,11 +90,17 @@ namespace og {
 	*/
 	class ImageFile {
 	public:
-		ImageFile() {}
+		ImageFile() : isLoaded(false) {}
 		virtual ~ImageFile() {}
 
-		virtual bool	UploadFile( const char *filename, ImageEx &image ) = 0;
-		virtual bool	SaveFile( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) = 0;
+		virtual bool	Open( const char *filename ) = 0;
+		virtual bool	Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) = 0;
+		virtual bool	Upload( ImageEx &image ) = 0;
+
+	protected:
+		uInt	width;
+		uInt	height;
+		bool	isLoaded;
 	};
 
 	/*
@@ -108,11 +114,9 @@ namespace og {
 	public:
 		ImageFileNoDXT() { curBuffer = 0; }
 
-		bool	UploadFile( const char *filename, ImageEx &image );
+		bool	Upload( ImageEx &image );
 
 	protected:
-		uInt	width;
-		uInt	height;
 		bool	hasAlpha;
 
 		DynBuffer<byte> dynBuffers[2];
@@ -120,8 +124,6 @@ namespace og {
 
 		void	ResampleAsNeeded( void );
 		void	ResampleFast( uInt newWidth, uInt newHeight );
-
-		virtual bool	Open( const char *filename ) = 0;
 	};
 
 	/*
@@ -133,10 +135,10 @@ namespace og {
 	*/
 	class ImageFileTGA : public ImageFileNoDXT {
 	public:
-		bool	SaveFile( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
+		bool	Open( const char *filename );
+		bool	Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
 
 	private:
-		bool	Open( const char *filename );
 		void	ReadType2( File *file, bool topDown );
 		void	ReadType3( File *file, bool topDown );
 		void	ReadType10( File *file, bool topDown );
@@ -151,10 +153,8 @@ namespace og {
 	*/
 	class ImageFilePNG : public ImageFileNoDXT {
 	public:
-		bool	SaveFile( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
-
-	private:
 		bool	Open( const char *filename );
+		bool	Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
 	};
 
 	/*
@@ -166,10 +166,8 @@ namespace og {
 	*/
 	class ImageFileJPG : public ImageFileNoDXT {
 	public:
-		bool	SaveFile( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
-
-	private:
 		bool	Open( const char *filename );
+		bool	Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
 	};
 
 	/*
@@ -181,14 +179,11 @@ namespace og {
 	*/
 	class ImageFileDDS : public ImageFile {
 	public:
-		bool	UploadFile( const char *filename, ImageEx &image );
-		bool	SaveFile( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
+		bool	Open( const char *filename );
+		bool	Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
+		bool	Upload( ImageEx &image );
 
 	private:
-		bool	Open( const char *filename );
-
-		uInt	width;
-		uInt	height;
 		uInt	dxtFormat;
 
 		DynBuffer<byte> dynBuffer;

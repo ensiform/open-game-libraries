@@ -72,11 +72,11 @@ struct ddsHeader{
 
 /*
 ================
-ImageFileDDS::UploadFile
+ImageFileDDS::Upload
 ================
 */
-bool ImageFileDDS::UploadFile( const char *filename, ImageEx &image ) {
-	if ( !Open( filename ) )
+bool ImageFileDDS::Upload( ImageEx &image ) {
+	if ( !isLoaded )
 		return false;
 
 	image.width = width;
@@ -118,15 +118,16 @@ bool ImageFileDDS::UploadFile( const char *filename, ImageEx &image ) {
 
 		src_data += mipSize;
 	}
+	isLoaded = false;
 	return true;
 }
 
 /*
 ================
-ImageFileDDS::SaveFile
+ImageFileDDS::Save
 ================
 */
-bool ImageFileDDS::SaveFile( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
+bool ImageFileDDS::Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
 	User::Error( ERR_BAD_FILE_FORMAT, "Can not save DDS files.", filename );
 	return false;
 }
@@ -137,6 +138,7 @@ ImageFileDDS::Open
 ================
 */
 bool ImageFileDDS::Open( const char *filename ) {
+	isLoaded = false;
 	if ( imageFS == NULL )
 		return false;
 
@@ -184,6 +186,7 @@ bool ImageFileDDS::Open( const char *filename ) {
 		file->Read( dynBuffer.data, bufSize );
 
 		file->Close();
+		isLoaded = true;
 		return true;
 	}
 	catch( FileReadWriteError &err ) {

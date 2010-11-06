@@ -153,10 +153,44 @@ namespace og {
 		// ==============================================================================
 		//! Reload images from their files
 		//!
-		//! @param	force		If set to false, it reloads only images that have
-		//!						a newer date than when it was first loaded.
+		//! @param	force			If set to false, it reloads only images that have
+		//!							a newer date than when it was first loaded.
+		//! @param	usePreloader	Use the preloader to reload them in background ( preloader must be started )
+		//!
+		//! @return	The number of items reloaded / to be reloaded
 		// ==============================================================================
-		static void		ReloadImages( bool force );
+		static uInt		ReloadImages( bool force, bool usePreloader=false );
+
+		// ==============================================================================
+		//! Start the preloading thread
+		//!
+		//! @param	max		The number of files allowed to be uploaded at one call to UploadPreloaded.
+		//!					This also defines how many files may be in preload memory at the same time.
+		// ==============================================================================
+		static void		StartPreloader( int max=16 );
+
+		// ==============================================================================
+		//! Stop the preloading thread
+		//!
+		//! @note	Clears the preload list, so the unfinished preloads won't be finished
+		// ==============================================================================
+		static void		StopPreloader( void );
+
+		// ==============================================================================
+		//! Preload image files in a separate thread
+		//!
+		//! @param	filename	The filename of the image
+		//!
+		//! @note	The preloader must be started before calling this
+		// ==============================================================================
+		static void		PreloadImage( const char *filename );
+
+		// ==============================================================================
+		//! Uploads the preloaded images to OpenGL
+		//!
+		//! @return	The number of items uploaded
+		// ==============================================================================
+		static uInt		UploadPreloaded( void );
 	//! @}
 
 	// Object Interface

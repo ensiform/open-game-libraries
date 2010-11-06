@@ -195,12 +195,13 @@ ImageFileJPG::Open
 ================
 */
 bool ImageFileJPG::Open( const char *filename ) {
+	isLoaded = false;
 	if ( imageFS == NULL )
 		return false;
 
 	File *file = imageFS->OpenRead( filename, true, true );
 	if ( !file )
-		return NULL;
+		return false;
 
 	struct jpeg_decompress_struct cinfo;
 	try {
@@ -258,6 +259,7 @@ bool ImageFileJPG::Open( const char *filename ) {
 		jpeg_destroy_decompress( &cinfo );
 
 		file->Close();
+		isLoaded = true;
 		return true;
 	}
 	catch( FileReadWriteError &err ) {
@@ -270,10 +272,10 @@ bool ImageFileJPG::Open( const char *filename ) {
 
 /*
 ================
-ImageFileJPG::SaveFile
+ImageFileJPG::Save
 ================
 */
-bool ImageFileJPG::SaveFile( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
+bool ImageFileJPG::Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
 	if ( imageFS == NULL )
 		return false;
 

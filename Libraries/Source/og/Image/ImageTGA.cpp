@@ -48,6 +48,7 @@ ImageFileTGA::Open
 ================
 */
 bool ImageFileTGA::Open( const char *filename ) {
+	isLoaded = false;
 	if ( imageFS == NULL )
 		return false;
 
@@ -108,6 +109,7 @@ bool ImageFileTGA::Open( const char *filename ) {
 			ReadType10( file, topDown );
 
 		file->Close();
+		isLoaded = true;
 		return true;
 	}
 	catch( FileReadWriteError &err ) {
@@ -302,10 +304,10 @@ void ImageFileTGA::ReadType10( File *file, bool topDown ) {
 
 /*
 ================
-ImageFileTGA::SaveFile
+ImageFileTGA::Save
 ================
 */
-bool ImageFileTGA::SaveFile( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
+bool ImageFileTGA::Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
 	if ( imageFS == NULL )
 		return false;
 

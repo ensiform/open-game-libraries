@@ -113,12 +113,57 @@ void Image::Shutdown( void ) {
 Image::ReloadImages
 ================
 */
-void Image::ReloadImages( bool force ) {
-	Image::SetFilters( ImageEx::minFilter, ImageEx::magFilter );
+uInt Image::ReloadImages( bool force, bool usePreloader ) {
+	if ( !usePreloader )
+		Image::SetFilters( ImageEx::minFilter, ImageEx::magFilter );
+	else // fixme: if no preloader started yet
+		return 0;
 
+	uInt numReloads = 0;
 	int num = imageList.Num();
-	for( int i=0; i<num; i++ )
-		imageList[i].ReloadImage( force );
+	for( int i=0; i<num; i++ ) {
+		if ( imageList[i].ReloadImage( force, usePreloader ) )
+			numReloads++;
+	}
+
+	return numReloads;
+}
+
+/*
+================
+Image::StartPreloader
+================
+*/
+void Image::StartPreloader( int max ) {
+	//fixme
+}
+
+/*
+================
+Image::StopPreloader
+================
+*/
+void Image::StopPreloader( void ) {
+	//fixme
+}
+
+/*
+================
+Image::PreloadImage
+================
+*/
+void Image::PreloadImage( const char *filename ) {
+	//fixme
+}
+
+/*
+================
+Image::UploadPreloaded
+================
+*/
+uInt Image::UploadPreloaded( void ) {
+	//fixme
+	return 0;
 }
 
 /*
@@ -174,7 +219,7 @@ bool Image::Save( const char *filename, byte *data, int width, int height, bool 
 		return false;
 	}
 
-	return imageFileTypes[index]->SaveFile( filename, data, width, height, hasAlpha );
+	return imageFileTypes[index]->Save( filename, data, width, height, hasAlpha );
 }
 
 /*
@@ -292,7 +337,9 @@ bool ImageEx::UploadImage( const char *filename ) {
 		return false;
 	}
 
-	if ( !imageFileTypes[index]->UploadFile( fullpath.c_str(), *this ) )
+	if ( !imageFileTypes[index]->Open( fullpath.c_str() ) )
+		return false;
+	if ( !imageFileTypes[index]->Upload( *this ) )
 		return false;
 
 	time = imageFS->FileTime( fullpath.c_str() );
@@ -304,7 +351,7 @@ bool ImageEx::UploadImage( const char *filename ) {
 ImageEx::ReloadImage
 ================
 */
-bool ImageEx::ReloadImage( bool force ) {
+bool ImageEx::ReloadImage( bool force, bool usePreloader ) {
 	if ( imageFS == NULL )
 		return false;
 
@@ -317,8 +364,13 @@ bool ImageEx::ReloadImage( bool force ) {
 		User::Warning( Format("Unknown image type for file '$*'" ) << fullpath );
 		return false;
 	}
-
-	if ( !imageFileTypes[index]->UploadFile( fullpath.c_str(), *this ) )
+	if ( usePreloader ) {
+		// fixme: add to preload list
+		return true;
+	}
+	if ( !imageFileTypes[index]->Open( fullpath.c_str() ) )
+		return false;
+	if ( !imageFileTypes[index]->Upload( *this ) )
 		return false;
 	time = newTime;
 	return true;
@@ -333,11 +385,11 @@ bool ImageEx::ReloadImage( bool force ) {
 */
 /*
 ================
-ImageFileNoDXT::UploadFile
+ImageFileNoDXT::Upload
 ================
 */
-bool ImageFileNoDXT::UploadFile( const char *filename, ImageEx &image ) {
-	if ( !Open( filename ) )
+bool ImageFileNoDXT::Upload( ImageEx &image ) {
+	if ( !isLoaded )
 		return false;
 
 	image.width = width;
@@ -353,6 +405,7 @@ bool ImageFileNoDXT::UploadFile( const char *filename, ImageEx &image ) {
 
 	glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 	glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	isLoaded = false;
 	return true;
 }
 
