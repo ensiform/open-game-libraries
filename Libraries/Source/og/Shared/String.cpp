@@ -1216,6 +1216,30 @@ int String::ToInt( const char *str ) {
 
 /*
 ================
+String::ToUInt
+
+faster than atoi..
+================
+*/
+uInt String::ToUInt( const char *str ) {
+	if ( str[0] == '-' )
+		return 0;
+	uInt val = 0;
+	uInt i = 0;
+	uInt m = 1;
+
+	if ( str[0] == '-'  || str[0] == '+' )
+		i++;
+
+	uInt max = 10 + i;
+	for ( ; IsDigit(str[i]) && i<max; i++ )
+		val = 10 * val + (str[i] - '0');
+
+	return val * m;
+}
+
+/*
+================
 String::ToLong
 
 faster than atol..
@@ -1230,6 +1254,30 @@ long String::ToLong( const char *str ) {
 		i++;
 
 	int max = 10 + i;
+	for ( ; IsDigit(str[i]) && i<max; i++ )
+		val = 10 * val + (str[i] - '0');
+
+	return val * m;
+}
+
+/*
+================
+String::ToULong
+
+faster than atoi..
+================
+*/
+uLong String::ToULong( const char *str ) {
+	if ( str[0] == '-' )
+		return 0;
+	uLong val = 0;
+	uLong i = 0;
+	uLong m = 1;
+
+	if ( str[0] == '-'  || str[0] == '+' )
+		i++;
+
+	uLong max = 10 + i;
 	for ( ; IsDigit(str[i]) && i<max; i++ )
 		val = 10 * val + (str[i] - '0');
 

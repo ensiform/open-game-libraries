@@ -763,6 +763,15 @@ namespace og {
 		static int		ToInt( const char *str );
 
 		// ==============================================================================
+		//! Convert a string to an unsigned integer
+		//!
+		//! @param	str	The string
+		//!
+		//! @return	The string converted to an unsigned integer, 0 if negative
+		// ==============================================================================
+		static uInt		ToUInt( const char *str );
+
+		// ==============================================================================
 		//! Convert a string to a long
 		//!
 		//! @param	str	The string
@@ -770,6 +779,15 @@ namespace og {
 		//! @return	The string converted to a long
 		// ==============================================================================
 		static long		ToLong( const char *str );
+
+		// ==============================================================================
+		//! Convert a string to an unsigned long
+		//!
+		//! @param	str	The string
+		//!
+		//! @return	The string converted to an unsigned long, 0 if negative
+		// ==============================================================================
+		static uLong	ToULong( const char *str );
 
 		// ==============================================================================
 		//! Convert a string to a floating point value
@@ -1017,17 +1035,17 @@ namespace og {
 		// ==============================================================================
 		//! Convert to an unsigned integer
 		// ==============================================================================
-		operator uInt	() const { return String::ToInt( value ); }
+		operator uInt	() const { return String::ToUInt( value ); }
 
 		// ==============================================================================
 		//! Convert to a long
 		// ==============================================================================
-		operator long	() const { return String::ToInt( value ); }
+		operator long	() const { return String::ToLong( value ); }
 
 		// ==============================================================================
 		//! Convert to an unsigned long
 		// ==============================================================================
-		operator uLong	() const { return String::ToInt( value ); }
+		operator uLong	() const { return String::ToULong( value ); }
 
 		// ==============================================================================
 		//! Convert to a floating point value
