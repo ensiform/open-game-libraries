@@ -33,7 +33,7 @@ freely, subject to the following restrictions:
 #include <string>
 #include <zlib/zlib.h>
 #include <og/Common/Common.h>
-#include <og/Common/Thread/LockFreeQueue.h>
+#include <og/Common/Thread/EventQueue.h>
 #include <og/FileSystem/FileSystem.h>
 #include "FileEx.h"
 #include "PakFileEx.h"
@@ -44,18 +44,40 @@ namespace og {
 	/*
 	==============================================================================
 
-	  FileEvent
+	  FileTrackEvent
 
 	==============================================================================
 	*/
-	class FileEvent {
+	class FileTrackEvent : public QueuedEvent {
 	public:
-		enum FEVT_Action { OPEN, CLOSE, BUFFER_LOAD, BUFFER_FREE };
+		FileTrackEvent( FileEx *f, bool add ) : file(f), doAdd(add) {}
+		void	Execute( void );
 
-		FileEvent( FEVT_Action action, void *param ) : fileAction(action), fileParam(param) {}
+		static void	ClearAll( void );
+	private:
+		FileEx	*	file;
+		bool		doAdd;
 
-		FEVT_Action	fileAction;
-		void *fileParam;
+		static LinkedList<FileEx *> list;	// Keeps track of opened filed to close them later
+	};
+
+	/*
+	==============================================================================
+
+	  LoadTrackEvent
+
+	==============================================================================
+	*/
+	class LoadTrackEvent : public QueuedEvent {
+	public:
+		LoadTrackEvent( byte *b, bool add ) : buffer(b), doAdd(add) {}
+		void	Execute( void );
+
+		static void	ClearAll( void );
+	private:
+		byte	*	buffer;
+		bool		doAdd;
+		static List<byte *> list;	// Same as above for file buffers
 	};
 
 	/*
@@ -98,11 +120,10 @@ namespace og {
 		FileSystemEx();
 
 		// moved from fileeventthread
-		void	AddFileEvent( FileEvent *evt ) { eventQueue.Produce( evt ); WakeUp(); }
+		void	AddFileEvent( QueuedEvent *evt ) { eventQueue.Add( evt ); WakeUp(); }
 
 	protected:
 		void	Run( void );
-		void	ConsumeEvents( void );
 
 	private:
 		friend class FileSystem;
@@ -124,7 +145,6 @@ namespace og {
 		FileEx *OpenLocalFileRead( const char *filename, int *size=NULL ); // Open a local file for reading.
 		int		GetArchivedFileList( const char *dir, const char *extension, StringList &files, int flags=LF_DEFAULT ); // Get all Files with this extension in the specified dir.
 
-		void	CloseAllFiles( void );
 	private:
 		static TLS<bool> notFoundWarning;
 
@@ -142,9 +162,7 @@ namespace og {
 		bool			pureMode;					// Pure mode enabled (like sv_pure in quake3)
 		StringList		pureExtensions;				// Extensions allowed when pure mode is enabled
 
-		LinkedList<FileEx *>	openFiles;			// Keeps track of opened filed to close them later
-		List<byte *>			openFilesLoaded;	// Same as above for file buffers
-		LowLockQueue<FileEvent> eventQueue;			// File event queue
+		EventQueue				eventQueue;			// File event queue
 	};
 }
 

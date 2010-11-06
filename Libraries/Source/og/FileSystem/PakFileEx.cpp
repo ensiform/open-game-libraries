@@ -255,7 +255,7 @@ File *PakFileEx::OpenFile( const char *filename ) {
 		int i = fileEx->fullpath.ReverseFind("/");
 		fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i+1);
 
-		static_cast<FileSystemEx *>(FS)->AddFileEvent( new FileEvent( FileEvent::OPEN, fileEx ) );
+		static_cast<FileSystemEx *>(FS)->AddFileEvent( new FileTrackEvent( fileEx, true ) );
 		return fileEx;
 	}
 	return NULL;

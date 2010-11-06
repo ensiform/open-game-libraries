@@ -52,7 +52,7 @@ namespace og {
 		const char *	GetFileName( void ) { return filename; }			// Returns the filename without path
 		const char *	GetFullPath( void ) { return fullpath.c_str(); }	// Returns the full filepath
 		time_t			GetTime( void ) { return time; }					// Returns the modification date/time
-		void			Close( void );										// Returns the modification date/time
+		virtual void	Close( void );										// Close the file
 
 		// ---------------------- Internal FileEx Members -------------------
 
@@ -69,7 +69,7 @@ namespace og {
 		const char *filename;		// filename only
 		String		fullpath;		// filename including path
 
-		friend class FileSystemEx;
+		friend class FileTrackEvent;
 		friend class PakFileEx;
 		friend class FileEventThread;
 	};
@@ -125,6 +125,8 @@ namespace og {
 
 		void	Read( void *buffer, uInt len );				// Read data
 		void	Write( const void *buffer, uInt len ) { OG_DEBUG_BREAK(); }	// Write data
+
+		void	Close( void );								// Close the file
 
 		// ---------------------- Internal FileBuffered Members -------------------
 

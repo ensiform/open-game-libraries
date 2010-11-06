@@ -37,6 +37,82 @@ namespace og {
 FileSystem *FS = NULL;
 TLS<bool> FileSystemEx::notFoundWarning(true);
 
+LinkedList<FileEx *> FileTrackEvent::list;
+List<byte *> LoadTrackEvent::list;
+
+/*
+==============================================================================
+
+  FileTrackEvent
+
+==============================================================================
+*/
+/*
+================
+FileTrackEvent::Execute
+================
+*/
+void FileTrackEvent::Execute( void ) {
+	if ( doAdd ) {
+		list.AddToEnd( file );
+		file->node = list.GetLastNode();
+	} else {
+		list.Remove( file->node );
+		delete file;
+	}
+}
+
+/*
+================
+FileTrackEvent::ClearAll
+================
+*/
+void FileTrackEvent::ClearAll( void ) {
+	//! @todo	The user should be notified if he left files open
+	LinkedList<FileEx *>::nodeType *node = list.GetFirstNode();
+	while( node != NULL ) {
+		delete node->value;
+		node = node->GetNext();
+	}
+	list.Clear();
+}
+
+/*
+==============================================================================
+
+  LoadTrackEvent
+
+==============================================================================
+*/
+/*
+================
+LoadTrackEvent::Execute
+================
+*/
+void LoadTrackEvent::Execute( void ) {
+	if ( doAdd )
+		list.Append( buffer );
+	else {
+		int index = list.Find( buffer );
+		if ( index != -1 ) {
+			delete[] buffer;
+			list.Remove( index );
+		}
+	}
+}
+
+/*
+================
+LoadTrackEvent::ClearAll
+================
+*/
+void LoadTrackEvent::ClearAll( void ) {
+	//! @todo	The user should be notified if he left files open
+	for( int i=list.Num()-1; i >= 0; i-- )
+		delete[] list[i];
+	list.Clear();
+}
+
 /*
 ==============================================================================
 
@@ -143,55 +219,6 @@ bool FileSystemEx::Init( const char *_pakExtension, const char *_basePath, const
 
 /*
 ================
-FileSystemEx::ConsumeEvents
-================
-*/
-void FileSystemEx::ConsumeEvents( void ) {
-	int index;
-	FileEx *file;
-	FileBuffered *fileBuffered;
-	byte *buffer;
-	FileEvent *evt = NULL;
-	while( (evt = eventQueue.Consume()) != NULL ) {
-		switch( evt->fileAction ) {
-			case FileEvent::OPEN:
-				file = static_cast<FileEx *>(evt->fileParam);
-				openFiles.AddToEnd( file );
-				file->node = openFiles.GetLastNode();
-				break;
-			case FileEvent::CLOSE:
-				file = static_cast<FileEx *>(evt->fileParam);
-				openFiles.Remove( file->node );
-				fileBuffered = dynamic_cast<FileBuffered *>(file);
-				if ( fileBuffered ) {
-					buffer = fileBuffered->data;
-					index = openFilesLoaded.Find( buffer );
-					OG_ASSERT( index != -1 );
-					if ( index != -1 ) {
-						delete[] buffer;
-						openFilesLoaded.Remove( index );
-					}
-				}
-				delete file;
-				break;
-			case FileEvent::BUFFER_LOAD:
-				openFilesLoaded.Append( static_cast<byte *>(evt->fileParam) );
-				break;
-			case FileEvent::BUFFER_FREE:
-				buffer = static_cast<byte *>(evt->fileParam);
-				index = openFilesLoaded.Find( buffer );
-				if ( index != -1 ) {
-					delete[] buffer;
-					openFilesLoaded.Remove( index );
-				}
-				break;
-		}
-		delete evt;
-	}
-}
-
-/*
-================
 FileSystemEx::Run
 ================
 */
@@ -199,16 +226,17 @@ void FileSystemEx::Run( void ) {
 	// All this does is watch the open/close file events and on shutdown clear all files that where still open.
 	wakeUpEvent.Lock();
 	while( keepRunning ) {
-		ConsumeEvents();
+		eventQueue.ProcessAll();
 		wakeUpEvent.Wait();
 	}
 	wakeUpEvent.Unlock();
 
 	// Consume remaining events
-	ConsumeEvents();
+	eventQueue.ProcessAll();
 
 	// Elvis has left the building, clear all evidence
-	CloseAllFiles();
+	FileTrackEvent::ClearAll();
+	LoadTrackEvent::ClearAll();
 
 	// This tape will selfdestruct in 0 seconds
 	CommonSetFileSystem( NULL );
@@ -224,22 +252,6 @@ void FileSystemEx::Run( void ) {
 			PakFileEx::CloseZip( pakFiles[i][j] );
 		pakFiles[i].Clear();
 	}
-}
-
-/*
-================
-FileSystemEx::CloseAllFiles
-================
-*/
-void FileSystemEx::CloseAllFiles( void ) {
-	//! @todo	The user should be notified if he left files open
-	LinkedList<FileEx *>::nodeType *node = openFiles.GetFirstNode();
-	while( node != NULL ) {
-		delete node->value;
-		node = node->GetNext();
-	}
-	for( int i=openFilesLoaded.Num()-1; i >= 0; i-- )
-		delete[] openFilesLoaded[i];
 }
 
 /*
@@ -429,7 +441,8 @@ bool FileSystemEx::ChangeMod( const char *dir ) {
 	}
 
 	// Close all opened files
-	CloseAllFiles();
+	FileTrackEvent::ClearAll();
+	LoadTrackEvent::ClearAll();
 
 	// Remove all resource directories, except the default(base) one
 	resourceDirs.Clear();
@@ -476,7 +489,7 @@ FileEx *FileSystemEx::OpenLocalFileRead( const char *filename, int *size ) {
 				if ( size != NULL )
 					*size = fileEx->size;
 				
-				AddFileEvent( new FileEvent( FileEvent::OPEN, fileEx ) );
+				AddFileEvent( new FileTrackEvent( fileEx, true ) );
 				return fileEx;
 			}
 		}
@@ -512,7 +525,7 @@ File *FileSystemEx::OpenRead( const char *filename, bool pure, bool buffered ) {
 		int i = fileEx->fullpath.ReverseFind("/");
 		fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i+1);
 
-		AddFileEvent( new FileEvent( FileEvent::OPEN, fileEx ) );
+		AddFileEvent( new FileTrackEvent( fileEx, true ) );
 		return fileEx;
 	}
 
@@ -599,7 +612,7 @@ File *FileSystemEx::OpenWrite( const char *filename, bool pure ) {
 	int i = fileEx->fullpath.ReverseFind("/");
 	fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i+1);
 
-	static_cast<FileSystemEx *>(FS)->AddFileEvent( new FileEvent( FileEvent::OPEN, fileEx ) );
+	static_cast<FileSystemEx *>(FS)->AddFileEvent( new FileTrackEvent( fileEx, true ) );
 
 	// Return the filehandle
 	return fileEx;
@@ -701,7 +714,7 @@ int FileSystemEx::LoadFile( const char *path, byte **buffer, bool pure ) {
 		// Just in case we are reading a text file, terminate the buffer
 		(*buffer)[size] = 0;
 
-		AddFileEvent( new FileEvent( FileEvent::BUFFER_LOAD, *buffer ) );
+		AddFileEvent( new LoadTrackEvent( *buffer, true ) );
 		file->Close();
 		return size;
 	}
@@ -722,7 +735,7 @@ Free a file that has been loaded with LoadFile()
 ============
 */
 void FileSystemEx::FreeFile( byte *buffer ) {
-	AddFileEvent( new FileEvent( FileEvent::BUFFER_FREE, buffer ) );
+	AddFileEvent( new LoadTrackEvent( buffer, false ) );
 }
 
 /*

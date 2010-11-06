@@ -41,13 +41,11 @@ namespace og {
 */
 /*
 ================
-FileEx::CloseFile
-
-Closes an open File
+FileEx::Close
 ================
 */
 void FileEx::Close( void ) {
-	static_cast<FileSystemEx *>(FS)->AddFileEvent( new FileEvent( FileEvent::CLOSE, this ) );
+	static_cast<FileSystemEx *>(FS)->AddFileEvent( new FileTrackEvent( this, false ) );
 }
 
 /*
@@ -137,6 +135,16 @@ FileBuffered *FileBuffered::Create( byte *buffer ) {
 	fileEx->data = buffer;
 	fileEx->position = 0;
 	return fileEx;
+}
+
+/*
+================
+FileBuffered::Close
+================
+*/
+void FileBuffered::Close( void ) {
+	static_cast<FileSystemEx *>(FS)->AddFileEvent( new LoadTrackEvent( data, false ) );
+	FileEx::Close();
 }
 
 /*
