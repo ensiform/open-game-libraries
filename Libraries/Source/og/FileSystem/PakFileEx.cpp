@@ -204,8 +204,8 @@ public:
 		utf8Buffer.CheckSize( inBytes );
 		int outBytes = inBytes;
 
-		byte *inchar = static_cast<byte *>( input );
-		byte *outchar = static_cast<byte *>( utf8Buffer.data );
+		byte *inchar = reinterpret_cast<byte *>( input );
+		byte *outchar = reinterpret_cast<byte *>( utf8Buffer.data );
 		if ( iconv(cd, &inchar, &inBytes, &outchar, &outBytes) == -1 )
 			return NULL;
 		utf8Buffer.data[numBytes-1] = '\0';
