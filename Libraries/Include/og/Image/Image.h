@@ -74,8 +74,7 @@ namespace og {
 		// ==============================================================================
 		static void		Shutdown( void );
 
-		// A few options to set
-
+	// A few options to set
 		// ==============================================================================
 		//! Change RoundDown mode
 		//!

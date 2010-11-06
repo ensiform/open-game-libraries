@@ -61,6 +61,7 @@ namespace og {
 		void				SeedTime( void );					// Sets the seed at ostime of calling function
 		uLong				GetSeed( void ) const;
 
+		//! @todo	what about negative ones ?
 		uLong				RandomULong( void );				// random uLong in the range [0,0xffffffff]
 		int					RandomInt( void );					// random integer in the range [0,0xffffffff]
 		int					RandomInt( int min, int max );		// random integer in the range [min, max]

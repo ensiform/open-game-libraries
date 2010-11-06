@@ -39,6 +39,9 @@ freely, subject to the following restrictions:
 	#undef INFINITY
 #endif
 
+//! @todo	Use simd instructions for vector, matrix, quat, angles, etc.. wherever it seems good.
+//! @todo	Doxygen comments
+//! @todo	Unit tests ?
 namespace og {
 	/*
 	==============================================================================

@@ -42,12 +42,13 @@ namespace og {
 //! @todo	See if thrown errors work without problems.
 //!	@todo	Cache a list of sounds + clear all cached sounds
 //! @todo	Get progress on caching ( percentage )
+//! @todo	Add EAX effects ? Reverb ?
 //! @{
 
 	// ==============================================================================
-	//! Sound Object
+	//! Defines how to play back sounds
 	//!
-	//! This is what a texture description is for graphics.
+	//! This is what a material definition is for graphics
 	// ==============================================================================
 	class Sound {
 	public:
@@ -59,7 +60,7 @@ namespace og {
 	};
 
 	// ==============================================================================
-	//! AudioEmitter Object
+	//! This positions and plays sounds in the world
 	//!
 	//! @todo	One channel that can play (non-looping) sounds without stopping anything.
 	//!			This channel would be created on play, and freed when done (or StopAll was called).
@@ -85,7 +86,7 @@ namespace og {
 		//!
 		//! @return	Number of channels allocated
 		// ==============================================================================
-		virtual int		NumChannels( void ) = 0;
+		virtual int		NumChannels( void ) const = 0;
 
 		// ==============================================================================
 		//! Play a sound on the specified channel
@@ -160,7 +161,7 @@ namespace og {
 	};
 
 	// ==============================================================================
-	//! AudioSystem Object
+	//! The audio manager
 	//!
 	//! This the interface to play stuff.
 	//! @note	og::ThreadSafetyClass = og::TSC_MULTIPLE ( except for Init/Shutdown )
@@ -181,18 +182,18 @@ namespace og {
 
 
 		// ==============================================================================
-		//! Initializes the Audio Library, loading a default soundfile.
+		//! Initialize the Audio Library, loading a default soundfile.
 		//!
 		//! @param	fileSystem			The FileSystem object
 		//! @param	defaultFilename		Default sound to play when a wanted sound is not found.
-		//! @param	deviceName			Device name, NULL for default, possible values: "Generic Software" : "Generic Hardware"
+		//! @param	deviceName			Device name, NULL for default, or use one of the values from GetDeviceList.
 		//!
 		//! @return	true if OpenAL initialization succeeded and the default sound was loaded, otherwise false.
 		// ==============================================================================
 		static bool		Init( FileSystemCore *fileSystem, const char *defaultFilename, const char *deviceName );
 
 		// ==============================================================================
-		//! Shuts down all audio playback and frees all resources.
+		//! Shut down all audio playback and free all resources.
 		//!
 		//! Clears all audio buffers and emitters.
 		// ==============================================================================

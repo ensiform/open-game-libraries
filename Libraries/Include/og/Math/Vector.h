@@ -145,9 +145,11 @@ namespace og {
 		Vec3			Snap( void ) const;
 		void			SnapSelf( void );
 
+		// operator % ?
 		Vec3			Cross( const Vec3 &other ) const;
 		static Vec3		Cross( const Vec3 &v1, const Vec3 &v2 );
 
+		// operator & ?
 		float			Dot( const Vec3 &other ) const;
 		static float	Dot( const Vec3 &v1, const Vec3 &v2 );
 

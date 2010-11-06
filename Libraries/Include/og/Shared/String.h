@@ -46,6 +46,7 @@ namespace og {
 	//! @todo	Use MultiByteToWideChar/mbstowcs rather at some points ?
 	//! @todo	Add Method Verify() (check for utf-8 correctness)
 	//! @todo	strip filename stuff and put it into a derived class, where extension and path will be saved differently.
+	//! @todo	Decide on size_t/uInt, etc.
 	// ==============================================================================
 	class String {
 	public:
