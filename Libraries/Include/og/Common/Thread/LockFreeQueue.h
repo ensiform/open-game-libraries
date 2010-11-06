@@ -32,11 +32,11 @@
 #ifndef __OG_LOCK_FREE_QUEUE_H__
 #define __OG_LOCK_FREE_QUEUE_H__
 
-#include <og/Shared/Thread/Thread.h>
+#include <og/Common/Thread/Thread.h>
 
 //! Open Game Libraries
 namespace og {
-//! @defgroup Shared Shared (Library)
+//! @defgroup Common Common (Library)
 //! @{
 
 	// ==============================================================================

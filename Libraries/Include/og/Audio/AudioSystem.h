@@ -3,7 +3,6 @@
 //! @brief	Audio Interface Public Interface (shared with game module)
 //! @author	Santo Pfingsten (TTK-Bandit)
 //! @note	Copyright (C) 2007-2010 Lusito Software
-//! @note	Thread safety class: None
 // ==============================================================================
 //
 // The Open Game Libraries.
@@ -66,7 +65,6 @@ namespace og {
 	//!			This channel would be created on play, and freed when done (or StopAll was called).
 	//!
 	//! This is like a speaker in your world.
-	//! @note	Thread safety class: single
 	// ==============================================================================
 	class AudioEmitter {
 	public:
@@ -165,7 +163,7 @@ namespace og {
 	//! AudioSystem Object
 	//!
 	//! This the interface to play stuff.
-	//! @note	Thread safety class: multiple ( except for Init/Shutdown )
+	//! @note	og::ThreadSafetyClass = og::TSC_MULTIPLE ( except for Init/Shutdown )
 	// ==============================================================================
 	class AudioSystem {
 	public:

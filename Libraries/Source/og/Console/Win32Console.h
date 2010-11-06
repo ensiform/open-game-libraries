@@ -33,7 +33,7 @@ freely, subject to the following restrictions:
 #include <string>
 
 #include <og/Console/Console.h>
-#include <og/Shared/Thread/LockFreeQueue.h>
+#include <og/Common/Thread/LockFreeQueue.h>
 #include "CmdSystemEx.h"
 #include <windows.h>
 

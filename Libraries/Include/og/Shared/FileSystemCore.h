@@ -93,7 +93,9 @@ namespace og {
 	//! FileSystemCore interface.
 	//!
 	//! Global file access
-	//! @note	Thread safety class: multiple
+	//! @note	og::ThreadSafetyClass = og::TSC_MULTIPLE
+	//! @note	These methods must be callable from multiple threads at the same time.
+	//!			Make sure that is possible if you provide your own filesystem.
 	// ==============================================================================
 	class FileSystemCore {
 	public:

@@ -135,7 +135,7 @@ namespace og {
 	//! FileSystem interface.
 	//!
 	//! Global file access
-	//! @note	Thread safety class: multiple
+	//! @note	og::ThreadSafetyClass = og::TSC_MULTIPLE
 	// ==============================================================================
 	class FileSystem : public FileSystemCore {
 	public:

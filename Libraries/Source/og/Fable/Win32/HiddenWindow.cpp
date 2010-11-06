@@ -29,7 +29,7 @@
 
 #include "DeviceDI.h"
 #include <Dbt.h>
-#include <og/Shared/Thread/Thread.h>
+#include <og/Common/Thread/Thread.h>
 
 #if OG_WIN32
 

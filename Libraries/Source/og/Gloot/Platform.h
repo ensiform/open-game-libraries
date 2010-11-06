@@ -49,7 +49,7 @@ freely, subject to the following restrictions:
 #endif
 
 #include <og/Common/Common.h>
-#include <og/Shared/Thread/LockFreeQueue.h>
+#include <og/Common/Thread/LockFreeQueue.h>
 
 #include <og/Gloot/glmin.h>
 #include <og/Gloot/gloot.h>

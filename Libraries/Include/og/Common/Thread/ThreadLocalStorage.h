@@ -34,7 +34,7 @@
 
 //! Open Game Libraries
 namespace og {
-//! @defgroup Shared Shared (Library)
+//! @defgroup Common Common (Library)
 //! @{
 
 	// ==============================================================================

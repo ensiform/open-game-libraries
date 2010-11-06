@@ -27,8 +27,8 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Shared/Thread/Thread.h>
-#include <og/Shared/Thread/ThreadLocalStorage.h>
+#include <og/Common/Thread/Thread.h>
+#include <og/Common/Thread/ThreadLocalStorage.h>
 
 #if OG_WIN32
 #include <windows.h>

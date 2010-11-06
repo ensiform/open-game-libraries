@@ -47,7 +47,7 @@ namespace og {
 	//! Image Interface & Object
 	//!
 	//! Load/Save images
-	//! @note	Thread safety class: None, should be Multiple
+	//! @note	og::ThreadSafetyClass = og::TSC_NONE, should be og::TSC_MULTIPLE
 	// ==============================================================================
 	class Image {
 	public:

@@ -27,18 +27,6 @@
 //
 // ==============================================================================
 
-/*
-Thread Safety Classes:
-Unknown		= Needs to be verified
-None		= Not thread safe (i.e. there is still some shared data between multiple objects
-			  that will cause problems when using multiple threads, even if the objects are used in their threads only)
-Multiple	= This object can be used from multiple threads at the same time
-Single		= One object will not interfere with objects or shared data in other threads,
-			  but can not be used by multiple threads at the same time without extra code.
-
-If not specified otherwise, the object has thread safety class single.
-*/
-
 #ifndef __OG_THREAD_H__
 #define __OG_THREAD_H__
 
@@ -58,8 +46,20 @@ If not specified otherwise, the object has thread safety class single.
 
 //! Open Game Libraries
 namespace og {
-//! @defgroup Shared Shared (Library)
+//! @defgroup Common Common (Library)
 //! @{
+
+	//! Thread Safety Classes ( not for actual use, just information )
+	//! @note If not specified otherwise, the object has thread safety class single.
+	enum ThreadSafetyClass {
+		TSC_UNKNOWN,	//!< Needs to be verified
+		TSC_NONE,		//!< Not thread safe at all.
+						//!  There is still some shared data between multiple objects that will cause problems
+						//!  when using multiple threads, even if the objects are used in their threads only
+		TSC_MULTIPLE,	//!< This object can be used from multiple threads at the same time
+		TSC_SINGLE,		//!< One object will not interfere with objects or shared data in other threads,
+						//!  but can not be used by multiple threads at the same time without extra code.
+	};
 
 	// ==============================================================================
 	//! Condition together with a mutex

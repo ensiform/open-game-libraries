@@ -3,6 +3,9 @@
 //! @brief	Common Library
 //! @author	Santo Pfingsten (TTK-Bandit)
 //! @note	Copyright (C) 2007-2010 Lusito Software
+//! @todo	Unit tests ?
+//! @todo	Check where Error and Warning Messages would be appropriate
+//! @todo	Checks for out of memory stuff?
 // ==============================================================================
 //
 // The Open Game Libraries.
@@ -32,7 +35,7 @@
 
 #include <og/Shared/Shared.h>
 #include <og/Shared/FileSystemCore.h>
-#include <og/Shared/Thread/ThreadLocalStorage.h>
+#include <og/Common/Thread/ThreadLocalStorage.h>
 
 #include <stdlib.h>
 #include <stdio.h>

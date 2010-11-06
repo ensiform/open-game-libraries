@@ -3,7 +3,7 @@
 //! @brief	Native Console Interface
 //! @author	Santo Pfingsten (TTK-Bandit)
 //! @note	Copyright (C) 2007-2010 Lusito Software
-//! @note	Thread safety class: Unknown
+//! @note	og::ThreadSafetyClass = og::TSC_UNKNOWN
 //!
 //! @todo	Test unicode more.
 //! @todo	Add access functions to log lines

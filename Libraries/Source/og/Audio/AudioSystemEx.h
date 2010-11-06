@@ -32,7 +32,7 @@
 
 #include <og/Audio/AudioSystem.h>
 #include <og/FileSystem/FileSystem.h>
-#include <og/Shared/Thread/LockFreeQueue.h>
+#include <og/Common/Thread/LockFreeQueue.h>
 #include "AudioSource.h"
 #include "AudioEmitterEx.h"
 #include "AudioStream.h"

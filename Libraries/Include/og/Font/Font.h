@@ -4,7 +4,7 @@
 //! @author	Santo Pfingsten (TTK-Bandit)
 //! @note	Copyright (C) 2007-2010 Lusito Software
 //! @note	This will not work on OpenGL 3
-//! @note	Thread safety class: Unknown
+//! @note	og::ThreadSafetyClass = og::TSC_UNKNOWN
 // ==============================================================================
 //
 // The Open Game Libraries.

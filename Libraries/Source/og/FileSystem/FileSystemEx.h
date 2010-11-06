@@ -33,7 +33,7 @@ freely, subject to the following restrictions:
 #include <string>
 #include <zlib/zlib.h>
 #include <og/Common/Common.h>
-#include <og/Shared/Thread/LockFreeQueue.h>
+#include <og/Common/Thread/LockFreeQueue.h>
 #include <og/FileSystem/FileSystem.h>
 #include "FileEx.h"
 #include "PakFileEx.h"

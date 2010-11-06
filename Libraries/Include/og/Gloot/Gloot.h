@@ -5,7 +5,7 @@
 //! @note	Copyright (C) 2002-2006 Camilla Berglund
 //! @note	Copyright (C) 2007-2010 Lusito Software
 //! @note	Some of the code is based on GLFW 2.6 (See Readme.txt)
-//! @note	Thread safety class: Unknown
+//! @note	og::ThreadSafetyClass = og::TSC_UNKNOWN
 // ==============================================================================
 //
 // The Open Game Libraries.

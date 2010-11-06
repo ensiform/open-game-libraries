@@ -31,7 +31,7 @@
 #define __OG_JOB_MANAGER_H__
 
 #include <og/Common/Common.h>
-#include <og/Shared/Thread/LockFreeQueue.h>
+#include <og/Common/Thread/LockFreeQueue.h>
 
 //! Open Game Libraries
 namespace og {
