@@ -568,7 +568,7 @@ LRESULT WindowEx::WndCallback( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 
 				int center[2] = { windowConfig.width/2, windowConfig.height/2 };
 				if( x != center[0] || y != center[1] ) {
-					Mgr.eventQueue.Produce( new WindowEvent( this, uMsg, x - center[0], y - center[1] ) );
+					Mgr.eventQueue.Add( new WindowEvent( this, uMsg, x - center[0], y - center[1] ) );
 				}
 			}
 			return 0;
@@ -581,7 +581,7 @@ LRESULT WindowEx::WndCallback( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 				RAWINPUT* raw = (RAWINPUT*)lpb;
 				if ( raw->header.dwType == RIM_TYPEMOUSE ) {
 					if ( raw->data.mouse.lLastX != 0 || raw->data.mouse.lLastY != 0 )
-						Mgr.eventQueue.Produce( new WindowEvent( this, WM_MOUSEMOVE, raw->data.mouse.lLastX, raw->data.mouse.lLastY ) );
+						Mgr.eventQueue.Add( new WindowEvent( this, WM_MOUSEMOVE, raw->data.mouse.lLastX, raw->data.mouse.lLastY ) );
 				}
 			}
 			break;
@@ -706,11 +706,11 @@ LRESULT WindowEx::WndCallback( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 
 			if ( hasFocus != Active ) {
 				hasFocus = Active;
-				Mgr.eventQueue.Produce( new WindowEvent( this, WM_ACTIVATE, 0, 0 ) );
+				Mgr.eventQueue.Add( new WindowEvent( this, WM_ACTIVATE, 0, 0 ) );
 			}
 			if ( isIconified != Iconified ) {
 				isIconified = Iconified;
-				Mgr.eventQueue.Produce( new WindowEvent( this, WM_ICONIFY_CHANGE, 0, 0 ) );
+				Mgr.eventQueue.Add( new WindowEvent( this, WM_ICONIFY_CHANGE, 0, 0 ) );
 			}
 
 			}
@@ -718,24 +718,24 @@ LRESULT WindowEx::WndCallback( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 
 		// Close Window
 		case WM_CLOSE:
-			Mgr.eventQueue.Produce( new WindowEvent( this, uMsg, 0, 0 ) );
+			Mgr.eventQueue.Add( new WindowEvent( this, uMsg, 0, 0 ) );
 			break;
 
 		// Resize window
 		case WM_SIZE:
 			if ( !ignoreSizeMove )
-				Mgr.eventQueue.Produce( new WindowEvent( this, uMsg, LOWORD(lParam), HIWORD(lParam) ) );
+				Mgr.eventQueue.Add( new WindowEvent( this, uMsg, LOWORD(lParam), HIWORD(lParam) ) );
 			break;
 
 		// Move window
 		case WM_MOVE:
 			if ( !ignoreSizeMove )
-				Mgr.eventQueue.Produce( new WindowEvent( this, uMsg, LOWORD(lParam), HIWORD(lParam) ) );
+				Mgr.eventQueue.Add( new WindowEvent( this, uMsg, LOWORD(lParam), HIWORD(lParam) ) );
 			break;
 
 		// Window needs to be redrawn
 		case WM_PAINT:
-			Mgr.eventQueue.Produce( new WindowEvent( this, uMsg, 0, 0 ) );
+			Mgr.eventQueue.Add( new WindowEvent( this, uMsg, 0, 0 ) );
 			break;
 	}
 

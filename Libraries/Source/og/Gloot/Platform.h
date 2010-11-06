@@ -49,7 +49,7 @@ freely, subject to the following restrictions:
 #endif
 
 #include <og/Common/Common.h>
-#include <og/Common/Thread/LockFreeQueue.h>
+#include <og/Common/Thread/EventQueue.h>
 
 #include <og/Gloot/glmin.h>
 #include <og/Gloot/gloot.h>
@@ -89,7 +89,7 @@ namespace og {
 
 	bool StringInExtensionString( const char *string, const char *extensions );
 
-	class WindowEvent {
+	class WindowEvent : public QueuedEvent {
 	public:
 		WindowEvent( WindowEx *window, uInt msg, uInt wParam, uInt lParam ) {
 			OG_ASSERT( window != NULL );
@@ -168,7 +168,7 @@ namespace og {
 		// Thread data
 		Thread *	messageThread;
 		Condition	newWindowEndEvent;
-		LockFreeQueue<WindowEvent> eventQueue;
+		EventQueue	eventQueue;
 
 		// Platform specific extensions (context specific)
 		WGLSWAPINTERVALEXT_T			wglSwapIntervalEXT;

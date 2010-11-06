@@ -148,9 +148,7 @@ void Platform::Shutdown( void ) {
 		messageThread = NULL;
 	}
 
-	WindowEvent *evt;
-	while( (evt=Mgr.eventQueue.Consume()) != NULL )
-		delete evt;
+	Mgr.eventQueue.DeleteAll();
 
 	if( classAtom ) {
 		// Unregister window class
@@ -302,11 +300,7 @@ bool Platform::DoSilentVideoTest( void ) {
 
 
 void Gloot::Synchronize( void ) {
-	WindowEvent *evt;
-	while( (evt=Mgr.eventQueue.Consume()) != NULL ) {
-		evt->Execute();
-		delete evt;
-	}
+	Mgr.eventQueue.ProcessAll();
 }
 
 void Gloot::GetMousePos( int *x, int *y ) {

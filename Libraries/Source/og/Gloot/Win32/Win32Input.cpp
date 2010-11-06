@@ -114,15 +114,15 @@ void Platform::KeyEvent( WindowEx *window, WPARAM wParam, LPARAM lParam, bool do
 		case VK_SHIFT:
 			if ( !down ) {
 				// Special trick: release both shift keys on SHIFT up event
-				Mgr.eventQueue.Produce( new WindowEvent( window, WM_KEYDOWN, Key::LSHIFT, 0 ) );
-				Mgr.eventQueue.Produce( new WindowEvent( window, WM_KEYDOWN, Key::RSHIFT, 0 ) );
+				Mgr.eventQueue.Add( new WindowEvent( window, WM_KEYDOWN, Key::LSHIFT, 0 ) );
+				Mgr.eventQueue.Add( new WindowEvent( window, WM_KEYDOWN, Key::RSHIFT, 0 ) );
 			} else {
 				// Compare scan code for this key with that of VK_RSHIFT in
 				// order to determine which shift key was pressed (left or right)
 				if( MapVirtualKey( VK_RSHIFT, MAPVK_VK_TO_VSC ) == ((lParam & 0x01ff0000) >> 16) )
-					Mgr.eventQueue.Produce( new WindowEvent( window, WM_KEYDOWN, Key::RSHIFT, 1 ) );
+					Mgr.eventQueue.Add( new WindowEvent( window, WM_KEYDOWN, Key::RSHIFT, 1 ) );
 				else
-					Mgr.eventQueue.Produce( new WindowEvent( window, WM_KEYDOWN, Key::LSHIFT, 1 ) );
+					Mgr.eventQueue.Add( new WindowEvent( window, WM_KEYDOWN, Key::LSHIFT, 1 ) );
 			}
 			return;
 
@@ -130,7 +130,7 @@ void Platform::KeyEvent( WindowEx *window, WPARAM wParam, LPARAM lParam, bool do
 		case VK_CONTROL:
 			// Is this an extended key (i.e. right key)?
 			if( lParam & VK_EXTENDED_FLAG )
-				Mgr.eventQueue.Produce( new WindowEvent( window, WM_KEYDOWN, Key::RCTRL, down ) );
+				Mgr.eventQueue.Add( new WindowEvent( window, WM_KEYDOWN, Key::RCTRL, down ) );
 			else {
 				// Here is a trick: "Alt Gr" sends LCTRL, then RALT. We only
 				// want the RALT message, so we try to see if the next message
@@ -144,20 +144,20 @@ void Platform::KeyEvent( WindowEx *window, WPARAM wParam, LPARAM lParam, bool do
 							return;
 					}
 				}
-				Mgr.eventQueue.Produce( new WindowEvent( window, WM_KEYDOWN, Key::LCTRL, down ) );
+				Mgr.eventQueue.Add( new WindowEvent( window, WM_KEYDOWN, Key::LCTRL, down ) );
 			}
 			return;
 
 		// The ALT keys require special handling
 		case VK_MENU:
 			// Is this an extended key (i.e. right key)?
-			Mgr.eventQueue.Produce( new WindowEvent( window, WM_KEYDOWN, (lParam & VK_EXTENDED_FLAG) ? Key::RALT : Key::LALT, down ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, WM_KEYDOWN, (lParam & VK_EXTENDED_FLAG) ? Key::RALT : Key::LALT, down ) );
 			return;
 
 		// The ENTER keys require special handling
 		case VK_RETURN:
 			// Is this an extended key (i.e. keypad)?
-			Mgr.eventQueue.Produce( new WindowEvent( window, WM_KEYDOWN, (lParam & VK_EXTENDED_FLAG) ? Key::KP_ENTER : Key::ENTER, down ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, WM_KEYDOWN, (lParam & VK_EXTENDED_FLAG) ? Key::KP_ENTER : Key::ENTER, down ) );
 			return;
 	}
 
@@ -166,7 +166,7 @@ void Platform::KeyEvent( WindowEx *window, WPARAM wParam, LPARAM lParam, bool do
 	if ( !(lParam & VK_EXTENDED_FLAG) ) {
 		it = keypadMap.find( MapVirtualKey( HIWORD(lParam) & 0xFF, MAPVK_VSC_TO_VK) );
 		if ( it != keypadMap.end() ) {
-			Mgr.eventQueue.Produce( new WindowEvent( window, WM_KEYDOWN, it->second, down ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, WM_KEYDOWN, it->second, down ) );
 			return;
 		}
 	}
@@ -174,7 +174,7 @@ void Platform::KeyEvent( WindowEx *window, WPARAM wParam, LPARAM lParam, bool do
 	// Special keys (non character keys)
 	it = keyMap.find( wParam );
 	if ( it != keyMap.end() ) {
-		Mgr.eventQueue.Produce( new WindowEvent( window, WM_KEYDOWN, it->second, down ) );
+		Mgr.eventQueue.Add( new WindowEvent( window, WM_KEYDOWN, it->second, down ) );
 		return;
 	}
 
@@ -187,13 +187,13 @@ void Platform::KeyEvent( WindowEx *window, WPARAM wParam, LPARAM lParam, bool do
 
 		// Valid ISO-8859-1 character?
 		if( (wParam >= 32 && wParam <= 126) || (wParam >= 160 && wParam <= 255) )
-			Mgr.eventQueue.Produce( new WindowEvent( window, WM_KEYDOWN, wParam, down ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, WM_KEYDOWN, wParam, down ) );
 #if 0
 		// unicode
 		//! @todo	my tests with a greek keyboard layout still had values betwen 0 and 255
 		// is this needed at all ?
 		else if( (wParam >= 256) )
-			Mgr.eventQueue.Produce( new WindowEvent( window, WM_KEYDOWN, wParam, down ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, WM_KEYDOWN, wParam, down ) );
 #endif
 	}
 }
@@ -218,58 +218,58 @@ bool Platform::WndInputCallback( WindowEx *window, UINT uMsg, WPARAM wParam, LPA
 			return true;
 
 		case WM_CHAR:
-			Mgr.eventQueue.Produce( new WindowEvent( window, uMsg, wParam, 0 ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, uMsg, wParam, 0 ) );
 			return true;
 
 		// Were any of the mouse-buttons pressed?
 		case WM_LBUTTONDOWN:
 			SetCapture( window->hWnd );
-			Mgr.eventQueue.Produce( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button1, 1 ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button1, 1 ) );
 			return true;
 		case WM_RBUTTONDOWN:
 			SetCapture( window->hWnd );
-			Mgr.eventQueue.Produce( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button2, 1 ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button2, 1 ) );
 			return true;
 		case WM_MBUTTONDOWN:
 			SetCapture( window->hWnd );
-			Mgr.eventQueue.Produce( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button3, 1 ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button3, 1 ) );
 			return true;
 		case WM_XBUTTONDOWN:
 			if( HIWORD(wParam) == XBUTTON1 ) {
 				SetCapture( window->hWnd );
-				Mgr.eventQueue.Produce( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button4, 1 ) );
+				Mgr.eventQueue.Add( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button4, 1 ) );
 			} else if( HIWORD(wParam) == XBUTTON2 ) {
 				SetCapture( window->hWnd );
-				Mgr.eventQueue.Produce( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button5, 1 ) );
+				Mgr.eventQueue.Add( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button5, 1 ) );
 			}
 			return true;
 
 		// Were any of the mouse-buttons released?
 		case WM_LBUTTONUP:
 			ReleaseCapture();
-			Mgr.eventQueue.Produce( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button1, 0 ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button1, 0 ) );
 			return true;
 		case WM_RBUTTONUP:
 			ReleaseCapture();
-			Mgr.eventQueue.Produce( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button2, 0 ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button2, 0 ) );
 			return true;
 		case WM_MBUTTONUP:
 			ReleaseCapture();
-			Mgr.eventQueue.Produce( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button3, 0 ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button3, 0 ) );
 			return true;
 		case WM_XBUTTONUP:
 			if( HIWORD(wParam) == XBUTTON1 ) {
 				ReleaseCapture();
-				Mgr.eventQueue.Produce( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button4, 0 ) );
+				Mgr.eventQueue.Add( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button4, 0 ) );
 			} else if( HIWORD(wParam) == XBUTTON2 ) {
 				ReleaseCapture();
-				Mgr.eventQueue.Produce( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button5, 0 ) );
+				Mgr.eventQueue.Add( new WindowEvent( window, WM_LBUTTONDOWN, Mouse::Button5, 0 ) );
 			}
 			return true;
 
 		// Mouse wheel action?
 		case WM_MOUSEWHEEL:
-			Mgr.eventQueue.Produce( new WindowEvent( window, WM_MOUSEWHEEL, (((int)wParam) >> 16) / WHEEL_DELTA, 0 ) );
+			Mgr.eventQueue.Add( new WindowEvent( window, WM_MOUSEWHEEL, (((int)wParam) >> 16) / WHEEL_DELTA, 0 ) );
 			return true;
 	}
 	return false;
