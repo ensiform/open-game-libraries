@@ -80,19 +80,6 @@ bool CheckAlErrors( void ) {
 
 /*
 ================
-AudioThread::ConsumeEvents
-================
-*/
-void AudioThread::ConsumeEvents( void ) {
-	EmitterEvent *evt = NULL;
-	while( (evt = eventQueue.Consume()) != NULL ) {
-		evt->emitter->OnEvent( evt );
-		delete evt;
-	}
-}
-
-/*
-================
 AudioThread::Run
 ================
 */
@@ -113,7 +100,7 @@ void AudioThread::Run( void ) {
 	}*/
 	wakeUpEvent.Lock();
 	while( keepRunning ) {
-		ConsumeEvents();
+		eventQueue.ProcessAll();
 
 		// update audio sources
 		for( AudioSource *source = firstAudioSource; source != NULL; source = source->next ) {
@@ -140,7 +127,7 @@ void AudioThread::Run( void ) {
 	wakeUpEvent.Unlock();
 
 	// Consume remaining events
-	ConsumeEvents();
+	eventQueue.ProcessAll();
 
 	if ( firstAudioSource ) {
 		delete firstAudioSource;

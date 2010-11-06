@@ -32,7 +32,7 @@
 
 #include <og/Audio/AudioSystem.h>
 #include <og/FileSystem/FileSystem.h>
-#include <og/Common/Thread/LockFreeQueue.h>
+#include <og/Common/Thread/EventQueue.h>
 #include "AudioSource.h"
 #include "AudioEmitterEx.h"
 #include "AudioStream.h"
@@ -43,11 +43,18 @@ namespace og {
 	extern FileSystemCore *audioFS;
 	bool CheckAlErrors( void );
 
+	/*
+	==============================================================================
+
+	  AudioThread
+
+	==============================================================================
+	*/
 	class AudioThread : public Thread {
 	public:
 		AudioThread( AudioStream *stream ) : firstAudioSource(NULL), defaultStream(stream) {}
 
-		void	AddEvent( EmitterEvent *evt ) { eventQueue.Produce( evt ); WakeUp(); }
+		void	AddEvent( QueuedEvent *evt ) { eventQueue.Add( evt ); WakeUp(); }
 
 		AudioSource *FindFreeAudioSource( void );
 
@@ -55,10 +62,9 @@ namespace og {
 
 	protected:
 		void	Run( void );
-		void	ConsumeEvents( void );
 
 	private:
-		LowLockQueue<EmitterEvent> eventQueue;
+		EventQueue	eventQueue;
 		AudioSource *firstAudioSource;
 
 		AudioStream *defaultStream;

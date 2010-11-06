@@ -31,24 +31,6 @@
 #define __OG_AUDIO_EMITTER_EX_H__
 
 namespace og {
-	class EmitterEvent {
-	public:
-		EmitterEvent( AudioEmitterEx *emt ) { emitter = emt; }
-		enum EEVT_Type {
-			PLAY,
-			PAUSE,
-			STOP,
-			STOPALL,
-			UPDATE,
-		};
-
-		EEVT_Type type;
-		AudioEmitterEx *emitter;
-		int channel;
-		const Sound *sound;
-		bool allowLoop;
-	};
-
 	/*
 	==============================================================================
 
@@ -61,7 +43,7 @@ namespace og {
 		// ---------------------- Public AudioEmitter Interface -------------------
 
 		void	Init( int channels );
-		int		NumChannels( void ) { return numChannels; }
+		int		NumChannels( void ) const { return numChannels; }
 
 		void	Play( int channel, const Sound *sound, bool allowLoop=true );
 		void	Pause( int channel );
@@ -82,9 +64,17 @@ namespace og {
 
 		void	Clear( void );
 		void	OnSourceStop( int channel );
-		void	OnEvent( EmitterEvent *evt );
 
 	private:
+		friend class EE_Play;
+		friend class EE_Pause;
+		friend class EE_Stop;
+		friend class EE_Update;
+		friend class EE_SetRelative;
+		friend class EE_SetPosition;
+		friend class EE_SetVelocity;
+		friend class EE_SetDirectional;
+
 		bool	IsValidChannel( int channel ) const;
 
 		AudioSource **sndChannels;

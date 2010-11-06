@@ -34,6 +34,201 @@ namespace og {
 /*
 ==============================================================================
 
+  EE_Base
+
+==============================================================================
+*/
+class EE_Base : public QueuedEvent {
+public:
+	EE_Base( AudioEmitterEx *emt ) : emitter(emt) {}
+
+protected:
+	AudioEmitterEx *emitter;
+};
+
+/*
+==============================================================================
+
+  EE_Play
+
+==============================================================================
+*/
+class EE_Play : public EE_Base {
+public:
+	EE_Play( AudioEmitterEx *emt, int ch, const Sound *snd, bool loopAllowed )
+		: EE_Base(emt), channel(ch), sound(snd), allowLoop(loopAllowed) {}
+
+	void	Execute( void )  {
+		if ( emitter->IsValidChannel( channel ) ) {
+			AudioSource *source = emitter->sndChannels[channel];
+			if ( source == NULL )
+				source = audioSystemObject.audioThread->FindFreeAudioSource();
+
+			if ( source ) {
+				if ( source->Play( emitter, channel, sound, allowLoop ) ) {
+					emitter->sndChannels[channel] = source;
+					emitter->sndChannels[channel]->OnUpdate( &emitter->details );
+				}
+				return;
+			}
+			User::Warning("No more free sound Sources!");
+		}
+	}
+
+private:
+	int channel;
+	const Sound *sound;
+	bool allowLoop;
+};
+
+/*
+==============================================================================
+
+  EE_Pause
+
+==============================================================================
+*/
+class EE_Pause : public EE_Base {
+public:
+	EE_Pause( AudioEmitterEx *emt, int ch ) : EE_Base(emt), channel(ch) {}
+
+	void	Execute( void )  {
+		if ( emitter->IsValidChannel( channel ) && emitter->sndChannels[channel] != NULL )
+			emitter->sndChannels[channel]->Pause();
+	}
+
+private:
+	int channel;
+};
+
+/*
+==============================================================================
+
+  EE_Stop
+
+==============================================================================
+*/
+class EE_Stop : public EE_Base {
+public:
+	EE_Stop( AudioEmitterEx *emt, int ch ) : EE_Base(emt), channel(ch) {}
+
+	void	Execute( void )  {
+		if ( channel == -1 ) {
+			for( int i=0; i<emitter->numChannels; i++ ) {
+				if ( emitter->sndChannels[i] != NULL )
+					emitter->sndChannels[i]->Stop();
+			}
+		}
+		else if ( emitter->IsValidChannel( channel ) && emitter->sndChannels[channel] != NULL )
+			emitter->sndChannels[channel]->Stop();
+	}
+
+private:
+	int channel;
+};
+
+/*
+==============================================================================
+
+  EE_Update
+
+==============================================================================
+*/
+class EE_Update : public EE_Base {
+public:
+	EE_Update( AudioEmitterEx *emt ) : EE_Base(emt) {}
+
+	void	Update( void )  {
+		if ( emitter->IsValidChannel( 0 ) ) {
+			for( int i=0; i<emitter->numChannels; i++ ) {
+				if ( emitter->sndChannels[i] != NULL )
+					emitter->sndChannels[i]->OnUpdate( &emitter->details );
+			}
+		}
+	}
+};
+
+/*
+==============================================================================
+
+  EE_SetRelative
+
+==============================================================================
+*/
+class EE_SetRelative : public EE_Update {
+public:
+	EE_SetRelative( AudioEmitterEx *emt, bool val ) : EE_Update(emt), value(val) {}
+
+	void	Execute( void )  { emitter->details.relative = value; Update(); }
+
+private:
+	bool	value;
+};
+
+/*
+==============================================================================
+
+  EE_SetPosition
+
+==============================================================================
+*/
+class EE_SetPosition : public EE_Update {
+public:
+	EE_SetPosition( AudioEmitterEx *emt, const Vec3 &val ) : EE_Update(emt), value(val) {}
+
+	void	Execute( void )  { emitter->details.origin = value; Update(); }
+
+private:
+	Vec3	value;
+};
+
+/*
+==============================================================================
+
+  EE_SetVelocity
+
+==============================================================================
+*/
+class EE_SetVelocity : public EE_Update {
+public:
+	EE_SetVelocity( AudioEmitterEx *emt, const Vec3 &val ) : EE_Update(emt), value(val) {}
+
+	void	Execute( void )  { emitter->details.velocity = value; Update(); }
+
+private:
+	Vec3	value;
+};
+
+/*
+==============================================================================
+
+  EE_SetDirectional
+
+==============================================================================
+*/
+class EE_SetDirectional : public EE_Update {
+public:
+	EE_SetDirectional( AudioEmitterEx *emt, const Vec3 &dir, float innerAng, float outerAng, float outerVol )
+		: EE_Update(emt), direction(dir), innerAngle(innerAng), outerAngle(outerAng), outerVolume(outerVol) {}
+
+	void	Execute( void )  {
+		emitter->details.direction = direction;
+		emitter->details.innerAngle = innerAngle;
+		emitter->details.outerAngle = outerAngle;
+		emitter->details.outerVolume = outerVolume;
+		Update();
+	}
+
+private:
+	Vec3	direction;
+	float	innerAngle;
+	float	outerAngle;
+	float	outerVolume;
+};
+
+/*
+==============================================================================
+
   AudioEmitterEx
 
 ==============================================================================
@@ -122,14 +317,8 @@ AudioEmitterEx::Play
 ================
 */
 void AudioEmitterEx::Play( int channel, const Sound *sound, bool allowLoop ) {
-	if ( !audioSystemObject.audioThread )
-		return;
-	EmitterEvent *evt = new EmitterEvent( this );
-	evt->type = EmitterEvent::PLAY;
-	evt->channel = channel;
-	evt->sound = sound;
-	evt->allowLoop = allowLoop;
-	audioSystemObject.audioThread->AddEvent( evt );
+	if ( audioSystemObject.audioThread )
+		audioSystemObject.audioThread->AddEvent( new EE_Play( this, channel, sound, allowLoop ) );
 }
 
 /*
@@ -138,12 +327,8 @@ AudioEmitterEx::Stop
 ================
 */
 void AudioEmitterEx::Stop( int channel ) {
-	if ( !audioSystemObject.audioThread )
-		return;
-	EmitterEvent *evt = new EmitterEvent( this );
-	evt->type = EmitterEvent::STOP;
-	evt->channel = channel;
-	audioSystemObject.audioThread->AddEvent( evt );
+	if ( audioSystemObject.audioThread )
+		audioSystemObject.audioThread->AddEvent( new EE_Stop( this, channel ) );
 }
 
 /*
@@ -152,11 +337,8 @@ AudioEmitterEx::StopAll
 ================
 */
 void AudioEmitterEx::StopAll( void ) {
-	if ( !audioSystemObject.audioThread )
-		return;
-	EmitterEvent *evt = new EmitterEvent( this );
-	evt->type = EmitterEvent::STOPALL;
-	audioSystemObject.audioThread->AddEvent( evt );
+	if ( audioSystemObject.audioThread )
+		audioSystemObject.audioThread->AddEvent( new EE_Stop( this, -1 ) );
 }
 
 /*
@@ -165,12 +347,8 @@ AudioEmitterEx::Pause
 ================
 */
 void AudioEmitterEx::Pause( int channel ) {
-	if ( !audioSystemObject.audioThread )
-		return;
-	EmitterEvent *evt = new EmitterEvent( this );
-	evt->type = EmitterEvent::PAUSE;
-	evt->channel = channel;
-	audioSystemObject.audioThread->AddEvent( evt );
+	if ( audioSystemObject.audioThread )
+		audioSystemObject.audioThread->AddEvent( new EE_Pause( this, channel ) );
 }
 
 /*
@@ -188,12 +366,8 @@ AudioEmitterEx::SetRelative
 ================
 */
 void AudioEmitterEx::SetRelative( bool value ) {
-	if ( !audioSystemObject.audioThread )
-		return;
-	EmitterEvent *evt = new EmitterEvent( this );
-	evt->type = EmitterEvent::UPDATE;
-	details.relative = value;
-	audioSystemObject.audioThread->AddEvent( evt );
+	if ( audioSystemObject.audioThread )
+		audioSystemObject.audioThread->AddEvent( new EE_SetRelative( this, value ) );
 }
 
 /*
@@ -202,12 +376,8 @@ AudioEmitterEx::SetPosition
 ================
 */
 void AudioEmitterEx::SetPosition( const Vec3 &pos ) {
-	if ( !audioSystemObject.audioThread )
-		return;
-	EmitterEvent *evt = new EmitterEvent( this );
-	evt->type = EmitterEvent::UPDATE;
-	details.origin = pos;
-	audioSystemObject.audioThread->AddEvent( evt );
+	if ( audioSystemObject.audioThread )
+		audioSystemObject.audioThread->AddEvent( new EE_SetPosition( this, pos ) );
 }
 
 /*
@@ -216,12 +386,8 @@ AudioEmitterEx::SetVelocity
 ================
 */
 void AudioEmitterEx::SetVelocity( const Vec3 &vel ) {
-	if ( !audioSystemObject.audioThread )
-		return;
-	EmitterEvent *evt = new EmitterEvent( this );
-	evt->type = EmitterEvent::UPDATE;
-	details.velocity = vel;
-	audioSystemObject.audioThread->AddEvent( evt );
+	if ( audioSystemObject.audioThread )
+		audioSystemObject.audioThread->AddEvent( new EE_SetVelocity( this, vel ) );
 }
 
 /*
@@ -230,70 +396,8 @@ AudioEmitterEx::SetDirectional
 ================
 */
 void AudioEmitterEx::SetDirectional( const Vec3 &dir, float innerAngle, float outerAngle, float outerVolume ) {
-	if ( !audioSystemObject.audioThread )
-		return;
-	EmitterEvent *evt = new EmitterEvent( this );
-	evt->type = EmitterEvent::UPDATE;
-	details.direction = dir;
-	details.innerAngle = innerAngle;
-	details.outerAngle = outerAngle;
-	details.outerVolume = outerVolume;
-	audioSystemObject.audioThread->AddEvent( evt );
-}
-
-
-/*
-================
-AudioEmitterEx::OnEvent
-================
-*/
-void AudioEmitterEx::OnEvent( EmitterEvent *evt ) {
-	switch( evt->type ) {
-		case EmitterEvent::PLAY:
-			if ( IsValidChannel( evt->channel ) ) {
-				AudioSource *source = NULL;
-				if ( sndChannels[evt->channel] != NULL )
-					source = sndChannels[evt->channel];
-				else
-					source = audioSystemObject.audioThread->FindFreeAudioSource();
-
-				if ( source ) {
-					if ( source->Play( this, evt->channel, evt->sound, evt->allowLoop ) ) {
-						sndChannels[evt->channel] = source;
-						sndChannels[evt->channel]->OnUpdate( &details );
-					}
-					return;
-				}
-				User::Warning("No more free sound Sources!");
-			}
-			break;
-
-		case EmitterEvent::PAUSE:
-			if ( IsValidChannel( evt->channel ) && sndChannels[evt->channel] != NULL )
-					sndChannels[evt->channel]->Pause();
-			break;
-
-		case EmitterEvent::STOP:
-			if ( IsValidChannel( evt->channel ) && sndChannels[evt->channel] != NULL )
-				sndChannels[evt->channel]->Stop();
-			break;
-
-		case EmitterEvent::STOPALL:
-			for( int i=0; i<numChannels; i++ ) {
-				if ( sndChannels[i] != NULL )
-					sndChannels[i]->Stop();
-			}
-			break;
-
-		case EmitterEvent::UPDATE:
-			if ( IsValidChannel( 0 ) ) {
-				for( int i=0; i<numChannels; i++ ) {
-					if ( sndChannels[i] != NULL )
-						sndChannels[i]->OnUpdate( &details );
-				}
-			}
-			break;
-	}
+	if ( audioSystemObject.audioThread )
+		audioSystemObject.audioThread->AddEvent( new EE_SetDirectional( this, dir, innerAngle, outerAngle, outerVolume ) );
 }
 
 }
