@@ -40,7 +40,10 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { librariesPath .. "/Include" }
-		links { "ogShared", "ogCommon", "ogFileSystem", "zLib", "winmm" }
+		links { "ogShared", "ogCommon", "ogFileSystem", "zLib" }
+		if isWindows then
+			links { "winmm" }
+		end
 		files { examplesPath .. "/TestFS/**.h", examplesPath .. "/TestFS/**.inl", examplesPath .. "/TestFS/**.cpp", examplesPath .. "/Shared/User.cpp" }
 		objdir( objectDir .. "/Examples/TestFS" )
 
@@ -51,7 +54,10 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "opengl32", "winmm" }
+		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "opengl32" }
+		if isWindows then
+			links { "winmm" }
+		end
 		files { examplesPath .. "/TestGloot/**.h", examplesPath .. "/TestGloot/**.inl", examplesPath .. "/TestGloot/**.cpp", examplesPath .. "/Shared/User.cpp" }
 		objdir( objectDir .. "/Examples/TestGloot" )
 
@@ -62,7 +68,10 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogAudio", "ogImage", "ogFileSystem", "ogFont", "soft_oal", "ogg", "vorbis", "jpeg", "png", "zLib", "opengl32", "winmm" }
+		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogAudio", "ogImage", "ogFileSystem", "ogFont", "soft_oal", "ogg", "vorbis", "jpeg", "png", "zLib", "opengl32" }
+		if isWindows then
+			links { "winmm" }
+		end
 		files { examplesPath .. "/TestAudio/**.h", examplesPath .. "/TestAudio/**.inl", examplesPath .. "/TestAudio/**.cpp" }
 		files { examplesPath .. "/Shared/SoundManager.*", examplesPath .. "/Shared/FontText.*", examplesPath .. "/Shared/User.cpp" }
 		objdir( objectDir .. "/Examples/TestAudio" )
@@ -74,7 +83,10 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogModel", "ogImage", "ogFileSystem", "jpeg", "png", "zLib", "ogConsole", "opengl32", "winmm" }
+		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogModel", "ogImage", "ogFileSystem", "jpeg", "png", "zLib", "ogConsole", "opengl32" }
+		if isWindows then
+			links { "winmm" }
+		end
 		files { examplesPath .. "/TestModel/**.h", examplesPath .. "/TestModel/**.inl", examplesPath .. "/TestModel/**.cpp", examplesPath .. "/Shared/User.cpp" }
 		objdir( objectDir .. "/Examples/TestModel" )
 
@@ -85,7 +97,10 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogAudio", "ogImage", "ogFileSystem", "ogFable", "ogFont", "soft_oal", "jpeg", "png", "zLib", "ogg", "vorbis", "opengl32", "winmm", "dinput8", "xinput", "dxguid" }
+		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogAudio", "ogImage", "ogFileSystem", "ogFable", "ogFont", "soft_oal", "jpeg", "png", "zLib", "ogg", "vorbis", "opengl32" }
+		if isWindows then
+			links { "winmm", "dinput8", "xinput", "dxguid" }
+		end
 		files { examplesPath .. "/DemoAsteroids/**.h", examplesPath .. "/DemoAsteroids/**.inl", examplesPath .. "/DemoAsteroids/**.cpp" }
 		files { examplesPath .. "/Shared/**.h", examplesPath .. "/Shared/**.inl", examplesPath .. "/Shared/**.cpp" }
 		objdir( objectDir .. "/Examples/DemoAsteroids" )
