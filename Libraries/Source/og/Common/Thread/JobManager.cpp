@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Common/JobManager.h>
+#include <og/Common/Thread/JobManager.h>
 
 namespace og {
 /*
