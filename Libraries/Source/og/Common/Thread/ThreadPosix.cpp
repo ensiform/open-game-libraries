@@ -63,7 +63,7 @@ TLS_Index::TLS_Index
 */
 TLS_Index::TLS_Index() : data(NULL) {
 	pthread_key_t key;
-	int result = pthread_key_create( &key, NULL ) == 0;
+	int result = pthread_key_create( &key, NULL );
 	OG_ASSERT( result == 0 );
 
 	if ( result == 0 )
