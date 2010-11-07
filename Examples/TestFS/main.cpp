@@ -61,8 +61,8 @@ bool ReadPureList( const char *filename ) {
 	int len;
 	while( fgets( buffer, MAX_BUFFER, f ) != NULL ) {
 		len = strlen(buffer);
-		if ( len == 41 && buffer[40] == '\n' ) {
-			len--;
+		if ( buffer[40] == '\r' || buffer[40] == '\n' ) {
+			len = 40;
 			buffer[40] = '\0';
 		}
 		if ( len == 40 )
