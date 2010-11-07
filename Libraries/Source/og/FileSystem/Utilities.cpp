@@ -36,6 +36,7 @@ freely, subject to the following restrictions:
 	#include <io.h>
 #else
 	#include <glob.h>
+	#include <sys/stat.h>
 #endif
 
 namespace og {
@@ -72,7 +73,7 @@ public:
 		strMatch += dir;
 		if ( !dir[0] )
 			strMatch += L"*";
-		else 
+		else
 			strMatch += L"/*";
 
 		HANDLE hFind = FindFirstFile(strMatch.c_str(), &findData);
@@ -126,21 +127,21 @@ public:
 		String findname = baseDir;
 		findname += "/";
 		findname += dir;
-		int nameOffset = findname.length();
+		int nameOffset = findname.Length();
 		if ( !dir[0] )
 			findname += "*";
 		else {
-			find->nameOffset += 1;
+			nameOffset += 1;
 			findname += "/*";
 		}
 
 		// Find all files
 		glob_t findResult;
-		if ( glob( findname.c_str(), 0, NULL, &find->findResult ) != 0 )
+		if ( glob( findname.c_str(), 0, NULL, &findResult ) != 0 )
 			return false;
 
 		const char *name;
-		int len, extLen = extension.length();
+		int len, extLen = extension.Length();
 		String filename;
 		struct stat stat_Info;
 		// Cycle through all files found
@@ -149,7 +150,7 @@ public:
 			if ( stat ( findResult.gl_pathv[i], &stat_Info ) == -1 )
 				continue;
 
-			name = findResult.gl_pathv[i] + baseDir.length();
+			name = findResult.gl_pathv[i] + baseDir.Length();
 			len = strlen( name );
 			if ( len > 0 && String::Icmp( name + len-extLen, extension.c_str() ) != 0 )
 				continue;
@@ -162,12 +163,12 @@ public:
 				filename = name;
 				filename += "\\";
 				if ( addDirs )
-					list->push_back( filename );
+					list->Append( filename );
 				if ( recursive )
 					SearchDir( filename.c_str() );
 			}
 			else if ( addFiles )
-				list->push_back( name );
+				list->Append( name );
 		}
 
 		globfree( &findResult );

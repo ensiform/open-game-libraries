@@ -33,13 +33,13 @@ freely, subject to the following restrictions:
 	#include <windows.h>
 #elif OG_LINUX || OG_MACOS_X
 	#include <iconv.h>
+	#include <limits.h>
 #endif
 
 // Check for correct short and long sizes
 #if USHRT_MAX != 0xffff || ULONG_MAX != 0xffffffffUL
 	#error "short must be 2 bytes and long must be 4 bytes to work correctly.."
 #endif
-
 namespace og {
 
 // Structure sizes
@@ -200,12 +200,12 @@ public:
 		utf8Buffer.FromWide( wideBuffer.data );
 		return utf8Buffer.c_str();
 #elif OG_LINUX || OG_MACOS_X
-		int inBytes = numBytes;
+		size_t inBytes = numBytes;
 		utf8Buffer.CheckSize( inBytes );
-		int outBytes = inBytes;
+		size_t outBytes = inBytes;
 
-		byte *inchar = reinterpret_cast<byte *>( input );
-		byte *outchar = reinterpret_cast<byte *>( utf8Buffer.data );
+		char *inchar =  input ;
+		char *outchar = utf8Buffer.data ;
 		if ( iconv(cd, &inchar, &inBytes, &outchar, &outBytes) == -1 )
 			return NULL;
 		utf8Buffer.data[numBytes-1] = '\0';
@@ -276,7 +276,7 @@ int PakFileEx::CompareFileHeader( FILE *file, uLong zipfileOffset, FileHeader *p
 
 	// Read in the local file header
 	LocalFileHeader localFH;
-	
+
 	if ( fread( &localFH, sizeof(localFH), 1, file ) != 1 )
 		return UNZ_ERRNO;
 
