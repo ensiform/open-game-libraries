@@ -230,8 +230,35 @@ namespace og {
 		//! @param	origin		Position of your head.
 		//! @param	forward		Where you are looking at.
 		//! @param	up			Beats me how to describe this short. Should be obvious
+		//! @param	velocity	Your moving velocity.
 		// ==============================================================================
-		virtual void				SetListener( const Vec3 &origin, const Vec3 &forward, const Vec3 &up ) = 0;
+		virtual void				SetListener( const Vec3 &origin, const Vec3 &forward, const Vec3 &up, const Vec3 &velocity ) = 0;
+
+		// ==============================================================================
+		//! Set the doppler factor (mustn't be negative)
+		//!
+		//! @param	factor		The doppler factor (mustn't be negative)
+		//!
+		//! Possible values:
+		//! @li		0 disables the doppler effect, may help performance, but sounds less realistic.
+		//! @li		1.0 will not change the effect at all.
+		//! @li		Anything between 0.0 and 1.0 will minimize the Doppler effect.
+		//! @li		Anything greater than 1.0 will maximize the effect.
+		// ==============================================================================
+		virtual void				SetDopplerFactor( float factor ) = 0;
+
+		// ==============================================================================
+		//! Set the speed of sound in the current medium (air, water, ..)
+		//!
+		//! @param	speed	The speed of sound (must be above 0)
+		//!
+		//! Examples:
+		//! @li		Air: 343.2 m/s or  1126 ft/s
+		//! @li		Water: 1484 m/s or 4868 ft/s
+		//!
+		//! @note	Recalculate the value to your unit size before passing them.
+		// ==============================================================================
+		virtual void				SetSpeedOfSound( float speed ) = 0;
 
 		// ==============================================================================
 		//! Create an AudioEmitter

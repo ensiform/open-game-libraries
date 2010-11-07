@@ -297,12 +297,31 @@ void AudioSystemEx::SetVolume( float value ) {
 AudioSystemEx::SetListener
 ================
 */
-void AudioSystemEx::SetListener( const Vec3 &origin, const Vec3 &forward, const Vec3 &up ) {
+void AudioSystemEx::SetListener( const Vec3 &origin, const Vec3 &forward, const Vec3 &up, const Vec3 &velocity ) {
 	if ( device ) {
 		float orientation[6] = { forward.x, forward.y, forward.z, up.x, up.y, up.z };
 		alListener3f( AL_POSITION, origin.y, origin.x, origin.z );
 		alListenerfv( AL_ORIENTATION, orientation );
+		alListenerfv( AL_VELOCITY, &velocity.x );
 	}
+}
+
+/*
+================
+AudioSystemEx::SetDopplerFactor
+================
+*/
+void AudioSystemEx::SetDopplerFactor( float factor ) {
+	alDopplerFactor( factor );
+}
+
+/*
+================
+AudioSystemEx::SetSpeedOfSound
+================
+*/
+void AudioSystemEx::SetSpeedOfSound( float speed ) {
+	alSpeedOfSound( speed );
 }
 
 /*

@@ -125,7 +125,7 @@ bool ogDemoWindow::Init( void ) {
 
 	og::Vec3 forward(0, -1, 0);
 	og::Vec3 up(0, 0, -1);
-	og::AS->SetListener( windowCenter, forward, up );
+	og::AS->SetListener( windowCenter, forward, up, og::c_vec3::origin );
 
 	audioEmitter = og::AS->CreateAudioEmitter( 1 );
 	audioEmitter->Play( 0, soundManager.Find( "helicopter" ) );
@@ -144,17 +144,17 @@ ogDemoWindow::UpdateSound
 ================
 */
 void ogDemoWindow::UpdateSound( void ) {
+	int frameTime;
+	if ( !frameTimer.IsActive() ) {
+		frameTime = 0;
+		frameTimer.Start();
+	} else {
+		frameTimer.Stop();
+		frameTime = frameTimer.Milliseconds();
+		frameTimer.Start();
+	}
+	float timeScale = static_cast<float>(frameTime)*0.001f;
 	if ( !manualPosition ) {
-		int frameTime;
-		if ( !frameTimer.IsActive() ) {
-			frameTime = 0;
-			frameTimer.Start();
-		} else {
-			frameTimer.Stop();
-			frameTime = frameTimer.Milliseconds();
-			frameTimer.Start();
-		}
-		float timeScale = static_cast<float>(frameTime)*0.001f;
 		soundAngle.yaw += 80.0f * timeScale;
 		soundPos = windowCenter + soundAngle.ToForward() * 80.0f;
 	} else if ( mouseDown ) {
@@ -164,11 +164,10 @@ void ogDemoWindow::UpdateSound( void ) {
 		soundPos.Set( x-wx, y-wy, 0.0f );
 	}
 	audioEmitter->SetPosition( soundPos );
-	audioEmitter->SetVelocity( soundPos-soundPosOld );
+	if ( frameTime > 0 )
+		audioEmitter->SetVelocity( (soundPos-soundPosOld)/frameTime );
 
-	if ( soundPos != soundPosOld )
-		soundPosOld = soundPos;
-
+	soundPosOld = soundPos;
 }
 
 /*

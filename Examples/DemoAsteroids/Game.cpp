@@ -128,7 +128,7 @@ bool ogGame::Init( void ) {
 	og::Vec3 forward(0, -1, 0);
 	og::Vec3 up(0, 0, -1);
 	og::Vec3 origin(0, 0, 1);
-	og::AS->SetListener( origin, forward, up );
+	og::AS->SetListener( origin, forward, up, og::c_vec3::origin );
 
 	globalRand.SeedTime();
 	return true;

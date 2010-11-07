@@ -176,9 +176,9 @@ AudioSource::OnUpdate
 void AudioSource::OnUpdate( const AudioSourceSetup *setup ) {
 	if ( IsActive() ) {
 		alSourcei( alSourceNum, AL_SOURCE_RELATIVE, setup->relative );
-		alSource3f( alSourceNum, AL_POSITION, setup->origin.x, setup->origin.y, setup->origin.z );
-		alSource3f( alSourceNum, AL_VELOCITY, setup->velocity.x, setup->velocity.y, setup->velocity.z );
-		alSource3f( alSourceNum, AL_DIRECTION, setup->direction.x, setup->direction.y, setup->direction.z );
+		alSourcefv( alSourceNum, AL_POSITION, &setup->origin.x );
+		alSourcefv( alSourceNum, AL_VELOCITY, &setup->velocity.x );
+		alSourcefv( alSourceNum, AL_DIRECTION, &setup->direction.x );
 		if ( !setup->direction.IsZero() ) {
 			alSourcef( alSourceNum, AL_CONE_INNER_ANGLE, setup->innerAngle );
 			alSourcef( alSourceNum, AL_CONE_OUTER_ANGLE, setup->outerAngle );

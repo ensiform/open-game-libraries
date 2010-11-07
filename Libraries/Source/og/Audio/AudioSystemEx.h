@@ -83,7 +83,9 @@ namespace og {
 
 		void				SetVolume( float value );
 		void				SetMaxVariations( int num ) { maxVariations = num; }
-		void				SetListener( const Vec3 &origin, const Vec3 &forward, const Vec3 &up );
+		void				SetListener( const Vec3 &origin, const Vec3 &forward, const Vec3 &up, const Vec3 &velocity );
+		void				SetDopplerFactor( float factor );
+		void				SetSpeedOfSound( float speed );
 
 		AudioEmitter *		CreateAudioEmitter( int channels=0 );
 		void				FreeAudioEmitter( AudioEmitter *emitter );
