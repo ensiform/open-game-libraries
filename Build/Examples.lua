@@ -40,9 +40,12 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { librariesPath .. "/Include" }
-		links { "ogShared", "ogCommon", "ogFileSystem", "zLib" }
+		links { "ogFileSystem", "ogShared", "ogCommon", "zLib" }
 		if isWindows then
 			links { "winmm" }
+		end
+		if isLinux then
+			links{ "boost_thread" }
 		end
 		files { examplesPath .. "/TestFS/**.h", examplesPath .. "/TestFS/**.inl", examplesPath .. "/TestFS/**.cpp", examplesPath .. "/Shared/User.cpp" }
 		objdir( objectDir .. "/Examples/TestFS" )
