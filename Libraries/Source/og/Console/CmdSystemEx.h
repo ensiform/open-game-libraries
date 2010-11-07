@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Console/Console.h>
+#include <og/Console.h>
 
 #ifndef __OG_CMDSYSTEM_EX_H__
 #define __OG_CMDSYSTEM_EX_H__

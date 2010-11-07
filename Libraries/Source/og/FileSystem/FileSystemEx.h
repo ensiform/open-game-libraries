@@ -32,9 +32,9 @@ freely, subject to the following restrictions:
 
 #include <string>
 #include <zlib/zlib.h>
-#include <og/Common/Common.h>
+#include <og/Common.h>
 #include <og/Common/Thread/EventQueue.h>
-#include <og/FileSystem/FileSystem.h>
+#include <og/FileSystem.h>
 #include "FileEx.h"
 #include "PakFileEx.h"
 #include "Utilities.h"

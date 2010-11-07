@@ -30,8 +30,8 @@ freely, subject to the following restrictions:
 #ifndef __OG_MODEL_GL_H__
 #define __OG_MODEL_GL_H__
 
-#include <og/Model/Model.h>
-#include <og/Image/Image.h>
+#include <og/Model.h>
+#include <og/Image.h>
 
 /*
 ==============================================================================

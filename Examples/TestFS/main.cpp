@@ -29,9 +29,9 @@ freely, subject to the following restrictions:
 
 #include <vector>
 #include <string>
-#include <og/Common/Common.h>
+#include <og/Common.h>
 #include <og/Shared/SecureHash.h>
-#include <og/FileSystem/FileSystem.h>
+#include <og/FileSystem.h>
 
 og::StringList allowedPakFiles;
 

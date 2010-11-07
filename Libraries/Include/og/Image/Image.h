@@ -30,13 +30,10 @@
 #ifndef __OG_IMAGE_H__
 #define __OG_IMAGE_H__
 
-#include <og/Shared/Shared.h>
-#include <og/Shared/FileSystemCore.h>
-
 //! Open Game Libraries
 namespace og {
 //! @defgroup Image Image (Library)
-//! You need to include <og/Image/Image.h>
+//! You need to include <og/Image.h>
 //! @see	UserCallbacks
 //! @todo	See if thrown errors work without problems in the file loaders.
 //! @todo	Later: Save Function for DDS files ?

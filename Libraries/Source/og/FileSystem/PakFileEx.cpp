@@ -40,6 +40,7 @@ freely, subject to the following restrictions:
 #if USHRT_MAX != 0xffff || ULONG_MAX != 0xffffffffUL
 	#error "short must be 2 bytes and long must be 4 bytes to work correctly.."
 #endif
+
 namespace og {
 
 // Structure sizes

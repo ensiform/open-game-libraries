@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Math/Math.h>
+#include <og/Math.h>
 
 namespace og {
 /*

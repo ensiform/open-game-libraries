@@ -30,9 +30,9 @@ freely, subject to the following restrictions:
 #ifndef __DEMO_LOGO_SCREEN_H__
 #define __DEMO_LOGO_SCREEN_H__
 
-#include <og/Common/Common.h>
-#include <og/Image/Image.h>
-#include <og/Audio/AudioSystem.h>
+#include <og/Common.h>
+#include <og/Image.h>
+#include <og/Audio.h>
 #include "FontText.h"
 
 /*

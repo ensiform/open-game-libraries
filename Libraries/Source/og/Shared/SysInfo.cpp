@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 */
 
 #include <cstdio>
-#include <og/Shared/Shared.h>
+#include <og/Shared.h>
 
 #if OG_WIN32
 	#include <windows.h>

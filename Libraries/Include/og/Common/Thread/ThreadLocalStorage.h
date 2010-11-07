@@ -30,7 +30,7 @@
 #ifndef __OG_THREAD_LOCAL_STORAGE_H__
 #define __OG_THREAD_LOCAL_STORAGE_H__
 
-#include <og/Shared/Shared.h>
+#include <og/Shared.h>
 
 //! Open Game Libraries
 namespace og {

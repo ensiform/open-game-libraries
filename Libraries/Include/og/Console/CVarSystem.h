@@ -30,7 +30,7 @@
 #ifndef __OG_CVARSYSTEM_H__
 #define __OG_CVARSYSTEM_H__
 
-#include "CmdSystem.h"
+#include <og/Console/CmdSystem.h>
 
 //! Open Game Libraries
 namespace og {

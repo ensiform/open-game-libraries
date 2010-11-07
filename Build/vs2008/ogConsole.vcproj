@@ -207,6 +207,10 @@
 							>
 						</File>
 					</Filter>
+					<File
+						RelativePath="..\..\Libraries\Include\og\Console.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

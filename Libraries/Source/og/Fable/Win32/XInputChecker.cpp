@@ -28,7 +28,7 @@
 //
 // ==============================================================================
 
-#include <og/Common/Common.h>
+#include <og/Common.h>
 
 #if defined(__MINGW32__)
 #warning "XInputChecker is not working with MinGW, fix it"

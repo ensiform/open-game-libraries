@@ -32,7 +32,7 @@
 #ifndef __OG_SECUREHASH_H__
 #define __OG_SECUREHASH_H__
 
-#include <og/Shared/Shared.h>
+#include <og/Shared.h>
 
 //! Open Game Libraries
 namespace og {

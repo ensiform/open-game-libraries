@@ -30,8 +30,8 @@
 #ifndef __OG_AUDIOSYSTEMEX_H__
 #define __OG_AUDIOSYSTEMEX_H__
 
-#include <og/Audio/AudioSystem.h>
-#include <og/FileSystem/FileSystem.h>
+#include <og/Audio.h>
+#include <og/FileSystem.h>
 #include <og/Common/Thread/EventQueue.h>
 #include "AudioSource.h"
 #include "AudioEmitterEx.h"

@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 */
 
 #include "InputListener.h"
-#include <og/Math/Math.h>
+#include <og/Math.h>
 
 const float	FABLE_AXIS_DETECTION_TRIGGER = 0.75f;
 const int	MOUSE_AXIS_DETECTION_TRIGGER = 100;

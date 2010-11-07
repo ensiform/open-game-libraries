@@ -33,12 +33,10 @@
 #ifndef __OG_FABLE_H__
 #define __OG_FABLE_H__
 
-#include <og/Shared/Shared.h>
-
 //! Open Game Libraries
 namespace og {
 	//! @defgroup Fable Fable (Library)
-	//! You need to include <og/Fable/Fable.h>
+	//! You need to include <og/Fable.h>
 	//! @{
 
 	//! Static Fable Interface

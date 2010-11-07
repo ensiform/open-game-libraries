@@ -30,8 +30,8 @@
 #ifndef __OG_IMAGE_EX_H__
 #define __OG_IMAGE_EX_H__
 
-#include <og/Shared/Shared.h>
-#include <og/Common/Common.h>
+#include <og/Shared.h>
+#include <og/Common.h>
 
 namespace og {
 	extern FileSystemCore *imageFS;

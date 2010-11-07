@@ -30,7 +30,7 @@
 #ifndef __OG_MODEL_EX_H__
 #define __OG_MODEL_EX_H__
 
-#include <og/Model/Model.h>
+#include <og/Model.h>
 
 //! Open Game Libraries
 namespace og {

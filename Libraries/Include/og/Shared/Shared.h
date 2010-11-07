@@ -32,14 +32,6 @@
 #ifndef __OG_SHARED_H__
 #define __OG_SHARED_H__
 
-#include <og/Setup.h>
-
-// Public Library Includes
-#include "String.h"
-#include "Format.h"
-#include "SysInfo.h"
-#include "Timer.h"
-
 //! Open Game
 namespace og {
 //! @defgroup UserCallbacks User Callbacks
@@ -240,10 +232,5 @@ namespace og {
 	void ErrorDialog( const char *message, const char *title );
 //! @}
 }
-
-// We include .inl files last, so we can access all classes here.
-#include "String.inl"
-#include "Timer.inl"
-
 
 #endif

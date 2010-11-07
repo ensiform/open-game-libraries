@@ -127,13 +127,10 @@ public:
 		String findname = baseDir;
 		findname += "/";
 		findname += dir;
-		int nameOffset = findname.Length();
 		if ( !dir[0] )
 			findname += "*";
-		else {
-			nameOffset += 1;
+		else
 			findname += "/*";
-		}
 
 		// Find all files
 		glob_t findResult;

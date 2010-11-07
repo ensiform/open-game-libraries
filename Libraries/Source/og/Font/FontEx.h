@@ -30,10 +30,10 @@
 #ifndef __OG_FONT_EX_H__
 #define __OG_FONT_EX_H__
 
-#include <og/Font/Font.h>
-#include <og/Common/Common.h>
-#include <og/Image/Image.h>
-#include <og/Math/Math.h>
+#include <og/Font.h>
+#include <og/Common.h>
+#include <og/Image.h>
+#include <og/Math.h>
 #include <map>
 
 //! Open Game Libraries

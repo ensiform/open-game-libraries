@@ -259,6 +259,10 @@
 							>
 						</File>
 					</Filter>
+					<File
+						RelativePath="..\..\Libraries\Include\og\Math.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

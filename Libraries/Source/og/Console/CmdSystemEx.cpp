@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Console/Console.h>
+#include <og/Console.h>
 #include "CmdSystemEx.h"
 #include "CvarSystemEx.h"
 

@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Shared/Shared.h>
+#include <og/Shared.h>
 #include <ctype.h>
 
 #if OG_WIN32

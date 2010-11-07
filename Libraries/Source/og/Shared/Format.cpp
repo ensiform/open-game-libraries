@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Shared/Shared.h>
+#include <og/Shared.h>
 #include <stdio.h>
 #include <stdarg.h>
 

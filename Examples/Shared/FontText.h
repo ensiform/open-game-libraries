@@ -30,9 +30,9 @@ freely, subject to the following restrictions:
 #ifndef __OG_FONT_TEXT_H__
 #define __OG_FONT_TEXT_H__
 
-#include <og/Common/Common.h>
-#include <og/Math/Math.h>
-#include <og/Font/Font.h>
+#include <og/Common.h>
+#include <og/Math.h>
+#include <og/Font.h>
 
 /*
 ==============================================================================

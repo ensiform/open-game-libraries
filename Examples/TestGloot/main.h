@@ -27,9 +27,9 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Gloot/Gloot.h>
-#include <og/Common/Common.h>
-#include <og/Math/Math.h>
+#include <og/Gloot.h>
+#include <og/Common.h>
+#include <og/Math.h>
 
 #define DEMO_OPENGL3
 

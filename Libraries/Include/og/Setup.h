@@ -32,11 +32,11 @@
 
 #include <og/Config.h>
 
-typedef unsigned char byte;				//!< unsigned char
-typedef unsigned short uShort;			//!< unsigned short
-typedef unsigned long uLong;			//!< unsigned long
-typedef unsigned int uInt;				//!< unsigned int
-typedef unsigned long long uLongLong;	//!< unsigned long long
+typedef unsigned char		byte;		//!< unsigned char
+typedef unsigned short		uShort;		//!< unsigned short
+typedef unsigned long		uLong;		//!< unsigned long
+typedef unsigned int		uInt;		//!< unsigned int
+typedef unsigned long long	uLongLong;	//!< unsigned long long
 
 /*!
 @def OG_LITTLE_ENDIAN

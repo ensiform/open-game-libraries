@@ -30,13 +30,10 @@
 #ifndef __OG_MODEL_H__
 #define __OG_MODEL_H__
 
-#include <og/Common/Common.h>
-#include <og/Math/Math.h>
-
 //! Open Game Libraries
 namespace og {
 	//! @defgroup Model Model (Library)
-	//! You need to include <og/Model/Model.h>
+	//! You need to include <og/Model.h>
 	//! @see	UserCallbacksTodo List:
 	//! @todo	Add Skeletal Animation
 	//! @{

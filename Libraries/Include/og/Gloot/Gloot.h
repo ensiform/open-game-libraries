@@ -33,15 +33,10 @@
 #ifndef __OG_GLOOT_H__
 #define __OG_GLOOT_H__
 
-#include <og/Shared/Shared.h>
-#include <og/Gloot/Window.h>
-#include <og/Gloot/Monitor.h>
-#include <og/Gloot/Input.h>
-
 //! Open Game Libraries
 namespace og {
 	//! @defgroup Gloot Gloot (Library)
-	//! You need to include <og/Gloot/Gloot.h>
+	//! You need to include <og/Gloot.h>
 	//! @see	UserCallbacks
 	//! @todo	Make windowList threadsafe
 	//! @todo	Check where Error and Warning Messages would be appropriate

@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #include<gl/glew.h>
 #include <og/Gloot/glmin.h>
 
-#include <og/Console/Console.h>
+#include <og/Console.h>
 #include "ModelGL.h"
 
 const char *validRenderTypes[] = { "Flat", "Textured", "TexturedTris", "Wireframe", "Textureframe", NULL };

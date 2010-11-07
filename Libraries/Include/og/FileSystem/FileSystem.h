@@ -30,15 +30,10 @@
 #ifndef __OG_FILESYSTEM_H__
 #define __OG_FILESYSTEM_H__
 
-#include <time.h>
-#include <og/Shared/Shared.h>
-#include <og/Shared/File.h>
-#include <og/Shared/FileSystemCore.h>
-
 //! Open Game Libraries
 namespace og {
 //! @defgroup FileSystem FileSystem (Library)
-//! You need to include <og/FileSystem/FileSystem.h>
+//! You need to include <og/FileSystem.h>
 //! @see	UserCallbacks, UserFileSystem
 //! @todo	Test everything, and on all systems.
 //! @todo	Interface to return searchpaths

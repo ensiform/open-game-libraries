@@ -27,7 +27,7 @@
 //
 // ==============================================================================
 
-#include <og/Image/Image.h>
+#include <og/Image.h>
 #include "ImageEx.h"
 
 namespace og {

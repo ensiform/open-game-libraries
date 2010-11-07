@@ -30,7 +30,7 @@ freely, subject to the following restrictions:
 #ifndef __DEMO_BIND_H__
 #define __DEMO_BIND_H__
 
-#include <og/Common/Common.h>
+#include <og/Common.h>
 
 /*
 ==============================================================================

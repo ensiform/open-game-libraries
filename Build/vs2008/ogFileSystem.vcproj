@@ -191,6 +191,10 @@
 							>
 						</File>
 					</Filter>
+					<File
+						RelativePath="..\..\Libraries\Include\og\FileSystem.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

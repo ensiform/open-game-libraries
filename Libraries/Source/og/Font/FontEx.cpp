@@ -28,7 +28,7 @@
 // ==============================================================================
 
 #include <og/Gloot/glmin.h>
-#include <og/FileSystem/FileSystem.h>
+#include <og/FileSystem.h>
 #include "FontEx.h"
 
 namespace og {

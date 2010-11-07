@@ -41,7 +41,7 @@
    email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 */
 
-#include <og/Math/Math.h>
+#include <og/Math.h>
 
 namespace og {
 

@@ -41,16 +41,10 @@
 #ifndef __OG_CONSOLE_H__
 #define __OG_CONSOLE_H__
 
-#include <og/Common/Common.h>
-#include <og/Math/Math.h>
-#include <og/FileSystem/FileSystem.h>
-#include <og/Console/CmdSystem.h>
-#include <og/Console/CVarSystem.h>
-
 //! Open Game Libraries
 namespace og {
 //! @defgroup Console Console (Library)
-//! You need to include <og/Console/Console.h>
+//! You need to include <og/Console.h>
 //! @see	UserCallbacks
 //! @{
 
@@ -173,7 +167,6 @@ namespace og {
 
 //! @}
 }
-#include <og/Console/CmdSystem.inl>
-#include <og/Console/CvarSystem.inl>
+
 
 #endif

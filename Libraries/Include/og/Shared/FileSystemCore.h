@@ -31,7 +31,7 @@
 #define __OG_FILESYSTEM_CORE_H__
 
 #include <time.h>
-#include <og/Shared/Shared.h>
+#include <og/Shared.h>
 #include <og/Shared/File.h>
 
 //! Open Game Libraries

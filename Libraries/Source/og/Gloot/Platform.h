@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #ifndef __GLOOT_MANAGER_H__
 #define __GLOOT_MANAGER_H__
 
-#include <og/Shared/Shared.h>
+#include <og/Shared.h>
 
 #if OG_WIN32
 	#include <windows.h>
@@ -48,11 +48,11 @@ freely, subject to the following restrictions:
 	#warning "Need MacOS here FIXME"
 #endif
 
-#include <og/Common/Common.h>
+#include <og/Common.h>
 #include <og/Common/Thread/EventQueue.h>
 
 #include <og/Gloot/glmin.h>
-#include <og/Gloot/gloot.h>
+#include <og/Gloot.h>
 #include <map>
 #include <string>
 #include "WindowEx.h"

@@ -45,6 +45,8 @@ libDir			= "out"
 binaryDir		= rootPath .. "/Binaries"
 
 librariesPath	= rootPath .. "/Libraries"
+libIncludePath	= librariesPath .. "/Include/og"
+libSourcePath	= librariesPath .. "/Source/og"
 examplesPath	= rootPath .. "/Examples"
 toolsPath		= rootPath .. "/Tools"
 

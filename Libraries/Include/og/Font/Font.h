@@ -32,12 +32,10 @@
 #ifndef __OG_FONT_H__
 #define __OG_FONT_H__
 
-#include <og/Shared/Shared.h>
-
 //! Open Game Libraries
 namespace og {
 //! @defgroup Font Font (Library)
-//! You need to include <og/Font/Font.h>
+//! You need to include <og/Font.h>
 //! @see	UserCallbacks
 //! @{
 

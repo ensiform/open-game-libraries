@@ -27,8 +27,8 @@
 //
 // ==============================================================================
 
-#include <og/Common/Common.h>
-#include <og/Fable/Fable.h>
+#include <og/Common.h>
+#include <og/Fable.h>
 
 namespace og {
 

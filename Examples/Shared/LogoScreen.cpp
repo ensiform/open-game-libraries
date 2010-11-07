@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 
 #include "LogoScreen.h"
 #include <og/Gloot/glmin.h>
-#include <og/Gloot/Gloot.h>
+#include <og/Gloot.h>
 
 /*
 ================

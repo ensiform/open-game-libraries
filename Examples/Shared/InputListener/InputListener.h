@@ -31,8 +31,8 @@ freely, subject to the following restrictions:
 #define __DEMO_INPUT_MANAGER_H__
 
 #include "Bind.h"
-#include <og/Gloot/Gloot.h>
-#include <og/Fable/Fable.h>
+#include <og/Gloot.h>
+#include <og/Fable.h>
 #include <map>
 
 /*

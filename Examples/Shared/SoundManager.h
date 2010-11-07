@@ -30,7 +30,7 @@ freely, subject to the following restrictions:
 #ifndef __DEMO_SOUND_MANAGER_H__
 #define __DEMO_SOUND_MANAGER_H__
 
-#include <og/Audio/AudioSystem.h>
+#include <og/Audio.h>
 
 /*
 ==============================================================================

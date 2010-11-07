@@ -29,8 +29,8 @@ freely, subject to the following restrictions:
 
 #include <stdio.h>
 #include <gl/glew.h>
-#include <og/Console/Console.h>
-#include <og/Image/Image.h>
+#include <og/Console.h>
+#include <og/Image.h>
 #include "main.h"
 
 #pragma comment(lib, "../../Thirdparty/gl/glew32.lib")

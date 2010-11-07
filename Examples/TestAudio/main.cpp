@@ -32,8 +32,8 @@ freely, subject to the following restrictions:
 #include <string.h>
 
 #include <og/Gloot/glmin.h>
-#include <og/Image/Image.h>
-#include <og/FileSystem/FileSystem.h>
+#include <og/Image.h>
+#include <og/FileSystem.h>
 
 #include "main.h"
 

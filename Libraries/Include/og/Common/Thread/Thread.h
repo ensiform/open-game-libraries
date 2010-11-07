@@ -30,7 +30,7 @@
 #ifndef __OG_THREAD_H__
 #define __OG_THREAD_H__
 
-#include <og/Shared/Shared.h>
+#include <og/Shared.h>
 #if OG_HAVE_STD_THREAD
 	#include <thread>
 	#include <condition_variable>

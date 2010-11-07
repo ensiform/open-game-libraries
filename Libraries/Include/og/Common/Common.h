@@ -33,28 +33,6 @@
 #ifndef __OG_COMMON_H__
 #define __OG_COMMON_H__
 
-#include <og/Shared/Shared.h>
-#include <og/Shared/FileSystemCore.h>
-#include <og/Common/Thread/ThreadLocalStorage.h>
-
-#include <stdio.h>
-#include <math.h>
-
-// Public Library Includes
-#include "Containers/List.h"
-#include "Containers/LinkedList.h"
-#include "Containers/Stack.h"
-#include "Containers/HashIndex.h"
-#include "Containers/StringPool.h"
-#include "Containers/Dict.h"
-#include "Containers/Pair.h"
-#include "Containers/CmdArgs.h"
-#include "Containers/DynBuffer.h"
-#include "Containers/Allocator.h"
-#include "Text/Lexer.h"
-#include "Text/DeclParser.h"
-#include "Text/XDeclParser.h"
-
 //! Open Game Libraries
 namespace og {
 //! @defgroup Common Common (Library)
@@ -92,15 +70,5 @@ namespace og {
 								int ( *compare )(void *, const void *, const void *) );
 //! @}
 }
-
-// We include .inl files last, so we can access all classes here.
-#include "Containers/List.inl"
-#include "Containers/LinkedList.inl"
-#include "Containers/Stack.inl"
-#include "Containers/HashIndex.inl"
-#include "Containers/Dict.inl"
-#include "Containers/Pair.inl"
-#include "Containers/DynBuffer.inl"
-#include "Containers/Allocator.inl"
 
 #endif

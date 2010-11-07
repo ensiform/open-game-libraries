@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 */
 
 #include "SoundManager.h"
-#include <og/FileSystem/FileSystem.h>
+#include <og/FileSystem.h>
 
 ogSoundManager::ogSoundManager() {
 	defaultSound.minDistance	= 0.0f;

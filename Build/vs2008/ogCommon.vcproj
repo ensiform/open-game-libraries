@@ -310,6 +310,10 @@
 							>
 						</File>
 					</Filter>
+					<File
+						RelativePath="..\..\Libraries\Include\og\Common.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

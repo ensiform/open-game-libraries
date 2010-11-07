@@ -207,6 +207,10 @@
 							>
 						</File>
 					</Filter>
+					<File
+						RelativePath="..\..\Libraries\Include\og\Gloot.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

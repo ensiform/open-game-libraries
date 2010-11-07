@@ -235,6 +235,10 @@
 						RelativePath="..\..\Libraries\Include\og\Config.h"
 						>
 					</File>
+					<File
+						RelativePath="..\..\Libraries\Include\og\Shared.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

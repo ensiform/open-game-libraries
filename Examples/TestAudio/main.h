@@ -27,8 +27,8 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include <og/Gloot/Gloot.h>
-#include <og/Common/Common.h>
+#include <og/Gloot.h>
+#include <og/Common.h>
 #include "../Shared/SoundManager.h"
 #include "../Shared/FontText.h"
 

@@ -28,8 +28,8 @@
 // ==============================================================================
 
 #include <og/Gloot/glmin.h>
-#include <og/Image/Image.h>
-#include <og/Math/Math.h>
+#include <og/Image.h>
+#include <og/Math.h>
 #include <GL/glext.h>
 #include "ImageEx.h"
 

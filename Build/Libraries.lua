@@ -29,7 +29,8 @@ solution "Libraries"
 		language "C++"
 		targetdir( libDir )
 		includedirs { librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/Setup.h", librariesPath .. "/Include/og/Config.h", librariesPath .. "/Include/og/Shared/**.h", librariesPath .. "/Include/og/Shared/**.inl", librariesPath .. "/Source/og/Shared/**.cpp" }
+		files { libIncludePath .. "/Setup.h", libIncludePath .. "/Config.h", libIncludePath .. "/Shared.h" }
+		files { libIncludePath .. "/Shared/**.h", libIncludePath .. "/Shared/**.inl", libSourcePath .. "/Shared/**.cpp" }
 		objdir( objectDir .. "/ogShared" )
 
 	-- ogCommon Static Library
@@ -39,7 +40,8 @@ solution "Libraries"
 		language "C++"
 		targetdir( libDir )
 		includedirs { librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/Common/**.h", librariesPath .. "/Include/og/Common/**.inl", librariesPath .. "/Source/og/Common/**.cpp" }
+		files { libIncludePath .. "/Common.h" }
+		files { libIncludePath .. "/Common/**.h", libIncludePath .. "/Common/**.inl", libSourcePath .. "/Common/**.cpp" }
 		objdir( objectDir .. "/ogCommon" )
 
 	-- ogMath Static Library
@@ -49,7 +51,8 @@ solution "Libraries"
 		language "C++"
 		targetdir( libDir )
 		includedirs { librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/Math/**.h", librariesPath .. "/Include/og/Math/**.inl", librariesPath .. "/Source/og/Math/**.cpp" }
+		files { libIncludePath .. "/Math.h" }
+		files { libIncludePath .. "/Math/**.h", libIncludePath .. "/Math/**.inl", libSourcePath .. "/Math/**.cpp" }
 		objdir( objectDir .. "/ogMath" )
 
 	-- ogFont Static Library
@@ -59,7 +62,8 @@ solution "Libraries"
 		language "C++"
 		targetdir( libDir )
 		includedirs { librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/Font/**.h", librariesPath .. "/Include/og/Font/**.inl", librariesPath .. "/Source/og/Font/**.cpp", librariesPath .. "/Source/og/Font/**.h" }
+		files { libIncludePath .. "/Font.h" }
+		files { libIncludePath .. "/Font/**.h", libIncludePath .. "/Font/**.inl", libSourcePath .. "/Font/**.cpp", libSourcePath .. "/Font/**.h" }
 		objdir( objectDir .. "/ogFont" )
 
 	-- ogModel Static Library
@@ -69,7 +73,8 @@ solution "Libraries"
 		language "C++"
 		targetdir( libDir )
 		includedirs { librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/Model/**.h", librariesPath .. "/Include/og/Model/**.inl", librariesPath .. "/Source/og/Model/**.cpp", librariesPath .. "/Source/og/Model/**.h" }
+		files { libIncludePath .. "/Model.h" }
+		files { libIncludePath .. "/Model/**.h", libIncludePath .. "/Model/**.inl", libSourcePath .. "/Model/**.cpp", libSourcePath .. "/Model/**.h" }
 		objdir( objectDir .. "/ogModel" )
 
 	-- ogImage Static Library
@@ -79,7 +84,8 @@ solution "Libraries"
 		language "C++"
 		targetdir( libDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/Image/**.h", librariesPath .. "/Include/og/Image/**.inl", librariesPath .. "/Source/og/Image/**.cpp", librariesPath .. "/Source/og/Image/**.h" }
+		files { libIncludePath .. "/Image.h" }
+		files { libIncludePath .. "/Image/**.h", libIncludePath .. "/Image/**.inl", libSourcePath .. "/Image/**.cpp", libSourcePath .. "/Image/**.h" }
 		objdir( objectDir .. "/ogImage" )
 
 	-- ogAudio Static Library
@@ -89,7 +95,8 @@ solution "Libraries"
 		language "C++"
 		targetdir( libDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/Audio/**.h", librariesPath .. "/Include/og/Audio/**.inl", librariesPath .. "/Source/og/Audio/**.cpp", librariesPath .. "/Source/og/Audio/**.h" }
+		files { libIncludePath .. "/Audio.h" }
+		files { libIncludePath .. "/Audio/**.h", libIncludePath .. "/Audio/**.inl", libSourcePath .. "/Audio/**.cpp", libSourcePath .. "/Audio/**.h" }
 		objdir( objectDir .. "/ogAudio" )
 
 	-- ogFileSystem Static Library
@@ -99,7 +106,8 @@ solution "Libraries"
 		language "C++"
 		targetdir( libDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/FileSystem/**.h", librariesPath .. "/Include/og/FileSystem/**.inl", librariesPath .. "/Source/og/FileSystem/**.cpp", librariesPath .. "/Source/og/FileSystem/**.h" }
+		files { libIncludePath .. "/FileSystem.h" }
+		files { libIncludePath .. "/FileSystem/**.h", libIncludePath .. "/FileSystem/**.inl", libSourcePath .. "/FileSystem/**.cpp", libSourcePath .. "/FileSystem/**.h" }
 		objdir( objectDir .. "/ogFileSystem" )
 		if isWindows then
 			defines { "UNICODE" }
@@ -112,7 +120,8 @@ solution "Libraries"
 		language "C++"
 		targetdir( libDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/Fable/**.h", librariesPath .. "/Include/og/Fable/**.inl", librariesPath .. "/Source/og/Fable/**.cpp", librariesPath .. "/Source/og/Fable/**.h" }
+		files { libIncludePath .. "/Fable.h" }
+		files { libIncludePath .. "/Fable/**.h", libIncludePath .. "/Fable/**.inl", libSourcePath .. "/Fable/**.cpp", libSourcePath .. "/Fable/**.h" }
 		objdir( objectDir .. "/ogFable" )
 		if isWindows then
 			defines { "UNICODE" }
@@ -125,7 +134,8 @@ solution "Libraries"
 		language "C++"
 		targetdir( libDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/Gloot/**.h", librariesPath .. "/Include/og/Gloot/**.inl", librariesPath .. "/Source/og/Gloot/**.cpp", librariesPath .. "/Source/og/Gloot/**.h" }
+		files { libIncludePath .. "/Gloot.h" }
+		files { libIncludePath .. "/Gloot/**.h", libIncludePath .. "/Gloot/**.inl", libSourcePath .. "/Gloot/**.cpp", libSourcePath .. "/Gloot/**.h" }
 		objdir( objectDir .. "/ogGloot" )
 		if isWindows then
 			defines { "UNICODE" }
@@ -138,7 +148,8 @@ solution "Libraries"
 		language "C++"
 		targetdir( libDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		files { librariesPath .. "/Include/og/Console/**.h", librariesPath .. "/Include/og/Console/**.inl", librariesPath .. "/Source/og/Console/**.cpp", librariesPath .. "/Source/og/Console/**.h" }
+		files { libIncludePath .. "/Console.h" }
+		files { libIncludePath .. "/Console/**.h", libIncludePath .. "/Console/**.inl", libSourcePath .. "/Console/**.cpp", libSourcePath .. "/Console/**.h" }
 		objdir( objectDir .. "/ogConsole" )
 		if isWindows then
 			defines { "UNICODE" }

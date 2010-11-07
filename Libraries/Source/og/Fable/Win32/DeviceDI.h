@@ -27,8 +27,8 @@
 //
 // ==============================================================================
 
-#include <og/Common/Common.h>
-#include <og/Fable/Fable.h>
+#include <og/Common.h>
+#include <og/Fable.h>
 
 #ifndef __OG_DEVICE_DI_H__
 #define __OG_DEVICE_DI_H__

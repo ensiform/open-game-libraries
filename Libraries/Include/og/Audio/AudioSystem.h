@@ -30,14 +30,10 @@
 #ifndef __OG_AUDIOSYSTEM_H__
 #define __OG_AUDIOSYSTEM_H__
 
-#include <og/Shared/Shared.h>
-#include <og/Common/Common.h>
-#include <og/Math/Math.h>
-
 //! Open Game Libraries
 namespace og {
 //! @defgroup Audio Audio (Library)
-//! You need to include <og/Audio/AudioSystem.h>
+//! You need to include <og/Audio.h>
 //! @see	UserCallbacks
 //! @todo	See if thrown errors work without problems.
 //!	@todo	Cache a list of sounds + clear all cached sounds

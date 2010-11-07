@@ -32,12 +32,12 @@ freely, subject to the following restrictions:
 #define __OG_MAIN_H__
 
 #include <og/Gloot/glmin.h>
-#include <og/Gloot/Gloot.h>
-#include <og/Common/Common.h>
-#include <og/FileSystem/FileSystem.h>
-#include <og/Audio/AudioSystem.h>
-#include <og/Image/Image.h>
-#include <og/Font/Font.h>
+#include <og/Gloot.h>
+#include <og/Common.h>
+#include <og/FileSystem.h>
+#include <og/Audio.h>
+#include <og/Image.h>
+#include <og/Font.h>
 #include "Game.h"
 #include "Menu.h"
 

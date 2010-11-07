@@ -30,7 +30,7 @@
 #ifndef __OG_JOB_MANAGER_H__
 #define __OG_JOB_MANAGER_H__
 
-#include <og/Common/Common.h>
+#include <og/Common.h>
 #include <og/Common/Thread/LockFreeQueue.h>
 
 //! Open Game Libraries
