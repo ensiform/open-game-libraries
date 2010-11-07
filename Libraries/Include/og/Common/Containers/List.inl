@@ -40,8 +40,6 @@ namespace og {
 ==============================================================================
 */
 
-template<class T> TLS<typename List<T>::cmpData_t> List<T>::cmpData;
-
 /*
 ================
 List::List
@@ -283,8 +281,8 @@ void List<T>::Sort( cmpFunc_t compare, bool removeDupes ) {
 	if ( num < 2 )
 		return;
 
-	cmpData->func = compare;
-	qsort( list, num, sizeof( T * ), CompareCallback );
+	CompareData cmpData( compare );
+	QuickSort( list, num, sizeof( T * ), &cmpData, CompareCallback );
 
 	if ( removeDupes ) {
 		for ( int i=num-2; i>=0; i-- ) {
@@ -306,9 +304,8 @@ void List<T>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupes ) {
 	if ( num < 2 )
 		return;
 
-	cmpData->funcEx = compare;
-	cmpData->param = param;
-	qsort( list, num, sizeof( T ), CompareCallbackEx );
+	CompareDataEx cmpData( compare, param );
+	QuickSort( list, num, sizeof( T * ), &cmpData, CompareCallbackEx );
 
 	if ( removeDupes ) {
 		for ( int i=num-2; i>=0; i-- ) {
@@ -324,7 +321,8 @@ List::CompareCallback
 ================
 */
 template<class T>
-int List<T>::CompareCallback( const void *a, const void *b ) {
+int List<T>::CompareCallback( void *context, const void *a, const void *b ) {
+	CompareData *cmpData = reinterpret_cast<CompareData *>(context);
 	return cmpData->func( *(const T *)a, *(const T *)b );
 }
 
@@ -334,8 +332,9 @@ ListEx::CompareCallbackEx
 ================
 */
 template<class T>
-int List<T>::CompareCallbackEx( const void *a, const void *b ) {
-	return cmpData->funcEx( *(const T *)a, *(const T *)b, cmpData->param );
+int List<T>::CompareCallbackEx( void *context, const void *a, const void *b ) {
+	CompareDataEx *cmpData = reinterpret_cast<CompareDataEx *>(context);
+	return cmpData->func( *(const T *)a, *(const T *)b, cmpData->param );
 }
 
 /*
@@ -374,8 +373,6 @@ void List<T>::Resize( int newSize, bool keepContent ) {
 
 ==============================================================================
 */
-
-template<class T> TLS<typename ListEx<T>::cmpData_t> ListEx<T>::cmpData;
 
 /*
 ================
@@ -627,8 +624,8 @@ void ListEx<T>::Sort( cmpFunc_t compare, bool removeDupes ) {
 	if ( num < 2 )
 		return;
 
-	cmpData->func = compare;
-	qsort( list, num, sizeof( T * ), CompareCallback );
+	CompareData cmpData( compare );
+	QuickSort( list, num, sizeof( T * ), &cmpData, CompareCallback );
 
 	if ( removeDupes ) {
 		for ( int i=num-2; i>=0; i-- ) {
@@ -650,9 +647,8 @@ void ListEx<T>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupes ) {
 	if ( num < 2 )
 		return;
 
-	cmpData->funcEx = compare;
-	cmpData->param = param;
-	qsort( list, num, sizeof( T * ), CompareCallbackEx );
+	CompareDataEx cmpData( compare, param );
+	QuickSort( list, num, sizeof( T * ), &cmpData, CompareCallbackEx );
 
 	if ( removeDupes ) {
 		for ( int i=num-2; i>=0; i-- ) {
@@ -668,9 +664,10 @@ ListEx::CompareCallback
 ================
 */
 template<class T>
-int ListEx<T>::CompareCallback( const void *a, const void *b ) {
+int ListEx<T>::CompareCallback( void *context, const void *a, const void *b ) {
 	const T *pa = *(const T **)a;
 	const T *pb = *(const T **)b;
+	CompareData *cmpData = reinterpret_cast<CompareData *>(context);
 	return cmpData->func( *pa, *pb );
 }
 
@@ -680,10 +677,11 @@ ListEx::CompareCallbackEx
 ================
 */
 template<class T>
-int ListEx<T>::CompareCallbackEx( const void *a, const void *b ) {
+int ListEx<T>::CompareCallbackEx( void *context, const void *a, const void *b ) {
 	const T *pa = *(const T **)a;
 	const T *pb = *(const T **)b;
-	return cmpData->funcEx( *pa, *pb, cmpData->param );
+	CompareDataEx *cmpData = reinterpret_cast<CompareDataEx *>(context);
+	return cmpData->func( *pa, *pb, cmpData->param );
 }
 
 /*

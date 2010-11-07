@@ -37,7 +37,6 @@
 #include <og/Shared/FileSystemCore.h>
 #include <og/Common/Thread/ThreadLocalStorage.h>
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
@@ -79,6 +78,18 @@ namespace og {
 	//! @return	The size of the new buffer
 	// ==============================================================================
 	int StringToWide( const char *in, DynBuffer<wchar_t> &buffer );
+	
+	// ==============================================================================
+	//! QuickSort
+	//!
+	//! @param	base	The start of the target array
+	//! @param	num		The array size in elements
+	//! @param	width	The element size in bytes
+	//! @param	context	A pointer to a context, can be anything you like
+	//! @param	compare	The comparison function
+	// ==============================================================================
+	void QuickSort( void *base, size_t num, size_t width, void *context,
+								int ( *compare )(void *, const void *, const void *) );
 //! @}
 }
 

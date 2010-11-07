@@ -39,8 +39,6 @@ namespace og {
 
 ==============================================================================
 */
-template<class T> TLS<typename LinkedList<T>::cmpData_t> LinkedList<T>::cmpData;
-
 /*
 ================
 LinkedList::LinkedList
@@ -314,8 +312,8 @@ void LinkedList<T>::Sort( cmpFunc_t compare, bool removeDupes ) {
 	for( nodeType *node=start; node; node=node->next, i++ )
 		list[i] = node;
 
-	cmpData->func = compare;
-	qsort( list, num, sizeof( nodeType * ), CompareCallback );
+	CompareData cmpData( this, compare );
+	QuickSort( list, num, sizeof( nodeType * ), &cmpData, CompareCallback );
 
 	for( i=1; i<num; i++ ) {
 		list[i]->prev = list[i-1];
@@ -356,9 +354,8 @@ void LinkedList<T>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupes )
 	for( nodeType *node=start; node; node=node->next, i++ )
 		list[i] = node;
 
-	cmpData->funcEx = compare;
-	cmpData->param = param;
-	qsort( list, num, sizeof( nodeType * ), CompareCallbackEx );
+	CompareDataEx cmpData( this, compare, param );
+	QuickSort( list, num, sizeof( nodeType * ), &cmpData, CompareCallbackEx );
 
 	for( i=1; i<num; i++ ) {
 		list[i]->prev = list[i-1];
@@ -388,9 +385,10 @@ LinkedList::CompareCallback
 ================
 */
 template<class T>
-int LinkedList<T>::CompareCallback( const void *a, const void *b ) {
+int LinkedList<T>::CompareCallback( void *context, const void *a, const void *b ) {
 	const nodeType *pa = *(const nodeType **)a;
 	const nodeType *pb = *(const nodeType **)b;
+	CompareData *cmpData = reinterpret_cast<CompareData *>(context);
 	return cmpData->func( pa->value, pb->value );
 }
 
@@ -400,10 +398,11 @@ LinkedList::CompareCallbackEx
 ================
 */
 template<class T>
-int LinkedList<T>::CompareCallbackEx( const void *a, const void *b ) {
+int LinkedList<T>::CompareCallbackEx( void *context, const void *a, const void *b ) {
 	const nodeType *pa = *(const nodeType **)a;
 	const nodeType *pb = *(const nodeType **)b;
-	return cmpData->funcEx( pa->value, pb->value, cmpData->param );
+	CompareDataEx *cmpData = reinterpret_cast<CompareDataEx *>(context);
+	return cmpData->func( pa->value, pb->value, cmpData->param );
 }
 
 }

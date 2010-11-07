@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 */
 
 #include <og/Common/Common.h>
+#include <stdlib.h>
 
 namespace og {
 
@@ -52,4 +53,14 @@ int StringToWide( const char *in, DynBuffer<wchar_t> &buffer ) {
 		String::ToWide( in, numBytes, buffer.data, buffer.size );
 	return size;
 }
+
+void QuickSort( void *base, size_t num, size_t width, void *context,
+							int ( *compare )(void *, const void *, const void *) ) {
+#if OG_WIN32
+	qsort_s( base, num, width, compare, context );
+#else
+	qsort_r( base, num, width, context, compare );
+#endif
+}
+
 }

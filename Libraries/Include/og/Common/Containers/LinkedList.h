@@ -239,32 +239,45 @@ namespace og {
 		// ==============================================================================
 		//! Comparison callback
 		//!
-		//! @param	a	A pointer to the first object
-		//! @param	b	A pointer to the second object
+		//! @param	context	A pointer to the CompareData object
+		//! @param	a		A pointer to the first object
+		//! @param	b		A pointer to the second object
 		//!
 		//! @return	0 if the objects match, otherwise positive or negative
 		// ==============================================================================
-		static int	CompareCallback( const void *a, const void *b );
+		static int	CompareCallback( void *context, const void *a, const void *b );
 
 		// ==============================================================================
 		//! Comparison callback
 		//!
+		//! @param	context	A pointer to the CompareDataEx object
 		//! @param	a	A pointer to the first object
 		//! @param	b	A pointer to the second object
 		//!
 		//! @return	0 if the objects match, otherwise positive or negative
 		// ==============================================================================
-		static int	CompareCallbackEx( const void *a, const void *b );
+		static int	CompareCallbackEx( void *context, const void *a, const void *b );
 		
 		// ==============================================================================
 		//! Comparison data
 		// ==============================================================================
-		struct cmpData_t {
-			cmpFunc_t	func;	//!< The normal comparison function
-			cmpFuncEx_t	funcEx;	//!< The extended comparison function
-			void		*param;	//!< The parameter ( for the extended comparison )
+		class CompareData {
+		public:
+			CompareData( cmpFunc_t f ) : func(f) {}
+
+			cmpFunc_t	func;		//!< The normal comparison function
 		};
-		static TLS<cmpData_t> cmpData;	//!< Thread local comparison data
+
+		// ==============================================================================
+		//! Comparison data with parameter
+		// ==============================================================================
+		class CompareDataEx {
+		public:
+			CompareDataEx( cmpFuncEx_t f, void *p ) : func(f), param(p) {}
+
+			cmpFuncEx_t	func;		//!< The extended comparison function
+			void		*param;		//!< The parameter ( for the extended comparison )
+		};
 	};
 //! @}
 }
