@@ -63,7 +63,7 @@ bool ReadPureList( const char *filename ) {
 		len = strlen(buffer);
 		if ( buffer[40] == '\r' || buffer[40] == '\n' ) {
 			len = 40;
-			buffer[40] = 0;
+			buffer[40] = '\0';
 		}
 		if ( len == 40 )
 			allowedPakFiles.Append( buffer );

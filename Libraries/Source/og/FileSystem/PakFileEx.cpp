@@ -201,9 +201,9 @@ public:
 		utf8Buffer.FromWide( wideBuffer.data );
 		return utf8Buffer.c_str();
 #elif OG_LINUX || OG_MACOS_X
-		size_t inBytes = (size_t)numBytes;
+		size_t inBytes = numBytes;
 		utf8Buffer.CheckSize( inBytes );
-		size_t outBytes = (size_t)inBytes;
+		size_t outBytes = inBytes;
 
 		char *inchar =  input ;
 		char *outchar = utf8Buffer.data ;
