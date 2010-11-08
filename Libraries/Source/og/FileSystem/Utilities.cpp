@@ -147,7 +147,7 @@ public:
 			if ( stat ( findResult.gl_pathv[i], &stat_Info ) == -1 )
 				continue;
 
-			name = findResult.gl_pathv[i] + baseDir.Length();
+			name = findResult.gl_pathv[i] + baseDir.Length() +1;
 			len = strlen( name );
 			if ( len > 0 && String::Icmp( name + len-extLen, extension.c_str() ) != 0 )
 				continue;

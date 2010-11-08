@@ -201,14 +201,14 @@ public:
 		utf8Buffer.FromWide( wideBuffer.data );
 		return utf8Buffer.c_str();
 #elif OG_LINUX || OG_MACOS_X
-		size_t inBytes = numBytes;
+		size_t inBytes = (size_t)numBytes;
 		utf8Buffer.CheckSize( inBytes );
-		size_t outBytes = inBytes;
+		size_t outBytes = (size_t)inBytes;
 
 		char *inchar =  input ;
 		char *outchar = utf8Buffer.data ;
 		if ( iconv(cd, &inchar, &inBytes, &outchar, &outBytes) == -1 )
-			return NULL;
+            return NULL;
 		utf8Buffer.data[numBytes-1] = '\0';
 		return utf8Buffer.data;
 #endif
@@ -462,7 +462,7 @@ PakFileEx *PakFileEx::OpenZip( const char *path ) {
 
 	if ( file == NULL ) {
 		// Couldn't be opened, so delete the object again
-		fclose( file );
+		//fclose( file );
 		delete pakFile;
 		User::Error( ERR_FS_FILE_OPENREAD, "Can't open file for reading", path );
 		return NULL;

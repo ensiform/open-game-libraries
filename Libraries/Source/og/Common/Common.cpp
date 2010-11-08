@@ -53,13 +53,31 @@ int StringToWide( const char *in, DynBuffer<wchar_t> &buffer ) {
 		String::ToWide( in, numBytes, buffer.data, buffer.size );
 	return size;
 }
+#if OG_LINUX
+class CompareWrapper {
+public:
+	CompareWrapper( void *ct, int ( *cmp )(void *, const void *, const void *) )
+		:context(ct), compare(cmp){}
+
+	static int Compare(const void *a, const void *b, void *context) {
+		CompareWrapper *wrap = reinterpret_cast<CompareWrapper *>(context);
+		wrap->compare( wrap->context, a, b );
+	}
+private:
+	void *context;
+	int ( *compare )(void *, const void *, const void *);
+};
+#endif
 
 void QuickSort( void *base, size_t num, size_t width, void *context,
 							int ( *compare )(void *, const void *, const void *) ) {
 #if OG_WIN32
 	qsort_s( base, num, width, compare, context );
-#else
+#elif OG_MACOS_X
 	qsort_r( base, num, width, context, compare );
+#elif OG_LINUX
+	CompareWrapper data(context, compare);
+	qsort_r( base, num, width, CompareWrapper::Compare, &data );
 #endif
 }
 
