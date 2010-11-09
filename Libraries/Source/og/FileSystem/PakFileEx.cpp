@@ -208,8 +208,8 @@ public:
 		char *inchar =  input ;
 		char *outchar = utf8Buffer.data ;
 		if ( iconv(cd, &inchar, &inBytes, &outchar, &outBytes) == -1 )
-            return NULL;
-		utf8Buffer.data[numBytes-1] = '\0';
+			return NULL;
+		utf8Buffer.data[numBytes-1] = '\0'; //fixme: wrong, numBytes is for input, not output
 		return utf8Buffer.data;
 #endif
 }
@@ -462,7 +462,6 @@ PakFileEx *PakFileEx::OpenZip( const char *path ) {
 
 	if ( file == NULL ) {
 		// Couldn't be opened, so delete the object again
-		//fclose( file );
 		delete pakFile;
 		User::Error( ERR_FS_FILE_OPENREAD, "Can't open file for reading", path );
 		return NULL;

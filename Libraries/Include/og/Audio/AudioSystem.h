@@ -246,10 +246,10 @@ namespace og {
 		// ==============================================================================
 		//! Set the speed of sound in the current medium (air, water, ..)
 		//!
-		//! @param	speed	The speed of sound (must be above 0)
+		//! @param	speed	The speed of sound (must be above 0, default: 343.3f)
 		//!
 		//! Examples:
-		//! @li		Air: 343.2 m/s or  1126 ft/s
+		//! @li		Air: 343.3 m/s or  1126 ft/s
 		//! @li		Water: 1484 m/s or 4868 ft/s
 		//!
 		//! @note	Recalculate the value to your unit size before passing them.

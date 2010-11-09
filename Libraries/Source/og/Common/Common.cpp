@@ -53,6 +53,7 @@ int StringToWide( const char *in, DynBuffer<wchar_t> &buffer ) {
 		String::ToWide( in, numBytes, buffer.data, buffer.size );
 	return size;
 }
+
 #if OG_LINUX
 class CompareWrapper {
 public:
