@@ -79,6 +79,7 @@ JobManager::JobManager
 ================
 */
 JobManager::~JobManager() {
+	KillAll();
 	WaitForDone();
 	listMutex.lock();
 	int num = allThreads.Num();
@@ -94,9 +95,10 @@ JobManager::AddJob
 ================
 */
 void JobManager::AddJob( Job *job ) {
-	if ( waitForDone )
-		job->Cancel();
-	else {
+	if ( waitForDone ) {
+		if ( job->Cancel() == JOB_DELETE )
+			delete job;
+	} else {
 		jobList.Produce( job );
 		TriggerNextJob();
 	}
@@ -142,6 +144,19 @@ void JobManager::WaitForDone( void ) {
 	while( waitForDone )
 		doneWaiter.Wait();
 	doneWaiter.Unlock();
+}
+
+/*
+================
+JobManager::KillAll
+================
+*/
+void JobManager::KillAll( void ) {
+	Job *job;
+	while( (job=jobList.Consume()) != NULL ) {
+		if ( job->Cancel() == JOB_DELETE )
+			delete job;
+	}
 }
 
 /*

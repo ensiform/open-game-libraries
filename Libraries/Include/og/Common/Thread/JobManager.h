@@ -69,8 +69,10 @@ namespace og {
 
 		// ==============================================================================
 		//! Called when a job is canceled due to the job manager stopping.
+		//!
+		//! @return	JobResult: Default is JOB_DELETE, all others won't do anything
 		// ==============================================================================
-		virtual void		Cancel( void ) = 0;
+		virtual JobResult	Cancel( void ) { return JOB_DELETE; }
 	};
 
 	// ==============================================================================
@@ -137,6 +139,11 @@ namespace og {
 		// ==============================================================================
 		void	WaitForDone( void );
 
+		// ==============================================================================
+		//! Kill all remaining jobs
+		// ==============================================================================
+		void	KillAll( void );
+
 	private:
 		friend class WorkerThread;
 
@@ -193,8 +200,9 @@ namespace og {
 			// ==============================================================================
 			//! Cancel should never be called on this one
 			// ==============================================================================
-			void		Cancel( void ) {
+			JobResult	Cancel( void ) {
 				OG_ASSERT( false );
+				return JOB_DELETE;
 			}
 
 		private:
