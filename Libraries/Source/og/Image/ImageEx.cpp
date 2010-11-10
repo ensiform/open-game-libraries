@@ -27,6 +27,7 @@
 //
 // ==============================================================================
 
+#include <og/Common/Thread/JobManager.h>
 #include <og/Gloot/glmin.h>
 #include <og/Image.h>
 #include <og/Math.h>
@@ -34,6 +35,7 @@
 #include "ImageEx.h"
 
 namespace og {
+class ImagePreloadJob;
 FileSystemCore *imageFS = NULL;
 
 typedef byte *( *imageLoadFunc_t )( const char *filename, uInt &width, uInt &height, bool &hasAlpha );
@@ -54,6 +56,54 @@ static DictEx<ImageEx> imageList;
 static DictEx<ImageFile *> imageFileTypes;
 static Image *defaultImage = NULL;
 
+JobManager *imageJobManager = NULL;
+int			imageMaxPreload = 1;
+Queue<ImagePreloadJob *> imagesPreloaded;
+Condition	imagePreloadCondition;
+
+/*
+==============================================================================
+
+  ImagePreloadJob
+
+==============================================================================
+*/
+class ImagePreloadJob : public Job {
+public:
+	ImagePreloadJob( const char *_filename ) : filename(_filename), file(NULL) {}
+	~ImagePreloadJob() {
+		if ( file )
+			delete file;
+	}
+
+	JobResult	Execute( void ) {
+		int index = ImageEx::GetFileTypeIndex( filename );
+
+		imagePreloadCondition.Lock();
+		if ( imagesPreloaded.Num() >= imageMaxPreload )
+			imagePreloadCondition.Wait();
+		imagePreloadCondition.Unlock();
+
+		if ( index != -1 ) {
+			file = imageFileTypes[index]->GetNew();
+			if ( !file->Open( filename.c_str() ) ) {
+				delete file;
+				file = NULL;
+			}
+			imagePreloadCondition.Lock();
+			imagesPreloaded.Push( this );
+			imagePreloadCondition.Unlock();
+			return JOB_DONE;
+		}
+		return JOB_DELETE;
+	}
+
+private:
+	friend class Image;
+
+	String	filename;
+	ImageFile *file;
+};
 
 /*
 ==============================================================================
@@ -116,7 +166,7 @@ Image::ReloadImages
 uInt Image::ReloadImages( bool force, bool usePreloader ) {
 	if ( !usePreloader )
 		Image::SetFilters( ImageEx::minFilter, ImageEx::magFilter );
-	else // fixme: if no preloader started yet
+	else if ( imageJobManager == NULL )
 		return 0;
 
 	uInt numReloads = 0;
@@ -135,7 +185,10 @@ Image::StartPreloader
 ================
 */
 void Image::StartPreloader( int max ) {
-	//fixme
+	if ( imageJobManager == NULL )
+		imageJobManager = new JobManager;
+	imageJobManager->SetNumWorkers(1);
+	imageMaxPreload = Max( max, 1 );
 }
 
 /*
@@ -144,7 +197,11 @@ Image::StopPreloader
 ================
 */
 void Image::StopPreloader( void ) {
-	//fixme
+	if ( imageJobManager != NULL ) {
+		imageJobManager->WaitForDone(); // fixme: kill all remaining
+		delete imageJobManager;
+		imageJobManager = NULL;
+	}
 }
 
 /*
@@ -153,7 +210,8 @@ Image::PreloadImage
 ================
 */
 void Image::PreloadImage( const char *filename ) {
-	//fixme
+	if ( imageJobManager != NULL )
+		imageJobManager->AddJob( new ImagePreloadJob(filename) );
 }
 
 /*
@@ -162,8 +220,23 @@ Image::UploadPreloaded
 ================
 */
 uInt Image::UploadPreloaded( void ) {
-	//fixme
-	return 0;
+	imagePreloadCondition.Lock();
+	ImagePreloadJob *job;
+	int num = imagesPreloaded.Num();
+	while( !imagesPreloaded.IsEmpty() ) {
+		job = imagesPreloaded.Front();
+
+		if ( job->file ) {
+			ImageEx &img = imageList[job->filename.c_str()];
+			if ( job->file->Upload( img ) )
+				img.time = imageFS->FileTime( job->filename.c_str() );
+		}
+		delete job;
+		imagesPreloaded.Pop();
+	}
+	imagePreloadCondition.Unlock();
+	imagePreloadCondition.Signal();
+	return num;
 }
 
 /*
@@ -315,27 +388,7 @@ bool ImageEx::UploadImage( const char *filename ) {
 		return false;
 
 	fullpath = filename;
-	String extension = fullpath.GetFileExtension();
-
-	// If no extension was given, try to find an image with the known extensions
-	if ( extension.IsEmpty() ) {
-		static const char *validExtensions[4] = { "dds", "tga", "png", "jpg" };
-		String newFilename;
-		// skips dds if denyPrecompressed is set.
-		for( int i=ImageEx::denyPrecompressed; i<4; i++ ) {
-			newFilename = Format( "$*.$*") << filename << validExtensions[i];
-			if ( imageFS->FileExists( newFilename.c_str() ) ) {
-				fullpath = newFilename;
-				extension = validExtensions[i];
-				break;
-			}
-		}
-	}
-	int index = imageFileTypes.Find( extension.c_str() );
-	if ( index == -1 ) {
-		User::Warning( Format("Unknown image type for file '$*'" ) << filename );
-		return false;
-	}
+	int index = ImageEx::GetFileTypeIndex( fullpath );
 
 	if ( !imageFileTypes[index]->Open( fullpath.c_str() ) )
 		return false;
@@ -365,7 +418,9 @@ bool ImageEx::ReloadImage( bool force, bool usePreloader ) {
 		return false;
 	}
 	if ( usePreloader ) {
-		// fixme: add to preload list
+		if ( !imageJobManager )
+			return false;
+		imageJobManager->AddJob( new ImagePreloadJob(fullpath.c_str()) );
 		return true;
 	}
 	if ( !imageFileTypes[index]->Open( fullpath.c_str() ) )
@@ -374,6 +429,35 @@ bool ImageEx::ReloadImage( bool force, bool usePreloader ) {
 		return false;
 	time = newTime;
 	return true;
+}
+
+
+/*
+================
+ImageEx::GetFileTypeIndex
+================
+*/
+int ImageEx::GetFileTypeIndex( String &filename ) {
+	String extension = filename.GetFileExtension();
+
+	// If no extension was given, try to find an image with the known extensions
+	if ( extension.IsEmpty() ) {
+		static const char *validExtensions[4] = { "dds", "tga", "png", "jpg" };
+		String newFilename;
+		// skips dds if denyPrecompressed is set.
+		for( int i=ImageEx::denyPrecompressed; i<4; i++ ) {
+			newFilename = Format( "$*.$*") << filename << validExtensions[i];
+			if ( imageFS->FileExists( newFilename.c_str() ) ) {
+				filename = newFilename;
+				extension = validExtensions[i];
+				break;
+			}
+		}
+	}
+	int index = imageFileTypes.Find( extension.c_str() );
+	if ( index == -1 )
+		User::Warning( Format("Unknown image type for file '$*'" ) << filename );
+	return index;
 }
 
 /*

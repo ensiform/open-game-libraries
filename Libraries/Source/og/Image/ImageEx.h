@@ -62,9 +62,12 @@ namespace og {
 		friend class ImageFileDDS;
 		friend class ImageFileJPG;
 		friend class Image;
+		friend class ImagePreloadJob;
 
 		bool	UploadImage( const char *filename );
 		bool	ReloadImage( bool force, bool usePreloader );
+		
+		static int	GetFileTypeIndex( String &filename );
 
 		String	fullpath;
 		uInt	glTextureNum;
@@ -96,6 +99,8 @@ namespace og {
 		virtual bool	Open( const char *filename ) = 0;
 		virtual bool	Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) = 0;
 		virtual bool	Upload( ImageEx &image ) = 0;
+
+		virtual ImageFile *GetNew( void ) = 0;
 
 	protected:
 		uInt	width;
@@ -138,6 +143,8 @@ namespace og {
 		bool	Open( const char *filename );
 		bool	Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
 
+		ImageFile *GetNew( void ) { return new ImageFileTGA; }
+
 	private:
 		void	ReadType2( File *file, bool topDown );
 		void	ReadType3( File *file, bool topDown );
@@ -155,6 +162,8 @@ namespace og {
 	public:
 		bool	Open( const char *filename );
 		bool	Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
+
+		ImageFile *GetNew( void ) { return new ImageFilePNG; }
 	};
 
 	/*
@@ -168,6 +177,8 @@ namespace og {
 	public:
 		bool	Open( const char *filename );
 		bool	Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
+
+		ImageFile *GetNew( void ) { return new ImageFileJPG; }
 	};
 
 	/*
@@ -182,6 +193,8 @@ namespace og {
 		bool	Open( const char *filename );
 		bool	Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
 		bool	Upload( ImageEx &image );
+
+		ImageFile *GetNew( void ) { return new ImageFileDDS; }
 
 	private:
 		uInt	dxtFormat;
