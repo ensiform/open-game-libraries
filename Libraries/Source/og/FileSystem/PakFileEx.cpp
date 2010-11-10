@@ -450,10 +450,6 @@ You can use it to search through the zipfile or extract data.
 PakFileEx *PakFileEx::OpenZip( const char *path ) {
 	// Create a new zipfile object
 	PakFileEx *pakFile = new PakFileEx;
-	if ( pakFile == NULL ) {
-		User::Error( ERR_OUT_OF_MEMORY, "new PakFileEx", Format() << sizeof(PakFileEx) );
-		return NULL;
-	}
 
 	// Try to open the file
 	pakFile->pakFileName = path;

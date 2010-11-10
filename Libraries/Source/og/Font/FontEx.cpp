@@ -271,11 +271,6 @@ bool FontFile::Open( const char *filename ) {
 
 						// Create glyph data
 						GlyphInfo *glyph = new GlyphInfo;
-						if ( glyph == NULL ) {
-							file->Close();
-							User::Error( ERR_OUT_OF_MEMORY, "new GlyphInfo", Format() << sizeof(GlyphInfo) );
-							return false;
-						}
 						glyph->texCoords[0].Set( x * imageScaleX, y * imageScaleY );
 						glyph->texCoords[1].Set( glyph->texCoords[0].x + width * imageScaleX, glyph->texCoords[0].y + height * imageScaleY );
 						glyph->size.Set( width, height );

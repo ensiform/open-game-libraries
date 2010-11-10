@@ -266,10 +266,6 @@ void AudioEmitterEx::Init( int channels ) {
 	Clear();
 	numChannels = channels;
 	sndChannels = new AudioSource *[numChannels];
-	if ( !sndChannels ) {
-		User::Error( ERR_OUT_OF_MEMORY, "new AudioSource *[numChannels]", Format() << (sizeof(AudioSource *) * numChannels) );
-		return;
-	}
 	for( int i=0; i<numChannels; i++ )
 		sndChannels[i] = NULL;
 }
