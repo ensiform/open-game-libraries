@@ -184,6 +184,7 @@ public:
 #if OG_WIN32
 		return true;
 #elif OG_LINUX || OG_MACOS_X
+        cd = iconv_open("UTF8", "437");
 		return cd != (iconv_t)-1;
 #endif
 	}
@@ -201,8 +202,8 @@ public:
 		return utf8Buffer.c_str();
 #elif OG_LINUX || OG_MACOS_X
 		size_t inBytes = numBytes;
-		utf8Buffer.CheckSize( inBytes*6 );
-		size_t outBytes = inBytes*6;
+		utf8Buffer.CheckSize( inBytes );
+		size_t outBytes = inBytes;
 
 		char *inchar =  input ;
 		char *outchar = utf8Buffer.data ;
