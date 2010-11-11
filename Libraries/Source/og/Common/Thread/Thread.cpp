@@ -103,6 +103,7 @@ void TLS_Data::Cleanup( void ) {
 	TLS_Data *lastTLS = static_cast<TLS_Data *>( lastTlsIndex->GetValue() );
 	if ( lastTLS != NULL ) {
 		delete lastTLS;
+		#warning - SegFault Here - FixMe
 		lastTlsIndex->SetValue( NULL );
 	}
 }
