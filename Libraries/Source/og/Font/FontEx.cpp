@@ -742,24 +742,24 @@ Font::Free
 ================
 */
 void Font::Free( Font *font ) {
+	OG_ASSERT( font != NULL );
+
 	FontEx *fontEx = static_cast<FontEx *>(font);
-	LinkedList<FontEx>::nodeType *node = fontList.FindByAddress( fontEx );
-	if ( node != NULL ) {
-		// No need to keep font families that are no longer in use.
-		// Remember, defaultFamily is always occupied with at least one user,
-		// which is correct, since we always want it to be available.
-		// It will be freed upon Font::Shutdown.
-		if ( fontEx->family->numUsers == 0 ) {
-			int num = fontFamilies.Num();
-			for( int i=0; i<num; i++ ) {
-				if ( &fontFamilies[i] == fontEx->family ) {
-					fontFamilies.Remove(i);
-					break;
-				}
+
+	// No need to keep font families that are no longer in use.
+	// Remember, defaultFamily is always occupied with at least one user,
+	// which is correct, since we always want it to be available.
+	// It will be freed upon Font::Shutdown.
+	if ( fontEx->family->numUsers == 0 ) {
+		int num = fontFamilies.Num();
+		for( int i=0; i<num; i++ ) {
+			if ( &fontFamilies[i] == fontEx->family ) {
+				fontFamilies.Remove(i);
+				break;
 			}
 		}
-		fontList.Remove(node);
 	}
+	fontList.Remove( fontEx->node );
 }
 
 }

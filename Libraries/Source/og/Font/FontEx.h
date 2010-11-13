@@ -210,6 +210,7 @@ namespace og {
 		float			scale;				//!< Scale to apply when drawing
 		float			spacing;			//!< Extra x-spacing between characters
 		Color			defaultColor;		//!< Default color
+		LinkedList<FontEx>::nodeType *node;	//!< Node in the list
 	};
 
 //! @}
