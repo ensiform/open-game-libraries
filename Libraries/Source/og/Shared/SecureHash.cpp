@@ -51,7 +51,7 @@ BigLong
 #if OG_LITTLE_ENDIAN
 	OG_INLINE uInt BigLong( const byte *buf )	{ return static_cast<int>(buf[0]<<24) + static_cast<int>(buf[1]<<16) + static_cast<int>(buf[2]<<8) + buf[3]; }
 #else
-	OG_INLINE int BigLong( const byte *buf )	{ return *reinterpret_cast<int *>(buf); }
+	OG_INLINE int BigLong( const byte *buf )	{ return *reinterpret_cast<const int *>(buf); }
 #endif
 
 /*
