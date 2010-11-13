@@ -1,6 +1,6 @@
 // ==============================================================================
 //! @file
-//! @brief	Audio Source
+//! @brief	Audio Effect
 //! @author	Santo Pfingsten (TTK-Bandit)
 //! @note	Copyright (C) 2007-2010 Lusito Software
 // ==============================================================================
@@ -27,65 +27,46 @@
 //
 // ==============================================================================
 
-#ifndef __OG_AUDIOSOURCE_H__
-#define __OG_AUDIOSOURCE_H__
+#ifndef __OG_AUDIO_EFFECT_EX_H__
+#define __OG_AUDIO_EFFECT_EX_H__
 
 namespace og {
-	class AudioEffectEx;
-	class AudioEmitterEx;
-	class AudioStreamData;
-
-	const int AUDIOSRC_BUFFERS = 4;
-
-	struct AudioSourceSetup {
-		bool	relative;
-		Vec3	origin;
-		Vec3	velocity;
-		Vec3	direction;
-		float	innerAngle;
-		float	outerAngle;
-		float	outerVolume;
-	};
-
 	/*
 	==============================================================================
 
-	  AudioSource
+	  AudioEffectEx
 
 	==============================================================================
 	*/
-	class AudioSource {
+	class AudioEffectEx : public AudioEffect {
 	public:
-		AudioSource( AudioSource *previous, uInt sourceNum );
-		~AudioSource();
+		// ---------------------- Public AudioEffect Interface -------------------
 
-		bool	Play( AudioEmitterEx *emitter, int channel, const Sound *sound, bool allowLoop );
-		void	Pause( void );
-		void	Stop( void );
+		bool	Load( const AudioEffectReverb *effect );
+		bool	Load( const AudioEffectEcho *effect );
+		void	Clear( void );
 
-		void	Frame( void );
-		void	OnUpdate( const AudioSourceSetup *setup );
+		// ---------------------- Internal AudioEffectEx Members -------------------
 
-		bool	IsActive( void ) const { return emitter != NULL; }
+	public:
+		AudioEffectEx();
+		~AudioEffectEx();
 
-		bool	SetEffect( AudioEffectEx *effect );
+		bool	Init( void );
 
 	private:
-		friend class AudioThread;
-		friend class AudioStream;
+		friend class AudioSource;
+		friend class AudioSystemEx;
 
-		AudioSource *next;
-		AudioSource *prev;
-		int	safeLevel;
+		bool	CreateEffect( int type );
+		void	DeleteEffect( void );
 
-		AudioEmitterEx *emitter;
-		int		emitterChannel;
-
-		uInt	alSourceNum;
-
-		AudioStreamData *streamData;
-		uInt	alBuffers[AUDIOSRC_BUFFERS];
+		uInt	alEffectSlotNum;
+		int		alEffectType;
+		uInt	alEffectNum;
+		LinkedList<AudioEffectEx>::nodeType *node;
 	};
+
 }
 
 #endif

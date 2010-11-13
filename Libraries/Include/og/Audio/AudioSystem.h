@@ -56,6 +56,77 @@ namespace og {
 	};
 
 	// ==============================================================================
+	//! Defines properties of an EFX reverb effect
+	// ==============================================================================
+	class AudioEffectReverb {
+	public:
+		float	density;
+		float	diffusion;
+		float	gain;
+		float	gainHF;
+		float	gainLF;
+		float	decayTime;
+		float	decayHFRatio;
+		float	decayLFRatio;
+		float	reflectionsGain;
+		float	reflectionsDelay;
+		Vec3	reflectionsPan;
+		float	lateReverbGain;
+		float	lateReverbDelay;
+		Vec3	lateReverbPan;
+		float	echoTime;
+		float	echoDepth;
+		float	modulationTime;
+		float	modulationDepth;
+		float	airAbsorptionGainHF;
+		float	referenceHF;
+		float	referenceLF;
+		float	roomRolloffFactor;
+		int		decayHFLimit;
+	};
+
+	// ==============================================================================
+	//! Defines properties of an EFX echo effect
+	// ==============================================================================
+	class AudioEffectEcho {
+	public:
+		float	delay;
+		float	delayLR;
+		float	damping;
+		float	feedback;
+		float	spread;  
+	};
+
+	// ==============================================================================
+	//! This is an effect, you can load reverbs or echoes into it ( only one )
+	// ==============================================================================
+	class AudioEffect {
+	public:
+		// ==============================================================================
+		//! Load a reverb into the effect, overwrites the last effect
+		//!
+		//! @param	effect	The reverb effect
+		//!
+		//! @return	true if it succeeds, false if it fails
+		// ==============================================================================
+		virtual bool	Load( const AudioEffectReverb *effect ) = 0;
+
+		// ==============================================================================
+		//! Load an echo into the effect, overwrites the last effect
+		//!
+		//! @param	effect	The echo effect
+		//!
+		//! @return	true if it succeeds, false if it fails
+		// ==============================================================================
+		virtual bool	Load( const AudioEffectEcho *effect ) = 0;
+
+		// ==============================================================================
+		//! Clear the last effect
+		// ==============================================================================
+		virtual void	Clear( void ) = 0;
+	};
+
+	// ==============================================================================
 	//! This positions and plays sounds in the world
 	//!
 	//! @todo	One channel that can play (non-looping) sounds without stopping anything.
@@ -154,6 +225,13 @@ namespace og {
 		//! @param	outerVolume		Volume level outside the cones.
 		// ==============================================================================
 		virtual void	SetDirectional( const Vec3 &dir, float innerAngle, float outerAngle, float outerVolume ) = 0;
+
+		// ==============================================================================
+		//! Use an AudioEffect on this emitter
+		//!
+		//! @param	effect	The effect to use, NULL to remove the active effect from this emitter
+		// ==============================================================================
+		virtual void	SetEffect( AudioEffect *effect ) = 0;
 	};
 
 	// ==============================================================================
@@ -271,6 +349,20 @@ namespace og {
 		//! @param	emitter		Pointer to the object to be freed
 		// ==============================================================================
 		virtual void				FreeEmitter( AudioEmitter *emitter ) = 0;
+
+		// ==============================================================================
+		//! Create an AudioEffect
+		//!
+		//! @return	Pointer to a new AudioEmitter object
+		// ==============================================================================
+		virtual AudioEffect *		CreateEffect( void ) = 0;
+
+		// ==============================================================================
+		//! Free an AudioEffect previously created by AudioSystem::CreateEffect
+		//!
+		//! @param	effect		Pointer to the object to be freed
+		// ==============================================================================
+		virtual void				FreeEffect( AudioEffect *effect ) = 0;
 	};
 
 	// ==============================================================================

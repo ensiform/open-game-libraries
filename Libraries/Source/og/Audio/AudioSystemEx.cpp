@@ -354,6 +354,33 @@ void AudioSystemEx::FreeEmitter( AudioEmitter *emitter ) {
 }
 
 /*
+================
+AudioSystemEx::CreateEffect
+================
+*/
+AudioEffect *AudioSystemEx::CreateEffect( void ) {
+	effectLock.lock();
+	AudioEffectEx *effect = &audioEffects.Alloc();
+	effectLock.unlock();
+	effect->node = audioEffects.GetLastNode();
+	effect->Init();
+	return effect;
+}
+
+/*
+================
+AudioSystemEx::FreeEffect
+================
+*/
+void AudioSystemEx::FreeEffect( AudioEffect *effect ) {
+	OG_ASSERT( effect != NULL );
+
+	effectLock.lock();
+	audioEffects.Remove( static_cast<AudioEffectEx *>(effect)->node );
+	effectLock.unlock();
+}
+
+/*
 ==============================================================================
 
   AudioSystem

@@ -56,6 +56,8 @@ namespace og {
 		void	SetVelocity( const Vec3 &vel );
 		void	SetDirectional( const Vec3 &dir, float innerAngle, float outerAngle, float outerVolume );
 
+		void	SetEffect( AudioEffect *effect );
+
 		// ---------------------- Internal AudioEmitterEx Members -------------------
 
 	public:
@@ -74,6 +76,8 @@ namespace og {
 		friend class EE_SetPosition;
 		friend class EE_SetVelocity;
 		friend class EE_SetDirectional;
+		friend class EE_SetEffect;
+		friend class AudioSource;
 		friend class AudioSystemEx;
 
 		bool	IsValidChannel( int channel ) const;
@@ -82,6 +86,7 @@ namespace og {
 		int		numChannels;
 
 		AudioSourceSetup details;
+		AudioEffectEx *	effect;
 
 		ogst::mutex		mutex;
 		LinkedList<AudioEmitterEx>::nodeType *node;

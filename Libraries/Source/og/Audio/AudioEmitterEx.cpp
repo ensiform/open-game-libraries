@@ -236,6 +236,34 @@ private:
 /*
 ==============================================================================
 
+  EE_SetEffect
+
+==============================================================================
+*/
+class EE_SetEffect : public EE_Base {
+public:
+	EE_SetEffect( AudioEmitterEx *emt, AudioEffectEx *fx )
+		: EE_Base(emt), effect(fx) {}
+
+	void	Execute( void )  {
+		emitter->mutex.lock();
+		emitter->effect = effect;
+		if ( emitter->IsValidChannel( 0 ) ) {
+			for( int i=0; i<emitter->numChannels; i++ ) {
+				if ( emitter->sndChannels[i] != NULL )
+					emitter->sndChannels[i]->SetEffect( effect );
+			}
+		}
+		emitter->mutex.unlock();
+	}
+
+private:
+	AudioEffectEx *effect;
+};
+
+/*
+==============================================================================
+
   AudioEmitterEx
 
 ==============================================================================
@@ -249,6 +277,7 @@ AudioEmitterEx::AudioEmitterEx
 AudioEmitterEx::AudioEmitterEx() {
 	sndChannels = NULL;
 	numChannels = 0;
+	effect = NULL;
 	details.relative	= false;
 	details.innerAngle	= 360.0f;
 	details.outerAngle	= 360.0f;
@@ -406,6 +435,16 @@ AudioEmitterEx::SetDirectional
 void AudioEmitterEx::SetDirectional( const Vec3 &dir, float innerAngle, float outerAngle, float outerVolume ) {
 	if ( audioSystemObject.audioThread )
 		audioSystemObject.audioThread->AddEvent( new EE_SetDirectional( this, dir, innerAngle, outerAngle, outerVolume ) );
+}
+
+/*
+================
+AudioEmitterEx::SetEffect
+================
+*/
+void AudioEmitterEx::SetEffect( AudioEffect *effect ) {
+	if ( audioSystemObject.audioThread )
+		audioSystemObject.audioThread->AddEvent( new EE_SetEffect( this, static_cast<AudioEffectEx *>(effect) ) );
 }
 
 }

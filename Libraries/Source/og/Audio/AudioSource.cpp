@@ -30,6 +30,8 @@
 #include "AudioSystemEx.h"
 #include "AudioStream.h"
 
+#include <al/efx.h>
+
 namespace og {
 
 /*
@@ -109,6 +111,8 @@ bool AudioSource::Play( AudioEmitterEx *_emitter, int channel, const Sound *soun
 	alSourcef( alSourceNum, AL_MAX_DISTANCE, sound->maxDistance );
 	alSourcef( alSourceNum, AL_GAIN, sound->volume );
 
+	SetEffect( emitter->effect );
+
 	bool loop = allowLoop ? sound->loop : false;
 	audioSystemObject.audioThread->PlayStream( this, filename, loop );
 
@@ -139,6 +143,7 @@ void AudioSource::Stop( void ) {
 		delete streamData;
 		streamData = NULL;
 
+		SetEffect(NULL);
 		emitter->OnSourceStop( emitterChannel );
 		emitter = NULL;
 		emitterChannel = 0;
@@ -185,6 +190,20 @@ void AudioSource::OnUpdate( const AudioSourceSetup *setup ) {
 			alSourcef( alSourceNum, AL_CONE_OUTER_GAIN, setup->outerVolume );
 		}
 	}
+}
+
+/*
+================
+AudioSource::SetEffect
+================
+*/
+bool AudioSource::SetEffect( AudioEffectEx *effect ) {
+	CheckAlErrors();
+	if ( effect )
+		alSource3i( alSourceNum, AL_AUXILIARY_SEND_FILTER, effect->alEffectSlotNum, 0, AL_FILTER_NULL );
+	else
+		alSource3i( alSourceNum, AL_AUXILIARY_SEND_FILTER, AL_EFFECTSLOT_NULL, 0, AL_FILTER_NULL );
+	return CheckAlErrors();
 }
 
 }

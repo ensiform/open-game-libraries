@@ -36,6 +36,7 @@
 #include "AudioSource.h"
 #include "AudioEmitterEx.h"
 #include "AudioStream.h"
+#include "AudioEffectEx.h"
 #include <al/al.h>
 #include <al/alc.h>
 
@@ -90,6 +91,9 @@ namespace og {
 		AudioEmitter *		CreateEmitter( int channels=0 );
 		void				FreeEmitter( AudioEmitter *emitter );
 
+		AudioEffect *		CreateEffect( void );
+		void				FreeEffect( AudioEffect *effect );
+
 		// ---------------------- Internal AudioSystemEx Members -------------------
 
 	public:
@@ -109,6 +113,8 @@ namespace og {
 		int			maxVariations;
 		LinkedList<AudioEmitterEx> audioEmitters;
 		ogst::mutex	emitterLock;
+		LinkedList<AudioEffectEx> audioEffects;
+		ogst::mutex	effectLock;
 
 		ALCcontext	*context;
 		ALCdevice	*device;

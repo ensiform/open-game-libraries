@@ -210,6 +210,10 @@
 						Filter=""
 						>
 						<File
+							RelativePath="..\..\Libraries\Source\og\Audio\AudioEffectEx.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\..\Libraries\Source\og\Audio\AudioEmitterEx.cpp"
 							>
 						</File>
@@ -223,6 +227,10 @@
 						</File>
 						<File
 							RelativePath="..\..\Libraries\Source\og\Audio\AudioSystemEx.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\Libraries\Source\og\Audio\AudioEffectEx.h"
 							>
 						</File>
 						<File
