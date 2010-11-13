@@ -38,6 +38,7 @@ freely, subject to the following restrictions:
 #include <og/Audio.h>
 #include <og/Image.h>
 #include <og/Font.h>
+#include <og/Common/Thread/PreloadManager.h>
 #include "Game.h"
 #include "Menu.h"
 
@@ -86,8 +87,7 @@ public:
 	int			width, height;
 	og::Timer	frameTimer;
 
-	int			numFilesPreload;
-	int			numFilesPreloadDone;
+	og::PreloadManager bgLoader;
 	ogLogoScreen	intro;
 	ogCreditsScreen	outro;
 	float		fadeIn;

@@ -30,6 +30,12 @@ freely, subject to the following restrictions:
 #include <stdio.h>
 #include "main.h"
 
+#if 1 // set to 1 to see image preloading bar
+const int INTRO_TIME = 100;
+#else
+const int INTRO_TIME = 4000;
+#endif
+
 ogDemoWindow demoWindow;
 
 ogBind bindAttack("attack");
@@ -107,8 +113,19 @@ bool ogDemoWindow::Init( void ) {
 
 	InitInput();
 
-	if ( !game.Init() )
-		return false;
+	bgLoader.Start();
+	bgLoader.SetNumWorkers(4);
+	const char *extensions[] = { ".tga", ".png", ".jpg", ".dds", NULL };
+	for( int i=0; extensions[i] != NULL; i++ ) {
+		og::FileList *files = og::FS->GetFileList("", extensions[i]);
+		if ( files ) {
+			do {
+				bgLoader.AddTask( og::Image::PreloadImage( files->GetName() ) );
+			} while ( files->GetNext() );
+
+			og::FS->FreeFileList( files );
+		}
+	}
 
 	// Register bindings and load config
 	RegisterBind( &bindAttack );
@@ -151,8 +168,20 @@ void ogDemoWindow::Draw( void ) {
 	window->GetSize( &width, &height );
 	height = height > 0 ? height : 1;
 
+	// finish preloading if not done yet.
+	if ( !bgLoader.IsDone() ) {
+		bgLoader.Synchronize();
+		if ( bgLoader.IsDone() ) {
+			bgLoader.Stop();
+			game.Init();
+		}
+	}
+
 	if ( !intro.IsDone() )
 		DrawIntro( frameTime );
+	// This shows a loading bar in case not all images have been loaded within the intro screen
+	else if ( !bgLoader.IsDone() )
+		DrawLoading( bgLoader.GetProgress() );
 	else {
 		if ( fadeIn == 1.0f ) {
 			game.StartAmbience();
@@ -174,12 +203,34 @@ void ogDemoWindow::Draw( void ) {
 
 /*
 ================
+ogDemoWindow::DrawLoading
+================
+*/
+void ogDemoWindow::DrawLoading( float pct ) {
+	SetupOrtho();
+
+	float barHeight = 50.0f;
+	float y = height/2.0f - barHeight/2.0f;
+
+	glDisable( GL_TEXTURE_2D );
+	glColor3f( 1.0f, 1.0f, 1.0f );
+	glBegin(GL_QUADS);
+		glTexCoord2f( 0, 0 ); glVertex2f( 0, y );
+		glTexCoord2f( 0, 1 ); glVertex2f( 0, y+barHeight );
+		glTexCoord2f( 1, 1 ); glVertex2f( width*pct, y+barHeight );
+		glTexCoord2f( 1, 0 ); glVertex2f( width*pct, y );
+	glEnd();
+	glEnable( GL_TEXTURE_2D );
+}
+
+/*
+================
 ogDemoWindow::DrawIntro
 ================
 */
 void ogDemoWindow::DrawIntro( int frameTime ) {
 	if ( fadeIn == 1.1f ) {
-		intro.Init( og::c_vec3::origin, 4000, game.soundManager.Find("intro_track") );
+		intro.Init( og::c_vec3::origin, INTRO_TIME, game.soundManager.Find("intro_track") );
 		fadeIn = 1.0f;
 	}
 	SetupPerspective();
