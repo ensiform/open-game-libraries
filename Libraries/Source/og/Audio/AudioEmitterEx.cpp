@@ -59,6 +59,7 @@ public:
 		: EE_Base(emt), channel(ch), sound(snd), allowLoop(loopAllowed) {}
 
 	void	Execute( void )  {
+		ogst::unique_lock<ogst::mutex> lock(emitter->mutex);
 		if ( emitter->IsValidChannel( channel ) ) {
 			AudioSource *source = emitter->sndChannels[channel];
 			if ( source == NULL )
@@ -93,8 +94,10 @@ public:
 	EE_Pause( AudioEmitterEx *emt, int ch ) : EE_Base(emt), channel(ch) {}
 
 	void	Execute( void )  {
+		emitter->mutex.lock();
 		if ( emitter->IsValidChannel( channel ) && emitter->sndChannels[channel] != NULL )
 			emitter->sndChannels[channel]->Pause();
+		emitter->mutex.unlock();
 	}
 
 private:
@@ -113,6 +116,7 @@ public:
 	EE_Stop( AudioEmitterEx *emt, int ch ) : EE_Base(emt), channel(ch) {}
 
 	void	Execute( void )  {
+		emitter->mutex.lock();
 		if ( channel == -1 ) {
 			for( int i=0; i<emitter->numChannels; i++ ) {
 				if ( emitter->sndChannels[i] != NULL )
@@ -121,6 +125,7 @@ public:
 		}
 		else if ( emitter->IsValidChannel( channel ) && emitter->sndChannels[channel] != NULL )
 			emitter->sndChannels[channel]->Stop();
+		emitter->mutex.unlock();
 	}
 
 private:
@@ -139,12 +144,14 @@ public:
 	EE_Update( AudioEmitterEx *emt ) : EE_Base(emt) {}
 
 	void	Update( void )  {
+		emitter->mutex.lock();
 		if ( emitter->IsValidChannel( 0 ) ) {
 			for( int i=0; i<emitter->numChannels; i++ ) {
 				if ( emitter->sndChannels[i] != NULL )
 					emitter->sndChannels[i]->OnUpdate( &emitter->details );
 			}
 		}
+		emitter->mutex.unlock();
 	}
 };
 
@@ -263,11 +270,13 @@ AudioEmitterEx::Init
 ================
 */
 void AudioEmitterEx::Init( int channels ) {
+	mutex.lock();
 	Clear();
 	numChannels = channels;
 	sndChannels = new AudioSource *[numChannels];
 	for( int i=0; i<numChannels; i++ )
 		sndChannels[i] = NULL;
+	mutex.unlock();
 }
 
 /*
@@ -277,7 +286,10 @@ AudioEmitterEx::Clear
 */
 void AudioEmitterEx::Clear( void ) {
 	if ( sndChannels ) {
-		StopAll();
+		for( int i=0; i<numChannels; i++ ) {
+			if ( sndChannels[i] != NULL )
+				sndChannels[i]->Stop();
+		}
 		delete[] sndChannels;
 		sndChannels = NULL;
 		numChannels = 0;

@@ -83,6 +83,7 @@ namespace og {
 
 		AudioSourceSetup details;
 
+		ogst::mutex		mutex;
 		LinkedList<AudioEmitterEx>::nodeType *node;
 	};
 
