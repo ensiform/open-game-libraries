@@ -96,9 +96,9 @@ bool ogDemoWindow::Init( void ) {
 	og::StringList deviceList;
 	og::AudioSystem::GetDeviceList( deviceList );
 
-	if ( !game.soundManager.Init( "sounds/default.wav" ) || !game.soundManager.SetupEmitters( MAX_SOUNDS ) )
-		return false;
 	if ( !og::AudioSystem::Init( og::FS, "sounds/default.wav", deviceList.IsEmpty() ? NULL : deviceList[0].c_str() ) )
+		return false;
+	if ( !game.soundManager.Init( "sounds/default.wav" ) || !game.soundManager.SetupEmitters( MAX_SOUNDS ) )
 		return false;
 	if ( !og::Image::Init( og::FS, "gfx/default.tga", window->GetProcAddress("glCompressedTexImage2DARB") ) )
 		return false;
