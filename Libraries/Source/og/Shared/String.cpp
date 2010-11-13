@@ -1293,7 +1293,7 @@ faster than atof and sscanf
 */
 float String::ToFloat( const char *str ) {
 	uLong val;
-	float m = (str[0] == '-' ) ? -1.0f : 1.0f;
+	float div = (str[0] == '-' ) ? -1.0f : 1.0f;
 	int i = 0;
 
 	if ( str[0] == '-'  || str[0] == '+' )
@@ -1305,10 +1305,10 @@ float String::ToFloat( const char *str ) {
 	if ( str[i] == '.' ) {
 		for ( i++; IsDigit(str[i]) && i<max; i++ ) {
 			val = 10 * val + (str[i] - '0');
-			m *= 0.1f;
+			div *= 10;
 		}
 	}
-	return val * m;
+	return val / div;
 }
 
 /*
@@ -1320,7 +1320,7 @@ faster than sscanf
 */
 bool String::ToFloatArray( const char *str, float *fp, int dim ) {
 	uLong val;
-	float m;
+	float div;
 	int i = 0;
 	int j, max;
 
@@ -1328,7 +1328,7 @@ bool String::ToFloatArray( const char *str, float *fp, int dim ) {
 		if ( j && str[i-1] != ' ' )
 			break;
 
-		m = (str[i] == '-' ) ? -1.0f : 1.0f;
+		div = (str[i] == '-' ) ? -1.0f : 1.0f;
 
 		if ( str[i] == '-'  || str[i] == '+' )
 			i++;
@@ -1348,14 +1348,14 @@ bool String::ToFloatArray( const char *str, float *fp, int dim ) {
 		if ( str[i] == '.' ) {
 			for ( i++; IsDigit(str[i]) && i<max; i++ ) {
 				val = 10 * val + (str[i] - '0');
-				m *= 0.1f;
+				div *= 10;
 			}
 			//! @todo	fix this nicer
 			// skip remaining digits we where not able to read.
 			for ( ; IsDigit(str[i]); i++ )
 				continue;
 		}
-		fp[j] = val * m;
+		fp[j] = val / div;
 
 		i++;
 	}
@@ -1376,7 +1376,7 @@ faster than atof and sscanf
 */
 double String::ToDouble( const char *str ) {
 	uLongLong val;
-	double m = (str[0] == '-' ) ? -1.0 : 1.0;
+	double div = (str[0] == '-' ) ? -1.0 : 1.0;
 	int i = 0;
 
 	if ( str[0] == '-'  || str[0] == '+' )
@@ -1388,10 +1388,10 @@ double String::ToDouble( const char *str ) {
 	if ( str[i] == '.' ) {
 		for ( i++; IsDigit(str[i]) && i<max; i++ ) {
 			val = 10 * val + (str[i] - '0');
-			m *= 0.1;
+			div *= 10;
 		}
 	}
-	return val * m;
+	return val / div;
 }
 
 /*
@@ -1403,7 +1403,7 @@ faster than sscanf
 */
 bool String::ToDoubleArray( const char *str, double *dp, int dim ) {
 	uLongLong val;
-	double m;
+	double div;
 	int i = 0;
 	int j, max;
 
@@ -1411,7 +1411,7 @@ bool String::ToDoubleArray( const char *str, double *dp, int dim ) {
 		if ( j && str[i-1] != ' ' )
 			break;
 
-		m = (str[i] == '-' ) ? -1.0 : 1.0;
+		div = (str[i] == '-' ) ? -1.0 : 1.0;
 
 		if ( str[i] == '-'  || str[i] == '+' )
 			i++;
@@ -1426,10 +1426,10 @@ bool String::ToDoubleArray( const char *str, double *dp, int dim ) {
 		if ( str[i] == '.' ) {
 			for ( i++; IsDigit(str[i]) && i<max; i++ ) {
 				val = 10 * val + (str[i] - '0');
-				m *= 0.1;
+				div *= 10;
 			}
 		}
-		dp[j] = val * m;
+		dp[j] = val / div;
 
 		i++;
 	}
