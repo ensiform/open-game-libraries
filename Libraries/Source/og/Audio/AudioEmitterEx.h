@@ -74,6 +74,7 @@ namespace og {
 		friend class EE_SetPosition;
 		friend class EE_SetVelocity;
 		friend class EE_SetDirectional;
+		friend class AudioSystemEx;
 
 		bool	IsValidChannel( int channel ) const;
 
@@ -81,6 +82,8 @@ namespace og {
 		int		numChannels;
 
 		AudioSourceSetup details;
+
+		LinkedList<AudioEmitterEx>::nodeType *node;
 	};
 
 }

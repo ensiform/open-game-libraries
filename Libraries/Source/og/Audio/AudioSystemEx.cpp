@@ -331,9 +331,10 @@ AudioSystemEx::CreateEmitter
 */
 AudioEmitter *AudioSystemEx::CreateEmitter( int channels ) {
 	emitterLock.lock();
-	AudioEmitter *emt = &audioEmitters.Alloc();
+	AudioEmitterEx *emt = &audioEmitters.Alloc();
 	emitterLock.unlock();
 
+	emt->node = audioEmitters.GetLastNode();
 	if ( channels > 0 )
 		emt->Init( channels );
 	return emt;
@@ -348,11 +349,7 @@ void AudioSystemEx::FreeEmitter( AudioEmitter *emitter ) {
 	OG_ASSERT( emitter != NULL );
 	
 	emitterLock.lock();
-	LinkedList<AudioEmitterEx>::nodeType *node = audioEmitters.FindByAddress( static_cast<AudioEmitterEx *>(emitter) );
-	if ( node != NULL )
-		audioEmitters.Remove( node );
-	else
-		User::Warning("Trying to free a AudioEmitter, which has not been allocated or already been freed!");
+	audioEmitters.Remove( static_cast<AudioEmitterEx *>(emitter)->node );
 	emitterLock.unlock();
 }
 
