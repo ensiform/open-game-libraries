@@ -63,6 +63,7 @@ public:
 
 	bool	IsOpen( void ) { return window && window->IsOpen(); }
 	void	Draw( void );
+	void	DrawLoading( float pct );
 	void	DrawIntro( int frameTime );
 	void	DrawOutro( int frameTime );
 	void	DrawGame( int frameTime );
@@ -85,6 +86,8 @@ public:
 	int			width, height;
 	og::Timer	frameTimer;
 
+	int			numFilesPreload;
+	int			numFilesPreloadDone;
 	ogLogoScreen	intro;
 	ogCreditsScreen	outro;
 	float		fadeIn;

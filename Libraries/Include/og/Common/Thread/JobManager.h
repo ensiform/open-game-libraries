@@ -88,11 +88,11 @@ namespace og {
 		WorkerThread( JobManager *_manager ) : job(NULL), manager(_manager) {}
 
 		// ==============================================================================
-		//! Starts the job
+		//! Set the new job
 		//!
 		//! @param	_job	The job
 		// ==============================================================================
-		void RunJob( Job *_job ) { job = _job; WakeUp(); }
+		void SetJob( Job *_job ) { job = _job; }
 
 	private:
 		Job *		job;		//!< The job
@@ -116,7 +116,7 @@ namespace og {
 		JobManager() : numThreadsWanted(0), waitForDone(false) {}
 
 		// ==============================================================================
-		//! Destructor
+		//! Destructor, kills all remaining untouched jobs, waits for the ones in progress
 		// ==============================================================================
 		~JobManager();
 
@@ -130,9 +130,10 @@ namespace og {
 		// ==============================================================================
 		//! Change the number workers
 		//!
-		//! @param	num	Number of workers
+		//! @param	num			Number of workers
+		//! @param	blocking	Wait until the number of workers has been adapted
 		// ==============================================================================
-		void	SetNumWorkers( int num );
+		void	SetNumWorkers( int num, bool blocking=false );
 
 		// ==============================================================================
 		//! Wait for all jobs to be done
@@ -150,7 +151,7 @@ namespace og {
 		// ==============================================================================
 		//! Trigger the next job
 		// ==============================================================================
-		void	TriggerNextJob( void );
+		void	TriggerNextJob( bool wakeUp=true );
 
 		// ==============================================================================
 		//! A worker is done
@@ -164,7 +165,7 @@ namespace og {
 		//!
 		//! @param	worker	The worker. 
 		// ==============================================================================
-		void	AddFreeWorker( WorkerThread *worker );
+		void	AddFreeWorker( WorkerThread *worker, bool wakeUp=true );
 
 		ogst::mutex					listMutex;			//!< Protects numThreadsWanted and allThreads
 		int							numThreadsWanted;	//!< The number of wanted threads wanted
@@ -209,6 +210,7 @@ namespace og {
 			JobManager *manager;	//!< The manager
 		};
 	};
+
 //! @}
 }
 

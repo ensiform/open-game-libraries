@@ -297,6 +297,10 @@
 								>
 							</File>
 							<File
+								RelativePath="..\..\Libraries\Include\og\Common\Thread\PreloadManager.h"
+								>
+							</File>
+							<File
 								RelativePath="..\..\Libraries\Include\og\Common\Thread\Thread.h"
 								>
 							</File>
@@ -376,6 +380,10 @@
 							>
 							<File
 								RelativePath="..\..\Libraries\Source\og\Common\Thread\JobManager.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\..\Libraries\Source\og\Common\Thread\PreloadManager.cpp"
 								>
 							</File>
 							<File

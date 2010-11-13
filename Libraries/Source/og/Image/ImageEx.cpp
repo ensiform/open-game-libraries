@@ -27,7 +27,7 @@
 //
 // ==============================================================================
 
-#include <og/Common/Thread/JobManager.h>
+#include <og/Common/Thread/PreloadManager.h>
 #include <og/Gloot/glmin.h>
 #include <og/Image.h>
 #include <og/Math.h>
@@ -56,52 +56,34 @@ static DictEx<ImageEx> imageList;
 static DictEx<ImageFile *> imageFileTypes;
 static Image *defaultImage = NULL;
 
-JobManager *imageJobManager = NULL;
-int			imageMaxPreload = 1;
-Queue<ImagePreloadJob *> imagesPreloaded;
-Condition	imagePreloadCondition;
-
-/*
-==============================================================================
-
-  ImagePreloadJob
-
-==============================================================================
-*/
-class ImagePreloadJob : public Job {
+class ImagePreloadTask : public PreloadTask {
 public:
-	ImagePreloadJob( const char *_filename ) : filename(_filename), file(NULL) {}
-	~ImagePreloadJob() {
+	ImagePreloadTask( const char *_filename ) : filename(_filename), file(NULL) {}
+	~ImagePreloadTask() {
 		if ( file )
 			delete file;
 	}
-
-	JobResult	Execute( void ) {
+	bool	Preload( void ) {
 		int index = ImageEx::GetFileTypeIndex( filename );
-
-		imagePreloadCondition.Lock();
-		if ( imagesPreloaded.Num() >= imageMaxPreload )
-			imagePreloadCondition.Wait();
-		imagePreloadCondition.Unlock();
-
 		if ( index != -1 ) {
 			file = imageFileTypes[index]->GetNew();
-			if ( !file->Open( filename.c_str() ) ) {
-				delete file;
-				file = NULL;
-			}
-			imagePreloadCondition.Lock();
-			imagesPreloaded.Push( this );
-			imagePreloadCondition.Unlock();
-			return JOB_DONE;
+			if ( file->Open( filename.c_str() ) )
+				return true;
+			delete file;
+			file = NULL;
 		}
-		return JOB_DELETE;
+		return false;
+	}
+	void	Synchronize( void ) {
+		if ( file ) {
+			ImageEx &img = imageList[filename.c_str()];
+			if ( file->Upload( img ) )
+				img.time = imageFS->FileTime( filename.c_str() );
+		}
 	}
 
 private:
-	friend class Image;
-
-	String	filename;
+	String filename;
 	ImageFile *file;
 };
 
@@ -163,80 +145,18 @@ void Image::Shutdown( void ) {
 Image::ReloadImages
 ================
 */
-uInt Image::ReloadImages( bool force, bool usePreloader ) {
-	if ( !usePreloader )
+uInt Image::ReloadImages( bool force, PreloadManager *preloadManager ) {
+	if ( preloadManager == NULL )
 		Image::SetFilters( ImageEx::minFilter, ImageEx::magFilter );
-	else if ( imageJobManager == NULL )
-		return 0;
 
 	uInt numReloads = 0;
 	int num = imageList.Num();
 	for( int i=0; i<num; i++ ) {
-		if ( imageList[i].ReloadImage( force, usePreloader ) )
+		if ( imageList[i].ReloadImage( force, preloadManager ) )
 			numReloads++;
 	}
 
 	return numReloads;
-}
-
-/*
-================
-Image::StartPreloader
-================
-*/
-void Image::StartPreloader( int max ) {
-	if ( imageJobManager == NULL )
-		imageJobManager = new JobManager;
-	imageJobManager->SetNumWorkers(1);
-	imageMaxPreload = Max( max, 1 );
-}
-
-/*
-================
-Image::StopPreloader
-================
-*/
-void Image::StopPreloader( void ) {
-	if ( imageJobManager != NULL ) {
-		imageJobManager->WaitForDone(); // fixme: kill all remaining
-		delete imageJobManager;
-		imageJobManager = NULL;
-	}
-}
-
-/*
-================
-Image::PreloadImage
-================
-*/
-void Image::PreloadImage( const char *filename ) {
-	if ( imageJobManager != NULL )
-		imageJobManager->AddJob( new ImagePreloadJob(filename) );
-}
-
-/*
-================
-Image::UploadPreloaded
-================
-*/
-uInt Image::UploadPreloaded( void ) {
-	imagePreloadCondition.Lock();
-	ImagePreloadJob *job;
-	int num = imagesPreloaded.Num();
-	while( !imagesPreloaded.IsEmpty() ) {
-		job = imagesPreloaded.Front();
-
-		if ( job->file ) {
-			ImageEx &img = imageList[job->filename.c_str()];
-			if ( job->file->Upload( img ) )
-				img.time = imageFS->FileTime( job->filename.c_str() );
-		}
-		delete job;
-		imagesPreloaded.Pop();
-	}
-	imagePreloadCondition.Unlock();
-	imagePreloadCondition.Signal();
-	return num;
 }
 
 /*
@@ -353,6 +273,15 @@ void Image::DenyPrecompressed( bool value ) {
 }
 
 /*
+================
+Image::PreloadImage
+================
+*/
+PreloadTask *Image::PreloadImage( const char *filename ) {
+	return new ImagePreloadTask(filename);
+}
+
+/*
 ==============================================================================
 
   ImageEx
@@ -404,7 +333,7 @@ bool ImageEx::UploadImage( const char *filename ) {
 ImageEx::ReloadImage
 ================
 */
-bool ImageEx::ReloadImage( bool force, bool usePreloader ) {
+bool ImageEx::ReloadImage( bool force, PreloadManager *preloadManager ) {
 	if ( imageFS == NULL )
 		return false;
 
@@ -417,10 +346,8 @@ bool ImageEx::ReloadImage( bool force, bool usePreloader ) {
 		User::Warning( Format("Unknown image type for file '$*'" ) << fullpath );
 		return false;
 	}
-	if ( usePreloader ) {
-		if ( !imageJobManager )
-			return false;
-		imageJobManager->AddJob( new ImagePreloadJob(fullpath.c_str()) );
+	if ( preloadManager != NULL ) {
+		preloadManager->AddTask( new ImagePreloadTask(fullpath.c_str()) );
 		return true;
 	}
 	if ( !imageFileTypes[index]->Open( fullpath.c_str() ) )
@@ -430,7 +357,6 @@ bool ImageEx::ReloadImage( bool force, bool usePreloader ) {
 	time = newTime;
 	return true;
 }
-
 
 /*
 ================

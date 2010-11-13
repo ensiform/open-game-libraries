@@ -62,10 +62,10 @@ namespace og {
 		friend class ImageFileDDS;
 		friend class ImageFileJPG;
 		friend class Image;
-		friend class ImagePreloadJob;
+		friend class ImagePreloadTask;
 
 		bool	UploadImage( const char *filename );
-		bool	ReloadImage( bool force, bool usePreloader );
+		bool	ReloadImage( bool force, PreloadManager *preloadManager=NULL );
 		
 		static int	GetFileTypeIndex( String &filename );
 

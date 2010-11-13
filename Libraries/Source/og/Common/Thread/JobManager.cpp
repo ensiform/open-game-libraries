@@ -30,6 +30,7 @@ freely, subject to the following restrictions:
 #include <og/Common/Thread/JobManager.h>
 
 namespace og {
+
 /*
 ==============================================================================
 
@@ -37,7 +38,6 @@ namespace og {
 
 ==============================================================================
 */
-
 /*
 ================
 WorkerThread::Run
@@ -46,7 +46,8 @@ WorkerThread::Run
 void WorkerThread::Run( void ) {
 	wakeUpEvent.Lock();
 	while( keepRunning ) {
-		wakeUpEvent.Wait();
+		if ( !job )
+			wakeUpEvent.Wait();
 		if ( job ) {
 			switch( job->Execute() ) {
 				case JOB_DONE: break;
@@ -79,14 +80,8 @@ JobManager::JobManager
 ================
 */
 JobManager::~JobManager() {
+	SetNumWorkers(0, true);
 	KillAll();
-	WaitForDone();
-	listMutex.lock();
-	int num = allThreads.Num();
-	for( int i=0; i<num; i++ )
-		allThreads[i]->Stop(true);
-	allThreads.Clear();
-	listMutex.unlock();
 }
 
 /*
@@ -109,15 +104,29 @@ void JobManager::AddJob( Job *job ) {
 JobManager::SetNumWorkers
 ================
 */
-void JobManager::SetNumWorkers( int num ) {
+void JobManager::SetNumWorkers( int num, bool blocking ) {
 	listMutex.lock();
 	if ( num != numThreadsWanted ) {
-		numThreadsWanted = num;
-		while( numThreadsWanted < allThreads.Num() ) {
-			WorkerThread *worker = new WorkerThread(this);
-			allThreads.Append( worker );
-			AddFreeWorker( worker );
+		if ( num > allThreads.Num() ) {
+			numThreadsWanted = num;
+			while( num > allThreads.Num() ) {
+				WorkerThread *worker = new WorkerThread(this);
+				worker->Start("Job Manager");
+				allThreads.Append( worker );
+				AddFreeWorker( worker );
+			}
+		} else if ( blocking ) {
+			numThreadsWanted = -1;
+			for( int i=allThreads.Num()-1; i >= num; i-- ) {
+				listMutex.unlock();
+				allThreads[i]->Stop( true );
+				listMutex.lock();
+				allThreads.Remove(i);
+			}
+			numThreadsWanted = num;
 		}
+		else
+			numThreadsWanted = num;
 	}
 	listMutex.unlock();
 }
@@ -164,14 +173,17 @@ void JobManager::KillAll( void ) {
 JobManager::TriggerNextJob
 ================
 */
-void JobManager::TriggerNextJob( void ) {
+void JobManager::TriggerNextJob( bool wakeUp ) {
 	WorkerThread *worker = availableThreads.Consume();
 	if ( worker ) {
 		Job *job = jobList.Consume();
-		if( job != NULL )
-			worker->RunJob( job );
-		else
+		if( job == NULL )
 			availableThreads.Produce( worker );
+		else {
+			worker->SetJob( job );
+			if ( wakeUp )
+				worker->WakeUp();
+		}
 	}
 }
 
@@ -183,8 +195,8 @@ JobManager::WorkerIsDone
 void JobManager::WorkerIsDone( WorkerThread *worker ) {
 	listMutex.lock();
 	if ( numThreadsWanted >= allThreads.Num() )
-		AddFreeWorker( worker );
-	else {
+		AddFreeWorker( worker, false );
+	else if ( numThreadsWanted != -1 ) {
 		worker->Stop( false );
 		int index = allThreads.Find( worker );
 		if ( index )
@@ -198,9 +210,9 @@ void JobManager::WorkerIsDone( WorkerThread *worker ) {
 JobManager::AddFreeWorker
 ================
 */
-void JobManager::AddFreeWorker( WorkerThread *worker ) {
+void JobManager::AddFreeWorker( WorkerThread *worker, bool wakeUp ) {
 	availableThreads.Produce( worker );
-	TriggerNextJob();
+	TriggerNextJob( wakeUp );
 }
 
 }

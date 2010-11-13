@@ -83,7 +83,8 @@ bool ImageFileDDS::Upload( ImageEx &image ) {
 	image.height = height;
 	image.mipmap = numMipmaps > 1;
 
-	glGenTextures( 1, &image.glTextureNum );
+	if ( !image.glTextureNum )
+		glGenTextures( 1, &image.glTextureNum );
 	glBindTexture( GL_TEXTURE_2D, image.glTextureNum );
 
 	if ( image.mipmap ) {
