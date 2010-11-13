@@ -263,14 +263,14 @@ namespace og {
 		//!
 		//! @return	Pointer to a new AudioEmitter object
 		// ==============================================================================
-		virtual AudioEmitter *		CreateAudioEmitter( int channels=0 ) = 0;
+		virtual AudioEmitter *		CreateEmitter( int channels=0 ) = 0;
 
 		// ==============================================================================
-		//! Free an AudioEmitter previously created by AudioSystem::CreateAudioEmitter
+		//! Free an AudioEmitter previously created by AudioSystem::CreateEmitter
 		//!
 		//! @param	emitter		Pointer to the object to be freed
 		// ==============================================================================
-		virtual void				FreeAudioEmitter( AudioEmitter *emitter ) = 0;
+		virtual void				FreeEmitter( AudioEmitter *emitter ) = 0;
 	};
 
 	// ==============================================================================

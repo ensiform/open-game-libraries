@@ -144,7 +144,7 @@ void ogLogoScreen::Init( const og::Vec3 &logoCenter, int time, const og::Sound *
 	image = og::Image::Find("gfx/logodice.png");
 	if ( sound ) {
 		if ( !emitter )
-			emitter = og::AS->CreateAudioEmitter( 1 );
+			emitter = og::AS->CreateEmitter( 1 );
 		emitter->Play( 0, sound );
 	}
 

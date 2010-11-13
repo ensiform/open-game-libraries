@@ -123,9 +123,9 @@ ogSoundManager2D::SetupEmitters
 bool ogSoundManager2D::SetupEmitters( uInt maxSounds ) {
 	// create audio emitters
 	for( int i=0; i<maxSounds; i++ )
-		audioEmitters.Append( og::AS->CreateAudioEmitter( 1 ) );
+		audioEmitters.Append( og::AS->CreateEmitter( 1 ) );
 	nextEmitter = 0;
-	ambienceEmitter = og::AS->CreateAudioEmitter( 1 );
+	ambienceEmitter = og::AS->CreateEmitter( 1 );
 	ambienceEmitter->SetPosition( og::c_vec3::origin );
 	return true;
 }
@@ -138,10 +138,10 @@ ogSoundManager2D::Clear
 void ogSoundManager2D::Clear( void ) {
 	int max = audioEmitters.Num();
 	for( int i=0; i<max; i++ )
-		og::AS->FreeAudioEmitter( audioEmitters[i] );
+		og::AS->FreeEmitter( audioEmitters[i] );
 	audioEmitters.Clear();
 	if ( ambienceEmitter ) {
-		og::AS->FreeAudioEmitter( ambienceEmitter );
+		og::AS->FreeEmitter( ambienceEmitter );
 		ambienceEmitter = NULL;
 	}
 	nextEmitter = 0;

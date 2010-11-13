@@ -326,10 +326,10 @@ void AudioSystemEx::SetSpeedOfSound( float speed ) {
 
 /*
 ================
-AudioSystemEx::CreateAudioEmitter
+AudioSystemEx::CreateEmitter
 ================
 */
-AudioEmitter *AudioSystemEx::CreateAudioEmitter( int channels ) {
+AudioEmitter *AudioSystemEx::CreateEmitter( int channels ) {
 	emitterLock.lock();
 	AudioEmitter *emt = &audioEmitters.Alloc();
 	emitterLock.unlock();
@@ -341,10 +341,10 @@ AudioEmitter *AudioSystemEx::CreateAudioEmitter( int channels ) {
 
 /*
 ================
-AudioSystemEx::FreeAudioEmitter
+AudioSystemEx::FreeEmitter
 ================
 */
-void AudioSystemEx::FreeAudioEmitter( AudioEmitter *emitter ) {
+void AudioSystemEx::FreeEmitter( AudioEmitter *emitter ) {
 	OG_ASSERT( emitter != NULL );
 	
 	emitterLock.lock();

@@ -87,8 +87,8 @@ namespace og {
 		void				SetDopplerFactor( float factor );
 		void				SetSpeedOfSound( float speed );
 
-		AudioEmitter *		CreateAudioEmitter( int channels=0 );
-		void				FreeAudioEmitter( AudioEmitter *emitter );
+		AudioEmitter *		CreateEmitter( int channels=0 );
+		void				FreeEmitter( AudioEmitter *emitter );
 
 		// ---------------------- Internal AudioSystemEx Members -------------------
 

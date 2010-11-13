@@ -127,7 +127,7 @@ bool ogDemoWindow::Init( void ) {
 	og::Vec3 up(0, 0, -1);
 	og::AS->SetListener( windowCenter, forward, up, og::c_vec3::origin );
 
-	audioEmitter = og::AS->CreateAudioEmitter( 1 );
+	audioEmitter = og::AS->CreateEmitter( 1 );
 	audioEmitter->Play( 0, soundManager.Find( "helicopter" ) );
 	UpdateSound();
 
