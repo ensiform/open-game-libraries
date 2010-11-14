@@ -234,10 +234,7 @@ ogModelGL::Load
 ================
 */
 bool ogModelGL::Load( const char *filename ) {
-	if ( model ) {
-		delete model;
-		model = NULL;
-	}
+	og::SafeDelete( model );
 
 	og::String ext = og::String::GetFileExtension(filename, og::String::ByteLength(filename));
 	if ( ext.Icmp("gmd") == 0 )

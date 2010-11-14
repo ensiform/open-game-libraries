@@ -81,10 +81,7 @@ List::Clear
 */
 template<class T>
 void List<T>::Clear( void ) {
-	if ( list ) {
-		delete[] list;
-		list = NULL;
-	}
+	SafeDeleteArray( list );
 	num		= 0;
 	size	= 0;
 }

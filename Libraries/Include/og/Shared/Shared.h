@@ -230,6 +230,29 @@ namespace og {
 	//! @param	title	The title of the dialog ( not displayed if send to stderr )
 	// ==============================================================================
 	void ErrorDialog( const char *message, const char *title );
+
+	// ==============================================================================
+	//! Delete an object and set the pointer to NULL
+	//!
+	//! @param	ptr		Pointer to the object
+	// ==============================================================================
+	template<class T>
+	OG_INLINE void SafeDelete( T *&ptr ) {
+		delete ptr;
+		ptr = NULL;
+	}
+
+	// ==============================================================================
+	//! Delete an array and set the pointer to NULL
+	//!
+	//! @param	ptr		Pointer to the array
+	// ==============================================================================
+	template<class T>
+	OG_INLINE void SafeDeleteArray( T *&ptr ) {
+		delete[] ptr;
+		ptr = NULL;
+	}
+
 //! @}
 }
 

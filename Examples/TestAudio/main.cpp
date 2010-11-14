@@ -240,14 +240,8 @@ bool ogDemoWindow::OnClose( bool forced ) {
 	if ( !forced )
 		return true;
 
-	if ( helpText[0] ) {
-		delete helpText[0];
-		helpText[0] = NULL;
-	}
-	if ( helpText[1] ) {
-		delete helpText[1];
-		helpText[1] = NULL;
-	}
+	og::SafeDelete( helpText[0] );
+	og::SafeDelete( helpText[1] );
 
 	og::Font::Shutdown();
 	og::Image::Shutdown();

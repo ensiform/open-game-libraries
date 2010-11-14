@@ -391,10 +391,7 @@ bool WavStream::LoadFile( const char *filename ) {
 		return false;
 	}
 	catch( FileReadWriteError &err ) {
-		if ( data ) {
-			delete[] data;
-			data = NULL;
-		}
+		SafeDeleteArray( data );
 		file->Close();
 		User::Error( ERR_FILE_CORRUPT, Format("Wave: $*" ) << err.ToString(), filename );
 		return false;

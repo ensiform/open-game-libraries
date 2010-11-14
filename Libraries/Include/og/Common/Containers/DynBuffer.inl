@@ -71,10 +71,7 @@ DynBuffer::Clear
 */
 template<class T>
 OG_INLINE void DynBuffer<T>::Clear( void ) {
-	if ( data ) {
-		delete[] data;
-		data = NULL;
-	}
+	SafeDeleteArray( data );
 	size = 0;
 }
 

@@ -129,15 +129,9 @@ void AudioThread::Run( void ) {
 	// Consume remaining events
 	eventQueue.ProcessAll();
 
-	if ( firstAudioSource ) {
-		delete firstAudioSource;
-		firstAudioSource = NULL;
-	}
+	SafeDelete( firstAudioSource );
+	SafeDelete( defaultStream );
 
-	if ( defaultStream ) {
-		delete defaultStream;
-		defaultStream = NULL;
-	}
 	int num = audioStreams.Num();
 	for( int i=0; i<num; i++ )
 		delete audioStreams[i];
