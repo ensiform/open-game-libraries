@@ -87,7 +87,8 @@ in release mode it calls og::User::AssertFailed()
 #if OG_WIN32
 	// Pragma warnings for msvc
 	#if defined(_MSC_VER)
-		#pragma warning(   error : 4002 )	// Too many actual parameters for macro: promoted to be an error
+		#pragma warning( error : 4002 )	// Too many actual parameters for macro: promoted to be an error
+		#pragma warning( error : 4715 ) // Not all control paths return a value: promoted to be an error
 
 		// Enable some useful ones that are disabled by default
 		// http://msdn2.microsoft.com/en-us/library/23k5d385(VS.80).aspx
