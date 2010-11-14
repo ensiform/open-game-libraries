@@ -33,13 +33,19 @@ freely, subject to the following restrictions:
 const float	FABLE_AXIS_DETECTION_TRIGGER = 0.75f;
 const int	MOUSE_AXIS_DETECTION_TRIGGER = 100;
 
-#define SAFE_RELEASE_CONTROL(ctrl) {\
-		if ( ctrl != NULL ) {\
-			ctrl->Reset();\
-			delete ctrl;\
-			ctrl = NULL;\
-		}\
+/*
+================
+SafeReleaseControl
+================
+*/
+template<class T>
+OG_INLINE void SafeReleaseControl( T *&ctrl ) {
+	if ( ctrl != NULL ) {
+		ctrl->Reset();
+		delete ctrl;
+		ctrl = NULL;
 	}
+}
 
 /*
 ==============================================================================
@@ -448,18 +454,18 @@ void ogInputListener::UnbindAll( ogBind *bind ) {
 	for( int i=0; i<og::Mouse::MaxButtons; i++ ) {
 		if ( mouseButtonActions[i] != NULL ) {
 			if ( bind == NULL || mouseButtonActions[i]->bind == bind )
-				SAFE_RELEASE_CONTROL( mouseButtonActions[i] )
+				SafeReleaseControl( mouseButtonActions[i] );
 		}
 	}
 
 	for( int i=0; i<2; i++ ) {
 		if ( mouseWheelActions[i] != NULL ) {
 			if ( bind == NULL || mouseWheelActions[i]->bind == bind )
-				SAFE_RELEASE_CONTROL( mouseWheelActions[i] )
+				SafeReleaseControl( mouseWheelActions[i] );
 		}
 		if ( mouseAxisActions[i] != NULL ) {
 			if ( bind == NULL || mouseAxisActions[i]->bind == bind )
-				SAFE_RELEASE_CONTROL( mouseAxisActions[i] )
+				SafeReleaseControl( mouseAxisActions[i] );
 		}
 	}
 }
@@ -573,7 +579,7 @@ ogInputListener::UnbindMouseAxis
 ================
 */
 void ogInputListener::UnbindMouseAxis( int axis ) {
-	SAFE_RELEASE_CONTROL( mouseAxisActions[axis] )
+	SafeReleaseControl( mouseAxisActions[axis] );
 }
 
 /*
@@ -596,9 +602,9 @@ ogInputListener::UnbindMouseButton
 */
 void ogInputListener::UnbindMouseButton( int button ) {
 	if ( button == -1 || button == -2 )
-		SAFE_RELEASE_CONTROL( mouseWheelActions[button+2] )
+		SafeReleaseControl( mouseWheelActions[button+2] );
 	else if ( button >= 0 )
-		SAFE_RELEASE_CONTROL( mouseButtonActions[button] )
+		SafeReleaseControl( mouseButtonActions[button] );
 }
 
 /*
@@ -619,7 +625,7 @@ ogInputListener::UnbindDeviceAxis
 */
 void ogInputListener::UnbindDeviceAxis( int deviceId, int axis ) {
 	if ( deviceId < fableDevices.Num() && axis < fableDevices[deviceId].device->GetNumAxes() )
-		SAFE_RELEASE_CONTROL( fableDevices[deviceId].axes[axis] )
+		SafeReleaseControl( fableDevices[deviceId].axes[axis] );
 }
 
 /*
@@ -640,7 +646,7 @@ ogInputListener::UnbindDeviceButton
 */
 void ogInputListener::UnbindDeviceButton( int deviceId, int button ) {
 	if ( deviceId < fableDevices.Num() && button < fableDevices[deviceId].device->GetNumButtons() )
-		SAFE_RELEASE_CONTROL( fableDevices[deviceId].buttons[button] )
+		SafeReleaseControl( fableDevices[deviceId].buttons[button] );
 }
 
 /*
@@ -661,7 +667,7 @@ ogInputListener::UnbindDevicePOV
 */
 void ogInputListener::UnbindDevicePOV( int deviceId, int pov ) {
 	if ( deviceId < fableDevices.Num() && pov < fableDevices[deviceId].device->GetNumPOVs() )
-		SAFE_RELEASE_CONTROL( fableDevices[deviceId].povs[pov] )
+		SafeReleaseControl( fableDevices[deviceId].povs[pov] );
 }
 
 /*
