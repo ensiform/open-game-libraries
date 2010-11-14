@@ -40,6 +40,32 @@ namespace og {
 	// ==============================================================================
 	class AudioEffectReverb {
 	public:
+		AudioEffectReverb() :
+			density				( 1.0f ),
+			diffusion			( 1.0f ),
+			gain				( 0.32f ),
+			gainHF				( 0.89f ),
+			gainLF				( 0.0f ),
+			decayTime			( 1.49f ),
+			decayHFRatio		( 0.83f ),
+			decayLFRatio		( 1.0f ),
+			reflectionsGain		( 0.05f ),
+			reflectionsDelay	( 0.007f ), // The name is Bond, James Bond
+			reflectionsPan		( 0.0f, 0.0f, 0.0f ),
+			lateReverbGain		( 1.26f ),
+			lateReverbDelay		( 0.011f ),
+			lateReverbPan		( 0.0f, 0.0f, 0.0f ),
+			echoTime			( 0.25f ),
+			echoDepth			( 0.0f ),
+			modulationTime		( 0.25f ),
+			modulationDepth		( 0.0f ),
+			airAbsorptionGainHF	( 0.994f ),
+			referenceHF			( 5000.0f ),
+			referenceLF			( 250.0f ),
+			roomRolloffFactor	( 0.0f ),
+			decayHFLimit		( true ) {}
+
+	public:
 		float	density;
 		float	diffusion;
 		float	gain;
@@ -62,13 +88,21 @@ namespace og {
 		float	referenceHF;
 		float	referenceLF;
 		float	roomRolloffFactor;
-		int		decayHFLimit;
+		bool	decayHFLimit;
 	};
 
 	// ==============================================================================
 	//! Defines properties of an EFX echo effect
 	// ==============================================================================
 	class AudioEffectEcho {
+	public:
+		AudioEffectEcho() :
+			delay		( 0.1f ),
+			delayLR		( 0.1f ),
+			damping		( 0.5f ),
+			feedback	( 0.5f ),
+			spread		( -1.0f ) {}
+
 	public:
 		float	delay;
 		float	delayLR;
