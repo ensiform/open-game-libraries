@@ -67,8 +67,7 @@ AudioSource::~AudioSource
 ================
 */
 AudioSource::~AudioSource() {
-	if ( next )
-		delete next;
+	delete next;
 	if ( IsActive() )
 		Stop();
 	alDeleteSources( 1, &alSourceNum );

@@ -49,8 +49,7 @@ Vertex::~Vertex
 ================
 */
 Vertex::~Vertex() {
-	if ( weights )
-		delete[] weights;
+	delete[] weights;
 }
 
 /*
@@ -66,10 +65,8 @@ Mesh::~Mesh
 ================
 */
 Mesh::~Mesh() {
-	if ( texCoords )
-		delete[] texCoords;
-	if ( indices )
-		delete[] indices;
+	delete[] texCoords;
+	delete[] indices;
 }
 
 /*
@@ -85,10 +82,8 @@ MeshStatic::~MeshStatic
 ================
 */
 MeshStatic::~MeshStatic() {
-	if ( vertices )
-		delete[] vertices;
-	if ( normals )
-		delete[] normals;
+	delete[] vertices;
+	delete[] normals;
 }
 
 /*
@@ -104,8 +99,7 @@ MeshAnimated::~MeshAnimated
 ================
 */
 MeshAnimated::~MeshAnimated() {
-	if ( vertices )
-		delete[] vertices;
+	delete[] vertices;
 }
 
 /*

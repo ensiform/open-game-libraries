@@ -310,11 +310,8 @@ WavStream::~WavStream
 ================
 */
 WavStream::~WavStream() {
-	if ( data ) {
-		OG_ASSERT( numInUse == 0 );
-		delete[] data;
-		data = NULL;
-	}
+	OG_ASSERT( numInUse == 0 );
+	delete[] data;
 }
 
 /*

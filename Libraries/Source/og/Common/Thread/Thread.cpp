@@ -70,8 +70,7 @@ TLS_Data::~TLS_Data
 */
 TLS_Data::~TLS_Data() {
 	tlsIndex->SetValue(NULL);
-	if ( previous )
-		delete previous;
+	delete previous;
 }
 
 /*

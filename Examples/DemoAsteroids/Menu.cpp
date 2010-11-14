@@ -88,8 +88,7 @@ ogMenu::ogMenu() {
 }
 
 ogMenu::~ogMenu() {
-	if ( mainMenu != NULL )
-		delete mainMenu;
+	delete mainMenu;
 }
 
 void ogMenu::Init( void ) {

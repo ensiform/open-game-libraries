@@ -83,8 +83,7 @@ DynBuffer::CheckSize
 template<class T>
 OG_INLINE void DynBuffer<T>::CheckSize( int newSize ) {
 	if ( newSize > size ) {
-		if ( data )
-			delete[] data;
+		delete[] data;
 
 		size = newSize;
 		data = new T[size];

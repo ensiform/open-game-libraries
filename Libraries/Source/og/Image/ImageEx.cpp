@@ -60,8 +60,7 @@ class ImagePreloadTask : public PreloadTask {
 public:
 	ImagePreloadTask( const char *_filename ) : filename(_filename), file(NULL) {}
 	~ImagePreloadTask() {
-		if ( file )
-			delete file;
+		delete file;
 	}
 	bool	Preload( void ) {
 		int index = ImageEx::GetFileTypeIndex( filename );

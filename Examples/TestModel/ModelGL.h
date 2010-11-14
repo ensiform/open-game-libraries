@@ -77,7 +77,7 @@ public:
 class ogModelGL {
 public:
 	ogModelGL() : scale(1.0f, 1.0f, 1.0f), model(NULL) {}
-	~ogModelGL() { if ( model ) delete model;} //! @todo	should be freed in the model library
+	~ogModelGL() { delete model;} //! @todo	should be freed in the model library
 
 	bool		Load( const char *filename );
 	void		Draw( void );

@@ -80,12 +80,9 @@ ogMeshGL::~ogMeshGL
 ogMeshGL::~ogMeshGL() {
 	if ( image )
 		og::Image::Free( image );
-	if ( wireFrameIndices )
-		delete[] wireFrameIndices;
-	if ( vertices )
-		delete[] vertices;
-	if ( normals )
-		delete[] normals;
+	delete[] wireFrameIndices;
+	delete[] vertices;
+	delete[] normals;
 }
 
 /*

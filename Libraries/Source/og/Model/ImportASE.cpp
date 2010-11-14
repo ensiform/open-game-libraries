@@ -107,12 +107,9 @@ public:
 		materialId = 0;
 	}
 	~aseMesh(){
-		if ( vertices )
-			delete[] vertices;
-		if ( triangles )
-			delete[] triangles;
-		if ( texCoords )
-			delete[] texCoords;
+		delete[] vertices;
+		delete[] triangles;
+		delete[] texCoords;
 	}
 	String name;
 
