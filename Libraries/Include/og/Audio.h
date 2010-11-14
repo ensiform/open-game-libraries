@@ -37,6 +37,8 @@
 #include <og/Math.h>
 
 // Public Library Includes
+#include <og/Audio/AudioEffect.h>
+#include <og/Audio/AudioEmitter.h>
 #include <og/Audio/AudioSystem.h>
 
 #endif

@@ -317,6 +317,15 @@ void AudioSystemEx::SetDopplerFactor( float factor ) {
 
 /*
 ================
+AudioSystemEx::SetUnitLength
+================
+*/
+void AudioSystemEx::SetUnitLength( float value ) {
+	alListenerf( AL_METERS_PER_UNIT, value );
+}
+
+/*
+================
 AudioSystemEx::SetSpeedOfSound
 ================
 */

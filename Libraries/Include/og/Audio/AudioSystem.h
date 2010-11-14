@@ -38,7 +38,6 @@ namespace og {
 //! @todo	See if thrown errors work without problems.
 //!	@todo	Cache a list of sounds + clear all cached sounds
 //! @todo	Get progress on caching ( percentage )
-//! @todo	Add EAX effects ? Reverb ?
 //! @{
 
 	// ==============================================================================
@@ -53,185 +52,6 @@ namespace og {
 		float		volume;			//!< Volume scale, 0.0f - 1.0f
 		bool		loop;			//!< Flag to make this sound loop until manually stopped
 		StringList	filenames;		//!< Sound filenames to randomly chose from
-	};
-
-	// ==============================================================================
-	//! Defines properties of an EFX reverb effect
-	// ==============================================================================
-	class AudioEffectReverb {
-	public:
-		float	density;
-		float	diffusion;
-		float	gain;
-		float	gainHF;
-		float	gainLF;
-		float	decayTime;
-		float	decayHFRatio;
-		float	decayLFRatio;
-		float	reflectionsGain;
-		float	reflectionsDelay;
-		Vec3	reflectionsPan;
-		float	lateReverbGain;
-		float	lateReverbDelay;
-		Vec3	lateReverbPan;
-		float	echoTime;
-		float	echoDepth;
-		float	modulationTime;
-		float	modulationDepth;
-		float	airAbsorptionGainHF;
-		float	referenceHF;
-		float	referenceLF;
-		float	roomRolloffFactor;
-		int		decayHFLimit;
-	};
-
-	// ==============================================================================
-	//! Defines properties of an EFX echo effect
-	// ==============================================================================
-	class AudioEffectEcho {
-	public:
-		float	delay;
-		float	delayLR;
-		float	damping;
-		float	feedback;
-		float	spread;  
-	};
-
-	// ==============================================================================
-	//! This is an effect, you can load reverbs or echoes into it ( only one )
-	// ==============================================================================
-	class AudioEffect {
-	public:
-		// ==============================================================================
-		//! Load a reverb into the effect, overwrites the last effect
-		//!
-		//! @param	effect	The reverb effect
-		//!
-		//! @return	true if it succeeds, false if it fails
-		// ==============================================================================
-		virtual bool	Load( const AudioEffectReverb *effect ) = 0;
-
-		// ==============================================================================
-		//! Load an echo into the effect, overwrites the last effect
-		//!
-		//! @param	effect	The echo effect
-		//!
-		//! @return	true if it succeeds, false if it fails
-		// ==============================================================================
-		virtual bool	Load( const AudioEffectEcho *effect ) = 0;
-
-		// ==============================================================================
-		//! Clear the last effect
-		// ==============================================================================
-		virtual void	Clear( void ) = 0;
-	};
-
-	// ==============================================================================
-	//! This positions and plays sounds in the world
-	//!
-	//! @todo	One channel that can play (non-looping) sounds without stopping anything.
-	//!			This channel would be created on play, and freed when done (or StopAll was called).
-	//!
-	//! This is like a speaker in your world.
-	// ==============================================================================
-	class AudioEmitter {
-	public:
-		// ==============================================================================
-		//! Virtual Destructor
-		// ==============================================================================
-		virtual ~AudioEmitter() {}
-
-		// ==============================================================================
-		//! Initializes audio emitter with the number of channels
-		//!
-		//! @param	channels	Number of channels you need on this object
-		// ==============================================================================
-		virtual void	Init( int channels ) = 0;
-
-		// ==============================================================================
-		//! Number of channels allocated
-		//!
-		//! @return	Number of channels allocated
-		// ==============================================================================
-		virtual int		NumChannels( void ) const = 0;
-
-		// ==============================================================================
-		//! Play a sound on the specified channel
-		//!
-		//! @param	channel		Which channel to play the sound on
-		//! @param	sound		Sound to play
-		//! @param	allowLoop	Allow looping playback
-		//!
-		//! @note	Don't delete the sound object after passing it,
-		//!			since the pointer is passed internally to a different thread
-		// ==============================================================================
-		virtual void	Play( int channel, const Sound *sound, bool allowLoop=true ) = 0;
-
-		// ==============================================================================
-		//! Pause a sound on the specified channel
-		//!
-		//! @param	channel		Which channel to pause
-		// ==============================================================================
-		virtual void	Pause( int channel ) = 0;
-
-		// ==============================================================================
-		//! Stop playback on the specified channel
-		//!
-		//! @param	channel		Which channel to stop playback
-		// ==============================================================================
-		virtual void	Stop( int channel ) = 0;
-
-		// ==============================================================================
-		//! Stop playback on all channels
-		// ==============================================================================
-		virtual void	StopAll( void ) = 0;
-
-		// ==============================================================================
-		//! Checks if a channel is currently in use
-		//!
-		//! @param	channel		Which channel to check
-		//!
-		//! @return	true if in use, otherwise false
-		// ==============================================================================
-		virtual bool	IsOccupied( int channel ) = 0;
-
-		// ==============================================================================
-		//! Use relative coordinates instead of world coordinates for this emitter
-		//!
-		//! @param	relative	Relative or not
-		// ==============================================================================
-		virtual void	SetRelative( bool relative ) = 0;
-
-		// ==============================================================================
-		//! Set the position of this emitter
-		//!
-		//! @param	pos		Position in world coordinates, or if relative mode is set, local coordinates.
-		// ==============================================================================
-		virtual void	SetPosition( const Vec3 &pos ) = 0;
-
-		// ==============================================================================
-		//! Set the velocity (speed & direction) of this emitter
-		//!
-		//! @param	vel		Velocity, a directional vector with it's length set to the speed it travels at.
-		// ==============================================================================
-		virtual void	SetVelocity( const Vec3 &vel ) = 0;
-
-		// ==============================================================================
-		//! Set directional mode (a speaker for example is louder when you are in front of it than when you're behind it)
-		//!
-		//! @param	dir				A vector pointing in the direction the speaker is looking at.
-		//! @param	innerAngle		Creates a cone in which the full volume is used.
-		//! @param	outerAngle		Creates a cone in which the volume fades the more you get away from it.
-		//! @param	outerVolume		Volume level outside the cones.
-		// ==============================================================================
-		virtual void	SetDirectional( const Vec3 &dir, float innerAngle, float outerAngle, float outerVolume ) = 0;
-
-		// ==============================================================================
-		//! Use an AudioEffect on this emitter
-		//!
-		//! @param	effect	The effect to use, NULL to remove the active effect from this emitter
-		// ==============================================================================
-		virtual void	SetEffect( AudioEffect *effect ) = 0;
 	};
 
 	// ==============================================================================
@@ -322,6 +142,13 @@ namespace og {
 		virtual void				SetDopplerFactor( float factor ) = 0;
 
 		// ==============================================================================
+		//! Set how many meters a unit is long
+		//!
+		//! @param	value	Number of meters per unit
+		// ==============================================================================
+		virtual void				SetUnitLength( float value ) = 0;
+
+		// ==============================================================================
 		//! Set the speed of sound in the current medium (air, water, ..)
 		//!
 		//! @param	speed	The speed of sound (must be above 0, default: 343.3f)
@@ -331,6 +158,7 @@ namespace og {
 		//! @li		Water: 1484 m/s or 4868 ft/s
 		//!
 		//! @note	Recalculate the value to your unit size before passing them.
+		//! @todo	make it use the value from SetUnitLength?
 		// ==============================================================================
 		virtual void				SetSpeedOfSound( float speed ) = 0;
 
