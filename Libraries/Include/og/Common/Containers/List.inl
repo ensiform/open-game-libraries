@@ -94,7 +94,7 @@ Checks to see if list is empty
 ================
 */
 template<class T>
-bool List<T>::IsEmpty( void ) const {
+OG_INLINE bool List<T>::IsEmpty( void ) const {
 	return num == 0 || list == NULL;
 }
 
@@ -104,7 +104,7 @@ List::Num
 ================
 */
 template<class T>
-int List<T>::Num( void ) const {
+OG_INLINE int List<T>::Num( void ) const {
 	return num;
 }
 
@@ -114,7 +114,7 @@ List::AllocSize
 ================
 */
 template<class T>
-int List<T>::AllocSize( void ) const {
+OG_INLINE int List<T>::AllocSize( void ) const {
 	return size;
 }
 
@@ -124,7 +124,7 @@ List::SetGranularity
 ================
 */
 template<class T>
-void List<T>::SetGranularity( int granularity ) {
+OG_INLINE void List<T>::SetGranularity( int granularity ) {
 	this->granularity = granularity;
 }
 
@@ -134,7 +134,7 @@ List::GetGranularity
 ================
 */
 template<class T>
-int List<T>::GetGranularity( void ) const {
+OG_INLINE int List<T>::GetGranularity( void ) const {
 	return granularity;
 }
 
@@ -160,7 +160,7 @@ List::operator+=
 ================
 */
 template<class T>
-void List<T>::operator+=( T value ) {
+OG_INLINE void List<T>::operator+=( T value ) {
 	Alloc() = value;
 }
 
@@ -173,7 +173,7 @@ copy all items from the other list.
 ================
 */
 template<class T>
-OG_INLINE void List<T>::Copy( const List<T> &other ) {
+void List<T>::Copy( const List<T> &other ) {
 	Clear();
 	for( int i=0; i<other.num; i++ )
 		Alloc() = other[i];
@@ -226,7 +226,7 @@ List::Append
 ================
 */
 template<class T>
-void List<T>::Append( T value ) {
+OG_INLINE void List<T>::Append( T value ) {
 	Alloc() = value;
 }
 
@@ -432,7 +432,7 @@ Checks to see if list is empty
 ================
 */
 template<class T>
-bool ListEx<T>::IsEmpty( void ) const {
+OG_INLINE bool ListEx<T>::IsEmpty( void ) const {
 	return num == 0 || *list == NULL;
 }
 
@@ -442,7 +442,7 @@ ListEx::Num
 ================
 */
 template<class T>
-int ListEx<T>::Num( void ) const {
+OG_INLINE int ListEx<T>::Num( void ) const {
 	return num;
 }
 
@@ -452,7 +452,7 @@ ListEx::AllocSize
 ================
 */
 template<class T>
-int ListEx<T>::AllocSize( void ) const {
+OG_INLINE int ListEx<T>::AllocSize( void ) const {
 	return size;
 }
 
@@ -462,7 +462,7 @@ ListEx::SetGranularity
 ================
 */
 template<class T>
-void ListEx<T>::SetGranularity( int granularity ) {
+OG_INLINE void ListEx<T>::SetGranularity( int granularity ) {
 	this->granularity = granularity;
 }
 
@@ -472,7 +472,7 @@ List::GetGranularity
 ================
 */
 template<class T>
-int ListEx<T>::GetGranularity( void ) const {
+OG_INLINE int ListEx<T>::GetGranularity( void ) const {
 	return granularity;
 }
 
@@ -498,7 +498,7 @@ ListEx::operator+=
 ================
 */
 template<class T>
-void ListEx<T>::operator+=( const T &value ) {
+OG_INLINE void ListEx<T>::operator+=( const T &value ) {
 	Alloc() = value;
 }
 
@@ -511,7 +511,7 @@ copy all items from the other list.
 ================
 */
 template<class T>
-OG_INLINE void ListEx<T>::Copy( const ListEx<T> &other ) {
+void ListEx<T>::Copy( const ListEx<T> &other ) {
 	Clear();
 	for( int i=0; i<other.num; i++ )
 		Alloc() = other[i];
@@ -525,7 +525,7 @@ Synonym for Copy
 ================
 */
 template<class T>
-OG_INLINE ListEx<T> &ListEx<T>::operator=( const ListEx<T> &other ) {
+ListEx<T> &ListEx<T>::operator=( const ListEx<T> &other ) {
 	Clear();
 	for( int i=0; i<other.num; i++ )
 		Alloc() = other[i];
@@ -567,7 +567,7 @@ ListEx::Append
 ================
 */
 template<class T>
-void ListEx<T>::Append( const T &value ) {
+OG_INLINE void ListEx<T>::Append( const T &value ) {
 	Alloc() = value;
 }
 
