@@ -150,7 +150,7 @@ void ogDemoWindow::UpdateSound( void ) {
 		frameTimer.Start();
 	} else {
 		frameTimer.Stop();
-		frameTime = frameTimer.Milliseconds();
+		frameTime = frameTimer.MilliSeconds();
 		frameTimer.Start();
 	}
 	float timeScale = static_cast<float>(frameTime)*0.001f;

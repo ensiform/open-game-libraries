@@ -152,7 +152,7 @@ void ogDemoWindow::Draw( void ) {
 		frameTimer.Start();
 	} else {
 		frameTimer.Stop();
-		frameTime = frameTimer.Milliseconds();
+		frameTime = frameTimer.MilliSeconds();
 		frameTimer.Start();
 	}
 

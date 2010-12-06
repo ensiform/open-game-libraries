@@ -47,7 +47,7 @@ public:
 	ogLogoScreen();
 	void	Init( const og::Vec3 &logoCenter, int time, const og::Sound *sound );
 	void	Draw( int frameTime );
-	bool	IsDone( void ) { return timer.Milliseconds() > playTime; }
+	bool	IsDone( void ) { return timer.MilliSeconds() > playTime; }
 
 private:
 	void	DrawLogo( void );

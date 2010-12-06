@@ -72,7 +72,7 @@ namespace og {
 		// ==============================================================================
 		//! Get the time elapsed in milliseconds
 		// ==============================================================================
-		uLong			Milliseconds( void ) const;
+		uLong			MilliSeconds( void ) const;
 
 		// ==============================================================================
 		//! Get the time elapsed in seconds

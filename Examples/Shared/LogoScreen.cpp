@@ -163,7 +163,7 @@ void ogLogoScreen::Draw( int frameTime ) {
 
 	float lightValue = 1.0f;
 	const int FADE_TIME = 1200;
-	int rest = playTime - timer.Milliseconds() - 200;
+	int rest = playTime - timer.MilliSeconds() - 200;
 	if ( rest < FADE_TIME )
 		lightValue = og::Clamp( static_cast<float>(rest) / static_cast<float>(FADE_TIME), 0.0f, 1.0f );
 	

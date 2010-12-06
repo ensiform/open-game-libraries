@@ -102,10 +102,10 @@ OG_INLINE uLongLong Timer::MicroSeconds( void ) const {
 
 /*
 =================
-Timer::Milliseconds
+Timer::MilliSeconds
 =================
 */
-OG_INLINE uLong Timer::Milliseconds( void ) const {
+OG_INLINE uLong Timer::MilliSeconds( void ) const {
 	return static_cast<uLong>(MicroSeconds() * 0.001);
 }
 
