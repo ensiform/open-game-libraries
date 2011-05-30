@@ -33,6 +33,28 @@ solution "Examples"
 		files { toolsPath .. "/SHaGen/**.h", toolsPath .. "/SHaGen/**.inl", toolsPath .. "/SHaGen/**.cpp" }
 		objdir( objectDir .. "/Examples/SHaGen" )
 
+	-- TestPluginEngine Executable
+	project "TestPluginEngine"
+		uuid "CD5F3292-C3E8-5F4D-8684-7FAA20B46EDF"
+		kind "ConsoleApp"
+		language "C++"
+		targetdir( binaryDir )
+		includedirs { librariesPath .. "/Include" }
+		links { "ogShared", "ogCommon", "ogPlugin" }
+		files { examplesPath .. "/TestPlugin/Engine.h", examplesPath .. "/TestPlugin/Engine.cpp", examplesPath .. "/Shared/User.cpp" }
+		objdir( objectDir .. "/Examples/TestPlugin" )
+
+	-- TestPluginGame Shared Library
+	project "TestPluginGame"
+		uuid "75566441-1262-234E-9F72-130D44CAE76D"
+		kind "SharedLib"
+		language "C++"
+		targetdir( binaryDir )
+		includedirs { librariesPath .. "/Include" }
+		links { "ogShared", "ogCommon", "ogPlugin" }
+		files { examplesPath .. "/TestPlugin/Game.h", examplesPath .. "/TestPlugin/Game.cpp", examplesPath .. "/TestPlugin/Game.def", examplesPath .. "/Shared/User.cpp" }
+		objdir( objectDir .. "/Examples/TestPlugin" )
+		
 	-- TestFS Executable
 	project "TestFS"
 		uuid "81E27090-9EF9-574C-9744-6C2A47AB3374"

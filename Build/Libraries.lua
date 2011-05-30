@@ -76,6 +76,17 @@ solution "Libraries"
 		files { libIncludePath .. "/Model.h" }
 		files { libIncludePath .. "/Model/**.h", libIncludePath .. "/Model/**.inl", libSourcePath .. "/Model/**.cpp", libSourcePath .. "/Model/**.h" }
 		objdir( objectDir .. "/ogModel" )
+		
+	-- ogPlugin Static Library
+	project "ogPlugin"
+		uuid "234F3C1E-5568-4647-BD9E-C32E3471FE3C"
+		kind "StaticLib"
+		language "C++"
+		targetdir( libDir )
+		includedirs { librariesPath .. "/Include" }
+		files { libIncludePath .. "/Plugin.h" }
+		files { libIncludePath .. "/Plugin/**.h", libIncludePath .. "/Plugin/**.inl", libSourcePath .. "/Plugin/**.cpp", libSourcePath .. "/Plugin/**.h" }
+		objdir( objectDir .. "/ogPlugin" )
 
 	-- ogImage Static Library
 	project "ogImage"
