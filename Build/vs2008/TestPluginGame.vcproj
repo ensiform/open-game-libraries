@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogPlugin.lib"
+				AdditionalDependencies="..\out\ogShared.lib"
 				OutputFile="$(OutDir)\TestPluginGame.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
@@ -148,7 +148,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\out\ogShared.lib ..\out\ogCommon.lib ..\out\ogPlugin.lib"
+				AdditionalDependencies="..\out\ogShared.lib"
 				OutputFile="$(OutDir)\TestPluginGame.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""

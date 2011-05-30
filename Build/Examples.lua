@@ -51,7 +51,7 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { librariesPath .. "/Include" }
-		links { "ogShared", "ogCommon", "ogPlugin" }
+		links { "ogShared" }
 		files { examplesPath .. "/TestPlugin/Game.h", examplesPath .. "/TestPlugin/Game.cpp", examplesPath .. "/TestPlugin/Game.def", examplesPath .. "/Shared/User.cpp" }
 		objdir( objectDir .. "/Examples/TestPlugin" )
 		
