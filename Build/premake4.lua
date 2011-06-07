@@ -38,7 +38,7 @@ else
 end
 
 -- Some Paths
-rootPath = ".."
+rootPath = "../.."
 
 objectDir		= "out/obj"
 libDir			= "out"
@@ -60,9 +60,9 @@ vorbisPath		= thirdPartyPath .. "/vorbis"
 oalPath			= thirdPartyPath .. "/AL"
 
 -- OpenAL Soft config generation:
-dofile "oal_config.lua"
+dofile "Thirdparty/oal_config.lua"
 
 -- The Solutions
-dofile "Thirdparty.lua"
-dofile "Libraries.lua"
-dofile "Examples.lua"
+dofile "Thirdparty/Thirdparty.lua"
+dofile "Libraries/Libraries.lua"
+dofile "Examples/Examples.lua"dofile "Tools/Tools.lua"

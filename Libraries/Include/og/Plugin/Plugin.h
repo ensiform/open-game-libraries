@@ -41,57 +41,48 @@ namespace og {
 	// ==============================================================================
 	//! Plugin Import Base
 	//!
-	//! The base for the import interface
+	//! The base interface for the plugin to import methods from the executable
 	// ==============================================================================
-	class PluginImportBase {};
+	class PluginImportBase {
+	public:
+		virtual int GetApiVersion( void ) const = 0;
+	};
 
 	// ==============================================================================
 	//! Plugin Export Base
 	//!
-	//! The base for the export interface
+	//! The base interface for the plugin to export methods to the executable
 	// ==============================================================================
-	class PluginExportBase {};
+	class PluginExportBase {
+	public:
+		virtual int GetApiVersion( void ) const = 0;
+		virtual void OnLoad( PluginImportBase *pluginImport ) = 0;
+		virtual void OnUnload( void ) = 0;
+	};
 
 	// ==============================================================================
-	//! Plugin Interface
+	//! Plugin namespace
 	//!
 	//! Load/Unload Plugins
 	// ==============================================================================
-	class Plugin {
-	public:
-		// ==============================================================================
-		//! Constructor. 
-		// ==============================================================================
-		Plugin() {}
-
-		// ==============================================================================
-		//! Virtual Destructor
-		// ==============================================================================
-		virtual ~Plugin() {}
-
+	namespace Plugin {
 		// ==============================================================================
 		//! Connect to the plugin
 		//!
-		//! @param	name	The entry point to call
+		//! @param	filename		The filename of the plugin
+		//! @param	pluginImport	The interface the plugin wants to import
 		//!
-		//! @return	NULL on failure, otherwise the returned PluginImportBase object from the plugin
+		//! @return	NULL on failure, otherwise the returned PluginExportBase object from the plugin
 		// ==============================================================================
-		virtual PluginImportBase *Connect( const char *name, PluginExportBase *pluginExport ) = 0;
+		PluginExportBase *Load( const char *filename, PluginImportBase *pluginImport );
 
 		// ==============================================================================
 		//! Unload this plugin
-		// ==============================================================================
-		virtual void Unload() = 0;
-
-		// ==============================================================================
-		//! Load a plugin
 		//!
-		//! @param	filename	The file path
-		//!
-		//! @return	true if it succeeds, false if it fails
+		//! @param	pluginExport	The export object of the plugin to unload
 		// ==============================================================================
-		static Plugin *	Load( const char *filename );
-	};
+		void Unload( PluginExportBase *pluginExport );
+	}
 }
 
 #endif

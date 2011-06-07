@@ -27,40 +27,32 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include "Engine.h"
 #include "Game.h"
 
 #include <stdio.h>
 
-class Engine : public EngineInterface {
+class EngineExportGame : public GameImport {
 public:
-	void SayHello( const char *name ) {
-		printf( "Engine: Hello %s\n", name );
+	int GetApiVersion( void ) const { return GAME_API_VERSION; }
+
+	void SayWorld( const char *name ) {
+		printf( "Engine: World %s\n", name );
 	}
 };
 
-Engine engineObject;
+EngineExportGame gameImport;
 
 int main( int argc, char* argv[] ) {
 
 	printf("Trying to load plugin\n");
-	og::Plugin *plugin = og::Plugin::Load("TestPluginGame");
-	if( plugin == NULL ) {
+	GameExport *game = (GameExport *)og::Plugin::Load("TestPluginGame.dll", &gameImport);
+	if( game == NULL ) {
 		printf("Failed to load plugin\n");
 		return -1;
 	}
 
-	printf("Trying to connect to plugin\n");
-	og::PluginImportBase *base = plugin->Connect("getGameApi", &engineObject);
-
-	if(base == NULL) {
-		printf("Failed to connect to plugin\n");
-	} else {
-		GameInterface *game = (GameInterface *)base;
-		game->SayHello("Bar");
-	}
-
-	plugin->Unload();
-	plugin = NULL;
+	game->SayHello("Engine");
+	og::Plugin::Unload(game);
+	game = NULL;
 	return 1;
 }

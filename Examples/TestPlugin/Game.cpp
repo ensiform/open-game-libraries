@@ -27,24 +27,33 @@ freely, subject to the following restrictions:
 ===========================================================================
 */
 
-#include "Engine.h"
 #include "Game.h"
 
 #include <stdio.h>
 
-class Game : public GameInterface {
+GameImport *engine;
+
+class Game : public GameExport {
 public:
+	int GetApiVersion( void ) const { return GAME_API_VERSION; }
+
+	void OnLoad( og::PluginImportBase *pluginImport ) {
+		engine = (GameImport *)pluginImport;
+		engine->SayWorld("Game::OnLoad");
+	}
+	void OnUnload( void ) {
+		engine->SayWorld("Game::OnUnload");
+		engine = NULL;
+	}
+
 	void SayHello( const char *name ) {
 		printf( "Game: Hello %s\n", name );
 	}
 };
 
 Game gameObject;
-EngineInterface *engine;
 
-og::PluginImportBase *getGameApi( og::PluginExportBase *pluginExport ) {
-	printf("getGameApi called\n");
-	engine = (EngineInterface *)pluginExport;
-	engine->SayHello("Foo");
+og::PluginExportBase *getPluginExport( void ) {
+	printf("getPluginExport called\n");
 	return &gameObject;
 }

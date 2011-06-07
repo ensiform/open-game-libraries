@@ -32,10 +32,18 @@ freely, subject to the following restrictions:
 
 #include <og/Plugin.h>
 
-class GameInterface : public og::PluginImportBase {
+const int GAME_API_VERSION = 1;
+
+class GameExport : public og::PluginExportBase {
 public:
 
 	virtual void SayHello( const char *name ) = 0;
+};
+
+class GameImport : public og::PluginImportBase {
+public:
+
+	virtual void SayWorld( const char *name ) = 0;
 };
 
 #endif

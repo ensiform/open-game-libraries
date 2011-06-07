@@ -33,7 +33,7 @@ freely, subject to the following restrictions:
 #include <og/Image.h>
 #include "main.h"
 
-#pragma comment(lib, "../../Thirdparty/gl/glew32.lib")
+#pragma comment(lib, "../../../Thirdparty/gl/glew32.lib")
 
 #define APP_TITLE "Model Loader"
 ogDemoWindow demoWindow;

@@ -35,7 +35,7 @@ freely, subject to the following restrictions:
 #define DEMO_OPENGL3
 #ifdef DEMO_OPENGL3
  #include <gl/glew.h>
- #pragma comment(lib, "../../Thirdparty/GL/glew32.lib")
+ #pragma comment(lib, "../../../Thirdparty/GL/glew32.lib")
 #else
  #include <og/Gloot/glmin.h>
 #endif
