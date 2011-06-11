@@ -95,9 +95,10 @@ public:
 					continue;
 
 				wfilename = dir;
-				wfilename += L"\\";
+				if( *dir != '\0' )
+					wfilename += L"/";
 				wfilename += findData.cFileName;
-				wfilename += L"\\";
+				wfilename += L"/";
 				if ( addDirs ) {
 					filename.FromWide( wfilename.c_str() );
 					list->Append( filename );
@@ -158,7 +159,7 @@ public:
 					continue;
 
 				filename = name;
-				filename += "\\";
+				filename += "/";
 				if ( addDirs )
 					list->Append( filename );
 				if ( recursive )
