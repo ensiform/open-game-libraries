@@ -145,6 +145,8 @@ namespace og {
 		FileEx *OpenLocalFileRead( const char *filename, int *size=NULL ); // Open a local file for reading.
 		int		GetArchivedFileList( const char *dir, const char *extension, StringList &files, int flags=LF_DEFAULT ); // Get all Files with this extension in the specified dir.
 
+		bool	GetModDescription( const char *filename, String &name ); // Read the mods description.txt
+
 	private:
 		static TLS<bool> notFoundWarning;
 
@@ -152,7 +154,7 @@ namespace og {
 		String			pakExtension;				// Pakfile extension, for example "gpk"
 		String			basePath;					// Base path, normally the working directory.
 		String			userPath;					// User path(for storing configs, downloads, ..)
-		String			modPath;					// baseDir or mods/<mod-folder>
+		String			modDir;						// baseDir or mod-folder
 		String			baseDir;					// Base Mod directory, for example "base"
 
 		StringList		searchPaths;				// includes all the different paths we want to search (basepath & userpath)

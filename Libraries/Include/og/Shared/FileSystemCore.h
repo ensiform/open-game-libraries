@@ -77,7 +77,7 @@ namespace og {
 	//! File list flags
 	// ==============================================================================
 	enum ListFlags {
-		LF_DIRS				= BIT(0),	//!< List directories.
+		LF_DIRS				= BIT(0),	//!< List directories (directories will have a trailing "/").
 		LF_FILES			= BIT(1),	//!< List files.
 		LF_CHECK_SUBDIRS	= BIT(2),	//!< Dive into subdirectories.
 		LF_CHECK_LOCAL		= BIT(3),	//!< List local files.

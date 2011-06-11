@@ -86,6 +86,14 @@ int main( int argc, char* argv[] ) {
 			printf( "%s\n", buffer );
 			og::FS->FreeFile( buffer );
 		}
+
+		printf( "Mod List:\n" );
+		og::ModList *mods = og::FS->GetModList();
+		for( int i=0; i<mods->Num(); i++ ) {
+			printf( "%s = %s\n", mods->GetDirectory(i), mods->GetDescription(i) );
+		}
+		og::FS->FreeModList(mods);
+		mods = NULL;
 		og::FileSystem::Shutdown();
 	}
 	return 0;

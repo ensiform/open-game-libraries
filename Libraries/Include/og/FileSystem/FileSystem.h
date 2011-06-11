@@ -38,6 +38,16 @@ namespace og {
 //! @todo	Test everything, and on all systems.
 //! @todo	Interface to return searchpaths
 //! @todo	Ensure all filenames are always stored with forward slashes
+//! @todo	File exists in savepath
+//! @todo	Remove file in savepath
+//! @todo	touch file in savepath
+//! @todo	filelist by filter string
+//! @todo	make sure no ".." and "\\" is found in paths
+//! @todo	support for extra search paths ? ( cd path ? )
+//! @todo	support for base-mod
+//! @todo	a way to ensure same order of gpk files on client and server
+//! @todo	a way to find out which file would be opened (which gpk file and/or which searchpath)
+//! @todo	a way to get a list of all gpk files loaded
 //! @{
 
 	class FileSystem;
@@ -93,37 +103,36 @@ namespace og {
 		virtual ~ModList() {}
 
 		// ==============================================================================
-		//! Get the next mod
-		//!
-		//! @return	false if there are no more mods, otherwise true
-		// ==============================================================================
-		virtual bool		GetNext( void ) = 0;
-
-		// ==============================================================================
-		//! Resets the file index.
-		// ==============================================================================
-		virtual void		Reset( void ) = 0;
-
-		// ==============================================================================
-		//! Get the (relative) mod path of the current index
-		//!
-		//! @return	The path
-		// ==============================================================================
-		virtual const char *GetPath( void ) = 0;
-
-		// ==============================================================================
-		//! Get Number of files
+		//! Get the number of mod directories
 		//!
 		//! @return	number of mods
 		// ==============================================================================
-		virtual int			Num( void ) = 0;
+		virtual int			Num( void ) const = 0;
 
 		// ==============================================================================
-		//! Get current mod directory index
+		//! Get active mod directory index
 		//!
 		//! @return	index
 		// ==============================================================================
-		virtual int			GetCurrentModIndex( void ) = 0;
+		virtual int			GetActiveModIndex( void ) const = 0;
+
+		// ==============================================================================
+		//! Get the mod directory name
+		//!
+		//! @param	index	The Mod index
+		//!
+		//! @return	The mod directory name
+		// ==============================================================================
+		virtual const char *GetDirectory( int index ) = 0;
+
+		// ==============================================================================
+		//! Get the mod description (what's found in the description.txt)
+		//!
+		//! @param	index	The Mod index
+		//!
+		//! @return	The mod description
+		// ==============================================================================
+		virtual const char *GetDescription( int index ) = 0;
 	};
 
 	// ==============================================================================

@@ -124,26 +124,19 @@ class ModListEx : public ModList {
 public:
 	// ---------------------- Public ModList Interface -------------------
 
-	bool		GetNext( void ) {
-		if ( (position+1) < paths.Num() ) {
-			position++;
-			return true;
-		}
-		return false;
-	}
-	void		Reset( void ) { position = 0; }
-	const char *GetPath( void ) { return paths[position].c_str(); }
-	int			Num( void ) { return paths.Num(); }
-	int			GetCurrentModIndex( void ) { return currentModIndex; }
+	int			Num( void ) const { return directories.Num(); }
+	int			GetActiveModIndex( void ) const { return activeModIndex; }
+	const char *GetDirectory( int index ) { return directories[index].c_str(); }
+	const char *GetDescription( int index ) { return descriptions[index].c_str(); }
 
 	// ---------------------- Internal ModListEx Members -------------------
 
 public:
-	ModListEx() { position = 0; currentModIndex = -1; }
+	ModListEx() { activeModIndex = -1; }
 
-	uInt			position;
-	int				currentModIndex;
-	StringList		paths;
+	int				activeModIndex;
+	StringList		directories;
+	StringList		descriptions;
 };
 
 /*
@@ -200,7 +193,7 @@ bool FileSystemEx::Init( const char *_pakExtension, const char *_basePath, const
 	basePath		= _basePath;
 	userPath		= _userPath;
 	baseDir			= _baseDir;
-	modPath			= baseDir;
+	modDir			= baseDir;
 
 	basePath.ToForwardSlashes();
 	userPath.ToForwardSlashes();
@@ -309,7 +302,7 @@ FileSystemEx::MakePath
 bool FileSystemEx::MakePath( const char *path, bool pure ) {
 	if ( pure ) {
 		SharedLock lock(sharedMutex);
-		return MakePath( Format("$*/$*/$*" ) << userPath << modPath << path, false );
+		return MakePath( Format("$*/$*/$*" ) << userPath << modDir << path, false );
 	}
 	int len = String::ByteLength(path);
 	DynBuffer<char> newPath(len+1);
@@ -418,23 +411,21 @@ Calls AddResourceDir() if the new moddir is not an IsEmpty string
 bool FileSystemEx::ChangeMod( const char *dir ) {
 	ogst::unique_lock<SharedMutex> lock(sharedMutex);
 	if ( dir[0] == '\0' )
-		modPath = baseDir;
+		modDir = baseDir;
 	else {
 		bool found = false;
 		// Check if the mod exists
-		ModList *mods = GetModList();
-		if ( mods ) {
-			do {
+		if ( ModList *mods = GetModList() ) {
+			for( int i=0; i<mods->Num(); i++ ) {
 				// Found it ?
-				if ( String::Icmp( mods->GetPath(), dir ) == 0 ) {
-					modPath = mods->GetPath();
+				if ( String::Icmp( mods->GetDirectory(i), dir ) == 0 ) {
+					modDir = mods->GetDirectory(i);
 					found = true;
 					break;
 				}
-			} while ( mods->GetNext() );
+			}
 
 			FreeModList( mods );
-			mods = NULL;
 		}
 		if ( !found )
 			return false;
@@ -456,7 +447,7 @@ bool FileSystemEx::ChangeMod( const char *dir ) {
 
 	// If we have a mod, add its resources.
 	if ( dir[0] != '\0' )
-		AddResourceDir( modPath.c_str(), PFLIST_MOD );
+		AddResourceDir( modDir.c_str(), PFLIST_MOD );
 	return true;
 }
 
@@ -587,7 +578,7 @@ FileSystemEx::OpenWrite
 File *FileSystemEx::OpenWrite( const char *filename, bool pure ) {
 	if ( pure ) {
 		SharedLock lock(sharedMutex);
-		return OpenWrite( Format( "$*/$*/$*" ) << userPath << modPath << filename, false );
+		return OpenWrite( Format( "$*/$*/$*" ) << userPath << modDir << filename, false );
 	}
 
 	// If the path doesn't exist and can not be created, fail.
@@ -898,24 +889,64 @@ int FileSystemEx::GetArchivedFileList( const char *dir, const char *extension, S
 
 /*
 ================
+FileSystemEx::GetModDescription
+================
+*/
+bool FileSystemEx::GetModDescription( const char *filename, String &name ) {
+	FileEx *file = OpenLocalFileRead( filename );
+	if ( file ) {
+		try {
+			DynBuffer<char> buffer( file->Size() + 1 );
+			file->Read( buffer.data, file->Size() );
+			file->Close();
+
+			// Terminate the buffer
+			buffer.data[file->Size()] = 0;
+
+			// fixme: if the file has more than one line, remove all following lines
+			name = buffer.data;
+			name.StripTrailingWhitespaces();
+			name.StripLeadingWhitespaces();
+
+			return !name.IsEmpty();
+		}
+		catch( FileReadWriteError &err ) {
+			file->Close();
+			User::Error( ERR_FILE_CORRUPT, Format("Failure reading mod description $*" ) << err.ToString(), filename );
+			return false;
+		}
+	}
+	return false;
+}
+
+/*
+================
 FileSystemEx::GetModList
 ================
 */
 ModList *FileSystemEx::GetModList( void ) {
-	int max = searchPaths.Num();
-	Format path( "$*/mods" );
+	Format filename( "$*/$*/description.txt" );
 	StringList modDirs;
+	String description;
 	ModListEx *mods = new ModListEx;
-	for( int i=0; i<max; i++ ) {
-		LocalFileSearch( path << searchPaths[i], "", "", &mods->paths, LF_DIRS );
-		path.Reset();
+	for( int i=searchPaths.Num()-1; i >= 0; i-- ) {
+		StringList directories;
+		LocalFileSearch( searchPaths[i].c_str(), "", "", &directories, LF_DIRS );
+		for( int j=0; j<directories.Num(); j++ ) {
+			directories[j].StripTrailingOnce("/");
+			// Do we have it already ?
+			if( mods->descriptions.IFind(directories[j].c_str()) != -1 )
+				continue;
+			if( GetModDescription( filename << searchPaths[i] << directories[j], description ) ) {
+				mods->directories.Append(directories[j]);
+				mods->descriptions.Append(description);
+			}
+			filename.Reset();
+		}
 	}
-	mods->paths.Sort( StringListICmp, true );
-
-	max = mods->paths.Num();
-	for( int i=0; i<max; i++ ) {
-		if ( modPath.Icmp( mods->paths[i].c_str() ) == 0 )
-			mods->currentModIndex = i;
+	for( int i=0; i<mods->directories.Num(); i++ ) {
+		if ( modDir.Icmp( mods->directories[i].c_str() ) == 0 )
+			mods->activeModIndex = i;
 	}
 
 	return mods;
