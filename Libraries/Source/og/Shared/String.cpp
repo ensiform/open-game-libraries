@@ -620,7 +620,10 @@ String::StripTrailingWhitespaces
 int String::StripTrailingWhitespaces( void ) {
 	int pos = byteLength-1;
 	int count = 0;
-	while ( IsSpace(data[pos--]) ) count++;
+	while ( IsSpace(data[pos]) ){
+		count++;
+		pos--;
+	}
 
 	pos++;
 	if ( pos != byteLength ) {
@@ -1498,8 +1501,8 @@ void String::FromWide( const wchar_t *in ) {
 	CheckSize( outLen, false );
 	WideCharToMultiByte( CP_UTF8, 0,  in, inLen, data, outLen, NULL, NULL );
 
-	length = inLen;
-	byteLength = outLen;
+	length = inLen-1;
+	byteLength = outLen-1;
 #elif OG_LINUX
 	#warning "Need Linux here FIXME"
 #elif OG_MACOS_X
