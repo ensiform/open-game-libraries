@@ -51,6 +51,7 @@ namespace og {
 
 		const char *	GetFileName( void ) { return filename; }			// Returns the filename without path
 		const char *	GetFullPath( void ) { return fullpath.c_str(); }	// Returns the full filepath
+		virtual const char *	GetPakFileName( void ) { return ""; }		// Returns which pak file this file is in ( empty if none )
 		time_t			GetTime( void ) { return time; }					// Returns the modification date/time
 		virtual void	Close( void );										// Close the file
 
@@ -117,6 +118,7 @@ namespace og {
 	public:
 		// ---------------------- Public File Interface -------------------
 
+		const char *	GetPakFileName( void ) { return pakFileName.c_str(); }	// Returns which pak file this file is in ( empty if none )
 		void	Seek( long offset, int origin );			// Jump to a position
 		long	Tell( void ) { return position; }			// Returns read/write position
 		void	Rewind( void ) { position = 0; }			// Rewind to the beginning
@@ -137,6 +139,7 @@ namespace og {
 		friend class FileSystemEx;
 		uLong	position;
 		byte*	data;
+		String	pakFileName;
 	};
 
 	/*
@@ -150,6 +153,7 @@ namespace og {
 	public:
 		// ---------------------- Public File Interface -------------------
 
+		const char *GetPakFileName( void );							// Returns which pak file this file is in ( empty if none )
 		void	Seek( long offset, int origin );					// Jump to a position
 		long	Tell( void ) { return static_cast<long>(stream.total_out); }	// Returns read/write position
 		void	Rewind( void );										// Rewind to the beginning

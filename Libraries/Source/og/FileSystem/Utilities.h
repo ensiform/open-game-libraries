@@ -34,6 +34,8 @@ namespace og {
 #if OG_WIN32
 	FILE *fopenwin32( const char *filename, const char *mode );
 	#define fopen fopenwin32
+	int removewin32( const char *filename );
+	#define remove removewin32
 #endif
 
 	/*

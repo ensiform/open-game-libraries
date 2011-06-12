@@ -367,6 +367,13 @@ namespace og {
 		virtual const char *GetFullPath( void ) = 0;
 
 		// ==============================================================================
+		//! Get which pak file this file is in ( empty if none )
+		//!
+		//! @return	The path to the pak file
+		// ==============================================================================
+		virtual const char *GetPakFileName( void ) = 0;
+
+		// ==============================================================================
 		//! Get the file modification time
 		//!
 		//! @return	The time in seconds (since 1.1.1970), when the file has been modified last

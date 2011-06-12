@@ -237,6 +237,16 @@ FILE *fopenwin32( const char *filename, const char *mode ) {
 	StringToWide( mode, strMode );
 	return _wfopen( strFilename.data, strMode.data );
 }
+/*
+================
+removewin32
+================
+*/
+int removewin32( const char *filename ) {
+	DynBuffer<wchar_t> strFilename;
+	StringToWide( filename, strFilename );
+	return DeleteFileW( strFilename.data ) ? 0 : -1;
+}
 #endif
 
 }

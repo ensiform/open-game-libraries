@@ -503,7 +503,8 @@ otherwise a new File Object and the filesize
 File *FileSystemEx::OpenRead( const char *filename, bool pure, bool buffered ) {
 	if ( buffered ) {
 		byte *buffer = NULL;
-		int filesize = LoadFile( filename, &buffer, pure );
+		String pakFileName;
+		int filesize = LoadFile( filename, &buffer, pure, &pakFileName );
 		if ( buffer == NULL )
 			return NULL;
 		
@@ -511,6 +512,7 @@ File *FileSystemEx::OpenRead( const char *filename, bool pure, bool buffered ) {
 		fileEx->writeMode = false;
 		fileEx->size = filesize;
 		fileEx->time = FileTime(filename);
+		fileEx->pakFileName = pakFileName;
 		fileEx->fullpath = filename;
 		fileEx->fullpath.ToForwardSlashes();
 		int i = fileEx->fullpath.ReverseFind("/");
@@ -611,6 +613,25 @@ File *FileSystemEx::OpenWrite( const char *filename, bool pure ) {
 
 /*
 ===========
+FileSystemEx::Remove
+===========
+*/
+bool FileSystemEx::Remove( const char *filename, bool pure ) {
+	SharedLock lock(sharedMutex);
+	String filePath;
+	if ( pure ) {
+		filePath = Format( "$*/$*/$*" ) << userPath << modDir << filename;
+	}
+	if( remove( filePath.c_str() ) != 0 ) {
+		// Fixme: better error id
+		User::Error( ERR_FS_FILE_OPENWRITE, "Can't remove file", filePath.c_str() );
+		return false;
+	}
+	return true;
+}
+
+/*
+===========
 FileSystemEx::FileSize
 
 Gets Filesize of a file (inside or outside a pakfile)
@@ -637,6 +658,22 @@ Does the specified file exist ?
 bool FileSystemEx::FileExists( const char *filename, bool pure ) {
 	*notFoundWarning = false;
 	File *file = OpenRead( filename, pure );
+	if ( file )
+		file->Close();
+	*notFoundWarning = true;
+	return file != NULL;
+}
+
+/*
+===========
+FileSystemEx::FileExistsInUserPath
+
+Does the specified file exist in the user path ?
+===========
+*/
+bool FileSystemEx::FileExistsInUserPath( const char *filename ) {
+	*notFoundWarning = false;
+	File *file = OpenLocalFileRead( Format( "$*/$*/$*" ) << userPath << modDir << filename );
 	if ( file )
 		file->Close();
 	*notFoundWarning = true;
@@ -684,7 +721,7 @@ Will load the whole file into a buffer
 (use FreeFile to free the buffer again)
 ============
 */
-int FileSystemEx::LoadFile( const char *path, byte **buffer, bool pure ) {
+int FileSystemEx::LoadFile( const char *path, byte **buffer, bool pure, String *pakFileName ) {
 	OG_ASSERT( buffer != NULL );
 
 	// Open the file
@@ -693,6 +730,9 @@ int FileSystemEx::LoadFile( const char *path, byte **buffer, bool pure ) {
 		*buffer = NULL;
 		return -1;
 	}
+
+	if( pakFileName )
+		*pakFileName = file->GetPakFileName();
 
 	// Allocate enough memory for the whole file.
 	int size = file->Size();

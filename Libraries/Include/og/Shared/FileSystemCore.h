@@ -111,7 +111,7 @@ namespace og {
 		virtual File *	OpenRead( const char *filename, bool pure=true, bool buffered=false ) = 0;
 
 		// ==============================================================================
-		//! Open a file for writing
+		//! Open a file for writing ( in user path if pure is true )
 		//!
 		//! @param	filename		The file path
 		//! @param	pure			Use internal file management
@@ -119,6 +119,16 @@ namespace og {
 		//! @return	Pointer to a new File object on success, otherwise NULL
 		// ==============================================================================
 		virtual File *	OpenWrite( const char *filename, bool pure=true ) = 0;
+
+		// ==============================================================================
+		//! Remove a file ( from user path if pure is true )
+		//!
+		//! @param	filename		The file path
+		//! @param	pure			Use internal file management
+		//!
+		//! @return	true on success, otherwise false
+		// ==============================================================================
+		virtual bool	Remove( const char *filename, bool pure ) = 0;
 
 		// ==============================================================================
 		//! Get the size of a given file
@@ -141,6 +151,15 @@ namespace og {
 		virtual bool	FileExists( const char *filename, bool pure=true ) = 0;
 
 		// ==============================================================================
+		//! Find out if a given file exists in the user path ( for use before writing a file )
+		//!
+		//! @param	filename		The file path
+		//!
+		//! @return	true if it exists, otherwise false
+		// ==============================================================================
+		virtual bool	FileExistsInUserPath( const char *filename ) = 0;
+
+		// ==============================================================================
 		//! Get the file modification time
 		//!
 		//! @param	filename		The file path
@@ -156,12 +175,13 @@ namespace og {
 		//! @param	path		The file path
 		//! @param	buffer		Pointer to a byte array, gets set by the function
 		//! @param	pure		Use internal file management
+		//! @param	pakFileName	A destination string for the pak file name the found file is in (optional, can be NULL)
 		//!
 		//! @return	The files size on success, otherwise -1
 		//!
 		//!	@note	You need to free it when you're done.
 		// ==============================================================================
-		virtual int		LoadFile( const char *path, byte **buffer, bool pure=true ) = 0;
+		virtual int		LoadFile( const char *path, byte **buffer, bool pure=true, String *pakFileName=NULL ) = 0;
 
 		// ==============================================================================
 		//! Free a file buffer previously created by LoadFile

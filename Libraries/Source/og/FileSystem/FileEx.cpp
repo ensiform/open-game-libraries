@@ -281,6 +281,15 @@ FileInPak *FileInPak::Create( PakFileEx *pakFile, CentralDirEntry *cde ) {
 
 /*
 ================
+FileInPak::GetPakFileName
+================
+*/
+const char *FileInPak::GetPakFileName( void ) {
+	return pakFile->GetFilename();
+}
+
+/*
+================
 FileInPak::Seek
 
 Jump to a specified location in the current file.

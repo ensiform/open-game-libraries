@@ -38,9 +38,6 @@ namespace og {
 //! @todo	Test everything, and on all systems.
 //! @todo	Interface to return searchpaths
 //! @todo	Ensure all filenames are always stored with forward slashes
-//! @todo	File exists in savepath
-//! @todo	Remove file in savepath
-//! @todo	touch file in savepath
 //! @todo	filelist by filter string
 //! @todo	make sure no ".." and "\\" is found in paths
 //! @todo	support for extra search paths ? ( cd path ? )

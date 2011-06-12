@@ -102,11 +102,13 @@ namespace og {
 		// File Access
 		File *	OpenRead( const char *filename, bool pure=true, bool buffered=false );
 		File *	OpenWrite( const char *filename, bool pure=true );
+		bool	Remove( const char *filename, bool pure );
 		int		FileSize( const char *filename, bool pure=true );
 		bool	FileExists( const char *filename, bool pure=true );
+		bool	FileExistsInUserPath( const char *filename );
 		time_t	FileTime( const char *filename, bool pure=true );
 
-		int		LoadFile( const char *path, byte **buffer, bool pure=true );
+		int		LoadFile( const char *path, byte **buffer, bool pure=true, String *pakFileName=NULL );
 		void	FreeFile( byte *buffer );
 		bool	MakePath( const char *path, bool pure=true );
 
