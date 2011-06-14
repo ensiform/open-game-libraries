@@ -30,7 +30,7 @@ freely, subject to the following restrictions:
 #include <stdio.h>
 #include "main.h"
 
-#if 1 // set to 1 to see image preloading bar
+#if 0 // set to 1 to see image preloading bar
 const int INTRO_TIME = 100;
 #else
 const int INTRO_TIME = 4000;
@@ -546,7 +546,7 @@ og::User::Main
 ================
 */
 int og::User::Main( int argc, char *argv[] ) {
-	if ( !og::FileSystem::Init( ".gpk", ".", ".", "base" ) )
+	if ( !og::FileSystem::SimpleInit( ".gpk", "base", ".", "." ) )
 		return 0;
 
 	if ( !og::FS->FileExists("gfx/asteroids/spaceship.tga") ) {

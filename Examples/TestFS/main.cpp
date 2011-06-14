@@ -79,7 +79,7 @@ int main( int argc, char* argv[] ) {
 	if ( !ReadPureList("purelist.txt") )
 		return 0;
 
-	if ( og::FileSystem::Init( ".gpk", ".", ".", "base" ) ) {
+	if ( og::FileSystem::SimpleInit( ".gpk", "base", ".", "." ) ) {
 		byte *buffer = NULL;
 		og::FS->LoadFile( "print.txt", &buffer );
 		if ( buffer ) {

@@ -444,7 +444,7 @@ og::User::Main
 */
 int og::User::Main( int argc, char *argv[] ) {
 	if ( InitConsole() ) {
-		if ( og::FileSystem::Init( ".gpk", ".", ".", "base" ) ) {
+		if ( og::FileSystem::SimpleInit( ".gpk", "base", ".", "." ) ) {
 			if ( !og::FS->FileExists("gfx/default.tga") ) {
 				og::Console::FatalError( "You might wanna check your working directory ?" );
 				//! @todo	wait for console close

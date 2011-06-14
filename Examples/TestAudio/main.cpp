@@ -258,7 +258,7 @@ og::User::Main
 ================
 */
 int og::User::Main( int argc, char *argv[] ) {
-	if ( !og::FileSystem::Init( ".gpk", ".", ".", "base" ) )
+	if ( !og::FileSystem::SimpleInit( ".gpk", "base", ".", "." ) )
 		return 0;
 
 	if ( !og::FS->FileExists("sounds/default.wav") ) {

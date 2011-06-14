@@ -105,7 +105,7 @@ namespace og {
 		bool	Remove( const char *filename, bool pure );
 		int		FileSize( const char *filename, bool pure=true );
 		bool	FileExists( const char *filename, bool pure=true );
-		bool	FileExistsInUserPath( const char *filename );
+		bool	FileExistsInSavePath( const char *filename );
 		time_t	FileTime( const char *filename, bool pure=true );
 
 		int		LoadFile( const char *path, byte **buffer, bool pure=true, String *pakFileName=NULL );
@@ -133,9 +133,11 @@ namespace og {
 		// Pak File List enum
 		enum pfListId { PFLIST_BASE, PFLIST_MOD, PFLIST_NUM };
 
-		bool	Init( const char *pakExtension, const char *basePath, const char *userPath, const char *baseDir );	// Init the filesystem
+		void	Init( const char *pakExtension, const char *baseDir );	// Init the filesystem
+		void	AddSearchPath( const char *path );
+		void	SetSavePath( const char *path );
 
-		bool	ChangeMod( const char *dir );		// Set the active mod directory
+		bool	ChangeMod( const char *_modDir, const char *_modDirBase );		// Set the active mod directory
 		void	InitModList( void );				// Init the modlist
 
 		void	AddResourceDir( const char *name, pfListId listId );	// Add a resource dir to the filesystem
@@ -154,12 +156,11 @@ namespace og {
 
 		SharedMutex		sharedMutex;
 		String			pakExtension;				// Pakfile extension, for example "gpk"
-		String			basePath;					// Base path, normally the working directory.
-		String			userPath;					// User path(for storing configs, downloads, ..)
+		String			savePath;					// Save path(for storing configs, downloads, ..)
 		String			modDir;						// baseDir or mod-folder
 		String			baseDir;					// Base Mod directory, for example "base"
 
-		StringList		searchPaths;				// includes all the different paths we want to search (basepath & userpath)
+		StringList		searchPaths;				// includes all the different paths we want to search (basepath & savepath)
 		StringList		resourceDirs;				// Name of all directories that have been added with AddResourceDir()
 		List<PakFileEx *>pakFiles[PFLIST_NUM];		// All Open Base & Mod PakFiles to search.
 

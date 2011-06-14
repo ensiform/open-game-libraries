@@ -142,33 +142,123 @@ public:
 /*
 ==============================================================================
 
+  FileSystem
+
+==============================================================================
+*/
+// These are here so we don't have to expose them to the public interface.
+static FileSystemEx *fileSys = NULL;
+
+/*
+================
+FileSystem::Prepare
+================
+*/
+void FileSystem::Prepare( void ) {
+	if ( fileSys != NULL )
+		return; //! @todo error
+
+	fileSys = new FileSystemEx;
+}
+
+/*
+================
+FileSystem::AddSearchPath
+================
+*/
+void FileSystem::AddSearchPath( const char *path ) {
+	if ( fileSys != NULL )
+		return; //! @todo error
+	fileSys->AddSearchPath(path);
+}
+
+/*
+================
+FileSystem::SetSavePath
+================
+*/
+void FileSystem::SetSavePath( const char *path ) {
+	if ( fileSys != NULL )
+		return; //! @todo error
+	fileSys->SetSavePath(path);
+}
+
+/*
+================
+FileSystem::SimpleInit
+================
+*/
+bool FileSystem::SimpleInit( const char *pakExtension, const char *baseDir, const char *searchPath, const char *savePath ) {
+	if ( fileSys != NULL )
+		return false; //! @todo error
+
+	fileSys = new FileSystemEx;
+	fileSys->AddSearchPath(searchPath);
+	fileSys->SetSavePath(savePath);
+	return FileSystem::Init( pakExtension, baseDir );
+}
+
+/*
+================
+FileSystem::Init
+================
+*/
+bool FileSystem::Init( const char *pakExtension, const char *baseDir ) {
+	if ( FS != NULL || fileSys == NULL )
+		return false; //! @todo error
+
+	fileSys->Init( pakExtension, baseDir );
+
+	// Start up with basedir by default
+	fileSys->AddResourceDir( baseDir, FileSystemEx::PFLIST_BASE );
+	if ( fileSys->pakFiles[FileSystemEx::PFLIST_BASE].IsEmpty() ) {
+		delete fileSys;
+		fileSys = NULL;
+		return false;
+	}
+	fileSys->Start("FileSystemEx");
+	FS = fileSys;
+	CommonSetFileSystem( FS );
+	return true;
+}
+
+/*
+================
+FileSystem::Shutdown
+================
+*/
+void FileSystem::Shutdown( void ) {
+	CommonSetFileSystem( NULL );
+	fileSys->Stop();
+	fileSys = NULL;
+	FS = NULL;
+}
+
+/*
+================
+FileSystem::SetPureMode
+================
+*/
+void FileSystem::SetPureMode( bool enable ) {
+	fileSys->SetPureMode( enable );
+}
+
+/*
+================
+FileSystem::ChangeMod
+================
+*/
+bool FileSystem::ChangeMod( const char *modDir, const char *modDirBase ) {
+	return fileSys->ChangeMod( modDir, modDirBase );
+}
+
+/*
+==============================================================================
+
   FileSystemEx
 
 ==============================================================================
 */
-
-// These are here so we don't have to expose them to the public interface.
-bool FileSystem::Init( const char *pakExtension, const char *basePath, const char *userPath, const char *baseDir ) {
-	if ( FS != NULL )
-		return false; //! @todo error
-
-	FileSystemEx *fileSys = new FileSystemEx;
-	fileSys->Start("FileSystemEx");
-	FS = fileSys;
-	if ( !fileSys->Init( pakExtension, basePath, userPath, baseDir ) ) {
-		fileSys->Stop();
-		FS = NULL;
-		return false;
-	}
-	return true;
-}
-void FileSystem::Shutdown( void )
-	{ static_cast<FileSystemEx *>(FS)->Stop(); FS = NULL; }
-void FileSystem::SetPureMode( bool enable )
-	{ static_cast<FileSystemEx *>(FS)->SetPureMode( enable ); }
-bool FileSystem::ChangeMod( const char *dir )
-	{ return static_cast<FileSystemEx *>(FS)->ChangeMod( dir ); }
-
 /*
 ================
 FileSystemEx::FileSystemEx
@@ -182,32 +272,35 @@ FileSystemEx::FileSystemEx() {
 /*
 ================
 FileSystemEx::Init
-
-Adds all pakfiles in the base directory.
 ================
 */
-bool FileSystemEx::Init( const char *_pakExtension, const char *_basePath, const char *_userPath, const char *_baseDir ) {
-	CommonSetFileSystem( this );
-
+void FileSystemEx::Init( const char *_pakExtension, const char *_baseDir ) {
 	pakExtension	= _pakExtension;
-	basePath		= _basePath;
-	userPath		= _userPath;
 	baseDir			= _baseDir;
-	modDir			= baseDir;
+}
 
-	basePath.ToForwardSlashes();
-	userPath.ToForwardSlashes();
+/*
+================
+FileSystemEx::AddSearchPath
+================
+*/
+void FileSystemEx::AddSearchPath( const char *path ) {
+	String strPath = path;
+	strPath.ToForwardSlashes();
+	if ( searchPaths.IFind( strPath.c_str() ) == -1 )
+		searchPaths.Append( strPath );
+}
 
-	searchPaths.Clear();
-	searchPaths.Append( basePath );
-	if ( userPath.Icmp( basePath.c_str() ) != 0 )
-		searchPaths.Append( userPath );
-
-	// Start up with basedir by default
-	AddResourceDir( baseDir.c_str(), PFLIST_BASE );
-
-	bool ret = !pakFiles[PFLIST_BASE].IsEmpty();
-	return ret;
+/*
+================
+FileSystemEx::SetSavePath
+================
+*/
+void FileSystemEx::SetSavePath( const char *path ) {
+	savePath = path;
+	savePath.ToForwardSlashes();
+	if ( searchPaths.IFind( savePath.c_str() ) == -1 )
+		AddSearchPath( savePath.c_str() );
 }
 
 /*
@@ -302,7 +395,7 @@ FileSystemEx::MakePath
 bool FileSystemEx::MakePath( const char *path, bool pure ) {
 	if ( pure ) {
 		SharedLock lock(sharedMutex);
-		return MakePath( Format("$*/$*/$*" ) << userPath << modDir << path, false );
+		return MakePath( Format("$*/$*/$*" ) << savePath << modDir << path, false );
 	}
 	int len = String::ByteLength(path);
 	DynBuffer<char> newPath(len+1);
@@ -408,9 +501,9 @@ Frees up all mod directories
 Calls AddResourceDir() if the new moddir is not an IsEmpty string
 ================
 */
-bool FileSystemEx::ChangeMod( const char *dir ) {
+bool FileSystemEx::ChangeMod( const char *_modDir, const char *_modDirBase ) {
 	ogst::unique_lock<SharedMutex> lock(sharedMutex);
-	if ( dir[0] == '\0' )
+	if ( _modDir[0] == '\0' )
 		modDir = baseDir;
 	else {
 		bool found = false;
@@ -418,7 +511,7 @@ bool FileSystemEx::ChangeMod( const char *dir ) {
 		if ( ModList *mods = GetModList() ) {
 			for( int i=0; i<mods->Num(); i++ ) {
 				// Found it ?
-				if ( String::Icmp( mods->GetDirectory(i), dir ) == 0 ) {
+				if ( String::Icmp( mods->GetDirectory(i), _modDir ) == 0 ) {
 					modDir = mods->GetDirectory(i);
 					found = true;
 					break;
@@ -446,8 +539,11 @@ bool FileSystemEx::ChangeMod( const char *dir ) {
 	pakFiles[PFLIST_MOD].Clear();
 
 	// If we have a mod, add its resources.
-	if ( dir[0] != '\0' )
-		AddResourceDir( modDir.c_str(), PFLIST_MOD );
+	if ( _modDirBase[0] != '\0' )
+		AddResourceDir( _modDirBase, PFLIST_MOD );
+	if ( _modDir[0] != '\0' )
+		AddResourceDir(_modDir, PFLIST_MOD );
+
 	return true;
 }
 
@@ -580,7 +676,7 @@ FileSystemEx::OpenWrite
 File *FileSystemEx::OpenWrite( const char *filename, bool pure ) {
 	if ( pure ) {
 		SharedLock lock(sharedMutex);
-		return OpenWrite( Format( "$*/$*/$*" ) << userPath << modDir << filename, false );
+		return OpenWrite( Format( "$*/$*/$*" ) << savePath << modDir << filename, false );
 	}
 
 	// If the path doesn't exist and can not be created, fail.
@@ -620,7 +716,7 @@ bool FileSystemEx::Remove( const char *filename, bool pure ) {
 	SharedLock lock(sharedMutex);
 	String filePath;
 	if ( pure ) {
-		filePath = Format( "$*/$*/$*" ) << userPath << modDir << filename;
+		filePath = Format( "$*/$*/$*" ) << savePath << modDir << filename;
 	}
 	if( remove( filePath.c_str() ) != 0 ) {
 		// Fixme: better error id
@@ -666,14 +762,14 @@ bool FileSystemEx::FileExists( const char *filename, bool pure ) {
 
 /*
 ===========
-FileSystemEx::FileExistsInUserPath
+FileSystemEx::FileExistsInSavePath
 
-Does the specified file exist in the user path ?
+Does the specified file exist in the save path ?
 ===========
 */
-bool FileSystemEx::FileExistsInUserPath( const char *filename ) {
+bool FileSystemEx::FileExistsInSavePath( const char *filename ) {
 	*notFoundWarning = false;
-	File *file = OpenLocalFileRead( Format( "$*/$*/$*" ) << userPath << modDir << filename );
+	File *file = OpenLocalFileRead( Format( "$*/$*/$*" ) << savePath << modDir << filename );
 	if ( file )
 		file->Close();
 	*notFoundWarning = true;

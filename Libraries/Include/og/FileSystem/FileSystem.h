@@ -41,9 +41,7 @@ namespace og {
 //! @todo	filelist by filter string
 //! @todo	make sure no ".." and "\\" is found in paths
 //! @todo	support for extra search paths ? ( cd path ? )
-//! @todo	support for base-mod
 //! @todo	a way to ensure same order of gpk files on client and server
-//! @todo	a way to find out which file would be opened (which gpk file and/or which searchpath)
 //! @todo	a way to get a list of all gpk files loaded
 //! @{
 
@@ -145,17 +143,45 @@ namespace og {
 	//! @{
 
 		// ==============================================================================
+		//! Prepare the filesystem before adding searchpaths and savepaths
+		// ==============================================================================
+		static void		Prepare( void );
+
+		// ==============================================================================
+		//! Add a search path
+		//!
+		//! @param	searchPath	The search path to add
+		// ==============================================================================
+		static void		AddSearchPath( const char *path );
+
+		// ==============================================================================
+		//! Add the last searchpath and make it the save path
+		//!
+		//! @param	savePath	The last search path and also the path where files will be saved
+		// ==============================================================================
+		static void		SetSavePath( const char *path );
+
+		// ==============================================================================
 		//! Initializes the filesystem
 		//!
 		//! @param	pakExtension	The extension of your zip files including the '.' ( for example ".gpk" )
-		//! @param	basePath		First searchpath, usually the working directory of the exe
-		//! @param	userPath		Second searchpath, and also the path where to store files in
-		//!							( for example a directory in the users home directory )
 		//! @param	baseDir			The name of the base resources folder ( for example "base" )
 		//!
 		//! @return	true if it succeeds, false if it fails
 		// ==============================================================================
-		static bool		Init( const char *pakExtension, const char *basePath, const char *userPath, const char *baseDir );
+		static bool		Init( const char *pakExtension, const char *baseDir );
+
+		// ==============================================================================
+		//! Initializes the filesystem with one call
+		//!
+		//! @param	pakExtension	The extension of your zip files including the '.' ( for example ".gpk" )
+		//! @param	baseDir			The name of the base resources folder ( for example "base" )
+		//! @param	searchPath		The first search path, usually the games working directory or simply "."
+		//! @param	savePath		The second search path and also the path where files will be saved, for the games working directory pass "."
+		//!
+		//! @return	true if it succeeds, false if it fails
+		// ==============================================================================
+		static bool		SimpleInit( const char *pakExtension, const char *baseDir, const char *searchPath, const char *savePath );
 
 		// ==============================================================================
 		//! Shuts down the filesystem and frees all resources.
@@ -176,11 +202,12 @@ namespace og {
 		// ==============================================================================
 		//! Set the active mod directory
 		//!
-		//! @param	dir	The mod directory, empty string if none
+		//! @param	modDir	The mod directory, empty string if none
+		//! @param	modDirBase	The mod directory to use as base, empty string if none
 		//!
 		//! @return	true if the mod directory exists, otherwise false
 		// ==============================================================================
-		static bool		ChangeMod( const char *dir );
+		static bool		ChangeMod( const char *modDir, const char *modDirBase );
 	//! @}
 
 	// Object Interface

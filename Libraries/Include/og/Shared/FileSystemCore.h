@@ -111,7 +111,7 @@ namespace og {
 		virtual File *	OpenRead( const char *filename, bool pure=true, bool buffered=false ) = 0;
 
 		// ==============================================================================
-		//! Open a file for writing ( in user path if pure is true )
+		//! Open a file for writing ( in save path if pure is true )
 		//!
 		//! @param	filename		The file path
 		//! @param	pure			Use internal file management
@@ -121,7 +121,7 @@ namespace og {
 		virtual File *	OpenWrite( const char *filename, bool pure=true ) = 0;
 
 		// ==============================================================================
-		//! Remove a file ( from user path if pure is true )
+		//! Remove a file ( from save path if pure is true )
 		//!
 		//! @param	filename		The file path
 		//! @param	pure			Use internal file management
@@ -151,13 +151,13 @@ namespace og {
 		virtual bool	FileExists( const char *filename, bool pure=true ) = 0;
 
 		// ==============================================================================
-		//! Find out if a given file exists in the user path ( for use before writing a file )
+		//! Find out if a given file exists in the save path ( for use before writing a file )
 		//!
 		//! @param	filename		The file path
 		//!
 		//! @return	true if it exists, otherwise false
 		// ==============================================================================
-		virtual bool	FileExistsInUserPath( const char *filename ) = 0;
+		virtual bool	FileExistsInSavePath( const char *filename ) = 0;
 
 		// ==============================================================================
 		//! Get the file modification time
