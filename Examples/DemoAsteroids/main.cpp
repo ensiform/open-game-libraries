@@ -397,6 +397,7 @@ bool ogDemoWindow::OnClose( bool forced ) {
 	if ( !forced )
 		return true;
 
+	bgLoader.Stop();
 	game.Shutdown();
 
 	ShutdownInput();
