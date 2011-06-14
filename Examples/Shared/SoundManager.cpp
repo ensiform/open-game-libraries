@@ -30,6 +30,11 @@ freely, subject to the following restrictions:
 #include "SoundManager.h"
 #include <og/FileSystem.h>
 
+/*
+================
+ogSoundManager::ogSoundManager
+================
+*/
 ogSoundManager::ogSoundManager() {
 	defaultSound.minDistance	= 0.0f;
 	defaultSound.maxDistance	= 9999.0f;
@@ -85,6 +90,60 @@ bool ogSoundManager::Init( const char *defaultFilename ) {
 
 /*
 ================
+ogSoundManager::InitReverbs
+
+Read in all reverb declarations
+================
+*/
+bool ogSoundManager::InitReverbs( void ) {
+	og::FileList *files = og::FS->GetFileList( "decls/reverbs", ".decl" );
+	if ( !files )
+		return false;
+
+	og::DeclType reverbPresets("reverbPreset");
+	og::DeclParser parser;
+	parser.AddDeclType( &reverbPresets );
+	do {
+		parser.LoadFile( files->GetName() );
+	} while ( files->GetNext() );
+
+	parser.SolveInheritance();
+	og::FS->FreeFileList( files );
+
+	int num = reverbPresets.declList.Num();
+	for( int i=0; i<num; i++ ) {
+		const og::Dict &from = reverbPresets.declList[i];
+		og::AudioEffectReverb &reverb = reverbs[ reverbPresets.declList.GetKey(i).c_str() ];
+
+		reverb.density				= from["density"];
+		reverb.diffusion			= from["diffusion"];
+		reverb.gain					= from["gain"];
+		reverb.gainHF				= from["gainHF"];
+		reverb.gainLF				= from["gainLF"];
+		reverb.decayTime			= from["decayTime"];
+		reverb.decayHFRatio			= from["decayHFRatio"];
+		reverb.decayLFRatio			= from["decayLFRatio"];
+		reverb.reflectionsGain		= from["reflectionsGain"];
+		reverb.reflectionsDelay		= from["reflectionsDelay"];
+		reverb.reflectionsPan		= from["reflectionsPan"];
+		reverb.lateReverbGain		= from["lateReverbGain"];
+		reverb.lateReverbDelay		= from["lateReverbDelay"];
+		reverb.lateReverbPan		= from["lateReverbPan"];
+		reverb.echoTime				= from["echoTime"];
+		reverb.echoDepth			= from["echoDepth"];
+		reverb.modulationTime		= from["modulationTime"];
+		reverb.modulationDepth		= from["modulationDepth"];
+		reverb.airAbsorptionGainHF	= from["airAbsorptionGainHF"];
+		reverb.referenceHF			= from["referenceHF"];
+		reverb.referenceLF			= from["referenceLF"];
+		reverb.roomRolloffFactor	= from["roomRolloffFactor"];
+		reverb.decayHFLimit			= from["decayHFLimit"];
+	}
+	return true;
+}
+
+/*
+================
 ogSoundManager::Clear
 ================
 */
@@ -106,7 +165,6 @@ const og::Sound *ogSoundManager::Find( const char *name ) const {
 	}
 	return &sounds[index];
 }
-
 
 /*
 ==============================================================================

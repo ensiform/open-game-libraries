@@ -44,12 +44,20 @@ public:
 	ogSoundManager();
 
 	virtual bool			Init( const char *defaultFilename );
+	virtual bool			InitReverbs( void );
 	virtual void			Clear( void );
 	const og::Sound *		Find( const char *name ) const;
+
+	// Reverbs
+	const og::AudioEffectReverb *FindReverb( const char *name ) { return &reverbs[name]; }
+	const og::AudioEffectReverb *GetReverb( int index ) { return &reverbs[index]; }
+	int						GetNumReverbs( void ) const { return reverbs.Num(); }
+	const og::String &		GetReverbName( int index ) const { return reverbs.GetKey(index); }
 
 private:
 	og::DictEx<og::Sound>	sounds;
 	og::Sound				defaultSound;
+	og::DictEx<og::AudioEffectReverb> reverbs;
 };
 
 /*

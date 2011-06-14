@@ -53,11 +53,10 @@ ogDemoWindow::ogDemoWindow
 ================
 */
 ogDemoWindow::ogDemoWindow() {
-	helpText[0] = NULL;
-	helpText[1] = NULL;
 	window = NULL;
 	mouseDown = false;
 	manualPosition = false;
+	showHelp = false;
 	soundPos = windowCenter;
 	soundPosOld = soundPos;
 }
@@ -97,6 +96,10 @@ bool ogDemoWindow::SetupWindow( int x, int y, byte multiSamples, const char *tit
 	return true;
 }
 
+int currentReverb = 0;
+og::AudioEffect *effect = NULL;
+og::Angles viewAngles(0, -90, 0);
+
 /*
 ================
 ogDemoWindow::Init
@@ -116,25 +119,37 @@ bool ogDemoWindow::Init( void ) {
 
 	if ( !og::AudioSystem::Init( og::FS, "sounds/default.wav", deviceList.IsEmpty() ? NULL : deviceList[0].c_str() ) )
 		return false;
-	if ( !soundManager.Init( "sounds/default.wav" ) )
+	if ( !soundManager.Init( "sounds/default.wav" ) || !soundManager.InitReverbs() )
 		return false;
 	if ( !og::Image::Init( og::FS, "gfx/default.tga", window->GetProcAddress("glCompressedTexImage2DARB") ) )
 		return false;
 	if ( !og::Font::Init( og::FS, "Arial" ) )
 		return false;
 
-	og::Vec3 forward(0, -1, 0);
+	effect = og::AS->CreateEffect();
+	effect->Load( soundManager.GetReverb(currentReverb) );
+
+	viewAngles = og::Vec3(0, -1, 0).ToAngles();
+	og::Vec3 forward = viewAngles.ToForward();
 	og::Vec3 up(0, 0, -1);
 	og::AS->SetListener( windowCenter, forward, up, og::c_vec3::origin );
+	og::AS->SetUnitLength(0.125f); // just some wild number: 8 units per meter
 
 	audioEmitter = og::AS->CreateEmitter( 1 );
+	audioEmitter->SetEffect( effect );
 	audioEmitter->Play( 0, soundManager.Find( "helicopter" ) );
 	UpdateSound();
 
-	helpText[0] = new ogFontText(18, og::Font::LEFT);
-	helpText[0]->value = "Right Mouse: Toggle mode ( auto )";
-	helpText[1] = new ogFontText(18, og::Font::LEFT);
-	helpText[1]->value = "Left Mouse: Move sound position";
+	helpLines.AddLine("^3H^0: Show Help");
+	helpLines.AddLine("^3Right Mouse^0: Toggle position mode");
+	helpLines.AddLine("^3Left Mouse^0: Move sound (manual mode)");
+	helpLines.AddLine("^3Middle Mouse^0: Look at");
+	helpLines.AddLine("^3E^0: Toggle reverb");
+	helpLines.AddLine("^3+^0: Next reverb");
+	helpLines.AddLine("^3-^0: Previous reverb");
+
+	infoLines.AddLine("Position mode: ^2Auto");
+	infoLines.AddLine( og::Format("Reverb (^3$*^0/^3$*^0): ^2$*") << (currentReverb+1) << soundManager.GetNumReverbs() << soundManager.GetReverbName( currentReverb ) );
 	return true;
 }
 
@@ -155,17 +170,17 @@ void ogDemoWindow::UpdateSound( void ) {
 	}
 	float timeScale = static_cast<float>(frameTime)*0.001f;
 	if ( !manualPosition ) {
-		soundAngle.yaw += 80.0f * timeScale;
+		soundAngle.yaw += 30.0f * timeScale;
 		soundPos = windowCenter + soundAngle.ToForward() * 80.0f;
 	} else if ( mouseDown ) {
 		int x, y, wx, wy;
 		og::Gloot::GetMousePos( &x, &y );
 		window->GetPos(&wx, &wy);
-		soundPos.Set( x-wx, y-wy, 0.0f );
+		soundPos.Set( static_cast<float>(x-wx), static_cast<float>(y-wy), 0.0f );
 	}
 	audioEmitter->SetPosition( soundPos );
 	if ( frameTime > 0 )
-		audioEmitter->SetVelocity( (soundPos-soundPosOld)/frameTime );
+		audioEmitter->SetVelocity( (soundPos-soundPosOld)/static_cast<float>(frameTime) );
 
 	soundPosOld = soundPos;
 }
@@ -196,9 +211,27 @@ void ogDemoWindow::Draw( void ) {
 
 	UpdateSound();
 
+	// the view direction
+	viewAngles.yaw = viewAngles.yaw - 45.0f;
+	og::Vec3 end1 = windowCenter + viewAngles.ToForward() * 50.0f;
+	viewAngles.yaw = viewAngles.yaw + 90.0f;
+	og::Vec3 end2 = windowCenter + viewAngles.ToForward() * 50.0f;
+	viewAngles.yaw = viewAngles.yaw - 45.0f;
+	glLineWidth( 3.0f );
+	glColor3f( 0.0f, 0.0f, 1.0f );
+	glEnable(GL_LINE_SMOOTH);
+	glBegin( GL_LINES );
+		glVertex2f( windowCenter.x, windowCenter.y );
+		glVertex2f( end1.x, end1.y );
+		glVertex2f( windowCenter.x, windowCenter.y );
+		glVertex2f( end2.x, end2.y );
+	glEnd();
+
+	// the center and sound position
 	glPointSize(10.0f);
 	glEnable(GL_POINT_SMOOTH);
 	glBegin( GL_POINTS );
+		glColor3f( 1.0f, 1.0f, 1.0f );
 		glVertex2f( windowCenter.x, windowCenter.y );
 		glColor3f( 0.5f, 0.5f, 0.0f );
 		glVertex2f( soundPos.x, soundPos.y );
@@ -207,12 +240,52 @@ void ogDemoWindow::Draw( void ) {
 	glEnable( GL_BLEND );
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 	glEnable( GL_TEXTURE_2D );
-	helpText[0]->Draw( 5.0f, 5.0f );
-	helpText[1]->Draw( 5.0f, 25.0f );
+
+	helpLines.Draw( 5, 5, false, showHelp ? -1 : 1 );
+	infoLines.Draw( 5, WINDOW_SIZE-25, true, -1 );
+
 	glDisable( GL_TEXTURE_2D );
 
 	// Swap buffers
 	window->SwapBuffers();
+}
+
+/*
+================
+ogDemoWindow::OnCharEvent
+================
+*/
+#include <ctype.h>
+void ogDemoWindow::OnCharEvent( int ch ) {
+	static bool reverbEnabled = true;
+	switch( tolower(ch) ) {
+		case 'e':
+			reverbEnabled = !reverbEnabled;
+			audioEmitter->SetEffect( reverbEnabled ? effect : NULL  );
+			if ( reverbEnabled )
+				infoLines.SetLine( 1, og::Format("Reverb (^3$*^0/^3$*^0): ^2$*") << (currentReverb+1) << soundManager.GetNumReverbs() << soundManager.GetReverbName( currentReverb ) );
+			else
+				infoLines.SetLine( 1, "Reverb: ^2Disabled" );
+			break;
+		case '+':
+			currentReverb++;
+			if ( currentReverb >= soundManager.GetNumReverbs() )
+				currentReverb = 0;
+			effect->Load( soundManager.GetReverb( currentReverb ) );
+			infoLines.SetLine( 1, og::Format("Reverb (^3$*^0/^3$*^0): ^2$*") << (currentReverb+1) << soundManager.GetNumReverbs() << soundManager.GetReverbName( currentReverb ) );
+			break;
+		case '-':
+			currentReverb--;
+			if ( currentReverb < 0 )
+				currentReverb = soundManager.GetNumReverbs()-1;
+			effect->Load( soundManager.GetReverb( currentReverb ) );
+			infoLines.SetLine( 1, og::Format("Reverb (^3$*^0/^3$*^0): ^2$*") << (currentReverb+1) << soundManager.GetNumReverbs() << soundManager.GetReverbName( currentReverb ) );
+			break;
+		case 'h':
+			showHelp = !showHelp;
+			helpLines.SetLine( 0, showHelp ? "^3H^0: Hide Help" : "^3H^0: Show Help" );
+			break;
+	}
 }
 
 /*
@@ -225,9 +298,20 @@ void ogDemoWindow::OnMouseButton( int button, bool down ) {
 		mouseDown = down;
 	else if ( button == og::Mouse::ButtonRight && down ) {
 		manualPosition = !manualPosition;
-		helpText[0]->value = og::Format( "Right Mouse: Toggle mode ( $* )" ) << (manualPosition ? "manual" : "auto");
+		infoLines.SetLine( 0, og::Format( "Position mode: ^2$*" ) << (manualPosition ? "Manual" : "Auto") );
+
 		if ( frameTimer.IsActive() )
 			frameTimer.Stop();
+	}
+	else if ( button == og::Mouse::ButtonMiddle ) {
+		int x, y, wx, wy;
+		og::Gloot::GetMousePos( &x, &y );
+		window->GetPos(&wx, &wy);
+		og::Vec3 dir = og::Vec3( static_cast<float>(x-wx), static_cast<float>(y-wy), 0 ) - windowCenter;
+		viewAngles = dir.ToAngles();
+		og::Vec3 forward = viewAngles.ToForward();
+		og::Vec3 up(0, 0, -1);
+		og::AS->SetListener( windowCenter, forward, up, og::c_vec3::origin );
 	}
 }
 
@@ -239,9 +323,6 @@ ogDemoWindow::OnClose
 bool ogDemoWindow::OnClose( bool forced ) {
 	if ( !forced )
 		return true;
-
-	og::SafeDelete( helpText[0] );
-	og::SafeDelete( helpText[1] );
 
 	og::Font::Shutdown();
 	og::Image::Shutdown();

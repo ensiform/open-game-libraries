@@ -37,6 +37,52 @@ freely, subject to the following restrictions:
 /*
 ==============================================================================
 
+  TextDrawer ( helps drawing lines )
+
+==============================================================================
+*/
+class TextDrawer {
+public:
+	TextDrawer() {}
+	~TextDrawer() {
+		for( int i=0; i<lines.Num(); i++ )
+			delete lines[i];
+	}
+	void	AddLine( const char *text )  {
+		ogFontText *item = new ogFontText(18, og::Font::LEFT);
+		item->value = text;
+		lines.Append(item);
+	}
+	void	SetLine( int index, const char *text ) {
+		if ( index < lines.Num() && index >= 0 )
+			lines[index]->value = text;
+	}
+	void	Draw( int x, int y, bool upwards, int maxLines ) {
+		int num = lines.Num();
+		if ( num == 0 )
+			return;
+		if ( maxLines > 0 && num > maxLines )
+			num = maxLines;
+
+		float step = 20.0f;
+		float px = static_cast<float>(x);
+		float py = static_cast<float>(y);
+		if ( upwards )
+			py -= (num-1) * step;
+
+		for( int i=0; i<num; i++ ) {
+			lines[i]->Draw( px, py );
+			py += step;
+		}
+	}
+
+private:
+	og::List<ogFontText	*> lines;
+};
+
+/*
+==============================================================================
+
   ogDemoWindow
 
 ==============================================================================
@@ -51,6 +97,7 @@ public:
 	void	Draw( void );
 
 protected:
+	void	OnCharEvent( int ch );
 	void	OnMouseButton( int button, bool down );
 	bool	OnClose( bool forced );
 
@@ -61,9 +108,11 @@ protected:
 	og::Vec3	soundPosOld;
 	bool		mouseDown;
 	bool		manualPosition;
+	bool		showHelp;
 	og::Angles	soundAngle;
 	ogSoundManager soundManager;
 	og::AudioEmitter *audioEmitter;
 	og::Timer	frameTimer;
-	ogFontText	*helpText[2];
+	TextDrawer	helpLines;
+	TextDrawer	infoLines;
 };
