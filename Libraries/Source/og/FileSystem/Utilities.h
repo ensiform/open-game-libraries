@@ -35,7 +35,9 @@ namespace og {
 	FILE *fopenwin32( const char *filename, const char *mode );
 	#define fopen fopenwin32
 	int removewin32( const char *filename );
+	int renamewin32( const char *from, const char *to );
 	#define remove removewin32
+	#define rename renamewin32
 #endif
 
 	/*
@@ -49,17 +51,12 @@ namespace og {
 	public:
 		// ---------------------- Public FileList Interface -------------------
 
-		bool		GetNext( void );
-		void		Reset( void ) { position = 0; }
-		const char *GetName( void ) { return files[position].c_str(); }
+		const char *GetName( int index ) { return files[index].c_str(); }
 		int			Num( void ) { return files.Num(); }
 
 		// ---------------------- Internal FileListEx Members -------------------
 
 	public:
-		FileListEx() { position = 0; }
-
-		uInt			position;
 		StringList		files;
 	};
 	

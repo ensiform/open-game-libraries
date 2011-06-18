@@ -47,23 +47,13 @@ namespace og {
 	class FileList {
 	public:
 		// ==============================================================================
-		//! Get the next file
+		//! Get the filename of the specified index
 		//!
-		//! @return	false if there are no more files, otherwise true
-		// ==============================================================================
-		virtual bool		GetNext( void ) = 0;
-
-		// ==============================================================================
-		//! Resets the file index.
-		// ==============================================================================
-		virtual void		Reset( void ) = 0;
-
-		// ==============================================================================
-		//! Get the filename of the current index
+		//! @param index The file index
 		//!
 		//! @return	The filename
 		// ==============================================================================
-		virtual const char *GetName( void ) = 0;
+		virtual const char *GetName( int index ) = 0;
 
 		// ==============================================================================
 		//! Get Number of files
@@ -121,6 +111,16 @@ namespace og {
 		virtual File *	OpenWrite( const char *filename, bool pure=true ) = 0;
 
 		// ==============================================================================
+		//! Open a file for appending ( in save path if pure is true )
+		//!
+		//! @param	filename		The file path
+		//! @param	pure			Use internal file management
+		//!
+		//! @return	Pointer to a new File object on success, otherwise NULL
+		// ==============================================================================
+		virtual File *	OpenAppend( const char *filename, bool pure=true ) = 0;
+
+		// ==============================================================================
 		//! Remove a file ( from save path if pure is true )
 		//!
 		//! @param	filename		The file path
@@ -128,7 +128,18 @@ namespace og {
 		//!
 		//! @return	true on success, otherwise false
 		// ==============================================================================
-		virtual bool	Remove( const char *filename, bool pure ) = 0;
+		virtual bool	Remove( const char *filename, bool pure=true ) = 0;
+
+		// ==============================================================================
+		//! Rename a file ( in save path if pure is true )
+		//!
+		//! @param	from			The old file path
+		//! @param	to				The new file path
+		//! @param	pure			Use internal file management
+		//!
+		//! @return	true on success, otherwise false
+		// ==============================================================================
+		virtual bool	Rename( const char *from, const char *to, bool pure=true ) = 0;
 
 		// ==============================================================================
 		//! Get the size of a given file
@@ -168,6 +179,20 @@ namespace og {
 		//! @return	The time in seconds (since 1.1.1970), when the file has been modified last
 		// ==============================================================================
 		virtual time_t	FileTime( const char *filename, bool pure=true ) = 0;
+
+		// ==============================================================================
+		//! Load the file into a buffer
+		//!
+		//! @param	path		The file path
+		//! @param	buffer		The buffer to write
+		//! @param	size		The size of the buffer
+		//! @param	pure		Use internal file management
+		//!
+		//! @return	true on success, otherwise false
+		//!
+		//!	@note	You need to free it when you're done.
+		// ==============================================================================
+		virtual bool	StoreFile( const char *path, byte *buffer, int size, bool pure=true ) = 0;
 
 		// ==============================================================================
 		//! Load the file into a buffer

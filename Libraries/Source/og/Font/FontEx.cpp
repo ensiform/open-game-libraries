@@ -562,10 +562,10 @@ bool FontFamily::Open( const char *name ) {
 	if ( !files )
 		return false;
 
-	do {
-		if ( !fontFiles.Alloc().Open( files->GetName() ) )
+	for( int i=0; i<files->Num(); i++ ) {
+		if ( !fontFiles.Alloc().Open( files->GetName(i) ) )
 			fontFiles.Remove( fontFiles.Num()-1 );
-	} while ( files->GetNext() );
+	};
 
 	fontFS->FreeFileList( files );
 

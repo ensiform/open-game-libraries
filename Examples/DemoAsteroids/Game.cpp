@@ -117,9 +117,8 @@ bool ogGame::Init( void ) {
 	if ( files ) {
 		og::DeclParser parser;
 		parser.AddDeclType( &entityDecls );
-		do {
-			parser.LoadFile( files->GetName() );
-		} while ( files->GetNext() );
+		for( int i=0; i<files->Num(); i++ )
+			parser.LoadFile( files->GetName(i) );
 
 		parser.SolveInheritance();
 		og::FS->FreeFileList( files );

@@ -134,6 +134,13 @@ namespace og {
 		virtual void	Flush( void ) = 0;
 
 		// ==============================================================================
+		//! Do automatic flushing after each write
+		//!
+		//!  @param enable true to enable auto flush
+		// ==============================================================================
+		virtual void	SetAutoFlush( bool enable ) = 0;
+
+		// ==============================================================================
 		//! Check if we are at the end of the file
 		//!
 		//! @return	true if it at end of file, otherwise false
@@ -351,6 +358,15 @@ namespace og {
 		//! @exception FileReadWriteError	Thrown when writing failed
 		// ==============================================================================
 		void			WriteBool( bool value );
+
+		// ==============================================================================
+		//! Write a (null-terminated) c-string
+		//!
+		//! @param	value	The c-string
+		//!
+		//! @exception FileReadWriteError	Thrown when writing failed
+		// ==============================================================================
+		void			WriteCStr( const char *value );
 
 		// ==============================================================================
 		//! Get the filename

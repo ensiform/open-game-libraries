@@ -130,10 +130,10 @@ OG_INLINE void ConArgCompleteFile::Complete( const CmdArgs &args, argCompletionC
 		return;
 
 	Format param( "$* $*" );
-	do {
-		callback( Format( "$* $*" ) << args.Argv( 0 ) << files->GetName() );
+	for( int i=0; i<files->Num(); i++ ) {
+		callback( Format( "$* $*" ) << args.Argv( 0 ) << files->GetName(i) );
 		param.Reset();
-	} while ( files->GetNext() );
+	}
 
 	FS->FreeFileList( files );
 }

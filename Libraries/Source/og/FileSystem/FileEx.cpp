@@ -78,6 +78,16 @@ void FileLocal::Seek( long offset, int origin ) {
 
 /*
 ================
+FileLocal::SetAutoFlush
+================
+*/
+void FileLocal::SetAutoFlush( bool enable ) {
+	autoFlush = enable;
+	//fixme: setvbuf instead ?
+}
+
+/*
+================
 FileLocal::Flush
 ================
 */
@@ -115,6 +125,8 @@ void FileLocal::Write( const void *buffer, uInt len ) {
 
 	if ( fwrite( buffer, 1, len, file ) != len )
 		throw FileReadWriteError(FileReadWriteError::WRITE);
+	if( autoFlush )
+		Flush();
 }
 
 

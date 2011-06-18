@@ -204,26 +204,6 @@ bool LocalFileSearch( const char *baseDir, const char *dir, const char *extensio
 #endif
 }
 
-/*
-==============================================================================
-
-  FileListEx
-
-==============================================================================
-*/
-/*
-================
-FileListEx::GetNext
-================
-*/
-bool FileListEx::GetNext( void ) {
-	if ( (position+1) < files.Num() ) {
-		position++;
-		return true;
-	}
-	return false;
-}
-
 // Win32 needs help to open utf-8 filenames.
 #if OG_WIN32
 /*
@@ -246,6 +226,12 @@ int removewin32( const char *filename ) {
 	DynBuffer<wchar_t> strFilename;
 	StringToWide( filename, strFilename );
 	return DeleteFileW( strFilename.data ) ? 0 : -1;
+}
+int renamewin32( const char *from, const char *to ) {
+	DynBuffer<wchar_t> strFrom, strTo;
+	StringToWide( from, strFrom );
+	StringToWide( to, strTo );
+	return _wrename( strFrom.data, strTo.data );
 }
 #endif
 

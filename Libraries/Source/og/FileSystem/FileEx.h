@@ -90,6 +90,7 @@ namespace og {
 		long	Tell( void ) { return ftell( file ); }		// Returns read/write position
 		void	Rewind( void ) { rewind( file ); }			// Rewind to the beginning
 		void	Flush( void );								// Buffered write data will be written to the file.
+		void	SetAutoFlush( bool enable );				// Auto flush after each write
 		bool	Eof( void ) { return ftell( file )>=size; }	// Tests for end-of-file
 
 		void	Read( void *buffer, uInt len );				// Read data
@@ -98,6 +99,7 @@ namespace og {
 		// ---------------------- Internal FileLocal Members -------------------
 
 	public:
+		FileLocal() { autoFlush = false; }
 		~FileLocal() { fclose( file ); }
 
 		static FileLocal *Create( FILE *f );
@@ -105,6 +107,7 @@ namespace og {
 	protected:
 		friend class FileSystemEx;
 		FILE*	file;
+		bool autoFlush;
 	};
 
 	/*
@@ -123,6 +126,7 @@ namespace og {
 		long	Tell( void ) { return position; }			// Returns read/write position
 		void	Rewind( void ) { position = 0; }			// Rewind to the beginning
 		void	Flush( void ) { OG_DEBUG_BREAK(); }			// Buffered write data will be written to the file.
+		void	SetAutoFlush( bool enable ) { OG_DEBUG_BREAK(); }// Auto flush after each write
 		bool	Eof( void ) { return position >= size; }	// Tests for end-of-file
 
 		void	Read( void *buffer, uInt len );				// Read data
@@ -158,6 +162,7 @@ namespace og {
 		long	Tell( void ) { return static_cast<long>(stream.total_out); }	// Returns read/write position
 		void	Rewind( void );										// Rewind to the beginning
 		void	Flush( void ) { OG_DEBUG_BREAK(); }					// Buffered write data will be written to the file.
+		void	SetAutoFlush( bool enable ) { OG_DEBUG_BREAK(); }// Auto flush after each write
 		bool	Eof( void ) { return atEOF; }						// Tests for end-of-file
 
 		void	Read( void *buffer, uInt len );						// Read data

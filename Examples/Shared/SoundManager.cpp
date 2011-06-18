@@ -62,9 +62,8 @@ bool ogSoundManager::Init( const char *defaultFilename ) {
 	og::DeclType soundDecls("soundDecl");
 	og::DeclParser parser;
 	parser.AddDeclType( &soundDecls );
-	do {
-		parser.LoadFile( files->GetName() );
-	} while ( files->GetNext() );
+	for( int i=0; i<files->Num(); i++ )
+		parser.LoadFile( files->GetName(i) );
 
 	parser.SolveInheritance();
 	og::FS->FreeFileList( files );
@@ -103,9 +102,8 @@ bool ogSoundManager::InitReverbs( void ) {
 	og::DeclType reverbPresets("reverbPreset");
 	og::DeclParser parser;
 	parser.AddDeclType( &reverbPresets );
-	do {
-		parser.LoadFile( files->GetName() );
-	} while ( files->GetNext() );
+	for( int i=0; i<files->Num(); i++ )
+		parser.LoadFile( files->GetName(i) );
 
 	parser.SolveInheritance();
 	og::FS->FreeFileList( files );

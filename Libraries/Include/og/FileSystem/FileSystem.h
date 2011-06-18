@@ -40,7 +40,6 @@ namespace og {
 //! @todo	Ensure all filenames are always stored with forward slashes
 //! @todo	filelist by filter string
 //! @todo	make sure no ".." and "\\" is found in paths
-//! @todo	support for extra search paths ? ( cd path ? )
 //! @todo	a way to ensure same order of gpk files on client and server
 //! @todo	a way to get a list of all gpk files loaded
 //! @{
@@ -208,6 +207,15 @@ namespace og {
 		//! @return	true if the mod directory exists, otherwise false
 		// ==============================================================================
 		static bool		ChangeMod( const char *modDir, const char *modDirBase );
+
+		// ==============================================================================
+		//! Create a path, if it doesn't exist already
+		//!
+		//! @param	path		Path
+		//!
+		//! @return	true if it succeeds, false if it fails
+		// ==============================================================================
+		static bool	MakePath( const char *path );
 	//! @}
 
 	// Object Interface
@@ -251,6 +259,33 @@ namespace og {
 	//!			but needs to be created (and assigned the value of the original) for other modules that need access to it.
 	// ==============================================================================
 	extern FileSystem *FS;
+
+	// ==============================================================================
+	//! Automatically free a file when the object runs out of scope
+	//!
+	//! @note	og::ThreadSafetyClass = og::TSC_MULTIPLE
+	// ==============================================================================
+	class AutoFreeFile {
+	private:
+		byte *buffer;
+	public:
+		// ==============================================================================
+		//! Constructor
+		//!
+		//! @param buffer	The buffer to free
+		// ==============================================================================
+		OG_INLINE AutoFreeFile( byte *buffer ) {
+			this->buffer = buffer;
+		}
+
+		// ==============================================================================
+		//! Destructor
+		// ==============================================================================
+		OG_INLINE ~AutoFreeFile() {
+			if( buffer )
+				FS->FreeFile(buffer);
+		}
+	};
 
 //! @}
 

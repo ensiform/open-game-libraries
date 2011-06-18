@@ -373,12 +373,12 @@ OG_INLINE void String::operator+=( const String &str ) {
 String::operator+
 ================
 */
-OG_INLINE String String::operator+( const String &str ) {
+OG_INLINE String String::operator+( const String &str ) const {
 	String ret(*this);
 	ret += str;
 	return ret;
 }
-OG_INLINE String String::operator+( const char *text ) {
+OG_INLINE String String::operator+( const char *text ) const {
 	String ret(*this);
 	ret += text;
 	return ret;

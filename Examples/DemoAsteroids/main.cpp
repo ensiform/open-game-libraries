@@ -119,10 +119,8 @@ bool ogDemoWindow::Init( void ) {
 	for( int i=0; extensions[i] != NULL; i++ ) {
 		og::FileList *files = og::FS->GetFileList("", extensions[i]);
 		if ( files ) {
-			do {
-				bgLoader.AddTask( og::Image::PreloadImage( files->GetName() ) );
-			} while ( files->GetNext() );
-
+			for( int j=0; j<files->Num(); j++ )
+				bgLoader.AddTask( og::Image::PreloadImage( files->GetName(j) ) );
 			og::FS->FreeFileList( files );
 		}
 	}

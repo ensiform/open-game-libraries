@@ -905,12 +905,12 @@ namespace og {
 		//!
 		//! @return	Both strings concatenated
 		// ==============================================================================
-		String			operator+( const String &str );
+		String			operator+( const String &str ) const;
 
 		// ==============================================================================
 		//! @overload
 		// ==============================================================================
-		String			operator+( const char *text );
+		String			operator+( const char *text ) const;
 
 		// ==============================================================================
 		//! @overload

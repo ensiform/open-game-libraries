@@ -297,6 +297,16 @@ void File::WriteBool( bool value ) {
 }
 
 /*
+================
+File::WriteCStr
+================
+*/
+void File::WriteCStr( const char *value ) {
+	OG_ASSERT(value != NULL);
+	Write( value, strlen(value) );
+}
+
+/*
 ==============================================================================
 
   FileReadWriteError

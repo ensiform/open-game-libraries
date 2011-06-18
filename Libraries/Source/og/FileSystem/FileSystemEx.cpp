@@ -167,7 +167,7 @@ FileSystem::AddSearchPath
 ================
 */
 void FileSystem::AddSearchPath( const char *path ) {
-	if ( fileSys != NULL )
+	if ( fileSys == NULL )
 		return; //! @todo error
 	fileSys->AddSearchPath(path);
 }
@@ -178,7 +178,7 @@ FileSystem::SetSavePath
 ================
 */
 void FileSystem::SetSavePath( const char *path ) {
-	if ( fileSys != NULL )
+	if ( fileSys == NULL )
 		return; //! @todo error
 	fileSys->SetSavePath(path);
 }
@@ -252,6 +252,76 @@ bool FileSystem::ChangeMod( const char *modDir, const char *modDirBase ) {
 	return fileSys->ChangeMod( modDir, modDirBase );
 }
 
+
+/*
+================
+FS_IsDir
+================
+*/
+bool FS_IsDir( const char *path ) {
+#if OG_WIN32
+	DynBuffer<wchar_t> strPath;
+	StringToWide( path, strPath );
+	struct _stat stat_Info;
+	if ( _wstat ( strPath.data, &stat_Info ) == -1 )
+		return false;
+	return (stat_Info.st_mode & S_IFDIR) != 0;
+#else
+	struct stat stat_Info;
+	if ( stat ( path, &stat_Info ) == -1 )
+		return false;
+	return (stat_Info.st_mode & S_IFDIR) != 0;
+#endif
+}
+
+/*
+================
+FS_MakeDir
+================
+*/
+bool FS_MakeDir( const char *path ) {
+	if ( FS_IsDir( path ) )
+		return true;
+#if OG_WIN32
+	DynBuffer<wchar_t> strPath;
+	StringToWide( path, strPath );
+	return _wmkdir( strPath.data ) == 0;
+#else
+	return mkdir( path, 0777 ) == 0;
+#endif
+}
+
+/*
+================
+FileSystem::MakePath
+================
+*/
+bool FileSystem::MakePath( const char *path ) {
+	int len = String::ByteLength(path);
+	DynBuffer<char> newPath(len+1);
+
+	for( int i=0; i<len; i++ ) {
+		if ( path[i] == '/' || path[i] == '\\' ) {
+			newPath.data[i] = '\0';
+			// Ignore root
+#if OG_WIN32
+			if ( i > 2  || (i == 2 && newPath.data[1] != ':') ) {
+#elif OG_LINUX
+			if ( i != 0 ) {
+#elif OG_MACOS_X
+	#warning "Need MacOS here FIXME"
+#endif
+				if ( !FS_MakeDir( newPath.data ) ) {
+					User::Error( ERR_FS_MAKEPATH, "Can't create path", path );
+					return false;
+				}
+			}
+		}
+		newPath.data[i] = path[i];
+	}
+	return true;
+}
+
 /*
 ==============================================================================
 
@@ -277,6 +347,7 @@ FileSystemEx::Init
 void FileSystemEx::Init( const char *_pakExtension, const char *_baseDir ) {
 	pakExtension	= _pakExtension;
 	baseDir			= _baseDir;
+	modDir			= baseDir;
 }
 
 /*
@@ -351,75 +422,15 @@ void FileSystemEx::SetPureMode( bool enable ) {
 
 /*
 ================
-FileSystemEx::IsDir
-================
-*/
-bool FileSystemEx::IsDir( const char *path ) {
-#if OG_WIN32
-	DynBuffer<wchar_t> strPath;
-	StringToWide( path, strPath );
-	struct _stat stat_Info;
-	if ( _wstat ( strPath.data, &stat_Info ) == -1 )
-		return false;
-	return (stat_Info.st_mode & S_IFDIR) != 0;
-#else
-	struct stat stat_Info;
-	if ( stat ( path, &stat_Info ) == -1 )
-		return false;
-	return (stat_Info.st_mode & S_IFDIR) != 0;
-#endif
-}
-
-/*
-================
-FileSystemEx::MakeDir
-================
-*/
-bool FileSystemEx::MakeDir( const char *path ) {
-	if ( IsDir( path ) )
-		return true;
-#if OG_WIN32
-	DynBuffer<wchar_t> strPath;
-	StringToWide( path, strPath );
-	return _wmkdir( strPath.data ) == 0;
-#else
-	return mkdir( path, 0777 ) == 0;
-#endif
-}
-
-/*
-================
 FileSystemEx::MakePath
 ================
 */
 bool FileSystemEx::MakePath( const char *path, bool pure ) {
 	if ( pure ) {
 		SharedLock lock(sharedMutex);
-		return MakePath( Format("$*/$*/$*" ) << savePath << modDir << path, false );
+		return FileSystem::MakePath( Format("$*/$*/$*" ) << savePath << modDir << path );
 	}
-	int len = String::ByteLength(path);
-	DynBuffer<char> newPath(len+1);
-
-	for( int i=0; i<len; i++ ) {
-		if ( path[i] == '/' || path[i] == '\\' ) {
-			newPath.data[i] = '\0';
-			// Ignore root
-#if OG_WIN32
-			if ( i > 2  || (i == 2 && newPath.data[1] != ':') ) {
-#elif OG_LINUX
-			if ( i != 0 ) {
-#elif OG_MACOS_X
-	#warning "Need MacOS here FIXME"
-#endif
-				if ( !MakeDir( newPath.data ) ) {
-					User::Error( ERR_FS_MAKEPATH, "Can't create path", path );
-					return false;
-				}
-			}
-		}
-		newPath.data[i] = path[i];
-	}
-	return true;
+	return FileSystem::MakePath(path);
 }
 
 /*
@@ -709,18 +720,75 @@ File *FileSystemEx::OpenWrite( const char *filename, bool pure ) {
 
 /*
 ===========
+FileSystemEx::OpenWrite
+===========
+*/
+File *FileSystemEx::OpenAppend( const char *filename, bool pure ) {
+	if ( pure ) {
+		SharedLock lock(sharedMutex);
+		return OpenAppend( Format( "$*/$*/$*" ) << savePath << modDir << filename, false );
+	}
+	time_t filetime = FileTime( filename, false );
+
+	// If the path doesn't exist and can not be created, fail.
+	if ( !MakePath( filename, false ) )
+		return NULL;
+
+	// Try to open it.
+	FILE *file = fopen( filename, "ab" );
+	if ( !file ) {
+		User::Error( ERR_FS_FILE_OPENWRITE, "Can't open file for appending", filename );
+		return NULL;
+	}
+
+	FileLocal *fileEx = FileLocal::Create( file );
+	if ( fileEx == NULL )
+		return NULL;
+	fileEx->writeMode = true;
+	fileEx->size = 0;
+	fileEx->time = filetime;
+	fileEx->fullpath = filename;
+	fileEx->fullpath.ToForwardSlashes();
+	int i = fileEx->fullpath.ReverseFind("/");
+	fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i+1);
+
+	static_cast<FileSystemEx *>(FS)->AddFileEvent( new FileTrackEvent( fileEx, true ) );
+
+	// Return the filehandle
+	return fileEx;
+}
+
+/*
+===========
 FileSystemEx::Remove
 ===========
 */
 bool FileSystemEx::Remove( const char *filename, bool pure ) {
-	SharedLock lock(sharedMutex);
-	String filePath;
 	if ( pure ) {
-		filePath = Format( "$*/$*/$*" ) << savePath << modDir << filename;
+		SharedLock lock(sharedMutex);
+		return Remove(Format( "$*/$*/$*" ) << savePath << modDir << filename, false);
 	}
-	if( remove( filePath.c_str() ) != 0 ) {
+	if( remove( filename ) != 0 ) {
 		// Fixme: better error id
-		User::Error( ERR_FS_FILE_OPENWRITE, "Can't remove file", filePath.c_str() );
+		User::Error( ERR_FS_FILE_OPENWRITE, "Can't remove file", filename );
+		return false;
+	}
+	return true;
+}
+
+/*
+===========
+FileSystemEx::Rename
+===========
+*/
+bool FileSystemEx::Rename( const char *from, const char *to, bool pure ) {
+	if ( pure ) {
+		SharedLock lock(sharedMutex);
+		return Rename(Format( "$*/$*/$*" ) << savePath << modDir << from, Format( "$*/$*/$*" ) << savePath << modDir << to, false);
+	}
+	if( rename( from, to ) != 0 ) {
+		// Fixme: better error id
+		User::Error( ERR_FS_FILE_OPENWRITE, Format("Can't rename file to $*") << to, from );
 		return false;
 	}
 	return true;
@@ -807,6 +875,35 @@ time_t FileSystemEx::FileTime( const char *filename, bool pure ) {
 		return 0;
 	return fileStat.st_mtime;
 #endif
+}
+
+/*
+============
+FileSystemEx::StoreFile
+
+Will store the whole buffer into a file
+============
+*/
+bool FileSystemEx::StoreFile( const char *path, byte *buffer, int size, bool pure ) {
+	OG_ASSERT( buffer != NULL && size > 0 );
+
+	// Open the file
+	File *file = OpenWrite( path, pure );
+	if ( !file ) {
+		return false;
+	}
+
+	try {
+		// Write the whole buffer into the file
+		file->Write( buffer, size );
+		file->Close();
+		return true;
+	}
+	catch( FileReadWriteError &err ) {
+		file->Close();
+		User::Error( ERR_FILE_WRITEFAIL, err.ToString(), path );
+		return false;
+	}
 }
 
 /*
@@ -911,8 +1008,10 @@ FileList *FileSystemEx::GetFileList( const char *dir, const char *extension, int
 	// If the user does not want the dir he provided inside the filenames, remove it.
 	if ( *dir && (flags & LF_REMOVE_DIR) ) {
 		int len = String::Length(dir);
-		for ( int i=fileList->files.Num()-1; i >= 0; i-- )
-			fileList->files[i] = fileList->files[i].Right( len );
+		for ( int i=fileList->files.Num()-1; i >= 0; i-- ) {
+			String &file = fileList->files[i];
+			file = file.Right( file.Length() - len );
+		}
 	}
 
 	// Remove double entries
@@ -943,7 +1042,6 @@ Searches for archived files only.
 int FileSystemEx::GetArchivedFileList( const char *dir, const char *extension, StringList &files, int flags ) {
 	// Get number of existing entries.
 	int oldsize = files.Num();
-	int dirLength = String::Length( dir );
 	int extLength = String::Length( extension );
 
 	int lastslash;
@@ -952,7 +1050,11 @@ int FileSystemEx::GetArchivedFileList( const char *dir, const char *extension, S
 
 	String dirWithSlash = dir;
 	dirWithSlash.ToForwardSlashes();
-	dirWithSlash += "/";
+	// Make sure it ends with a /
+	dirWithSlash.StripTrailing("/");
+	if( !dirWithSlash.IsEmpty() )
+		dirWithSlash += "/";
+	int dirLength = dirWithSlash.Length();
 
 	int max, max2;
 	// Check all pak files
@@ -993,14 +1095,14 @@ int FileSystemEx::GetArchivedFileList( const char *dir, const char *extension, S
 
 					if ( flags & LF_CHECK_SUBDIRS ) {
 						// If the directory doesn't match, we don't want it.
-						if ( filename.Icmpn( dirWithSlash.c_str(), dirLength+1 ) != 0 )
+						if ( filename.Icmpn( dirWithSlash.c_str(), dirLength ) != 0 )
 							continue;
 					}
 					else {
 						// If the directory doesn't match, we don't want it.
-						if ( lastslash != dirLength )
+						if ( lastslash != (dirLength-1) )
 							continue;
-						if ( filename.Icmpn( dirWithSlash.c_str(), dirLength+1 ) != 0 )
+						if ( filename.Icmpn( dirWithSlash.c_str(), dirLength ) != 0 )
 							continue;
 					}
 				}
@@ -1014,7 +1116,10 @@ int FileSystemEx::GetArchivedFileList( const char *dir, const char *extension, S
 				if ( !filename.CheckFileExtension( extension ) )
 					continue;
 
-				files.Append( filename );
+				if ( cd[k].isDir )
+					files.Append( filename + "/" );
+				else
+					files.Append( filename );
 			}
 		}
 	}
