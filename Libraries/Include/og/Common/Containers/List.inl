@@ -222,6 +222,18 @@ T& List<T>::Alloc( void ) {
 
 /*
 ================
+List::Alloc
+================
+*/
+template<class T>
+void List<T>::Alloc( int count ) {
+	OG_ASSERT(count > 0);
+	CheckSize( num+count );
+	num += count;
+}
+
+/*
+================
 List::Append
 ================
 */
@@ -559,6 +571,18 @@ T& ListEx<T>::Alloc( void ) {
 	CheckSize( num+1 );
 	list[num] = new T;
 	return *list[num++];
+}
+
+/*
+================
+ListEx::Alloc
+================
+*/
+template<class T>
+void ListEx<T>::Alloc( int count ) {
+	OG_ASSERT(count > 0);
+	CheckSize( num+count );
+	num += count;
 }
 
 /*
