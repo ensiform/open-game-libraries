@@ -505,15 +505,6 @@ namespace og {
 		void			DefaultFileExtension( const char *ext );
 
 		// ==============================================================================
-		//! Check for a file extension ( case insensitive )
-		//!
-		//! @param	ext	The file extension ( should include the dot! )
-		//!
-		//! @return	true if it was found, false if not
-		// ==============================================================================
-		bool			CheckFileExtension( const char *ext ) const;
-
-		// ==============================================================================
 		//! Get the file extension of this string
 		//!
 		//! @param	str	The string to store the file extension in
@@ -680,6 +671,15 @@ namespace og {
 		static int		CmpPrefix( const char *text1, const char *text2 );
 
 		// ==============================================================================
+		//! Compare the last Length(text) characters of this string to another (case sensitive)
+		//!
+		//! @param	text	The string to compare to
+		//!
+		//! @return	<0 if text is less than this, 0 if equal, >0 if text is greater than this
+		// ==============================================================================
+		int				CmpSuffix( const char *text ) const;
+
+		// ==============================================================================
 		//! Compare this string to another (case insensitive)
 		//!
 		//! @param	text	The string to compare to
@@ -727,6 +727,15 @@ namespace og {
 		//! @param	text1	The base string
 		// ==============================================================================
 		static int		IcmpPrefix( const char *text1, const char *text2 );
+
+		// ==============================================================================
+		//! Compare the last Length(text) characters of this string to another (case insensitive)
+		//!
+		//! @param	text	The string to compare to
+		//!
+		//! @return	<0 if text is less than this, 0 if equal, >0 if text is greater than this
+		// ==============================================================================
+		int				IcmpSuffix( const char *text ) const;
 
 	// Escape Colors
 		// ==============================================================================

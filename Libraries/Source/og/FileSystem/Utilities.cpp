@@ -69,12 +69,8 @@ public:
 		DWORD dwError=0;
 
 		std::wstring strMatch = baseDir.data;
-		strMatch += L"/";
 		strMatch += dir;
-		if ( !dir[0] )
-			strMatch += L"*";
-		else
-			strMatch += L"/*";
+		strMatch += L"*";
 
 		HANDLE hFind = FindFirstFile(strMatch.c_str(), &findData);
 		if ( hFind == INVALID_HANDLE_VALUE )
@@ -91,12 +87,10 @@ public:
 
 			if ( findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) {
 				// Skip "." and ".." directories
-				if ( findData.cFileName[0] == '.' )
+				if ( wcscmp(findData.cFileName,  L".") == 0 || wcscmp(findData.cFileName,  L"..") == 0 )
 					continue;
 
 				wfilename = dir;
-				if( *dir != '\0' )
-					wfilename += L"/";
 				wfilename += findData.cFileName;
 				wfilename += L"/";
 				if ( addDirs ) {
@@ -108,7 +102,6 @@ public:
 			}
 			else if ( addFiles ) {
 				wfilename = dir;
-				wfilename += L"\\";
 				wfilename += findData.cFileName;
 				filename.FromWide( wfilename.c_str() );
 				list->Append( filename );
@@ -126,12 +119,8 @@ public:
 	bool	SearchDir( const char *dir ) {
 		// Set the search pattern
 		String findname = baseDir;
-		findname += "/";
 		findname += dir;
-		if ( !dir[0] )
-			findname += "*";
-		else
-			findname += "/*";
+		findname += "*";
 
 		// Find all files
 		glob_t findResult;
@@ -155,7 +144,7 @@ public:
 
 			if ( stat_Info.st_mode & S_IFDIR ) {
 				// Skip "." and ".." directories
-				if ( name[0] == '.' )
+				if ( strcmp(findData.cFileName[0],  ".") == 0 || strcmp(findData.cFileName[0],  "..") == 0 )
 					continue;
 
 				filename = name;
@@ -187,20 +176,31 @@ private:
 	String			extension;
 #endif
 };
+
 /*
 ================
 LocalFileSearch
 ================
 */
 bool LocalFileSearch( const char *baseDir, const char *dir, const char *extension, StringList *list, int flags ) {
-	FileFinder finder( baseDir, extension, list, flags );
+	String baseDirWithSlash = baseDir;
+	if( !baseDirWithSlash.IsEmpty() ) {
+		if( baseDirWithSlash.CmpSuffix("/") != 0 )
+			baseDirWithSlash += "/";
+	}
+	String dirWithSlash = dir;
+	if( !dirWithSlash.IsEmpty() ) {
+		if( dirWithSlash.CmpSuffix("/") != 0 )
+			dirWithSlash += "/";
+	}
+	FileFinder finder( baseDirWithSlash.c_str(), extension, list, flags );
 
 #if OG_WIN32
 	DynBuffer<wchar_t> strDir;
-	StringToWide( dir, strDir );
+	StringToWide( dirWithSlash.c_str(), strDir );
 	return finder.SearchDir( strDir.data );
 #else
-	return finder.SearchDir( dir );
+	return finder.SearchDir( dirWithSlash.c_str() );
 #endif
 }
 

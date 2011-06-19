@@ -971,6 +971,14 @@ See the LS_* flags in FileSystem.h for options
 ================
 */
 FileList *FileSystemEx::GetFileList( const char *dir, const char *extension, int flags ) {
+	String dirWithSlash = dir;
+	dirWithSlash.ToForwardSlashes();
+	// Make sure it ends with a /
+	if( !dirWithSlash.IsEmpty() ) {
+		if( dirWithSlash.CmpSuffix("/") != 0 )
+			dirWithSlash += "/";
+	}
+
 	sharedMutex.lock_shared();
 	FileListEx *fileList = new FileListEx;
 	if ( flags & LF_CHECK_LOCAL ) {
@@ -984,10 +992,10 @@ FileList *FileSystemEx::GetFileList( const char *dir, const char *extension, int
 		// Check for local files.
 		if ( !pureMode || unpureFileAllowed ) {
 			int max = searchPaths.Num();
-			Format path( "$*/$*" );
+			Format path( "$*/$*/" );
 			for( int i=0; i<max; i++ ) {
 				for( int j=resourceDirs.Num()-1; j >= 0; j-- ) {
-					LocalFileSearch( path << searchPaths[i] << resourceDirs[j], dir, extension, &fileList->files, flags );
+					LocalFileSearch( path << searchPaths[i] << resourceDirs[j], dirWithSlash.c_str(), extension, &fileList->files, flags );
 					path.Reset();
 				}
 			}
@@ -995,7 +1003,7 @@ FileList *FileSystemEx::GetFileList( const char *dir, const char *extension, int
 	}
 	// Check for archived files.
 	if ( flags & LF_CHECK_ARCHIVED )
-		GetArchivedFileList( dir, extension, fileList->files, flags );
+		GetArchivedFileList( dirWithSlash.c_str(), extension, fileList->files, flags );
 
 	sharedMutex.unlock_shared();
 
@@ -1006,8 +1014,8 @@ FileList *FileSystemEx::GetFileList( const char *dir, const char *extension, int
 	}
 
 	// If the user does not want the dir he provided inside the filenames, remove it.
-	if ( *dir && (flags & LF_REMOVE_DIR) ) {
-		int len = String::Length(dir);
+	if ( !dirWithSlash.IsEmpty() && (flags & LF_REMOVE_DIR) ) {
+		int len = dirWithSlash.Length();
 		for ( int i=fileList->files.Num()-1; i >= 0; i-- ) {
 			String &file = fileList->files[i];
 			file = file.Right( file.Length() - len );
@@ -1043,18 +1051,11 @@ int FileSystemEx::GetArchivedFileList( const char *dir, const char *extension, S
 	// Get number of existing entries.
 	int oldsize = files.Num();
 	int extLength = String::Length( extension );
+	int dirLength = String::Length( dir );
 
 	int lastslash;
 	int length;
 	PakFileEx *pakFile;
-
-	String dirWithSlash = dir;
-	dirWithSlash.ToForwardSlashes();
-	// Make sure it ends with a /
-	dirWithSlash.StripTrailing("/");
-	if( !dirWithSlash.IsEmpty() )
-		dirWithSlash += "/";
-	int dirLength = dirWithSlash.Length();
 
 	int max, max2;
 	// Check all pak files
@@ -1095,14 +1096,14 @@ int FileSystemEx::GetArchivedFileList( const char *dir, const char *extension, S
 
 					if ( flags & LF_CHECK_SUBDIRS ) {
 						// If the directory doesn't match, we don't want it.
-						if ( filename.Icmpn( dirWithSlash.c_str(), dirLength ) != 0 )
+						if ( filename.Icmpn( dir, dirLength ) != 0 )
 							continue;
 					}
 					else {
 						// If the directory doesn't match, we don't want it.
 						if ( lastslash != (dirLength-1) )
 							continue;
-						if ( filename.Icmpn( dirWithSlash.c_str(), dirLength ) != 0 )
+						if ( filename.Icmpn( dir, dirLength ) != 0 )
 							continue;
 					}
 				}
@@ -1113,7 +1114,7 @@ int FileSystemEx::GetArchivedFileList( const char *dir, const char *extension, S
 					continue;
 
 				// If the extension doesn't match
-				if ( !filename.CheckFileExtension( extension ) )
+				if ( filename.IcmpSuffix( extension ) != 0 )
 					continue;
 
 				if ( cd[k].isDir )

@@ -687,21 +687,6 @@ void String::DefaultFileExtension( const char *ext ) {
 
 /*
 ================
-String::CheckFileExtension
-================
-*/
-bool String::CheckFileExtension( const char *ext ) const {
-	int len = Length( ext );
-	if ( len > length )
-		return false;
-	else {
-		uInt byteLen = countBytesForLengthReverse( data, len, byteLength );
-		return  Icmp( ext, data+byteLength-byteLen ) == 0;
-	}
-}
-
-/*
-================
 String::GetFileExtension
 ================
 */
@@ -981,6 +966,21 @@ int String::Cmpn( const char *text1, const char *text2, int len ) {
 
 /*
 ================
+String::CmpSuffix
+================
+*/
+int String::CmpSuffix( const char *text ) const {
+	int len = Length( text );
+	if ( len > length )
+		return  Cmp( data, text );
+	else {
+		uInt byteLen = countBytesForLengthReverse( data, len, byteLength );
+		return  Cmp( data+byteLength-byteLen, text );
+	}
+}
+
+/*
+================
 String::Icmp
 ================
 */
@@ -1031,6 +1031,21 @@ int String::Icmpn( const char *text1, const char *text2, int len ) {
 	}
 
 	return 0;
+}
+
+/*
+================
+String::IcmpSuffix
+================
+*/
+int String::IcmpSuffix( const char *text ) const {
+	int len = Length( text );
+	if ( len > length )
+		return  Icmp( data, text );
+	else {
+		uInt byteLen = countBytesForLengthReverse( data, len, byteLength );
+		return  Icmp( data+byteLength-byteLen, text );
+	}
 }
 
 /*

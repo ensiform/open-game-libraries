@@ -50,7 +50,7 @@ namespace og {
 	*/
 	class FileTrackEvent : public QueuedEvent {
 	public:
-		FileTrackEvent( FileEx *f, bool add ) : file(f), doAdd(add) {}
+		FileTrackEvent( FileEx *f, bool add ) : file(f), doAdd(add) { OG_ASSERT(f != NULL); }
 		void	Execute( void );
 
 		static void	ClearAll( void );
