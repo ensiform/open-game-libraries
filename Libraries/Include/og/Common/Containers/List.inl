@@ -582,6 +582,8 @@ template<class T>
 void ListEx<T>::Alloc( int count ) {
 	OG_ASSERT(count > 0);
 	CheckSize( num+count );
+	for( int i=0; i<count; i++ )
+		list[num+i] = new T;
 	num += count;
 }
 
