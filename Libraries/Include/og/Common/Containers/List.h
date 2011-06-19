@@ -124,9 +124,12 @@ namespace og {
 		T &			Alloc( void );
 
 		// ==============================================================================
-		//! Allocate a number of items
+		//! Ensure n items are allocated
+		//!
+		//! @param	count		The number of items that need to be available
+		//! @param	keepContent	true to keep the content
 		// ==============================================================================
-		void		Alloc( int count );
+		void		EnsureAllocated( int count, bool keepContent=true );
 
 		// ==============================================================================
 		//! Add a new item, resize the list if needed
@@ -353,9 +356,12 @@ namespace og {
 		T &			Alloc( void );
 
 		// ==============================================================================
-		//! Allocate a number of items
+		//! Ensure n items are allocated
+		//!
+		//! @param	count		The number of items that need to be available
+		//! @param	keepContent	true to keep the content
 		// ==============================================================================
-		void		Alloc( int count );
+		void		EnsureAllocated( int count, bool keepContent=true );
 
 		// ==============================================================================
 		//! Add a new item, resize the list if needed

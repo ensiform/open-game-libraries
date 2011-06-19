@@ -222,14 +222,14 @@ T& List<T>::Alloc( void ) {
 
 /*
 ================
-List::Alloc
+List::EnsureAllocated
 ================
 */
 template<class T>
-void List<T>::Alloc( int count ) {
+void List<T>::EnsureAllocated( int count, bool keepContent ) {
 	OG_ASSERT(count > 0);
-	CheckSize( num+count );
-	num += count;
+	CheckSize( count, keepContent );
+	num = count;
 }
 
 /*
@@ -575,16 +575,15 @@ T& ListEx<T>::Alloc( void ) {
 
 /*
 ================
-ListEx::Alloc
+ListEx::EnsureAllocated
 ================
 */
 template<class T>
-void ListEx<T>::Alloc( int count ) {
+void ListEx<T>::EnsureAllocated( int count, bool keepContent ) {
 	OG_ASSERT(count > 0);
-	CheckSize( num+count );
-	for( int i=0; i<count; i++ )
-		list[num+i] = new T;
-	num += count;
+	CheckSize( count, keepContent );
+	while( num<count )
+		list[num++] = new T;
 }
 
 /*
