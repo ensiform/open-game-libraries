@@ -1138,12 +1138,13 @@ bool FileSystemEx::GetModDescription( const char *filename, String &name ) {
 	FileEx *file = OpenLocalFileRead( filename );
 	if ( file ) {
 		try {
-			DynBuffer<char> buffer( file->Size() + 1 );
-			file->Read( buffer.data, file->Size() );
+			int size = file->Size();
+			DynBuffer<char> buffer( size + 1 );
+			file->Read( buffer.data, size );
 			file->Close();
 
 			// Terminate the buffer
-			buffer.data[file->Size()] = 0;
+			buffer.data[size] = 0;
 
 			// fixme: if the file has more than one line, remove all following lines
 			name = buffer.data;
