@@ -107,11 +107,6 @@ in release mode it calls og::User::AssertFailed()
 		#endif
 	#endif
 
-	// Visual Leak Detector 2.0a
-	#if OG_HAVE_VISUAL_LEAK_DETECTOR && defined(_DEBUG)
-		#include <vld.h>
-	#endif
-
 	// Fix for MinGW
 	#if !defined(_WIN32_WINNT) || (_WIN32_WINNT < 0x0501)
 		#undef _WIN32_WINNT

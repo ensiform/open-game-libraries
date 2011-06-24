@@ -32,6 +32,11 @@ freely, subject to the following restrictions:
 #include <og/Shared.h>
 #include <ctype.h>
 
+// Visual Leak Detector 2.1
+#if OG_HAVE_VISUAL_LEAK_DETECTOR && defined(_DEBUG)
+	#include <vld.h>
+#endif
+
 #if OG_WIN32
 	#include <windows.h>
 #elif OG_LINUX
