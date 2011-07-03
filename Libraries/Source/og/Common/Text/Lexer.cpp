@@ -481,7 +481,7 @@ bool Lexer::LoadData( const char *dataName, const byte *data, int size ) {
 		return false;
 
 	byte bom[] = { 0xEF, 0xBB, 0xBF };
-	hasByteOrderMark = memcmp( buffer, bom, 3) == 0;
+	hasByteOrderMark = memcmp( data, bom, 3) == 0;
 	if ( hasByteOrderMark )
 		bufPos = 3;
 	else {
