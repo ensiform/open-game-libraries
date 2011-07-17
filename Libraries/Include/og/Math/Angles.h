@@ -75,6 +75,10 @@ namespace og {
 		Mat3		ToMat3( void ) const;
 		Quat		ToQuat( void ) const;
 
+		float			ToYaw( void ) const;
+		static float	ToYaw( const Angles &vec );
+		static float	ToYaw( const float yaw, const float pitch );
+
 		// operators
 		Angles			operator-() const;
 		float			operator[]( int index ) const;

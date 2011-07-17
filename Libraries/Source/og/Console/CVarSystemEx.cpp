@@ -684,7 +684,7 @@ bool CVarSystemEx::WriteToConfig( const char *filename, int flags ) const {
 	cvars.SortEx( CVarICmp, (void *)&dataList, false );
 	num = cvars.Num();
 	int index;
-	Format out( "seta $+32* \"$*\"\r\n" );
+	Format out( "SetA $+32* \"$*\"\r\n" );
 	for ( i = 0; i<num; i++ ) {
 		index = cvars[i];
 		out << dataList[index].strName << dataList[index].strValue;

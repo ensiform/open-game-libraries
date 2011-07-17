@@ -84,6 +84,13 @@ namespace c_vec3 {
 	Vec3 unity ( 0.0f, 1.0f, 0.0f );
 	Vec3 unitz ( 0.0f, 0.0f, 1.0f );
 	Vec3 one   ( 1.0f, 1.0f, 1.0f );
+	Vec3 up    ( 0.0f, -1.0f, 0.0f );
+	Vec3 down  ( 0.0f, -2.0f, 0.0f );
+}
+
+namespace c_movedir {
+	Vec3 up    ( 0.0f, 0.0f, 1.0f );
+	Vec3 down  ( 0.0f, 0.0f, -1.0f );
 }
 
 /*

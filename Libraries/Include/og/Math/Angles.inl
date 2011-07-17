@@ -140,6 +140,37 @@ OG_INLINE bool Angles::Cmp( const Angles &ang, float epsilon ) const {
 }
 
 /*
+=================
+Angles::ToYaw
+=================
+*/
+OG_INLINE float Angles::ToYaw( const float yaw, const float pitch ) {
+	float newyaw;
+
+	if ( yaw == 0 && pitch == 0 )
+		newyaw = 0;
+	else {
+		if ( pitch )
+			newyaw = ( Math::ATan( yaw, pitch ) * 180 / Math::PI );
+		else if ( yaw > 0 )
+			newyaw = 90;
+		else
+			newyaw = 270;
+
+		if ( newyaw < 0 )
+			newyaw += 360;
+	}
+
+	return newyaw;
+}
+OG_INLINE float Angles::ToYaw( const Angles &ang ) {
+	return ToYaw( ang.yaw, ang.pitch );
+}
+OG_INLINE float Angles::ToYaw( void ) const {
+	return ToYaw( yaw, pitch );
+}
+
+/*
 ================
 Angles::operator-
 ================

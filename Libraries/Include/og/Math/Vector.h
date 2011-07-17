@@ -200,6 +200,13 @@ namespace og {
 		extern Vec3 unity;
 		extern Vec3 unitz;
 		extern Vec3 one;
+		extern Vec3 up;
+		extern Vec3 down;
+	}
+
+	namespace c_movedir {
+		extern Vec3 up;
+		extern Vec3 down;
 	}
 
 	/*
