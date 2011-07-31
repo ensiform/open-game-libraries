@@ -95,7 +95,7 @@ namespace og {
 		}
 
 	private:
-		LowLockQueue<QueuedEvent> queue;	//!< The queue
+		LockFreeQueue<QueuedEvent> queue;	//!< The queue
 	};
 //! @}
 }

@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\Libraries\out\ogShared.lib ..\..\Libraries\out\ogCommon.lib ..\..\Libraries\out\ogMath.lib ..\..\Libraries\out\ogGloot.lib ..\..\Libraries\out\ogAudio.lib ..\..\Libraries\out\ogImage.lib ..\..\Libraries\out\ogFileSystem.lib ..\..\Libraries\out\ogFont.lib ..\..\Thirdparty\out\soft_oal.lib ..\..\Thirdparty\out\ogg.lib ..\..\Thirdparty\out\vorbis.lib ..\..\Thirdparty\out\jpeg.lib ..\..\Thirdparty\out\png.lib ..\..\Thirdparty\out\zLib.lib opengl32.lib winmm.lib"
+				AdditionalDependencies="..\..\Libraries\out\ogShared.lib ..\..\Libraries\out\ogCommon.lib ..\..\Libraries\out\ogMath.lib ..\..\Libraries\out\ogGloot.lib ..\..\Libraries\out\ogAudio.lib ..\..\Libraries\out\ogImage.lib ..\..\Libraries\out\ogFileSystem.lib ..\..\Libraries\out\ogFont.lib ..\..\Thirdparty\out\soft_oal.lib ..\..\Thirdparty\out\ogg.lib ..\..\Thirdparty\out\vorbis.lib ..\..\Thirdparty\out\jpeg.lib ..\..\Thirdparty\out\png.lib ..\..\Thirdparty\out\zLib.lib ..\..\Thirdparty\out\liblfds.lib opengl32.lib winmm.lib"
 				OutputFile="$(OutDir)\TestAudio.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
@@ -147,7 +147,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\Libraries\out\ogShared.lib ..\..\Libraries\out\ogCommon.lib ..\..\Libraries\out\ogMath.lib ..\..\Libraries\out\ogGloot.lib ..\..\Libraries\out\ogAudio.lib ..\..\Libraries\out\ogImage.lib ..\..\Libraries\out\ogFileSystem.lib ..\..\Libraries\out\ogFont.lib ..\..\Thirdparty\out\soft_oal.lib ..\..\Thirdparty\out\ogg.lib ..\..\Thirdparty\out\vorbis.lib ..\..\Thirdparty\out\jpeg.lib ..\..\Thirdparty\out\png.lib ..\..\Thirdparty\out\zLib.lib opengl32.lib winmm.lib"
+				AdditionalDependencies="..\..\Libraries\out\ogShared.lib ..\..\Libraries\out\ogCommon.lib ..\..\Libraries\out\ogMath.lib ..\..\Libraries\out\ogGloot.lib ..\..\Libraries\out\ogAudio.lib ..\..\Libraries\out\ogImage.lib ..\..\Libraries\out\ogFileSystem.lib ..\..\Libraries\out\ogFont.lib ..\..\Thirdparty\out\soft_oal.lib ..\..\Thirdparty\out\ogg.lib ..\..\Thirdparty\out\vorbis.lib ..\..\Thirdparty\out\jpeg.lib ..\..\Thirdparty\out\png.lib ..\..\Thirdparty\out\zLib.lib ..\..\Thirdparty\out\liblfds.lib opengl32.lib winmm.lib"
 				OutputFile="$(OutDir)\TestAudio.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""

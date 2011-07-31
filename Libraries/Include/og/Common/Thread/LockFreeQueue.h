@@ -34,123 +34,49 @@
 
 #include <og/Common/Thread/Thread.h>
 
+struct queue_state;
+
 //! Open Game Libraries
 namespace og {
 //! @defgroup Common Common (Library)
 //! @{
 
 	// ==============================================================================
-	//! Atomic exchange pointer
-	//!
-	//! @param	target		The target
-	//! @param	exchange	The exchange address
-	//!
-	//! @return	The initial address pointed to by target
+	//! Lock free queue wrapper class, not to be used directly, as it's not type safe
 	// ==============================================================================
-	OG_INLINE void *AtomicExchangePointer( void **target, void *exchange ) {
-		void *old;
-#if OG_ASM_MSVC
-		__asm {
-			mov eax, exchange;
-			mov edx, target;
-			lock xchg [edx], eax;
-			mov old, eax;
-		}
-#elif OG_ASM_GNU
-		__asm__ __volatile__(
-			"lock xchg %0,%1"
-			: "=r" (old), "=m" (*target)
-			:  "0" (exchange)
-		);
-#endif
-	}
+	class LockFreeQueueVoid {
+	public:
+		LockFreeQueueVoid( int size );
+		~LockFreeQueueVoid();
+
+		bool Produce( void *data );
+		bool ProduceSafe( void *data );
+		bool Consume( void **data );
+
+	private:
+		struct queue_state *queueState;
+	};
 
 	// ==============================================================================
-	//! Atomic compare exchange pointer
-	//!
-	//! @param	target		The target
-	//! @param	exchange	The exchange address
-	//! @param	comparand	The address to compare to target
-	//!
-	//! @return	The initial address pointed to by target
-	// ==============================================================================
-	OG_INLINE void *AtomicCompareExchangePointer( void **target, void *exchange, void *comparand ) {
-		void *old;
-#if OG_ASM_MSVC
-		__asm {
-			mov eax, comparand;
-			mov ecx, exchange;
-			mov edx, target;
-			lock cmpxchg [edx], ecx;
-			mov old, eax;
-		}
-#elif OG_ASM_GNU
-		__asm__ __volatile__(
-			"lock cmpxchg %3,%1"
-			: "=a" (old), "=m" (*(target))
-			:  "0" (comparand), "r" (exchange)
-		);
-#endif
-		return old;
-	}
-
-	// ==============================================================================
-	//! Lock free queue for single producer single consumer scenarios
+	//! Lock free queue for multi producer multi consumer scenarios
 	// ==============================================================================
 	template<typename type>
 	class LockFreeQueue {
-	private:
-		// ==============================================================================
-		//! A node
-		// ==============================================================================
-		struct Node {
-
-			// ==============================================================================
-			//! Constructor
-			//!
-			//! @param	val	The value
-			// ==============================================================================
-			Node( type *val ) : value(val), next(NULL) { }
-
-			type *	value;	//!< The value ( NULL for the divider )
-			Node *	next;	//!< The next node
-		};
-		Node *	first;		//!< The first node
-		Node *	divider;	//!< The divider node
-		Node *	last;		//!< The last node
-
 	public:
 		// ==============================================================================
-		//! Default constructor ( create divider node and set first/last to the divider )
+		//! Default constructor
+		//!
+		//! @param	size	The maximum number of elements which can be present in the queue.
 		// ==============================================================================
-		LockFreeQueue() { first = divider = last = new Node(NULL); }
-
-		// ==============================================================================
-		//! Destructor ( delete all nodes )
-		// ==============================================================================
-		~LockFreeQueue() {
-			while( first != NULL ) {
-				Node* tmp = first;
-				first = tmp->next;
-				delete tmp;
-			}
-		}
+		LockFreeQueue( int size=100 ) : queue(size) {}
 
 		// ==============================================================================
 		//! Add an entry to the queue
 		//!
-		//! @param	value	A pointer to the object
+		//! @param	data	A pointer to the object
 		// ==============================================================================
-		void Produce( type *value ) {
-			last->next = new Node(value);
-			AtomicExchangePointer( (void **)&last, last->next );
-
-			// remove consumed
-			for( void *p = first; AtomicCompareExchangePointer( (void **)&p, NULL, divider ) && p; p = first ) {
-				Node* tmp = first;
-				first = first->next;
-				delete tmp;
-			}
+		bool Produce( type *data ) {
+			return queue.ProduceSafe( (void *)data );
 		}
 
 		// ==============================================================================
@@ -159,46 +85,17 @@ namespace og {
 		//! @return	NULL if the queue is empty, otherwise the next entry
 		// ==============================================================================
 		type *Consume( void ) {
-			void *p = divider;
-			AtomicCompareExchangePointer( (void **)&p, NULL, last );
-
-			if( p ) {
-				type *result = divider->next->value;
-				AtomicExchangePointer( (void **)&divider, divider->next );
-				return result;
+			void *p;
+			if( queue.Consume(&p) ) {
+				return (type *)p;
 			}
 			return NULL;
 		}
-	};
-
-	// ==============================================================================
-	//! Low lock queue for multi producer multi consumer scenarios
-	// ==============================================================================
-	template<typename type>
-	class LowLockQueue {
+		
 	private:
-		LockFreeQueue<type>	queue;			//!< The queue
-		ogst::mutex			producerLock;	//!< The producer lock
-		ogst::mutex			consumerLock;	//!< The consumer lock
-
-	public:
-		// ==============================================================================
-		//! @copydoc LockFreeQueue::Produce
-		// ==============================================================================
-		void Produce( type *t ) {
-			producerLock.lock();
-			queue.Produce( t );
-			producerLock.unlock();
-		}
-
-		// ==============================================================================
-		//! @copydoc LockFreeQueue::Consume
-		// ==============================================================================
-		type *Consume( void ) {
-			ogst::unique_lock<ogst::mutex> lock(consumerLock);
-			return queue.Consume();
-		}
+		LockFreeQueueVoid queue;	//!< The queue
 	};
+
 	//! @}
 }
 

@@ -383,6 +383,10 @@
 								>
 							</File>
 							<File
+								RelativePath="..\..\..\Libraries\Source\og\Common\Thread\LockFreeQueue.cpp"
+								>
+							</File>
+							<File
 								RelativePath="..\..\..\Libraries\Source\og\Common\Thread\PreloadManager.cpp"
 								>
 							</File>

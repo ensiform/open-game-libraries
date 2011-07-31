@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\Libraries\Include"
+				AdditionalIncludeDirectories="..\..\..\Libraries\Include;..\..\..\Thirdparty\liblfds\inc"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -57,14 +57,14 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;_DEBUG"
-				AdditionalIncludeDirectories="..\..\..\Libraries\Include"
+				AdditionalIncludeDirectories="..\..\..\Libraries\Include;..\..\..\Thirdparty\liblfds\inc"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\Libraries\out\ogFileSystem.lib ..\..\Libraries\out\ogShared.lib ..\..\Libraries\out\ogCommon.lib ..\..\Thirdparty\out\zLib.lib winmm.lib"
+				AdditionalDependencies="..\..\Libraries\out\ogFileSystem.lib ..\..\Libraries\out\ogShared.lib ..\..\Libraries\out\ogCommon.lib ..\..\Thirdparty\out\zLib.lib ..\..\Thirdparty\out\liblfds.lib winmm.lib"
 				OutputFile="$(OutDir)\TestFS.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories=""
@@ -124,7 +124,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
-				AdditionalIncludeDirectories="..\..\..\Libraries\Include"
+				AdditionalIncludeDirectories="..\..\..\Libraries\Include;..\..\..\Thirdparty\liblfds\inc"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -140,14 +140,14 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE;NDEBUG"
-				AdditionalIncludeDirectories="..\..\..\Libraries\Include"
+				AdditionalIncludeDirectories="..\..\..\Libraries\Include;..\..\..\Thirdparty\liblfds\inc"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\Libraries\out\ogFileSystem.lib ..\..\Libraries\out\ogShared.lib ..\..\Libraries\out\ogCommon.lib ..\..\Thirdparty\out\zLib.lib winmm.lib"
+				AdditionalDependencies="..\..\Libraries\out\ogFileSystem.lib ..\..\Libraries\out\ogShared.lib ..\..\Libraries\out\ogCommon.lib ..\..\Thirdparty\out\zLib.lib ..\..\Thirdparty\out\liblfds.lib winmm.lib"
 				OutputFile="$(OutDir)\TestFS.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""

@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vorbis", "vorbis.vcproj", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soft_oal", "soft_oal.vcproj", "{0968CDDA-5D5A-E74F-838D-A4FDDAA24B05}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liblfds", "liblfds.vcproj", "{3DFA7DB4-E07A-F043-AAF1-956017036162}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -43,6 +45,10 @@ Global
 		{0968CDDA-5D5A-E74F-838D-A4FDDAA24B05}.Debug|Win32.Build.0 = Debug|Win32
 		{0968CDDA-5D5A-E74F-838D-A4FDDAA24B05}.Release|Win32.ActiveCfg = Release|Win32
 		{0968CDDA-5D5A-E74F-838D-A4FDDAA24B05}.Release|Win32.Build.0 = Release|Win32
+		{3DFA7DB4-E07A-F043-AAF1-956017036162}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3DFA7DB4-E07A-F043-AAF1-956017036162}.Debug|Win32.Build.0 = Debug|Win32
+		{3DFA7DB4-E07A-F043-AAF1-956017036162}.Release|Win32.ActiveCfg = Release|Win32
+		{3DFA7DB4-E07A-F043-AAF1-956017036162}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

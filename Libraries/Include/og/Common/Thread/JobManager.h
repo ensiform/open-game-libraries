@@ -172,8 +172,8 @@ namespace og {
 		List<WorkerThread *>		allThreads;			//!< A list of all worker threads
 		bool						waitForDone;		//!< Waiting to be done ( see WaitForDone )
 		Condition					doneWaiter;			//!< The done waiter condition
-		LowLockQueue<WorkerThread>	availableThreads;	//!< The available (job-less) threads
-		LowLockQueue<Job>			jobList;			//!< The list of jobs to do
+		LockFreeQueue<WorkerThread>	availableThreads;	//!< The available (job-less) threads
+		LockFreeQueue<Job>			jobList;			//!< The list of jobs to do
 
 		// ==============================================================================
 		//! The job that ends the WaitForDone()

@@ -61,8 +61,8 @@ solution "Examples"
 		kind "ConsoleApp"
 		language "C++"
 		targetdir( binaryDir )
-		includedirs { librariesPath .. "/Include" }
-		links { "ogFileSystem", "ogShared", "ogCommon", "zLib" }
+		includedirs { librariesPath .. "/Include", liblfdsPath .. "/inc" }
+		links { "ogFileSystem", "ogShared", "ogCommon", "zLib", "liblfds" }
 		if isWindows then
 			links { "winmm" }
 		end
@@ -79,7 +79,7 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "opengl32" }
+		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "liblfds", "opengl32" }
 		if isWindows then
 			links { "winmm" }
 		end
@@ -93,7 +93,7 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogAudio", "ogImage", "ogFileSystem", "ogFont", "soft_oal", "ogg", "vorbis", "jpeg", "png", "zLib", "opengl32" }
+		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogAudio", "ogImage", "ogFileSystem", "ogFont", "soft_oal", "ogg", "vorbis", "jpeg", "png", "zLib", "liblfds", "opengl32" }
 		if isWindows then
 			links { "winmm" }
 		end
@@ -108,7 +108,7 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogModel", "ogImage", "ogFileSystem", "jpeg", "png", "zLib", "ogConsole", "opengl32" }
+		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogModel", "ogImage", "ogFileSystem", "jpeg", "png", "zLib", "ogConsole", "liblfds", "opengl32" }
 		if isWindows then
 			links { "winmm" }
 		end
@@ -122,7 +122,7 @@ solution "Examples"
 		language "C++"
 		targetdir( binaryDir )
 		includedirs { thirdPartyPath, librariesPath .. "/Include" }
-		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogAudio", "ogImage", "ogFileSystem", "ogFable", "ogFont", "soft_oal", "jpeg", "png", "zLib", "ogg", "vorbis", "opengl32" }
+		links { "ogShared", "ogCommon", "ogMath", "ogGloot", "ogAudio", "ogImage", "ogFileSystem", "ogFable", "ogFont", "soft_oal", "jpeg", "png", "zLib", "ogg", "vorbis", "liblfds", "opengl32" }
 		if isWindows then
 			links { "winmm", "dinput8", "xinput", "dxguid" }
 		end

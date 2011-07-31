@@ -87,3 +87,14 @@ solution "Thirdparty"
 				excludes { oalPath .. "/Alc/" .. v }
 			end
 		end
+
+	-- liblfds Static Library
+	project "liblfds"
+		uuid "3DFA7DB4-E07A-F043-AAF1-956017036162"
+		kind "StaticLib"
+		language "C"
+		targetdir( libDir )
+		includedirs { liblfdsPath .. "/inc", liblfdsPath .. "/src" }
+		files { liblfdsPath .. "/**.h", liblfdsPath .. "/**.c" }
+		objdir( objectDir .. "/liblfds" )
+		
