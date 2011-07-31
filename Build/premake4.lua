@@ -53,6 +53,7 @@ toolsPath		= rootPath .. "/Tools"
 -- Thirdparty Paths
 thirdPartyPath	= rootPath .. "/Thirdparty"
 zlibPath		= thirdPartyPath .. "/zlib"
+liblfdsPath		= thirdPartyPath .. "/liblfds"
 pngPath			= thirdPartyPath .. "/libpng"
 jpegPath		= thirdPartyPath .. "/jpeg"
 oggPath			= thirdPartyPath .. "/ogg"
