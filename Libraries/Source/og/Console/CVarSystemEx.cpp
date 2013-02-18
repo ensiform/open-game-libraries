@@ -688,7 +688,7 @@ bool CVarSystemEx::WriteToConfig( const char *filename, int flags ) const {
 	for ( i = 0; i<num; i++ ) {
 		index = cvars[i];
 		out << dataList[index].strName << dataList[index].strValue;
-		file->Write( out, out.ByteLength()+1 );
+		file->Write( out, out.ByteLength() );
 		out.Reset();
 	}
 #endif
@@ -937,7 +937,8 @@ void CVarSystemEx::Cmd_Toggle_f( const CmdArgs &args ) {
 			else
 				cv->SetString(cv->data->enumValues[currentIndex+1]);
 		}
-		cv->SetBool(!cv->GetBool());
+		else
+			cv->SetBool(!cv->GetBool());
 	} else if ( args.Argc() == 3 ) {
 		/*
 		NOTE:	Limits will cause this to fail if 0
