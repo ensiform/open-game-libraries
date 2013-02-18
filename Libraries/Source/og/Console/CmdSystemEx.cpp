@@ -212,7 +212,8 @@ CmdSystemEx::ExecuteConfig
 ================
 */
 void CmdSystemEx::ExecuteConfig( const char *filename ) {
-	Lexer lexer(LEXER_FULL_LINES);
+	// was just full lines dunno why BOM error should be printed for plain text configs
+	Lexer lexer(LEXER_FULL_LINES|LEXER_NO_BOM_WARNING);
 	if ( !lexer.LoadFile(filename) )
 		return;
 
