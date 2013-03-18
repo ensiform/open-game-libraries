@@ -1,7 +1,7 @@
 open-game-libraries
 ===================
 
-The Open Game Libraries are brought to you by Lusito Software.  
+The Open Game Libraries (_brought to you by Lusito Software_), a set of Intuitive C++ libraries for creating games.   
 As of today, that includes Santo Pfingsten(TTK-Bandit) and Ensiform.
 
 News
@@ -15,11 +15,9 @@ Things to consider
 * Linux builds have been left out completely for now, but will be re-added once we're done.
 * The binaries needed will not be uploaded onto the git.  Previously they were on google project page.
 
-The Open Game Libraries, a set of Intuitive C++ libraries for creating games.
-
 We're focusing on performance, simplicity and being as lightweight as possible.
 
-The Libraries _(in alphabetical order)_
+The Libraries
 ------------------
 * Audio - OpenAL audio management ( loading sounds from ogg/wav, positioning them, setting attributes, etc. )
 * Common - Generic classes and objects for game development ( containers, text processing, etc. )
@@ -55,4 +53,4 @@ Icon Credits
 License
 -------
 zlib/PNG License  
-See License.txt
+See license.txt
