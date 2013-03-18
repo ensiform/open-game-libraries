@@ -4,8 +4,10 @@ open-game-libraries
 The Open Game Libraries are brought to you by Lusito Software.
 As of today, that includes Santo Pfingsten(TTK-Bandit) and Ensiform.
 
-News
-__Due to all team members being busy otherwise for some time now, I'm officially putting this project on ice.__
+##News##
+
+Project moved to GitHub but still on ice.
+Due to all team members being busy otherwise for some time now, I'm officially putting this project on ice.
 
 Things to consider
 -------------------
