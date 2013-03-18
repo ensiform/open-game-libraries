@@ -2,12 +2,14 @@ open-game-libraries
 ===================
 
 The Open Game Libraries are brought to you by Lusito Software.
+
 As of today, that includes Santo Pfingsten(TTK-Bandit) and Ensiform.
 
 News
 -------------------
 
 Project moved to GitHub but still on ice.
+
 Due to all team members being busy otherwise for some time now, I'm officially putting this project on ice.
 
 Things to consider
@@ -21,7 +23,7 @@ zlib/PNG License (License.txt)
 
 We're focusing on performance, simplicity and being as lightweight as possible.
 
-Alphabetic order:
+Alphabetical order:
 
 * Audio - OpenAL audio management ( loading sounds from ogg/wav, positioning them, setting attributes, etc. )
 * Common - Generic classes and objects for game development ( containers, text processing, etc. )
