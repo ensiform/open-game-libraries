@@ -4,13 +4,14 @@ open-game-libraries
 The Open Game Libraries are brought to you by Lusito Software.
 As of today, that includes Santo Pfingsten(TTK-Bandit) and Ensiform.
 
-##News##
+News
+-------------------
 
 Project moved to GitHub but still on ice.
 Due to all team members being busy otherwise for some time now, I'm officially putting this project on ice.
 
 Things to consider
--------------------
+------------------
 * There is still a lot to do before the refactoring is complete, a lot is untested and might not work.
 * Linux builds have been left out completely for now, but will be re-added once we're done.
 * The binaries needed will not be uploaded onto the git.  Previously they were on google project page.
@@ -34,7 +35,7 @@ Alphabetic order:
 * Model - Loading 3D Models in a generic way, with import functions for various formats ( ASE, MD3, MD5, SKM, SMD )
 * Shared - Shared parts to lighten the dependencies
 
-For more details and Tutorials, check out the Wiki  (not yet available)
+For more details and Tutorials, check out the Wiki _(not yet available)_
 
 ( The names of these libraries are not final yet, if you have better suggestions, please tell us )
 
