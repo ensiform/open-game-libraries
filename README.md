@@ -1,15 +1,12 @@
 open-game-libraries
 ===================
 
-The Open Game Libraries are brought to you by Lusito Software.
-
+The Open Game Libraries are brought to you by Lusito Software.  
 As of today, that includes Santo Pfingsten(TTK-Bandit) and Ensiform.
 
 News
 -------------------
-
-Project moved to GitHub but still on ice.
-
+Project moved to GitHub but still on ice.  
 Due to all team members being busy otherwise for some time now, I'm officially putting this project on ice.
 
 Things to consider
@@ -19,12 +16,11 @@ Things to consider
 * The binaries needed will not be uploaded onto the git.  Previously they were on google project page.
 
 The Open Game Libraries, a set of Intuitive C++ libraries for creating games.
-zlib/PNG License (License.txt)
 
 We're focusing on performance, simplicity and being as lightweight as possible.
 
-Alphabetical order:
-
+The Libraries _(in alphabetical order)_
+------------------
 * Audio - OpenAL audio management ( loading sounds from ogg/wav, positioning them, setting attributes, etc. )
 * Common - Generic classes and objects for game development ( containers, text processing, etc. )
 * Console - Developer console window with support for Commands and variables
@@ -41,6 +37,22 @@ For more details and Tutorials, check out the Wiki _(not yet available)_
 
 ( The names of these libraries are not final yet, if you have better suggestions, please tell us )
 
-Icon Credits
+Dependencies
+------------------
+* libJPEG ( Image and Font )
+* libPNG ( Image and Font )
+* zLib ( libPNG and FileSystem )
+* libOgg / libVorbis ( Audio )
+* OpenAL Soft ( Audio )
+* OpenGL ( Gloot )
+* Direct-X ( Fable )
+* Visual Leak Detector ( ALL, Optional )
 
+Icon Credits
+------------
 * Joystick icon made by Alexandre Moore
+
+License
+-------
+zlib/PNG License  
+See License.txt
