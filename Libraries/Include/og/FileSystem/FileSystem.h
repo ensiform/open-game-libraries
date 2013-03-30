@@ -154,6 +154,13 @@ namespace og {
 		static void		AddSearchPath( const char *path );
 
 		// ==============================================================================
+		//! Add the first searchpath and make it the base path
+		//!
+		//! @param	basePath	The first search path and also the path where files will be loaded
+		// ==============================================================================
+		static void		SetBasePath( const char *path );
+
+		// ==============================================================================
 		//! Add the last searchpath and make it the save path
 		//!
 		//! @param	savePath	The last search path and also the path where files will be saved

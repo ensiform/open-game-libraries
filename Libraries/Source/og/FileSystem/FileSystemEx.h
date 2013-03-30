@@ -138,6 +138,7 @@ namespace og {
 
 		void	Init( const char *pakExtension, const char *baseDir );	// Init the filesystem
 		void	AddSearchPath( const char *path );
+		void	SetBasePath( const char *path );
 		void	SetSavePath( const char *path );
 
 		bool	ChangeMod( const char *_modDir, const char *_modDirBase );		// Set the active mod directory
@@ -154,11 +155,14 @@ namespace og {
 
 		bool	GetModDescription( const char *filename, String &name ); // Read the mods description.txt
 
+		void	FindDLL( const char *filename, String &path );
+
 	private:
 		static TLS<bool> notFoundWarning;
 
 		SharedMutex		sharedMutex;
 		String			pakExtension;				// Pakfile extension, for example "gpk"
+		String			basePath;					// Main path(for where exe, core content, ..)
 		String			savePath;					// Save path(for storing configs, downloads, ..)
 		String			modDir;						// baseDir or mod-folder
 		String			baseDir;					// Base Mod directory, for example "base"

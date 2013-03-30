@@ -174,6 +174,17 @@ void FileSystem::AddSearchPath( const char *path ) {
 
 /*
 ================
+FileSystem::SetBasePath
+================
+*/
+void FileSystem::SetBasePath( const char *path ) {
+	if ( fileSys == NULL )
+		return; //! @todo error
+	fileSys->SetBasePath(path);
+}
+
+/*
+================
 FileSystem::SetSavePath
 ================
 */
@@ -188,12 +199,12 @@ void FileSystem::SetSavePath( const char *path ) {
 FileSystem::SimpleInit
 ================
 */
-bool FileSystem::SimpleInit( const char *pakExtension, const char *baseDir, const char *searchPath, const char *savePath ) {
+bool FileSystem::SimpleInit( const char *pakExtension, const char *baseDir, const char *basePath, const char *savePath ) {
 	if ( fileSys != NULL )
 		return false; //! @todo error
 
 	fileSys = new FileSystemEx;
-	fileSys->AddSearchPath(searchPath);
+	fileSys->SetBasePath(basePath);
 	fileSys->SetSavePath(savePath);
 	return FileSystem::Init( pakExtension, baseDir );
 }
@@ -360,6 +371,18 @@ void FileSystemEx::AddSearchPath( const char *path ) {
 	strPath.ToForwardSlashes();
 	if ( searchPaths.IFind( strPath.c_str() ) == -1 )
 		searchPaths.Append( strPath );
+}
+
+/*
+================
+FileSystemEx::SetBasePath
+================
+*/
+void FileSystemEx::SetBasePath( const char *path ) {
+	basePath = path;
+	basePath.ToForwardSlashes();
+	if ( searchPaths.IFind( basePath.c_str() ) == -1 )
+		AddSearchPath( basePath.c_str() );
 }
 
 /*
@@ -1127,6 +1150,81 @@ int FileSystemEx::GetArchivedFileList( const char *dir, const char *extension, S
 
 	// Return the number of files added.
 	return files.Num() - oldsize;
+}
+
+/*
+================
+FileSystemEx::GetModDescription
+================
+*/
+void FileSystemEx::FindDLL( const char *filename, String &path ) {
+	// FIXME prefix/suffix for dll names
+	// FIXME cwd (exepath)
+
+	Format dllPath("$*/$*$*");
+
+#if 0
+	// Try exePath
+	dllPath << exePath << filename;
+#if OG_WIN32
+	dllPath << ".dll";
+#else
+	dllPath << ".so";
+	// FIXME OSX
+#endif
+
+	FileEx *file = OpenLocalFileRead( dllPath.c_str() );
+	if ( file ) {
+		path = file->GetFullPath();
+		file->Close();
+		return;
+	} else {
+		// Fixme is this right?
+		path.Empty();
+	}
+
+	dllPath.Reset();
+#endif
+
+	// Try basePath
+	dllPath << basePath << filename;
+#if OG_WIN32
+	dllPath << ".dll";
+#else
+	dllPath << ".so";
+	// FIXME OSX
+#endif
+
+	FileEx *file = OpenLocalFileRead( dllPath.c_str() );
+	if ( file ) {
+		path = file->GetFullPath();
+		file->Close();
+		return;
+	} else {
+		// Fixme is this right?
+		path.Empty();
+	}
+
+	dllPath.Reset();
+
+	// Now try savePath
+	dllPath << savePath << filename;
+#if OG_WIN32
+	dllPath << ".dll";
+#else
+	dllPath << ".so";
+	// FIXME OSX
+#endif
+
+	file = OpenLocalFileRead( dllPath.c_str() );
+	if ( file ) {
+		path = file->GetFullPath();
+		file->Close();
+		return;
+	} else {
+		// Fixme is this right?
+		path.Empty();
+	}
 }
 
 /*
