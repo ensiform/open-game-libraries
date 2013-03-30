@@ -263,6 +263,16 @@ bool FileSystem::ChangeMod( const char *modDir, const char *modDirBase ) {
 	return fileSys->ChangeMod( modDir, modDirBase );
 }
 
+/*
+================
+FileSystem::FindDLL
+================
+*/
+void FileSystem::FindDLL( const char *filename, String &path ) {
+	if ( fileSys == NULL )
+		return; //! @todo error
+	fileSys->FindDLL( filename, path );
+}
 
 /*
 ================
@@ -1154,7 +1164,7 @@ int FileSystemEx::GetArchivedFileList( const char *dir, const char *extension, S
 
 /*
 ================
-FileSystemEx::GetModDescription
+FileSystemEx::FindDLL
 ================
 */
 void FileSystemEx::FindDLL( const char *filename, String &path ) {

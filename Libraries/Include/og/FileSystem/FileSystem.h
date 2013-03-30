@@ -222,7 +222,16 @@ namespace og {
 		//!
 		//! @return	true if it succeeds, false if it fails
 		// ==============================================================================
-		static bool	MakePath( const char *path );
+		static bool		MakePath( const char *path );
+
+		// ==============================================================================
+		//! Find the specified dll in search paths
+		//!
+		//! @param	filename	The dll filename without extension
+		//! @param	path		The output full filename of the dll, empty string if not found
+		//!
+		// ==============================================================================
+		static void		FindDLL( const char *filename, String &path );
 	//! @}
 
 	// Object Interface
