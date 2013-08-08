@@ -226,7 +226,7 @@ void CmdSystemEx::ExecuteConfig( const char *filename ) {
 				ExecuteCmd( p, inEngineStartup );
 		}
 	}
-	catch( LexerError err ) {
+	catch( LexerError &err ) {
 		String errStr;
 		err.ToString( errStr );
 		User::Error( ERR_LEXER_FAILURE, errStr.c_str(), filename );

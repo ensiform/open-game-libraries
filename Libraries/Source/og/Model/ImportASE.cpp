@@ -366,7 +366,7 @@ Model *Model::ImportASE( const char *filename ) {
 //		if ( inJointGroup || inMeshGroup || numJoints == -1 || numMeshes == -1 )
 //			throw LexerError( LexerError::END_OF_FILE );
 	}
-	catch( LexerError err ) {
+	catch( LexerError &err ) {
 		delete model;
 		String errStr;
 		err.ToString( errStr );

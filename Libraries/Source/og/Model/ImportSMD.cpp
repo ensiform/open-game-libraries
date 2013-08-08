@@ -192,7 +192,7 @@ Model *LoadSMD( const char *filename, ListEx<smdMesh_t> &smdMeshes ) {
 		}
 		return model;
 	}
-	catch( LexerError err ) {
+	catch( LexerError &err ) {
 		delete model;
 		String errStr;
 		err.ToString( errStr );

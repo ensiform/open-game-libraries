@@ -182,7 +182,7 @@ bool ImportMD5AnimBaseFrame( const char *filename, Model *model ) {
 			throw LexerError( LexerError::END_OF_FILE );
 		return true;
 	}
-	catch( LexerError err ) {
+	catch( LexerError &err ) {
 		delete model;
 		String errStr;
 		err.ToString( errStr );
@@ -419,7 +419,7 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 		if ( inJointGroup || inMeshGroup || numJoints == -1 || numMeshes == -1 )
 			throw LexerError( LexerError::END_OF_FILE );
 	}
-	catch( LexerError err ) {
+	catch( LexerError &err ) {
 		delete model;
 		String errStr;
 		err.ToString( errStr );

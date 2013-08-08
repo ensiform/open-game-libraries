@@ -163,7 +163,7 @@ bool DeclParser::LexFile( const char *filename ) {
 		Parse(lexer);
 		return true;
 	}
-	catch( LexerError err ) {
+	catch( LexerError &err ) {
 		String errStr;
 		err.ToString( errStr );
 		User::Error( ERR_LEXER_FAILURE, errStr.c_str(), filename );
@@ -185,7 +185,7 @@ bool DeclParser::LexData( const char *dataName, const byte *data, int size ) {
 		Parse(lexer);
 		return true;
 	}
-	catch( LexerError err ) {
+	catch( LexerError &err ) {
 		String errStr;
 		err.ToString( errStr );
 		User::Error( ERR_LEXER_FAILURE, errStr.c_str(), dataName );
@@ -380,7 +380,7 @@ bool DeclParser::MakeBinary( const char *filename ) {
 		User::Error( ERR_FILE_WRITEFAIL, Format("Binary Decl: $*.bin" ) << err.ToString(), filename );
 		return false;
 	}
-	catch( LexerError err ) {
+	catch( LexerError &err ) {
 		f->Close();
 		String errStr;
 		err.ToString( errStr );

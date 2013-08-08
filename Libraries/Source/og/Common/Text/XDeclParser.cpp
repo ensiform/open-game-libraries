@@ -138,7 +138,7 @@ bool XDeclParser::LexFile( const char *filename ) {
 		Parse(lexer);
 		return true;
 	}
-	catch( LexerError err ) {
+	catch( LexerError &err ) {
 		String errStr;
 		err.ToString( errStr );
 		User::Error( ERR_LEXER_FAILURE, errStr.c_str(), filename );
@@ -160,7 +160,7 @@ bool XDeclParser::LexData( const char *dataName, byte *data, int size ) {
 		Parse(lexer);
 		return true;
 	}
-	catch( LexerError err ) {
+	catch( LexerError &err ) {
 		String errStr;
 		err.ToString( errStr );
 		User::Error( ERR_LEXER_FAILURE, errStr.c_str(), dataName );
