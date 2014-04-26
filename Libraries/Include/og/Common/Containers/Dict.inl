@@ -269,7 +269,7 @@ DictEx::Find
 */
 template<class T>
 int DictEx<T>::Find( const char *key ) const {
-	if ( key == NULL || key[0] == '\0' )
+	if ( key == OG_NULL || key[0] == '\0' )
 		return -1;
 
 	int hash = hashIndex.GenerateKey( key, false );
@@ -298,7 +298,7 @@ DictEx::MatchPrefix
 */
 template<class T>
 int DictEx<T>::MatchPrefix( const char *prefix, int length, int prevMatch ) const {
-	if ( prefix == NULL || prefix[0] == '\0' )
+	if ( prefix == OG_NULL || prefix[0] == '\0' )
 		return -1;
 
 	int num = entries.Num();

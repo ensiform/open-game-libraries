@@ -276,7 +276,7 @@ namespace og {
 		//!
 		//! @see	AddCmd
 		// ==============================================================================
-		virtual void	AddCmd( const char *cmd, cmdFunc_t func, int flags, const ConUsage *usage, const ConArgComplete *completion = NULL ) = 0;
+		virtual void	AddCmd( const char *cmd, cmdFunc_t func, int flags, const ConUsage *usage, const ConArgComplete *completion = OG_NULL ) = 0;
 
 		// ==============================================================================
 		//! Unregister a command previously registered by AddCmd

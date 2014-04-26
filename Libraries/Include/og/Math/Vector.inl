@@ -1238,7 +1238,7 @@ OG_INLINE void VecX<dim>::Set( const VecX<dim> &vec ) {
 }
 template<int dim>
 OG_INLINE void VecX<dim>::Set( const float *vec ) {
-	*v = NULL;
+	*v = OG_NULL;
 	memcpy( v, vec, dim * sizeof( float ) );
 }
 

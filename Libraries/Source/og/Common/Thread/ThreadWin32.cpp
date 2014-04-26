@@ -47,7 +47,7 @@ namespace og {
 TLS_Index::TLS_Index
 ================
 */
-TLS_Index::TLS_Index() : data(NULL) {
+TLS_Index::TLS_Index() : data(OG_NULL) {
 	uLong index = TlsAlloc();
 	OG_ASSERT( index != TLS_OUT_OF_INDEXES );
 
@@ -74,7 +74,7 @@ TLS_Index::GetValue
 ================
 */
 void *TLS_Index::GetValue( void ) const {
-	OG_ASSERT( data != NULL );
+	OG_ASSERT( data != OG_NULL );
 	return TlsGetValue( *static_cast<uLong *>(data) );
 }
 
@@ -84,7 +84,7 @@ TLS_Index::SetValue
 ================
 */
 void TLS_Index::SetValue( void *value ) const {
-	OG_ASSERT( data != NULL );
+	OG_ASSERT( data != OG_NULL );
 	TlsSetValue( *static_cast<uLong *>(data), value );
 }
 

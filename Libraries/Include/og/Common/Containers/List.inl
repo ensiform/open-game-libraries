@@ -47,7 +47,7 @@ List::List
 */
 template<class T>
 OG_INLINE List<T>::List( int _granularity ) {
-	list		= NULL;
+	list		= OG_NULL;
 	granularity = _granularity;
 	Clear();
 }
@@ -59,7 +59,7 @@ List::List
 */
 template<class T>
 OG_INLINE List<T>::List( const List<T> &other ) {
-	list = NULL;
+	list = OG_NULL;
 	granularity = other.granularity;
 	Copy(other);
 }
@@ -95,7 +95,7 @@ Checks to see if list is empty
 */
 template<class T>
 OG_INLINE bool List<T>::IsEmpty( void ) const {
-	return num == 0 || list == NULL;
+	return num == 0 || list == OG_NULL;
 }
 
 /*
@@ -390,7 +390,7 @@ ListEx::ListEx
 */
 template<class T>
 OG_INLINE ListEx<T>::ListEx( int _granularity ) {
-	list		= NULL;
+	list		= OG_NULL;
 	granularity = _granularity;
 	Clear();
 }
@@ -402,7 +402,7 @@ ListEx::ListEx
 */
 template<class T>
 OG_INLINE ListEx<T>::ListEx( const ListEx<T> &other ) {
-	list = NULL;
+	list = OG_NULL;
 	granularity = other.granularity;
 	Copy(other);
 }
@@ -430,7 +430,7 @@ void ListEx<T>::Clear( void ) {
 		for ( int i=0; i<num; i++ )
 			delete list[i];
 		delete[] list;
-		list = NULL;
+		list = OG_NULL;
 	}
 	num		= 0;
 	size	= 0;
@@ -445,7 +445,7 @@ Checks to see if list is empty
 */
 template<class T>
 OG_INLINE bool ListEx<T>::IsEmpty( void ) const {
-	return num == 0 || *list == NULL;
+	return num == 0 || *list == OG_NULL;
 }
 
 /*
@@ -614,7 +614,7 @@ void ListEx<T>::Remove( int index ) {
 		if ( (i+1) < num )
 			list[i] = list[i+1];
 	}
-	list[--num] = NULL;
+	list[--num] = OG_NULL;
 }
 
 /*

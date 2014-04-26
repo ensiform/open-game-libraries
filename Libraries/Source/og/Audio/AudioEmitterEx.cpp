@@ -62,7 +62,7 @@ public:
 		ogst::unique_lock<ogst::mutex> lock(emitter->mutex);
 		if ( emitter->IsValidChannel( channel ) ) {
 			AudioSource *source = emitter->sndChannels[channel];
-			if ( source == NULL )
+			if ( source == OG_NULL )
 				source = audioSystemObject.audioThread->FindFreeAudioSource();
 
 			if ( source ) {
@@ -95,7 +95,7 @@ public:
 
 	void	Execute( void )  {
 		emitter->mutex.lock();
-		if ( emitter->IsValidChannel( channel ) && emitter->sndChannels[channel] != NULL )
+		if ( emitter->IsValidChannel( channel ) && emitter->sndChannels[channel] != OG_NULL )
 			emitter->sndChannels[channel]->Pause();
 		emitter->mutex.unlock();
 	}
@@ -119,11 +119,11 @@ public:
 		emitter->mutex.lock();
 		if ( channel == -1 ) {
 			for( int i=0; i<emitter->numChannels; i++ ) {
-				if ( emitter->sndChannels[i] != NULL )
+				if ( emitter->sndChannels[i] != OG_NULL )
 					emitter->sndChannels[i]->Stop();
 			}
 		}
-		else if ( emitter->IsValidChannel( channel ) && emitter->sndChannels[channel] != NULL )
+		else if ( emitter->IsValidChannel( channel ) && emitter->sndChannels[channel] != OG_NULL )
 			emitter->sndChannels[channel]->Stop();
 		emitter->mutex.unlock();
 	}
@@ -147,7 +147,7 @@ public:
 		emitter->mutex.lock();
 		if ( emitter->IsValidChannel( 0 ) ) {
 			for( int i=0; i<emitter->numChannels; i++ ) {
-				if ( emitter->sndChannels[i] != NULL )
+				if ( emitter->sndChannels[i] != OG_NULL )
 					emitter->sndChannels[i]->OnUpdate( &emitter->details );
 			}
 		}
@@ -250,7 +250,7 @@ public:
 		emitter->effect = effect;
 		if ( emitter->IsValidChannel( 0 ) ) {
 			for( int i=0; i<emitter->numChannels; i++ ) {
-				if ( emitter->sndChannels[i] != NULL )
+				if ( emitter->sndChannels[i] != OG_NULL )
 					emitter->sndChannels[i]->SetEffect( effect );
 			}
 		}
@@ -275,9 +275,9 @@ AudioEmitterEx::AudioEmitterEx
 ================
 */
 AudioEmitterEx::AudioEmitterEx() {
-	sndChannels = NULL;
+	sndChannels = OG_NULL;
 	numChannels = 0;
-	effect = NULL;
+	effect = OG_NULL;
 	details.relative	= false;
 	details.innerAngle	= 360.0f;
 	details.outerAngle	= 360.0f;
@@ -304,7 +304,7 @@ void AudioEmitterEx::Init( int channels ) {
 	numChannels = channels;
 	sndChannels = new AudioSource *[numChannels];
 	for( int i=0; i<numChannels; i++ )
-		sndChannels[i] = NULL;
+		sndChannels[i] = OG_NULL;
 	mutex.unlock();
 }
 
@@ -316,11 +316,11 @@ AudioEmitterEx::Clear
 void AudioEmitterEx::Clear( void ) {
 	if ( sndChannels ) {
 		for( int i=0; i<numChannels; i++ ) {
-			if ( sndChannels[i] != NULL )
+			if ( sndChannels[i] != OG_NULL )
 				sndChannels[i]->Stop();
 		}
 		delete[] sndChannels;
-		sndChannels = NULL;
+		sndChannels = OG_NULL;
 		numChannels = 0;
 	}
 }
@@ -332,7 +332,7 @@ AudioEmitterEx::OnSourceStop
 */
 void AudioEmitterEx::OnSourceStop( int channel ) {
 	if ( IsValidChannel( channel ) )
-		sndChannels[channel] = NULL;
+		sndChannels[channel] = OG_NULL;
 }
 
 /*
@@ -394,7 +394,7 @@ AudioEmitterEx::IsOccupied
 ================
 */
 bool AudioEmitterEx::IsOccupied( int channel ) {
-	return IsValidChannel( channel ) && sndChannels[channel] != NULL;
+	return IsValidChannel( channel ) && sndChannels[channel] != OG_NULL;
 }
 
 /*

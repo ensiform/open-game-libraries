@@ -158,7 +158,7 @@ namespace og {
 		//!
 		//! @return	The number of items reloaded / to be reloaded
 		// ==============================================================================
-		static uInt		ReloadImages( bool force, PreloadManager *preloadManager=NULL );
+		static uInt		ReloadImages( bool force, PreloadManager *preloadManager=OG_NULL );
 
 		// ==============================================================================
 		//! Preload image files in a separate thread

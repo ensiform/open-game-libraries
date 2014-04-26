@@ -85,7 +85,7 @@ namespace og {
 		//!
 		//! @param	_manager	The manager of this worker
 		// ==============================================================================
-		WorkerThread( JobManager *_manager ) : job(NULL), manager(_manager) {}
+		WorkerThread( JobManager *_manager ) : job(OG_NULL), manager(_manager) {}
 
 		// ==============================================================================
 		//! Set the new job

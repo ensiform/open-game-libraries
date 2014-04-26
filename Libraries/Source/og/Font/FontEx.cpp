@@ -32,14 +32,14 @@
 #include "FontEx.h"
 
 namespace og {
-FileSystemCore *fontFS = NULL;
+FileSystemCore *fontFS = OG_NULL;
 
 OG_INLINE void FontSetColor( const Color &color ) { glColor4f( color.r, color.g, color.b, color.a ); }
 
 //! @todo	make thread safe
 static float screenScale = 1.0f;
 static DictEx<FontFamily> fontFamilies;
-static FontFamily *defaultFamily = NULL;
+static FontFamily *defaultFamily = OG_NULL;
 static LinkedList<FontEx> fontList;
 
 const byte	MASKBITS	= 0x3F;
@@ -141,7 +141,7 @@ FontFile::Open
 ================
 */
 bool FontFile::Open( const char *filename ) {
-	if ( fontFS == NULL )
+	if ( fontFS == OG_NULL )
 		return false;
 
 	File *file = fontFS->OpenRead( filename );
@@ -323,7 +323,7 @@ FontFile::CalcWidth
 ================
 */
 float FontFile::CalcWidth( const FontEx *font, const char *text ) const {
-	OG_ASSERT( font != NULL && text != NULL );
+	OG_ASSERT( font != OG_NULL && text != OG_NULL );
 	if ( text[0] == '\0' )
 		return 0.0f;
 
@@ -332,7 +332,7 @@ float FontFile::CalcWidth( const FontEx *font, const char *text ) const {
 
 	GlyphMap::const_iterator it;
 	Color lastColor;
-	const GlyphInfo *glyph = NULL;
+	const GlyphInfo *glyph = OG_NULL;
 	for( int i=0; ; i++ ) {
 		// Skip escape colors
 		while( 1 ) {
@@ -380,7 +380,7 @@ How many chars can be drawn at the given maxWidth
 ================
 */
 int FontFile::CalcStringLength( const FontEx *font, const char *text, float maxWidth ) const {
-	OG_ASSERT( font != NULL && text != NULL );
+	OG_ASSERT( font != OG_NULL && text != OG_NULL );
 	if ( text[0] == '\0' )
 		return 0;
 
@@ -390,7 +390,7 @@ int FontFile::CalcStringLength( const FontEx *font, const char *text, float maxW
 
 	GlyphMap::const_iterator it;
 	Color lastColor;
-	const GlyphInfo *glyph = NULL;
+	const GlyphInfo *glyph = OG_NULL;
 	for( int i=0; ; i++ ) {
 		// Skip escape colors
 		while( 1 ) {
@@ -442,7 +442,7 @@ FontFile::DrawString
 ================
 */
 void FontFile::DrawString( const FontEx *font, float x, float y, const char *text, Font::Align align ) const {
-	OG_ASSERT( font != NULL && text != NULL );
+	OG_ASSERT( font != OG_NULL && text != OG_NULL );
 	if ( text[0] == '\0' )
 		return;
 
@@ -461,7 +461,7 @@ void FontFile::DrawString( const FontEx *font, float x, float y, const char *tex
 
 	GlyphMap::const_iterator it;
 	Color lastColor;
-	const GlyphInfo *glyph = NULL;
+	const GlyphInfo *glyph = OG_NULL;
 	uInt charId, escapeLength, charLen;
 	int page = -1;
 	glBegin(GL_QUADS);
@@ -554,10 +554,10 @@ FontFamily::Open
 ================
 */
 bool FontFamily::Open( const char *name ) {
-	if ( fontFS == NULL )
+	if ( fontFS == OG_NULL )
 		return false;
 
-	OG_ASSERT( name != NULL );
+	OG_ASSERT( name != OG_NULL );
 	FileList *files = fontFS->GetFileList( Format( "fonts/$*" ) << name, ".fnt", (LF_FILES | LF_CHECK_LOCAL | LF_CHECK_ARCHIVED) );
 	if ( !files )
 		return false;
@@ -583,7 +583,7 @@ FontFamily::Find
 ================
 */
 FontFamily *FontFamily::Find( const char *name ) {
-	OG_ASSERT( name != NULL );
+	OG_ASSERT( name != OG_NULL );
 	int index = fontFamilies.Find( name );
 	if ( index == -1 ) {
 		FontFamily &font = fontFamilies[name];
@@ -621,7 +621,7 @@ FontEx::Init
 ================
 */
 void FontEx::Init( const char *_family, float size, float _spacing, float defR, float defG, float defB, float defA ) {
-	OG_ASSERT( _family != NULL );
+	OG_ASSERT( _family != OG_NULL );
 	family = FontFamily::Find( _family );
 	fontSize = size;
 	spacing = _spacing;
@@ -693,11 +693,11 @@ Font::Init
 ================
 */
 bool Font::Init( FileSystemCore *fileSystem, const char *_defaultFamily ) {
-	OG_ASSERT( fileSystem != NULL );
-	OG_ASSERT( _defaultFamily != NULL );
+	OG_ASSERT( fileSystem != OG_NULL );
+	OG_ASSERT( _defaultFamily != OG_NULL );
 	fontFS = fileSystem;
 	defaultFamily = FontFamily::Find( _defaultFamily );
-	return defaultFamily != NULL;
+	return defaultFamily != OG_NULL;
 }
 
 /*
@@ -708,8 +708,8 @@ Font::Shutdown
 void Font::Shutdown( void ) {
 	fontList.Clear();
 	fontFamilies.Clear();
-	defaultFamily = NULL;
-	fontFS = NULL;
+	defaultFamily = OG_NULL;
+	fontFS = OG_NULL;
 }
 
 /*
@@ -720,7 +720,7 @@ Font::SetScreenScale
 void Font::SetScreenScale( float scale ) {
 	screenScale = scale;
 	LinkedList<FontEx>::nodeType *node = fontList.GetFirstNode();
-	while( node != NULL ) {
+	while( node != OG_NULL ) {
 		node->value.UpdateSize();
 		node = node->GetNext();
 	}
@@ -742,7 +742,7 @@ Font::Free
 ================
 */
 void Font::Free( Font *font ) {
-	OG_ASSERT( font != NULL );
+	OG_ASSERT( font != OG_NULL );
 
 	FontEx *fontEx = static_cast<FontEx *>(font);
 

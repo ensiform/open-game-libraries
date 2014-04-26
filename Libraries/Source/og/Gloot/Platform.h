@@ -92,7 +92,7 @@ namespace og {
 	class WindowEvent : public QueuedEvent {
 	public:
 		WindowEvent( WindowEx *window, uInt msg, uInt wParam, uInt lParam ) {
-			OG_ASSERT( window != NULL );
+			OG_ASSERT( window != OG_NULL );
 			this->window = window;
 			this->msg = msg;
 			this->wParam = wParam;

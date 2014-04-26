@@ -206,7 +206,7 @@ namespace og {
 		//!
 		//!	@note	You need to free it when you're done.
 		// ==============================================================================
-		virtual int		LoadFile( const char *path, byte **buffer, bool pure=true, String *pakFileName=NULL ) = 0;
+		virtual int		LoadFile( const char *path, byte **buffer, bool pure=true, String *pakFileName=OG_NULL ) = 0;
 
 		// ==============================================================================
 		//! Free a file buffer previously created by LoadFile

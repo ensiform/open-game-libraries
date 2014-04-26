@@ -88,14 +88,14 @@ void Win32MessageThread::Run( void ) {
 	while( keepRunning ) {
 		// Check for new window messages
 		MSG msg;
-		while( GetMessage( &msg, NULL, 0, 0 ) ) {
+		while( GetMessage( &msg, OG_NULL, 0, 0 ) ) {
 			if ( msg.message == WM_WAKE_UP )
 				break;
 			if ( msg.message == WM_CREATE_NEW_WINDOW ) {
 				OG_ASSERT( msg.wParam );
 				WindowEx *window = (WindowEx*)msg.wParam;
 				window->Open();
-				window = NULL;
+				window = OG_NULL;
 				Mgr.newWindowEndEvent.Signal();
 			}
 			DispatchMessage( &msg );
@@ -112,13 +112,13 @@ WindowEx::WindowEx() {
 	isIconified		= false;
 	vsyncEnabled	= false;
 
-	hDC				= NULL;
-	hRC				= NULL;
-	hWnd			= NULL;
+	hDC				= OG_NULL;
+	hRC				= OG_NULL;
+	hWnd			= OG_NULL;
 	dwStyle			= 0;
 	dwExStyle		= 0;
 
-	fsMonitor		= NULL;
+	fsMonitor		= OG_NULL;
 
 	mouseUseRaw		= true;
 	mouseLock		= false;
@@ -128,7 +128,7 @@ WindowEx::WindowEx() {
 
 void *WindowEx::GetProcAddress( const char *procname ) const {
 	if( !isOpen )
-		return NULL;
+		return OG_NULL;
 	return (void *) wglGetProcAddress( procname ); 
 }
 
@@ -136,7 +136,7 @@ WindowEx *WindowEx::NewWindow( const WindowConfig *windowCfg ) {
 	WindowEx *wnd = new WindowEx;
 	wnd->SetWindowConfig( windowCfg );
 
-	OG_ASSERT( Mgr.messageThread != NULL );
+	OG_ASSERT( Mgr.messageThread != OG_NULL );
 	Mgr.newWindowEndEvent.Lock();
 	PostThreadMessage( Mgr.messageThread->GetNativeId(), WM_CREATE_NEW_WINDOW, (WPARAM)wnd, 0 );
 	Mgr.newWindowEndEvent.Wait();
@@ -148,8 +148,8 @@ WindowEx *WindowEx::NewWindow( const WindowConfig *windowCfg ) {
 bool WindowEx::Create( void ) {
 	isOpen = false;
 
-	hDC = NULL;
-	hRC = NULL;
+	hDC = OG_NULL;
+	hRC = OG_NULL;
 
 	// Set window size to true requested size (adjust for window borders)
 	RECT rect = { 0, 0, windowConfig.width-1, windowConfig.height-1 };
@@ -181,8 +181,8 @@ bool WindowEx::Create( void ) {
 				x, y,				// Window position
 				full_width,			// Decorated window width
 				full_height,		// Decorated window height
-				NULL,				// No parent window
-				NULL,				// No menu
+				OG_NULL,			// No parent window
+				OG_NULL,			// No menu
 				Mgr.hInstance,		// hInstance
 				this );				// pass this to WM_CREATE
 
@@ -250,7 +250,7 @@ bool WindowEx::CreateContext( void ) {
 		}
 		else {
 			// we got an advanced one, delete the simple one.
-			wglMakeCurrent( NULL, NULL );
+			wglMakeCurrent( OG_NULL, OG_NULL );
 			wglDeleteContext( hRC_simple );
 		}
 	}
@@ -275,15 +275,15 @@ bool WindowEx::CreateContext( void ) {
 void WindowEx::Destroy( void ) {
 	// Delete the rendering context
 	if( hRC ){
-		wglMakeCurrent( NULL, NULL );
+		wglMakeCurrent( OG_NULL, OG_NULL );
 		wglDeleteContext( hRC );
-		hRC = NULL;
+		hRC = OG_NULL;
 	}
 
 	// Release the device context
 	if( hDC ) {
 		ReleaseDC( hWnd, hDC );
-		hDC = NULL;
+		hDC = OG_NULL;
 	}
 
 	// Destroy the window
@@ -291,7 +291,7 @@ void WindowEx::Destroy( void ) {
 		ShowWindow( hWnd, SW_HIDE );
 		SetWindowLongPtr( hWnd, GWL_USERDATA, NULL );
 		DestroyWindow( hWnd );
-		hWnd = NULL;
+		hWnd = OG_NULL;
 	}
 }
 
@@ -309,7 +309,7 @@ void WindowEx::UpdateStyles( bool fullScreen ) {
 			dwExStyle	|= WS_EX_WINDOWEDGE;
 		}
 	}
-	if ( hWnd != NULL ) {
+	if ( hWnd != OG_NULL ) {
 		ignoreSizeMove = true;
 		SetWindowLong( hWnd, GWL_STYLE, dwStyle );
 		SetWindowLong( hWnd, GWL_EXSTYLE, dwExStyle );
@@ -427,7 +427,7 @@ int WindowEx::ChoosePixelFormatARB( void ) {
 
 	int PixelFormat = 0;
 	UINT numFormats;
-	if( !Mgr.wglChoosePixelFormatARB( hDC, attribs, NULL, 1, &PixelFormat, &numFormats ) || numFormats <= 0 )
+	if( !Mgr.wglChoosePixelFormatARB( hDC, attribs, OG_NULL, 1, &PixelFormat, &numFormats ) || numFormats <= 0 )
 		return 0;
 	return PixelFormat;
 }
@@ -515,7 +515,7 @@ LRESULT CALLBACK WindowEx::WndCallback( HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 		// catch ALT F4, otherwise it will be used as normal input.
 		//! @todo	make this optional for the user to decide.
 		if ( uMsg == WM_SYSKEYDOWN && wParam == VK_F4 ) {
-			if ( window->fsMonitor == NULL )
+			if ( window->fsMonitor == OG_NULL )
 				return window->WndCallback( uMsg, wParam, lParam );
 		}
 		// Try for input messages
@@ -554,7 +554,7 @@ LRESULT WindowEx::WndCallback( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 				ReleaseCapture();
 
 				// Disable cursor clipping
-				ClipCursor( NULL );
+				ClipCursor( OG_NULL );
 
 				// Show cursor
 				ShowCursor( TRUE );
@@ -601,7 +601,7 @@ LRESULT WindowEx::WndCallback( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 				SetWindowPos( hWnd, HWND_TOP, fsMonitor->left, fsMonitor->top, fsMonitor->width, fsMonitor->height, SWP_FRAMECHANGED );
 			} else {
 				fsMonitor->Revert();
-				fsMonitor = NULL;
+				fsMonitor = OG_NULL;
 
 				// Restore window styles
 				UpdateStyles( false );
@@ -626,7 +626,7 @@ LRESULT WindowEx::WndCallback( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 			else if ( windowConfig.flags & WF_NORESIZE )
 				windowConfig.flags &= ~WF_NORESIZE;
 
-			UpdateStyles( fsMonitor != NULL );
+			UpdateStyles( fsMonitor != OG_NULL );
 
 			//! @todo	may need to update size here ?
 			return 0;
@@ -640,7 +640,7 @@ LRESULT WindowEx::WndCallback( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 				}
 				// Deactivate window
 				CloseWindow( hWnd );
-				SetFocus( NULL );
+				SetFocus( OG_NULL );
 			} else {
 				// Re-lock mouse
 				if( oldMouseLock == 1 )
@@ -702,7 +702,7 @@ LRESULT WindowEx::WndCallback( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 					oldMouseLock = -1;
 				}
 			}
-			Mgr.activeWindow = Active ? this : NULL;
+			Mgr.activeWindow = Active ? this : OG_NULL;
 
 			if ( hasFocus != Active ) {
 				hasFocus = Active;
@@ -948,7 +948,7 @@ Monitor *WindowEx::GetMonitor( void ) const {
 		if ( Mgr.monitorList[i]->IsHMonitor(hMonitor) )
 			return Mgr.monitorList[i];
 	}
-	return NULL;
+	return OG_NULL;
 }
 
 // mouse stuff

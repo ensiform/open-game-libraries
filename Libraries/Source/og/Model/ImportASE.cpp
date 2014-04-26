@@ -41,7 +41,7 @@ static bool SkipUnknown( Lexer &lexer ) {
 	const Token *token;
 	const char *p;
 	int line = lexer.GetLine();
-	while ( (token = lexer.ReadToken()) != NULL ) {
+	while ( (token = lexer.ReadToken()) != OG_NULL ) {
 		p = token->GetString();
 		if ( !p || !*p )
 			continue;
@@ -101,9 +101,9 @@ public:
 	aseMesh() {
 		numVerts = 0;
 		numTris = 0;
-		vertices = NULL;
-		triangles = NULL;
-		texCoords = NULL;
+		vertices = OG_NULL;
+		triangles = OG_NULL;
+		texCoords = OG_NULL;
 		materialId = 0;
 	}
 	~aseMesh(){
@@ -136,7 +136,7 @@ static void ReadMaterial( Lexer &lexer ) {
 	lexer.ExpectToken("{");
 	const char *p;
 	const Token *token;
-	while ( (token = lexer.ReadToken()) != NULL ) {
+	while ( (token = lexer.ReadToken()) != OG_NULL ) {
 		p = token->GetString();
 		if ( !p || !*p )
 			continue;
@@ -162,7 +162,7 @@ static void ReadMaterialList( Lexer &lexer ) {
 	const char *p;
 	const Token *token;
 	int numMaterials;
-	while ( (token = lexer.ReadToken()) != NULL ) {
+	while ( (token = lexer.ReadToken()) != OG_NULL ) {
 		p = token->GetString();
 		if ( !p || !*p )
 			continue;
@@ -191,7 +191,7 @@ static void ReadMesh( Lexer &lexer, aseMesh *inMesh ) {
 	lexer.ExpectToken("{");
 	const char *p;
 	const Token *token;
-	while ( (token = lexer.ReadToken()) != NULL ) {
+	while ( (token = lexer.ReadToken()) != OG_NULL ) {
 		p = token->GetString();
 		if ( !p || !*p )
 			continue;
@@ -306,7 +306,7 @@ static void ReadGeoMObject( Lexer &lexer, ListEx<aseMesh> &myMeshList ) {
 	const char *p;
 	const Token *token;
 	String name;
-	while ( (token = lexer.ReadToken()) != NULL ) {
+	while ( (token = lexer.ReadToken()) != OG_NULL ) {
 		p = token->GetString();
 		if ( !p || !*p )
 			continue;
@@ -339,7 +339,7 @@ Model *Model::ImportASE( const char *filename ) {
 	lexer.SetCommentStrings( "", "", "" );
 
 	if ( !lexer.LoadFile( filename ) )
-		return NULL;
+		return OG_NULL;
 
 	int numJoints = -1;
 	Model *model = new Model(false);
@@ -349,7 +349,7 @@ Model *Model::ImportASE( const char *filename ) {
 
 		const char *p;
 
-		while ( (token = lexer.ReadToken()) != NULL ) {
+		while ( (token = lexer.ReadToken()) != OG_NULL ) {
 			p = token->GetString();
 			if ( !p || !*p )
 				continue;
@@ -371,7 +371,7 @@ Model *Model::ImportASE( const char *filename ) {
 		String errStr;
 		err.ToString( errStr );
 		User::Error( ERR_LEXER_FAILURE, errStr.c_str(), filename );
-		return NULL;
+		return OG_NULL;
 	}
 
 	// add root bone

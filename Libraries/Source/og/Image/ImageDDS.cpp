@@ -34,7 +34,7 @@
 #include <GL/glext.h>
 
 namespace og {
-PFNGLCOMPRESSEDTEXIMAGE2DARBPROC og_glCompressedTexImage2DARB = NULL;
+PFNGLCOMPRESSEDTEXIMAGE2DARBPROC og_glCompressedTexImage2DARB = OG_NULL;
 
 struct ddsHeader{
 	char magic[4];
@@ -140,11 +140,11 @@ ImageFileDDS::Open
 */
 bool ImageFileDDS::Open( const char *filename ) {
 	isLoaded = false;
-	if ( imageFS == NULL )
+	if ( imageFS == OG_NULL )
 		return false;
 
 	File *file = imageFS->OpenRead( filename, true, true );
-	if ( file == NULL )
+	if ( file == OG_NULL )
 		return false;
 
 	try {

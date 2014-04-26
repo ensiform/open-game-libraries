@@ -63,7 +63,7 @@ uLongLong GetHiResTime( void ) {
 	return static_cast<uLongLong>(count.QuadPart*pfcMultiplier);
 #else
 	struct timeval tp;
-	gettimeofday(&tp, NULL);
+	gettimeofday(&tp, OG_NULL);
 	return tp.tv_sec*1000000 + tp.tv_usec;
 #endif
 }
@@ -78,7 +78,7 @@ uLong GetTime( void ) {
 	return timeGetTime();
 #else
 	struct timeval tp;
-	gettimeofday(&tp, NULL);
+	gettimeofday(&tp, OG_NULL);
 	return tp.tv_sec*1000 + (tp.tv_usec/1000);
 #endif
 }
@@ -366,14 +366,14 @@ void RetrieveCPUSpeed( void ) {
 
 #elif OG_LINUX
 	FILE *file = fopen("/proc/cpuinfo", "r");
-	if( file != NULL ) {
+	if( file != OG_NULL ) {
 		char buffer[1024];
 		int len = fread (buffer, 1, 1023, file);
 		fclose( file );
 		if ( len != 0 ) {
 			buffer[len] = '\0';
 			char *match = strstr( buffer, "cpu MHz" );
-			if ( match != NULL ) {
+			if ( match != OG_NULL ) {
 				float speed;
 				sscanf( match, "cpu MHz : %f", &speed );
 				cpu.speed = static_cast<int>(speed);
@@ -402,14 +402,14 @@ void RetrieveMemorySize( void ) {
 
 #elif OG_LINUX
 	FILE *file = fopen("/proc/meminfo", "r");
-	if( file != NULL ) {
+	if( file != OG_NULL ) {
 		char buffer[1024];
 		int len = fread (buffer, 1, 1023, file);
 		fclose( file );
 		if ( len != 0 ) {
 			buffer[len] = '\0';
 			char *match = strstr( buffer, "MemTotal" );
-			if ( match != NULL ) {
+			if ( match != OG_NULL ) {
 				long memTotal;
 				sscanf( match, "MemTotal: %ld", &memTotal );
 				ramMB = memTotal/1024;
@@ -477,14 +477,14 @@ bool GetOSInfo( OSInfo &data ) {
 	}
 #elif OG_LINUX
 	FILE *file = fopen("/proc/version", "r");
-	if( file != NULL ) {
+	if( file != OG_NULL ) {
 		char buffer[256];
 		int len = fread (buffer, 1, 255, file);
 		fclose( file );
 		if ( len != 0 ) {
 			buffer[len] = '\0';
 			char *p = strchr( buffer, '(' );
-			if ( p != NULL || (p = strchr( buffer, '\n' )) != NULL )
+			if ( p != OG_NULL || (p = strchr( buffer, '\n' )) != OG_NULL )
 				*p = '\0';
 
 			data.name = buffer;
@@ -535,7 +535,7 @@ DateTime::UseCurrentTime
 ================
 */
 void DateTime::UseCurrentTime( void ) {
-	FromTime( time(NULL) );
+	FromTime( time(OG_NULL) );
 }
 
 /*

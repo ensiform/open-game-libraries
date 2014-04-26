@@ -48,12 +48,12 @@ AudioSource::AudioSource
 ================
 */
 AudioSource::AudioSource( AudioSource *previous, uInt sourceNum ) {
-	emitter		= NULL;
+	emitter		= OG_NULL;
 	emitterChannel = 0;
 	safeLevel	= 0;
 	alSourceNum	= sourceNum;
-	streamData	= NULL;
-	next		= NULL;
+	streamData	= OG_NULL;
+	next		= OG_NULL;
 	prev		= previous;
 	if ( previous )
 		previous->next = this;
@@ -80,7 +80,7 @@ AudioSource::Play
 ================
 */
 bool AudioSource::Play( AudioEmitterEx *_emitter, int channel, const Sound *sound, bool allowLoop ) {
-	OG_ASSERT( _emitter != NULL && sound != NULL );
+	OG_ASSERT( _emitter != OG_NULL && sound != OG_NULL );
 
 	Stop();
 
@@ -89,7 +89,7 @@ bool AudioSource::Play( AudioEmitterEx *_emitter, int channel, const Sound *soun
 
 	int num = sound->filenames.Num();
 	if ( num == 0 ) {
-		emitter = NULL;
+		emitter = OG_NULL;
 		emitterChannel = 0;
 		return false;
 	}
@@ -140,11 +140,11 @@ void AudioSource::Stop( void ) {
 		CheckAlErrors();
 
 		delete streamData;
-		streamData = NULL;
+		streamData = OG_NULL;
 
-		SetEffect(NULL);
+		SetEffect(OG_NULL);
 		emitter->OnSourceStop( emitterChannel );
-		emitter = NULL;
+		emitter = OG_NULL;
 		emitterChannel = 0;
 	}
 }

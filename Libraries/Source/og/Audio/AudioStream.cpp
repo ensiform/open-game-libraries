@@ -108,7 +108,7 @@ VorbisStream::~VorbisStream() {
 	if ( data ) {
 		OG_ASSERT( numInUse == 0 );
 		audioFS->FreeFile( data );
-		data = NULL;
+		data = OG_NULL;
 	}
 }
 
@@ -124,7 +124,7 @@ bool VorbisStream::LoadFile( const char *filename ) {
 
 	// Create a fake stream data so we can get some info.
 	VorbisStreamData *streamData = static_cast<VorbisStreamData *>( CreateStreamData( false ) );
-	if ( streamData == NULL )
+	if ( streamData == OG_NULL )
 		return false;
 	vorbis_info *fileInfo = ov_info( &streamData->file, -1 );
 
@@ -148,10 +148,10 @@ VorbisStream::CreateStreamData
 */
 AudioStreamData *VorbisStream::CreateStreamData( bool loop ) {
 	VorbisStreamData *streamData = new VorbisStreamData( this, loop );
-	if ( ov_open_callbacks( streamData, &streamData->file, NULL, 0, vorbisCallbacks ) != 0 ) {
+	if ( ov_open_callbacks( streamData, &streamData->file, OG_NULL, 0, vorbisCallbacks ) != 0 ) {
 		//common->Warning("Failed to read ogg file.");
 		delete streamData;
-		return NULL;
+		return OG_NULL;
 	}
 
 	numInUse++;
@@ -207,7 +207,7 @@ bool VorbisStream::UploadData( AudioStreamData *streamData, int buffer, uInt max
 		else {
 			ov_clear( &static_cast<VorbisStreamData *>(streamData)->file );
 			streamData->pos = 0;
-			if ( ov_open_callbacks( streamData, &static_cast<VorbisStreamData *>(streamData)->file, NULL, 0, vorbisCallbacks ) != 0 ) {
+			if ( ov_open_callbacks( streamData, &static_cast<VorbisStreamData *>(streamData)->file, OG_NULL, 0, vorbisCallbacks ) != 0 ) {
 				//common->Warning("Failed to read ogg file.");
 				return false;
 			}
@@ -331,7 +331,7 @@ bool WavStream::LoadFile( const char *filename ) {
 
 	short formatTag;
 	unsigned short channels, bitsPerSample;
-	data = NULL;
+	data = OG_NULL;
 
 	try {
 		uInt chunkID	= file->ReadUint();
@@ -463,7 +463,7 @@ bool AudioStream::StartStream( AudioSource *src, bool loop ) {
 	if ( outSize <= AUDIOSRC_STREAM_LIMIT ) {
 		if( !UploadData( src->streamData, src->alBuffers[0], AUDIOSRC_STREAM_LIMIT ) ) {
 			delete src->streamData;
-			src->streamData = NULL;
+			src->streamData = OG_NULL;
 			return false;
 		}
 		src->streamData->isDone = true;
@@ -474,7 +474,7 @@ bool AudioStream::StartStream( AudioSource *src, bool loop ) {
 		for( int i=0; i<AUDIOSRC_BUFFERS; i++ ) {
 			if( !UploadData( src->streamData, src->alBuffers[i], AUDIOSRC_BUFFERSIZE ) ) {
 				delete src->streamData;
-				src->streamData = NULL;
+				src->streamData = OG_NULL;
 				return false;
 			}
 		}
@@ -493,7 +493,7 @@ AudioStream::UpdateStream
 ================
 */
 void AudioStream::UpdateStream( AudioSource *src ) {
-	OG_ASSERT( src->streamData != NULL );
+	OG_ASSERT( src->streamData != OG_NULL );
 
 	if ( outSize > AUDIOSRC_STREAM_LIMIT ) {
 		int processed;
@@ -530,12 +530,12 @@ AudioStream *AudioStream::Open( const char *filename ) {
 		stream = new WavStream;
 	else {
 		//common->Warning("Unknown extension '%s'", extension.c_str() );
-		return NULL;
+		return OG_NULL;
 	}
 
 	if ( !stream->LoadFile( filename ) ) {
 		delete stream;
-		return NULL;
+		return OG_NULL;
 	}
 	return stream;
 }

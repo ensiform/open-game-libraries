@@ -56,18 +56,18 @@ Platform::Platform() {
 	initialized = false;
 	GLVersion[0] = GLVersion[1] = GLVersion[2] = -1;
 
-	wglSwapIntervalEXT				= NULL;
-	wglChoosePixelFormatARB			= NULL;
-	wglGetPixelFormatAttribivARB	= NULL;
-	wglGetExtensionsStringEXT		= NULL;
-	wglGetExtensionsStringARB		= NULL;
-	wglCreateContextAttribsARB		= NULL;
+	wglSwapIntervalEXT				= OG_NULL;
+	wglChoosePixelFormatARB			= OG_NULL;
+	wglGetPixelFormatAttribivARB	= OG_NULL;
+	wglGetExtensionsStringEXT		= OG_NULL;
+	wglGetExtensionsStringARB		= OG_NULL;
+	wglCreateContextAttribsARB		= OG_NULL;
 	supportsMultiSampling			= false;
 
-	activeWindow					= NULL;
+	activeWindow					= OG_NULL;
 
-	messageThread					= NULL;
-	keyboardHook					= NULL;
+	messageThread					= OG_NULL;
+	keyboardHook					= OG_NULL;
 	disableSysKeys					= false;
 
 	hasGammaRamp					= false;
@@ -76,9 +76,9 @@ Platform::Platform() {
 bool Platform::Init( void ) {
 	// Get desktop gammaramp, so we can restore it later
 	if ( !hasGammaRamp ) {
-		HDC hDC = GetDC( NULL );
+		HDC hDC = GetDC( OG_NULL );
 		hasGammaRamp = GetDeviceGammaRamp( hDC, storedGammaRamp ) == TRUE;
-		ReleaseDC( NULL, hDC );
+		ReleaseDC( OG_NULL, hDC );
 	}
 	// Init all monitors
 	if ( !InitMonitors() )
@@ -98,7 +98,7 @@ bool Platform::Init( void ) {
 #endif
 
 	// Retrieve GLOOT instance handle
-	hInstance = GetModuleHandle( NULL );
+	hInstance = GetModuleHandle( OG_NULL );
 
 	// Create window class
 	WNDCLASS wc;
@@ -107,15 +107,15 @@ bool Platform::Init( void ) {
 	wc.cbClsExtra		= 0;								// No extra class data
 	wc.cbWndExtra		= 0;								// No extra window data
 	wc.hInstance		= hInstance;						// Set instance
-	wc.hCursor			= LoadCursor( NULL, IDC_ARROW );	// Load arrow pointer
-	wc.hbrBackground	= NULL;								// No background
-	wc.lpszMenuName		= NULL;								// No menu
+	wc.hCursor			= LoadCursor( OG_NULL, IDC_ARROW );	// Load arrow pointer
+	wc.hbrBackground	= OG_NULL;								// No background
+	wc.lpszMenuName		= OG_NULL;								// No menu
 	wc.lpszClassName	= GLOOT_WNDCLASSNAME;				// Set class name
 
 	// Load user-provided icon if available
 	wc.hIcon = LoadIcon( hInstance, L"GLOOT_ICON" );
 	if( !wc.hIcon )
-		wc.hIcon = LoadIcon( NULL, IDI_WINLOGO );
+		wc.hIcon = LoadIcon( OG_NULL, IDI_WINLOGO );
 
 	// Register the window class
 	classAtom = RegisterClass( &wc );
@@ -135,9 +135,9 @@ bool Platform::Init( void ) {
 }
 
 void Platform::Shutdown( void ) {
-	if( keyboardHook != NULL ) {
+	if( keyboardHook != OG_NULL ) {
 		UnhookWindowsHookEx( keyboardHook );
-		keyboardHook = NULL;
+		keyboardHook = OG_NULL;
 	}
 	ShutdownInput();
 	ShutdownMonitors();
@@ -145,7 +145,7 @@ void Platform::Shutdown( void ) {
 	// Terminate message thread
 	if ( messageThread ) {
 		messageThread->Stop();
-		messageThread = NULL;
+		messageThread = OG_NULL;
 	}
 
 	Mgr.eventQueue.DeleteAll();
@@ -162,16 +162,16 @@ void Platform::Shutdown( void ) {
 
 bool Platform::wglExtensionSupported( HDC hDC, const char *extension ) {
 	// Try wglGetExtensionsStringEXT
-	if( wglGetExtensionsStringEXT != NULL ) {
+	if( wglGetExtensionsStringEXT != OG_NULL ) {
 		const char *extensions = (const char *) wglGetExtensionsStringEXT();
 		if( extensions && StringInExtensionString( extension, extensions ) )
 			return true;
 	}
 
 	// Try wglGetExtensionsStringARB
-	if( wglGetExtensionsStringARB != NULL ) {
+	if( wglGetExtensionsStringARB != OG_NULL ) {
 		const char *extensions = (const char *) wglGetExtensionsStringARB( hDC );
-		if( extensions != NULL && StringInExtensionString( extension, extensions ) )
+		if( extensions != OG_NULL && StringInExtensionString( extension, extensions ) )
 			return true;
 	}
 	return false;
@@ -205,7 +205,7 @@ bool Platform::wglInitExtensions( HDC hDC ) {
 bool Platform::DoSilentVideoTest( void ) {
 	// Create invisible window
 	HWND hWnd = CreateWindowEx( WS_EX_TOOLWINDOW, GLOOT_WNDCLASSNAME, L"GLOOT Test", WS_POPUP,
-								0, 0, 10, 10, NULL, NULL, hInstance, NULL );
+								0, 0, 10, 10, OG_NULL, OG_NULL, hInstance, OG_NULL );
 	if( !hWnd )
 		return false;
 
@@ -274,7 +274,7 @@ bool Platform::DoSilentVideoTest( void ) {
 		const int MAX_PIXEL_FORMATS = 1024;
 		int PixelFormats[MAX_PIXEL_FORMATS];
 		UINT numFormats;
-		if( !wglChoosePixelFormatARB( hDC, attribs, NULL, MAX_PIXEL_FORMATS, PixelFormats, &numFormats ) || numFormats <= 0 )
+		if( !wglChoosePixelFormatARB( hDC, attribs, OG_NULL, MAX_PIXEL_FORMATS, PixelFormats, &numFormats ) || numFormats <= 0 )
 			return false;
 
 		if ( supportsMultiSampling ) {
@@ -290,7 +290,7 @@ bool Platform::DoSilentVideoTest( void ) {
 	}
 
 	// Cleanup
-	wglMakeCurrent( NULL, NULL );
+	wglMakeCurrent( OG_NULL, OG_NULL );
 	wglDeleteContext( hRC );
 	ReleaseDC( hWnd, hDC );
 	DestroyWindow( hWnd );
@@ -327,7 +327,7 @@ int ParseCommandLine( char *lpCmdLine, char *argv[] )  {
 	bool inQuote;
 
 	// We can use the lpCmdLine buffer, since it's long enough and writable
-	char *write = argv ? lpCmdLine : NULL;
+	char *write = argv ? lpCmdLine : OG_NULL;
 	for( int i=0; lpCmdLine[i]; i++ ) {
 		// Skip whitespaces
 		for( ; isspace(lpCmdLine[i]); i++ ) {
@@ -368,7 +368,7 @@ int WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR, int ) {
 	strCommandLine.FromWide( GetCommandLineW() );
 
 	// One call to count argc, one to fill argv
-	int argc = ParseCommandLine( strCommandLine.raw_ptr(), NULL );
+	int argc = ParseCommandLine( strCommandLine.raw_ptr(), OG_NULL );
 	char **argv = new char *[argc * sizeof(char *)];
 	ParseCommandLine( strCommandLine.raw_ptr(), argv );
 

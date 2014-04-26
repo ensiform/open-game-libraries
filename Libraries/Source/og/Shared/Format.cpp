@@ -59,8 +59,8 @@ Format::Format
 ================
 */
 Format::Format( const char *fmt ) {
-	firstFormatEntry = NULL;
-	lastFormatEntry = NULL;
+	firstFormatEntry = OG_NULL;
+	lastFormatEntry = OG_NULL;
 	numFormatEntries = 0;
 	Reset( false, fmt );
 }
@@ -119,7 +119,7 @@ void Format::Reset( bool keep, const char *fmt ) {
 	}
 	DeleteFormatEntries();
 
-	hasFormat = (fmt != NULL);
+	hasFormat = (fmt != OG_NULL);
 	if ( !hasFormat ) {
 		offset = 0;
 		paramCount = -1;
@@ -136,7 +136,7 @@ void Format::Reset( bool keep, const char *fmt ) {
 					r++;
 				else {
 					FormatEntry *entry = new FormatEntry;
-					if ( firstFormatEntry == NULL )
+					if ( firstFormatEntry == OG_NULL )
 						firstFormatEntry = lastFormatEntry = entry;
 					else
 						lastFormatEntry = lastFormatEntry->next = entry;

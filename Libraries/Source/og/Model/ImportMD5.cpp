@@ -94,7 +94,7 @@ bool ImportMD5AnimBaseFrame( const char *filename, Model *model ) {
 		Vec3 vTemp;
 		int boneIndex = 0;
 
-		while ( (token = lexer.ReadToken()) != NULL ) {
+		while ( (token = lexer.ReadToken()) != OG_NULL ) {
 			p = token->GetString();
 			if ( !p || !*p )
 				continue;
@@ -199,7 +199,7 @@ Model::ImportMD5
 Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 	Lexer lexer(LEXER_NO_BOM_WARNING);
 	if ( !lexer.LoadFile( filename ) )
-		return NULL;
+		return OG_NULL;
 
 	Model *model = new Model(true);
 	int numJoints = -1;
@@ -225,7 +225,7 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 		int numVerts, vertIndex;
 		int triCounter, indexCounter;
 		int numWeights;
-		MeshAnimated *mesh = NULL;
+		MeshAnimated *mesh = OG_NULL;
 		
 		int i, j, num;
 		Vec3 vTemp;
@@ -237,7 +237,7 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 		ListEx<MD5Vertex> vertexList;
 		ListEx<MD5Weight> weightList;
 
-		while ( (token = lexer.ReadToken()) != NULL ) {
+		while ( (token = lexer.ReadToken()) != OG_NULL ) {
 			p = token->GetString();
 			if ( !p || !*p )
 				continue;
@@ -424,16 +424,16 @@ Model *Model::ImportMD5( const char *filename, const char *filenameAnim ) {
 		String errStr;
 		err.ToString( errStr );
 		User::Error( ERR_LEXER_FAILURE, errStr.c_str(), filename );
-		return NULL;
+		return OG_NULL;
 	}
 
 	if ( !ImportMD5AnimBaseFrame( filenameAnim, model ) )
-		return NULL;
+		return OG_NULL;
 
 	if ( numJoints != model->bones.Num() ) {
 		delete model;
 		User::Error( ERR_FILE_CORRUPT, "Number of Joints do not match", filename );
-		return NULL;
+		return OG_NULL;
 	}
 	return model;
 }

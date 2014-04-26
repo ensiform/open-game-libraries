@@ -206,7 +206,7 @@ namespace og {
 		//!
 		//! @see	Init
 		// ==============================================================================
-		CVar( const char *name, const char *defValue, int flags, const char *desc, const ConArgComplete *completion=NULL );
+		CVar( const char *name, const char *defValue, int flags, const char *desc, const ConArgComplete *completion=OG_NULL );
 
 		// ==============================================================================
 		//! Constructor for numeric types

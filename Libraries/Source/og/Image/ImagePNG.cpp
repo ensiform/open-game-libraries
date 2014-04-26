@@ -102,26 +102,26 @@ ImageFilePNG::Open
 */
 bool ImageFilePNG::Open( const char *filename ) {
 	isLoaded = false;
-	if ( imageFS == NULL )
+	if ( imageFS == OG_NULL )
 		return false;
 
 	File *file = imageFS->OpenRead( filename, true, true );
-	if ( file == NULL )
+	if ( file == OG_NULL )
 		return false;
 
-	png_structp png_ptr = NULL;
-	png_infop info_ptr = NULL;
+	png_structp png_ptr = OG_NULL;
+	png_infop info_ptr = OG_NULL;
 	try {
-		png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL, pngError, pngWarning );
+		png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, OG_NULL, pngError, pngWarning );
 
-		if ( png_ptr == NULL ) {
+		if ( png_ptr == OG_NULL ) {
 			User::Error( ERR_OUT_OF_MEMORY, "png_create_read_struct", "-1" );
 			file->Close();
 			return false;
 		}
 
 		info_ptr = png_create_info_struct(png_ptr);
-		if ( info_ptr == NULL ) {
+		if ( info_ptr == OG_NULL ) {
 			png_destroy_read_struct(&png_ptr, png_infopp_NULL, png_infopp_NULL);
 			User::Error( ERR_OUT_OF_MEMORY, "png_create_info_struct", "-1" );
 			file->Close();
@@ -168,26 +168,26 @@ ImageFilePNG::Save
 ================
 */
 bool ImageFilePNG::Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
-	if ( imageFS == NULL )
+	if ( imageFS == OG_NULL )
 		return false;
 
 	File *file = imageFS->OpenWrite(filename);
-	if ( file == NULL )
+	if ( file == OG_NULL )
 		return false;
 
-	png_structp png_ptr = NULL;
-	png_infop info_ptr = NULL;
+	png_structp png_ptr = OG_NULL;
+	png_infop info_ptr = OG_NULL;
 	try {
-		png_ptr = png_create_write_struct( PNG_LIBPNG_VER_STRING, NULL, pngError, pngWarning );
+		png_ptr = png_create_write_struct( PNG_LIBPNG_VER_STRING, OG_NULL, pngError, pngWarning );
 
-		if ( png_ptr == NULL ) {
+		if ( png_ptr == OG_NULL ) {
 			User::Error( ERR_OUT_OF_MEMORY, "png_create_write_struct", "-1" );
 			file->Close();
 			return false;
 		}
 
 		info_ptr = png_create_info_struct(png_ptr);
-		if ( info_ptr == NULL ) {
+		if ( info_ptr == OG_NULL ) {
 			png_destroy_write_struct( &png_ptr,  png_infopp_NULL );
 			User::Error( ERR_OUT_OF_MEMORY, "png_create_info_struct", "-1" );
 			file->Close();
@@ -216,7 +216,7 @@ bool ImageFilePNG::Save( const char *filename, byte *data, uInt width, uInt heig
 
 		png_write_png( png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, png_voidp_NULL );
 
-		info_ptr->row_pointers = NULL;
+		info_ptr->row_pointers = OG_NULL;
 
 		png_destroy_write_struct( &png_ptr, &info_ptr );
 

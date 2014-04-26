@@ -34,7 +34,7 @@ namespace og {
 const int GMD_VERSION = 1;	//!< The model file version
 const int GMA_VERSION = 1;	//!< The animation file version
 
-FileSystemCore *modelFS = NULL;
+FileSystemCore *modelFS = OG_NULL;
 
 /*
 ==============================================================================
@@ -137,16 +137,16 @@ Model::Load
 ================
 */
 Model *Model::Load( const char *filename ) {
-	if ( modelFS == NULL )
-		return NULL;
+	if ( modelFS == OG_NULL )
+		return OG_NULL;
 
 	File *file = modelFS->OpenRead( filename );
 	if ( !file ) {
 		User::Warning( Format( "Can't open file: '$*'" ) << filename );
-		return NULL;
+		return OG_NULL;
 	}
 
-	Model *model = NULL;
+	Model *model = OG_NULL;
 	try {
 		// Read Header
 		char fileId[4];
@@ -235,7 +235,7 @@ Model *Model::Load( const char *filename ) {
 		file->Close();
 		delete model;
 		User::Error( ERR_FILE_CORRUPT, Format("MD3: $*" ) << err.ToString(), filename );
-		return NULL;
+		return OG_NULL;
 	}
 }
 
@@ -270,7 +270,7 @@ Model::Save
 ================
 */
 bool Model::Save( Model *model, const char *filename ) {
-	if ( modelFS == NULL )
+	if ( modelFS == OG_NULL )
 		return false;
 
 	File *file = modelFS->OpenWrite( filename, false );
@@ -350,7 +350,7 @@ bool Model::Save( Model *model, const char *filename ) {
 	catch( FileReadWriteError &err ) {
 		file->Close();
 		User::Error( ERR_FILE_WRITEFAIL, Format("GMD: $*" ) << err.ToString(), filename );
-		return NULL;
+		return OG_NULL;
 	}
 }
 

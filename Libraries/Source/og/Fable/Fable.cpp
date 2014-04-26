@@ -52,7 +52,7 @@ void Shutdown( void ) {
 }
 
 int GetNumDevices( void ) { return deviceList.Num(); }
-Device *GetDevice( uInt index ) { return (index >= deviceList.Num()) ? NULL : deviceList[index]; }
+Device *GetDevice( uInt index ) { return (index >= deviceList.Num()) ? OG_NULL : deviceList[index]; }
 
 }
 }

@@ -124,7 +124,7 @@ public:
 
 		// Find all files
 		glob_t findResult;
-		if ( glob( findname.c_str(), 0, NULL, &findResult ) != 0 )
+		if ( glob( findname.c_str(), 0, OG_NULL, &findResult ) != 0 )
 			return false;
 
 		const char *name;

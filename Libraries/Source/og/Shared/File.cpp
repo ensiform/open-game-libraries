@@ -302,7 +302,7 @@ File::WriteCStr
 ================
 */
 void File::WriteCStr( const char *value ) {
-	OG_ASSERT(value != NULL);
+	OG_ASSERT(value != OG_NULL);
 	Write( value, strlen(value) );
 }
 

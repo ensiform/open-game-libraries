@@ -136,13 +136,13 @@ Model::ImportMD3
 ================
 */
 Model *Model::ImportMD3( const char *filename ) {
-	if ( modelFS == NULL )
-		return NULL;
+	if ( modelFS == OG_NULL )
+		return OG_NULL;
 
 	File *file = modelFS->OpenRead( filename );
 	if( !file ) {
 		User::Warning( Format("Can't open file: $*!" ) << filename );
-		return NULL;
+		return OG_NULL;
 	}
 	
 	Model *model = new Model(false);
@@ -263,7 +263,7 @@ Model *Model::ImportMD3( const char *filename ) {
 		file->Close();
 		delete model;
 		User::Error( ERR_FILE_CORRUPT, Format("MD3: $*" ) << err.ToString(), filename );
-		return NULL;
+		return OG_NULL;
 	}
 }
 

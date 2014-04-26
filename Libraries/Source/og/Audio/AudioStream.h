@@ -54,7 +54,7 @@ namespace og {
 	*/
 	class AudioStream {
 	public:
-		AudioStream() : numInUse(0), format(0), freq(0), data(NULL), dataSize(0) {}
+		AudioStream() : numInUse(0), format(0), freq(0), data(OG_NULL), dataSize(0) {}
 		virtual ~AudioStream() {}
 
 		virtual bool	LoadFile( const char *filename ) = 0;

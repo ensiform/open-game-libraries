@@ -915,13 +915,13 @@ String::Cmp
 ================
 */
 int String::Cmp( const char *text1, const char *text2 ) {
-	if ( text1 == NULL ) {
-		if ( text2 == NULL )
+	if ( text1 == OG_NULL ) {
+		if ( text2 == OG_NULL )
 			return 0;
 		else
 			return -1;
 	}
-	else if ( text2 == NULL )
+	else if ( text2 == OG_NULL )
 		return 1;
 
 	int d;
@@ -940,13 +940,13 @@ String::Cmpn
 ================
 */
 int String::Cmpn( const char *text1, const char *text2, int len ) {
-	if ( text1 == NULL ) {
-		if ( text2 == NULL )
+	if ( text1 == OG_NULL ) {
+		if ( text2 == OG_NULL )
 			return 0;
 		else
 			return -1;
 	}
-	else if ( text2 == NULL )
+	else if ( text2 == OG_NULL )
 		return 1;
 
 	int d;
@@ -985,13 +985,13 @@ String::Icmp
 ================
 */
 int String::Icmp( const char *text1, const char *text2 ) {
-	if ( text1 == NULL ) {
-		if ( text2 == NULL )
+	if ( text1 == OG_NULL ) {
+		if ( text2 == OG_NULL )
 			return 0;
 		else
 			return -1;
 	}
-	else if ( text2 == NULL )
+	else if ( text2 == OG_NULL )
 		return 1;
 
 	int numB1, numB2, d;
@@ -1009,13 +1009,13 @@ String::Icmpn
 ================
 */
 int String::Icmpn( const char *text1, const char *text2, int len ) {
-	if ( text1 == NULL ) {
-		if ( text2 == NULL )
+	if ( text1 == OG_NULL ) {
+		if ( text2 == OG_NULL )
 			return 0;
 		else
 			return -1;
 	}
-	else if ( text2 == NULL )
+	else if ( text2 == OG_NULL )
 		return 1;
 
 	int numB1, numB2, d;
@@ -1165,7 +1165,7 @@ String::SetData
 */
 void String::SetData( const char *text, int byteLen, int len ) {
 	//! @todo	rather just an assert ?
-	if ( text == NULL ) {
+	if ( text == OG_NULL ) {
 		// don't boom on NULL text
 		data[0] = '\0';
 		length = 0;
@@ -1512,9 +1512,9 @@ String::FromWide
 void String::FromWide( const wchar_t *in ) {
 #if OG_WIN32
 	int inLen = wcslen(in)+1;
-	int outLen = WideCharToMultiByte( CP_UTF8, 0, in, inLen, NULL, 0, NULL, NULL );
+	int outLen = WideCharToMultiByte( CP_UTF8, 0, in, inLen, OG_NULL, 0, OG_NULL, OG_NULL );
 	CheckSize( outLen, false );
-	WideCharToMultiByte( CP_UTF8, 0,  in, inLen, data, outLen, NULL, NULL );
+	WideCharToMultiByte( CP_UTF8, 0, in, inLen, data, outLen, OG_NULL, OG_NULL );
 
 	length = inLen-1;
 	byteLength = outLen-1;
@@ -1532,11 +1532,11 @@ String::ToWide
 */
 int String::ToWide( const char *in, uInt numBytes, wchar_t *out, uInt outSize ) {
 #if OG_WIN32
-	if ( out == NULL )
-		return MultiByteToWideChar( CP_UTF8, 0, in, numBytes, NULL, 0 );
+	if ( out == OG_NULL )
+		return MultiByteToWideChar( CP_UTF8, 0, in, numBytes, OG_NULL, 0 );
 
 	out[0] = L'\0';
-	return MultiByteToWideChar( CP_UTF8, 0,  in, numBytes, out, outSize );
+	return MultiByteToWideChar( CP_UTF8, 0, in, numBytes, out, outSize );
 #elif OG_LINUX
 	#warning "Need Linux here FIXME"
 #elif OG_MACOS_X

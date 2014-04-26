@@ -76,7 +76,7 @@ namespace og {
 		void			Lerp( const Quat &from, const Quat &to, float t );
 
 		Mat3			ToMat3( void ) const;
-		void			ToVectors( Vec3 *forward, Vec3 *right = NULL, Vec3 *up = NULL ) const;
+		void			ToVectors( Vec3 *forward, Vec3 *right = OG_NULL, Vec3 *up = OG_NULL ) const;
 		Angles			ToAngles( void ) const;
 
 		// operators

@@ -42,9 +42,9 @@ void ShutdownDirectInput( void );
 bool InitXInput( void );
 void ShutdownXInput( void );
 
-HINSTANCE hInstance = NULL;
+HINSTANCE hInstance = OG_NULL;
 ATOM classAtom = 0;
-HWND hWndInput = NULL;
+HWND hWndInput = OG_NULL;
 const UINT WM_WAKE_UP = WM_USER;
 
 #define FABLE_WNDCLASSNAME L"FableHidden"
@@ -75,7 +75,7 @@ public:
 
 	bool	Init( void ) {
 		// Retrieve GLOOT instance handle
-		hInstance = GetModuleHandle( NULL );
+		hInstance = GetModuleHandle( OG_NULL );
 
 		// Create window class
 		WNDCLASS wc;
@@ -84,11 +84,11 @@ public:
 		wc.cbClsExtra		= 0;								// No extra class data
 		wc.cbWndExtra		= 0;								// No extra window data
 		wc.hInstance		= hInstance;						// Set instance
-		wc.hCursor			= LoadCursor( NULL, IDC_ARROW );	// Load arrow pointer
-		wc.hbrBackground	= NULL;								// No background
-		wc.lpszMenuName		= NULL;								// No menu
+		wc.hCursor			= LoadCursor( OG_NULL, IDC_ARROW );	// Load arrow pointer
+		wc.hbrBackground	= OG_NULL;							// No background
+		wc.lpszMenuName		= OG_NULL;							// No menu
 		wc.lpszClassName	= FABLE_WNDCLASSNAME;				// Set class name
-		wc.hIcon			= LoadIcon( NULL, IDI_WINLOGO );	// Icon
+		wc.hIcon			= LoadIcon( OG_NULL, IDI_WINLOGO );	// Icon
 
 		// Register the window class
 		classAtom = RegisterClass( &wc );
@@ -99,7 +99,7 @@ public:
 
 		// Create invisible window
 		hWndInput = CreateWindowEx( WS_EX_TOOLWINDOW, FABLE_WNDCLASSNAME, L"Fable Hidden", WS_POPUP,
-										0, 0, 10, 10, NULL, NULL, hInstance, NULL );
+										0, 0, 10, 10, OG_NULL, OG_NULL, hInstance, OG_NULL );
 
 		if ( !hWndInput ) {
 			Shutdown();
@@ -117,7 +117,7 @@ public:
 		HDEVNOTIFY hDevNotify = RegisterDeviceNotification( hWndInput, &notificationFilter,
 			DEVICE_NOTIFY_WINDOW_HANDLE );
 
-		if( hDevNotify == NULL ) {
+		if( hDevNotify == OG_NULL ) {
 			Shutdown();
 			return false;
 		}
@@ -129,7 +129,7 @@ protected:
 	void	Run( void ) {
 		MSG msg;
 		while( keepRunning ) {
-			while( GetMessage( &msg, NULL, 0, 0 ) ) {
+			while( GetMessage( &msg, OG_NULL, 0, 0 ) ) {
 				if ( msg.message == WM_WAKE_UP )
 					break;
 				DispatchMessage( &msg );
@@ -142,9 +142,9 @@ protected:
 		ShutdownXInput();
 		ShutdownDirectInput();
 
-		if ( hWndInput != NULL ) {
+		if ( hWndInput != OG_NULL ) {
 			DestroyWindow( hWndInput );
-			hWndInput = NULL;
+			hWndInput = OG_NULL;
 		}
 		if( classAtom ) {
 			// Unregister window class
@@ -154,7 +154,7 @@ protected:
 	}
 };
 
-HiddenWindow *hiddenWnd = NULL;
+HiddenWindow *hiddenWnd = OG_NULL;
 
 /*
 ================
@@ -166,7 +166,7 @@ bool PlatformInit( void ) {
 		hiddenWnd = new HiddenWindow;
 		if ( !hiddenWnd->Start("HiddenWindow", true) ) {
 			delete hiddenWnd;
-			hiddenWnd = NULL;
+			hiddenWnd = OG_NULL;
 			return false;
 		}
 #ifdef __MINGW32__
@@ -176,7 +176,7 @@ bool PlatformInit( void ) {
 		if ( !InitXInput() || !InitDirectInput() ) {
 #endif
 			hiddenWnd->Stop();
-			hiddenWnd = NULL;
+			hiddenWnd = OG_NULL;
 			return false;
 		}
 	}
@@ -191,7 +191,7 @@ PlatformShutdown
 void PlatformShutdown( void ) {
 	if ( hiddenWnd ) {
 		hiddenWnd->Stop();
-		hiddenWnd = NULL;
+		hiddenWnd = OG_NULL;
 	}
 }
 

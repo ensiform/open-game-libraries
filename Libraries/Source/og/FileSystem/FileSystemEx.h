@@ -50,7 +50,7 @@ namespace og {
 	*/
 	class FileTrackEvent : public QueuedEvent {
 	public:
-		FileTrackEvent( FileEx *f, bool add ) : file(f), doAdd(add) { OG_ASSERT(f != NULL); }
+		FileTrackEvent( FileEx *f, bool add ) : file(f), doAdd(add) { OG_ASSERT(f != OG_NULL); }
 		void	Execute( void );
 
 		static void	ClearAll( void );
@@ -111,7 +111,7 @@ namespace og {
 		time_t	FileTime( const char *filename, bool pure=true );
 
 		bool	StoreFile( const char *path, byte *buffer, int size, bool pure=true );
-		int		LoadFile( const char *path, byte **buffer, bool pure=true, String *pakFileName=NULL );
+		int		LoadFile( const char *path, byte **buffer, bool pure=true, String *pakFileName=OG_NULL );
 		void	FreeFile( byte *buffer );
 		bool	MakePath( const char *path, bool pure=true );
 

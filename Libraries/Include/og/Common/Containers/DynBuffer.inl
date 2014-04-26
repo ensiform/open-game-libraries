@@ -51,7 +51,7 @@ OG_INLINE DynBuffer<T>::DynBuffer( int _size ) {
 	if ( size > 0 )
 		data = new T[size];
 	else
-		data = NULL;
+		data = OG_NULL;
 }
 
 /*

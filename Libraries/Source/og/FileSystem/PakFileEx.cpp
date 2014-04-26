@@ -150,7 +150,7 @@ Convert Dos Time & Date to time_t
 ================
 */
 time_t ConvertDosTime( short DosTime, short DosDate ) {
-	time_t clock = time(NULL);
+	time_t clock = time(OG_NULL);
 	struct tm *t = localtime(&clock);
 	t->tm_isdst = -1;
 	t->tm_sec  = (DosTime <<  1) & 0x3e;
@@ -192,7 +192,7 @@ public:
 	const char *Convert( char *input, int numBytes ) {
 #if OG_WIN32
 		// Convert from OEM codepage to unicode first
-		int length = MultiByteToWideChar( 437, 0, input, numBytes, NULL, 0 );
+		int length = MultiByteToWideChar( 437, 0, input, numBytes, OG_NULL, 0 );
 		wideBuffer.CheckSize( length + 1 );
 		wideBuffer.data[0] = L'\0';
 		MultiByteToWideChar( 437, 0,  input, numBytes, wideBuffer.data, length+1 );
@@ -208,7 +208,7 @@ public:
 		char *inchar =  input ;
 		char *outchar = utf8Buffer.data ;
 		if ( iconv(cd, &inchar, &inBytes, &outchar, &outBytes) == -1 )
-			return NULL;
+			return OG_NULL;
 		utf8Buffer.data[numBytes-1] = '\0'; //fixme: wrong, numBytes is for input, not output
 		return utf8Buffer.data;
 #endif
@@ -241,15 +241,15 @@ returns a new File Object.
 ================
 */
 File *PakFileEx::OpenFile( const char *filename ) {
-	if ( FS == NULL )
-		return NULL;
+	if ( FS == OG_NULL )
+		return OG_NULL;
 
 	int index = centralDir.Find( filename );
 	if ( index != -1 ) {
 		// Create a new object
 		FileInPak *fileEx = FileInPak::Create( this, &centralDir[index] );
-		if ( fileEx == NULL )
-			return NULL;
+		if ( fileEx == OG_NULL )
+			return OG_NULL;
 		fileEx->writeMode = false;
 		fileEx->size = centralDir[index].unCompressedSize;
 		fileEx->fullpath = centralDir.GetKey( index );
@@ -259,7 +259,7 @@ File *PakFileEx::OpenFile( const char *filename ) {
 		static_cast<FileSystemEx *>(FS)->AddFileEvent( new FileTrackEvent( fileEx, true ) );
 		return fileEx;
 	}
-	return NULL;
+	return OG_NULL;
 }
 
 /*
@@ -372,7 +372,7 @@ int PakFileEx::ReadCentralDir( FILE *file, uLong zipfileOffset, uLong Offset, in
 		else {
 			// Convert from CP437 to UTF-8
 			pszFilename = converter.Convert( filenameBuf.data, fh.filenameLength+1 );
-			if ( pszFilename == NULL )
+			if ( pszFilename == OG_NULL )
 				return UNZ_ERRNO;
 		}
 
@@ -456,11 +456,11 @@ PakFileEx *PakFileEx::OpenZip( const char *path ) {
 	pakFile->pakFileName.ToForwardSlashes();
 	FILE *file = fopen(path, "rb");
 
-	if ( file == NULL ) {
+	if ( file == OG_NULL ) {
 		// Couldn't be opened, so delete the object again
 		delete pakFile;
 		User::Error( ERR_FS_FILE_OPENREAD, "Can't open file for reading", path );
-		return NULL;
+		return OG_NULL;
 	}
 
 	// The structure to read in the Central directory end..
@@ -493,10 +493,10 @@ PakFileEx *PakFileEx::OpenZip( const char *path ) {
 	fclose( file );
 
 	if ( failed ) {
-		// Some error happened, so close the zipfile and return NULL
+		// Some error happened, so close the zipfile and return OG_NULL
 		PakFileEx::CloseZip( pakFile );
 		User::Error( ERR_FILE_CORRUPT, "ZIP: Central dir defect", path );
-		return NULL;
+		return OG_NULL;
 	}
 
 	return pakFile;
@@ -512,7 +512,7 @@ these files MUST be closed before calling CloseZip.
 ================
 */
 void PakFileEx::CloseZip( PakFileEx *pakFile ) {
-	OG_ASSERT( pakFile != NULL );
+	OG_ASSERT( pakFile != OG_NULL );
 	delete pakFile;
 }
 

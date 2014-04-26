@@ -34,7 +34,7 @@
 
 #include <og/Common/Thread/Thread.h>
 
-struct queue_state;
+struct lfds611_queue_state;
 
 //! Open Game Libraries
 namespace og {
@@ -54,7 +54,7 @@ namespace og {
 		bool Consume( void **data );
 
 	private:
-		struct queue_state *queueState;
+		struct lfds611_queue_state *queueState;
 	};
 
 	// ==============================================================================
@@ -89,7 +89,7 @@ namespace og {
 			if( queue.Consume(&p) ) {
 				return (type *)p;
 			}
-			return NULL;
+			return OG_NULL;
 		}
 		
 	private:

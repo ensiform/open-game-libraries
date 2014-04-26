@@ -122,7 +122,7 @@ ConArgCompleteFile::Complete
 ================
 */
 OG_INLINE void ConArgCompleteFile::Complete( const CmdArgs &args, argCompletionCB_t callback ) const {
-	if ( FS == NULL )
+	if ( FS == OG_NULL )
 		return;
 	FileList *files = FS->GetFileList( dir.c_str(), extension.c_str(), findFlags );
 

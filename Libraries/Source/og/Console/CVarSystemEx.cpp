@@ -77,7 +77,7 @@ void CVarDataEx::SetString( const char *newValue ) {
 			count++;
 		}
 		// Not found
-		if ( enumValues[count] == NULL )
+		if ( enumValues[count] == OG_NULL )
 			return;
 
 		if ( !initialized )
@@ -358,14 +358,14 @@ CVarSystemEx::Find
 ================
 */
 CVar *CVarSystemEx::Find( const char *key ) const {
-	if ( key == NULL || key[0] == '\0' )
-		return NULL;
+	if ( key == OG_NULL || key[0] == '\0' )
+		return OG_NULL;
 
 	int index = dataList.Find( key );
 	if ( index != -1 )
 		return dataList[index].cvar;
 
-	return NULL;
+	return OG_NULL;
 }
 
 /*
@@ -378,9 +378,9 @@ void CVarSystemEx::CreateUnlinkedCVar( const char *key, const char *value ) {
 	data.flags = CVAR_UNLINKED;
 	data.name = key;
 	data.cvar = new CVar(&data);
-	data.enumValues = NULL;
-	data.completion = NULL;
-	data.callback = NULL;
+	data.enumValues = OG_NULL;
+	data.completion = OG_NULL;
+	data.callback = OG_NULL;
 	data.name = key;
 	data.defValue = value;
 	data.strDescription = data.description.c_str();
@@ -398,7 +398,7 @@ CVarSystemEx::SetString
 ================
 */
 void CVarSystemEx::SetString( const char *key, const char *value, bool force ) {
-	if ( key == NULL || key[0] == '\0' )
+	if ( key == OG_NULL || key[0] == '\0' )
 		return;
 
 	CVar *cv = Find( key );
@@ -426,7 +426,7 @@ const char *CVarSystemEx::GetString( const char *key ) const {
 	CVar *cv = Find( key );
 	if ( cv )
 		return cv->data->strValue;
-	return NULL;
+	return OG_NULL;
 }
 
 /*
@@ -435,7 +435,7 @@ CVarSystemEx::SetBool
 ================
 */
 void CVarSystemEx::SetBool( const char *key, bool value, bool force ) {
-	if ( key == NULL || key[0] == '\0' )
+	if ( key == OG_NULL || key[0] == '\0' )
 		return;
 
 	CVar *cv = Find( key );
@@ -540,7 +540,7 @@ CVarSystemEx::ToDict
 ================
 */
 void CVarSystemEx::ToDict( int flags, Dict *dict ) const {
-	OG_ASSERT( dict != NULL );
+	OG_ASSERT( dict != OG_NULL );
 	dict->Clear();
 	int num = dataList.Num();
 	for ( int i = 0; i<num; i++ ) {
@@ -579,10 +579,10 @@ CVarSystemEx::ExportToHTML
 ================
 */
 bool CVarSystemEx::ExportToHTML( const char *filename, int flags ) const {
-	if ( FS == NULL )
+	if ( FS == OG_NULL )
 		return false;
 
-	byte *buffer = NULL;
+	byte *buffer = OG_NULL;
 	FS->LoadFile("exportTemplate.html", &buffer);
 	if ( !buffer ) 
 		return false;
@@ -656,7 +656,7 @@ CVarSystemEx::WriteToConfig
 ================
 */
 bool CVarSystemEx::WriteToConfig( const char *filename, int flags ) const {
-	if ( FS == NULL )
+	if ( FS == OG_NULL )
 		return false;
 
 	File *file = FS->OpenWrite(filename);
@@ -783,7 +783,7 @@ ConUsageString Cmd_ListCVars_Usage("Lists all cvars currently available.", 0, "L
 void CVarSystemEx::Cmd_ListCVars_f( const CmdArgs &args ) {
 	DictEx<CVarDataEx> & cvarDataList = CVarSystemObject.dataList;
 	bool match = false;
-	const char *matchstr = NULL;
+	const char *matchstr = OG_NULL;
 
 	int num = cvarDataList.Num();
 	int disp = -1;
@@ -932,7 +932,7 @@ void CVarSystemEx::Cmd_Toggle_f( const CmdArgs &args ) {
 				currentIndex++;
 			}
 			// Not found or the last item
-			if ( cv->data->enumValues[currentIndex] == NULL || currentIndex == cv->data->iMaxValue )
+			if ( cv->data->enumValues[currentIndex] == OG_NULL || currentIndex == cv->data->iMaxValue )
 				cv->SetString(cv->data->enumValues[0]);
 			else
 				cv->SetString(cv->data->enumValues[currentIndex+1]);
@@ -1179,9 +1179,9 @@ void CVarSystemEx::UnlinkCVar( CVar *cvar ) {
 	CVarDataEx *data = static_cast<CVarDataEx *>(cv->data);
 	data->flags |= CVAR_UNLINKED;
 	data->cvar = new CVar(data);
-	data->completion = NULL;
-	data->enumValues = NULL;
-	data->callback = NULL;
+	data->completion = OG_NULL;
+	data->enumValues = OG_NULL;
+	data->callback = OG_NULL;
 }
 
 /*

@@ -40,7 +40,7 @@ freely, subject to the following restrictions:
 
 namespace og {
 
-static ConsoleWindow *conWindow = NULL;
+static ConsoleWindow *conWindow = OG_NULL;
 static WinConsoleData_t wcd;
 
 enum {
@@ -159,11 +159,11 @@ ConsoleWindow::ConsoleWindow( const ConsoleParams_t *_params ) {
 	appTitle = params.appTitle;
 	logBgImage = params.logBgImage ? params.logBgImage : "";
 
-	hWndMain = NULL;
-	hWndLog = NULL;
-	hWndCommand = NULL;
-	hWndErrorMessage = NULL;
-	hWndButtonOptions = NULL;
+	hWndMain = OG_NULL;
+	hWndLog = OG_NULL;
+	hWndCommand = OG_NULL;
+	hWndErrorMessage = OG_NULL;
+	hWndButtonOptions = OG_NULL;
 	completionCursor = 0;
 
 	dwStyle = WS_POPUPWINDOW | WS_CAPTION | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SIZEBOX;
@@ -174,19 +174,19 @@ ConsoleWindow::~ConsoleWindow() {
 	if ( hWndMain ) {
 		if ( hBackBmp ) {
 			DeleteObject( hBackBmp );
-			hBackBmp = NULL;
+			hBackBmp = OG_NULL;
 		}
 		if ( hbrLogBg ) {
 			DeleteObject( hbrLogBg );
-			hbrLogBg = NULL;
+			hbrLogBg = OG_NULL;
 		}
 		if ( hbrErrorBg ) {
 			DeleteObject( hbrErrorBg );
-			hbrErrorBg = NULL;
+			hbrErrorBg = OG_NULL;
 		}
 		if ( hbrErrorBgFlash ) {
 			DeleteObject( hbrErrorBgFlash );
-			hbrErrorBgFlash = NULL;
+			hbrErrorBgFlash = OG_NULL;
 		}
 
 		ShowWindow( hWndMain, SW_HIDE );
@@ -199,15 +199,15 @@ ConsoleWindow::~ConsoleWindow() {
 bool ConsoleWindow::Init( void ) {
 	// Load the background image
 	if ( logBgImage.IsEmpty() )
-		hBackBmp = NULL;
+		hBackBmp = OG_NULL;
 	else {
 		DynBuffer<wchar_t> strFilename;
 		StringToWide( logBgImage.c_str(), strFilename );
 
 		// Use LoadImage() to get the image loaded into a DIBSection
-		hBackBmp = (HBITMAP)LoadImage( NULL, strFilename.data, IMAGE_BITMAP, 0, 0,
+		hBackBmp = (HBITMAP)LoadImage( OG_NULL, strFilename.data, IMAGE_BITMAP, 0, 0,
 			LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE );
-		if( hBackBmp != NULL ) {
+		if( hBackBmp != OG_NULL ) {
 			// Get width & height
 			BITMAP bm;
 			GetObject(hBackBmp, sizeof(BITMAP), &bm );
@@ -220,7 +220,7 @@ bool ConsoleWindow::Init( void ) {
 	StringToWide( Format("$* Console" ) << appTitle, windowClass );
 	StringToWide( Format("$* WinConsole" ) << appTitle, windowTitle );
 
-	hInstance = GetModuleHandle(NULL);
+	hInstance = GetModuleHandle(OG_NULL);
 
 	WNDCLASS wc;
 	memset( &wc, 0, sizeof( wc ) );
@@ -229,7 +229,7 @@ bool ConsoleWindow::Init( void ) {
 	wc.cbClsExtra		= 0;
 	wc.cbWndExtra		= 0;
 	wc.hInstance		= hInstance;
-	wc.hCursor			= LoadCursor (NULL,IDC_ARROW);
+	wc.hCursor			= LoadCursor(OG_NULL, IDC_ARROW);
 	wc.hbrBackground	= (HBRUSH)COLOR_WINDOW;
 	wc.lpszMenuName		= 0;
 	wc.lpszClassName	= windowClass.data;
@@ -237,7 +237,7 @@ bool ConsoleWindow::Init( void ) {
 	// Load user-provided icon if available
 	wc.hIcon = LoadIcon( hInstance, L"GLOOT_ICON" );
 	if( !wc.hIcon )
-		wc.hIcon = LoadIcon( NULL, IDI_WINLOGO );
+		wc.hIcon = LoadIcon( OG_NULL, IDI_WINLOGO );
 
 	if ( !RegisterClass (&wc) )
 		return false;
@@ -285,12 +285,12 @@ bool ConsoleWindow::Init( void ) {
 		x, y,				// Window position
 		width,				// Decorated window width
 		height,				// Decorated window height
-		NULL,				// No parent window
-		NULL,				// No menu
+		OG_NULL,			// No parent window
+		OG_NULL,			// No menu
 		hInstance,			// hInstance
 		0 );				// pass this to WM_CREATE
 
-	if ( hWndMain == NULL )
+	if ( hWndMain == OG_NULL )
 		return false;
 
 	// Create fonts
@@ -316,9 +316,9 @@ bool ConsoleWindow::Init( void ) {
 	SendMessage( hWndCommand, WM_SETFONT, ( WPARAM ) hfGlobalFont, 0 );
 
 	// Create the buttons
-	hWndButtonOptions = CreateWindow( L"BUTTON", NULL,
+	hWndButtonOptions = CreateWindow( L"BUTTON", OG_NULL,
 		BS_FLAT | WS_VISIBLE | WS_CHILD,
-		0, 0, 0, 0, hWndMain, (HMENU)CONID_OPTIONS, hInstance, NULL );
+		0, 0, 0, 0, hWndMain, (HMENU)CONID_OPTIONS, hInstance, OG_NULL );
 	SendMessage( hWndButtonOptions, WM_SETTEXT, 0, ( LPARAM ) L"Menu" );
 
 	SysEditWndProc = ( WNDPROC ) SetWindowLong( hWndCommand, GWL_WNDPROC, ( long ) WndProc );
@@ -347,7 +347,7 @@ bool ConsoleWindow::Init( void ) {
 	fadeTimeStart = SysInfo::GetTime();
 
 	if ( fadeTime )
-		SetTimer( hWndMain, IDT_FADE, 10, NULL );
+		SetTimer( hWndMain, IDT_FADE, 10, OG_NULL );
 
 	return true;
 }
@@ -359,7 +359,7 @@ void ConsoleWindow::WakeUp( void ) {
 void ConsoleWindow::Run( void ) {
 	MSG msg;
 	while( keepRunning ) {
-		while( GetMessage( &msg, NULL, 0, 0 ) ) {
+		while( GetMessage( &msg, OG_NULL, 0, 0 ) ) {
 			if ( msg.message == WM_WAKE_UP )
 				break;
 			DispatchMessage( &msg );
@@ -444,7 +444,7 @@ void ConsoleWindow::Print( ConPrint *evt ) {
 	SendMessage( hWndLog, EM_EXSETSEL, 0, (LPARAM)&crOld );
 
 	// Scroll to end
-	SendMessage( hWndLog, WM_VSCROLL, SB_BOTTOM, (LPARAM)NULL );
+	SendMessage( hWndLog, WM_VSCROLL, SB_BOTTOM, (LPARAM)OG_NULL );
 }
 
 /*
@@ -455,12 +455,12 @@ ConsoleWindow::FatalError
 void ConsoleWindow::FatalError( ConPrint *evt ) {
 	if ( !hWndErrorMessage ) {
 		SetWindowPos(hWndLog, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOSIZE|SWP_NOMOVE|SWP_SHOWWINDOW);
-		hWndErrorMessage = CreateWindowEx( WS_EX_CLIENTEDGE, L"STATIC", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER,
-										0, 0, 0, 0,	hWndMain, (HMENU)CONID_ERROR, hInstance, NULL );
+		hWndErrorMessage = CreateWindowEx( WS_EX_CLIENTEDGE, L"STATIC", OG_NULL, WS_CHILD | WS_VISIBLE | WS_BORDER,
+										0, 0, 0, 0,	hWndMain, (HMENU)CONID_ERROR, hInstance, OG_NULL );
 
 		SendMessage( hWndErrorMessage, WM_SETFONT, ( WPARAM ) hfGlobalFont, 0 );
 		DoResize();
-		SetTimer( hWndMain, IDT_ERROR, 1000, NULL );
+		SetTimer( hWndMain, IDT_ERROR, 1000, OG_NULL );
 	}
 	SetWindowText( hWndErrorMessage, evt->message.data );
 	Show( Console::VIS_NORMAL, true );
@@ -490,7 +490,7 @@ const wchar_t *ConsoleWindow::GetInputText( void ) {
 }
 
 LRESULT CALLBACK ConsoleWindow::WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam ) {
-	if ( conWindow == NULL )
+	if ( conWindow == OG_NULL )
 		return DefWindowProc( hWnd, uMsg, wParam, lParam );
 	if ( uMsg == WM_CREATE ) // only happens for main window here..
 		conWindow->hWndMain = hWnd;
@@ -530,7 +530,7 @@ MenuOpenCallback
 ================
 */
 void MenuOpenCallback( const char *name, const char *command ) {
-	OG_ASSERT( name != NULL && command != NULL );
+	OG_ASSERT( name != OG_NULL && command != OG_NULL );
 
 	DynBuffer<wchar_t> strName;
 	StringToWide( name, strName );
@@ -628,7 +628,7 @@ LRESULT ConsoleWindow::MainWndProc( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 					case CON_ID_MENU_SAVE:
 						break;
 					case CON_ID_MENU_CLEAR:
-						if ( hWndErrorMessage == NULL ) {
+						if ( hWndErrorMessage == OG_NULL ) {
 							CHARRANGE cr;
 							cr.cpMin = 0;cr.cpMax = -1;
 							SendMessage( hWndLog, EM_EXSETSEL, 0, (LPARAM)&cr );
@@ -658,7 +658,7 @@ LRESULT ConsoleWindow::MainWndProc( UINT uMsg, WPARAM wParam, LPARAM lParam ) {
 		case WM_TIMER:
 			if ( wParam == IDT_ERROR && hWndErrorMessage ) {
 				flashErrorColor = !flashErrorColor;
-				InvalidateRect( hWndErrorMessage, NULL, FALSE );
+				InvalidateRect( hWndErrorMessage, OG_NULL, FALSE );
 			}
 			else if ( wParam == IDT_FADE ) {
 				// Do alpha fading
@@ -864,7 +864,7 @@ bool Console::Init( const ConsoleParams_t *params ) {
 	conWindow = new ConsoleWindow( params );
 	if ( !conWindow->Start("ConsoleWindow", true) ) {
 		delete conWindow;
-		conWindow = NULL;
+		conWindow = OG_NULL;
 	}
 
 	CVar::LinkCVars();
@@ -883,7 +883,7 @@ void Console::Shutdown( void ) {
 		CVar::UnlinkCVars();
 
 		conWindow->Stop();
-		conWindow = NULL;
+		conWindow = OG_NULL;
 	}
 }
 
@@ -928,7 +928,7 @@ void ProcessConCommand( ConCommand *cmd ) {
 					conWindow->completionCursor = 0;
 					cmdOut->strValue = wcd.inputHistory[len-wcd.inputHistoryPos].c_str();
 					PostMessage( conWindow->hWndMain, WM_CON_COMMAND, (WPARAM)cmdOut, 0 );
-					cmdOut = NULL;
+					cmdOut = OG_NULL;
 				}
 			} else {
 				if ( wcd.inputHistoryPos == 1 ) {
@@ -937,14 +937,14 @@ void ProcessConCommand( ConCommand *cmd ) {
 					cmdOut->strValue = wcd.inputSavedText.c_str();
 					wcd.inputSavedText.Clear();
 					PostMessage( conWindow->hWndMain, WM_CON_COMMAND, (WPARAM)cmdOut, 0 );
-					cmdOut = NULL;
+					cmdOut = OG_NULL;
 				} else if ( wcd.inputHistoryPos > 1 ) {
 					int len = wcd.inputHistory.Num();
 					wcd.inputHistoryPos--;
 					conWindow->completionCursor = 0;
 					cmdOut->strValue = wcd.inputHistory[len-wcd.inputHistoryPos].c_str();
 					PostMessage( conWindow->hWndMain, WM_CON_COMMAND, (WPARAM)cmdOut, 0 );
-					cmdOut = NULL;
+					cmdOut = OG_NULL;
 				}
 			}
 			if ( cmdOut )
@@ -969,7 +969,7 @@ Console::Synchronize
 void Console::Synchronize( void ) {
 	if ( conWindow ) {
 		ConCommand *cmd;
-		while( (cmd = wcd.cmdQueue.Consume()) != NULL ) {
+		while( (cmd = wcd.cmdQueue.Consume()) != OG_NULL ) {
 			ProcessConCommand( cmd );
 			delete cmd;
 		}

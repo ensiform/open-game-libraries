@@ -86,7 +86,7 @@ namespace og {
 		//!
 		//! @param	fmt	Describes the format to use
 		// ==============================================================================
-		Format( const char *fmt = NULL );
+		Format( const char *fmt = OG_NULL );
 
 		// ==============================================================================
 		//! Destructor
@@ -99,7 +99,7 @@ namespace og {
 		//! @param	keep	true to keep the old format
 		//! @param	fmt		Describes the format to use
 		// ==============================================================================
-		void	Reset( bool keep = true, const char *fmt = NULL );
+		void	Reset( bool keep = true, const char *fmt = OG_NULL );
 
 		// ==============================================================================
 		//! Byte length
@@ -184,7 +184,7 @@ namespace og {
 		//! @todo	Move float precision here too ?
 		// ==============================================================================
 		struct FormatEntry {
-			FormatEntry() : append(NULL), fieldWidth(0), takeInput(0), next(NULL) {}
+			FormatEntry() : append(OG_NULL), fieldWidth(0), takeInput(0), next(OG_NULL) {}
 
 			const char *append;		//!< What to append after getting input
 			int			fieldWidth;	//!< Field width ( fill up the rest with fillChar, align right if negative )

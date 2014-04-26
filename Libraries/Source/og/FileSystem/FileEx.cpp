@@ -218,7 +218,7 @@ FileInPak::FileInPak
 ================
 */
 FileInPak::FileInPak() {
-	file = NULL;
+	file = OG_NULL;
 	compressedData = false;
 	atEOF = false;
 }
@@ -253,8 +253,8 @@ Open the specified file from the zipfile for reading data.
 */
 FileInPak *FileInPak::Create( PakFileEx *pakFile, CentralDirEntry *cde ) {
 	FILE *file = fopen( pakFile->GetFilename(), "rb");
-	if ( file == NULL )
-		return NULL; //! @todo	error message
+	if ( file == OG_NULL )
+		return OG_NULL; //! @todo	error message
 
 	FileInPak *fileEx = new FileInPak;
 	fileEx->file = file;
@@ -387,7 +387,7 @@ return <0 with error code if there is an error
 */
 void FileInPak::Read( void *buffer, uInt len ) {
 	OG_ASSERT( !writeMode );
-	OG_ASSERT( buffer != NULL );
+	OG_ASSERT( buffer != OG_NULL );
 	OG_ASSERT( len > 0 );
 
 	uInt totalRead = 0;

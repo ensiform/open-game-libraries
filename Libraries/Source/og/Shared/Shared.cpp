@@ -168,7 +168,7 @@ uLongLong FNV64( const char *value, bool caseSensitive ) {
 #include <windows.h>
 static wchar_t *SharedToWString( const char *string ) {
 	uInt numBytes = String::ByteLength( string ) + 1;
-	uInt size = Max( 1, String::ToWide( string, numBytes, NULL, 0 ) );
+	uInt size = Max( 1, String::ToWide( string, numBytes, OG_NULL, 0 ) );
 	wchar_t *buffer = new wchar_t[size];
 	if ( size == 1 )
 		buffer[0] = L'\0';

@@ -34,7 +34,7 @@ freely, subject to the following restrictions:
 
 namespace og {
 
-FileSystem *FS = NULL;
+FileSystem *FS = OG_NULL;
 TLS<bool> FileSystemEx::notFoundWarning(true);
 
 LinkedList<FileEx *> FileTrackEvent::list;
@@ -70,7 +70,7 @@ FileTrackEvent::ClearAll
 void FileTrackEvent::ClearAll( void ) {
 	//! @todo	The user should be notified if he left files open
 	LinkedList<FileEx *>::nodeType *node = list.GetFirstNode();
-	while( node != NULL ) {
+	while( node != OG_NULL ) {
 		delete node->value;
 		node = node->GetNext();
 	}
@@ -147,7 +147,7 @@ public:
 ==============================================================================
 */
 // These are here so we don't have to expose them to the public interface.
-static FileSystemEx *fileSys = NULL;
+static FileSystemEx *fileSys = OG_NULL;
 
 /*
 ================
@@ -155,7 +155,7 @@ FileSystem::Prepare
 ================
 */
 void FileSystem::Prepare( void ) {
-	if ( fileSys != NULL )
+	if ( fileSys != OG_NULL )
 		return; //! @todo error
 
 	fileSys = new FileSystemEx;
@@ -167,7 +167,7 @@ FileSystem::AddSearchPath
 ================
 */
 void FileSystem::AddSearchPath( const char *path ) {
-	if ( fileSys == NULL )
+	if ( fileSys == OG_NULL )
 		return; //! @todo error
 	fileSys->AddSearchPath(path);
 }
@@ -178,7 +178,7 @@ FileSystem::SetBasePath
 ================
 */
 void FileSystem::SetBasePath( const char *path ) {
-	if ( fileSys == NULL )
+	if ( fileSys == OG_NULL )
 		return; //! @todo error
 	fileSys->SetBasePath(path);
 }
@@ -189,7 +189,7 @@ FileSystem::SetSavePath
 ================
 */
 void FileSystem::SetSavePath( const char *path ) {
-	if ( fileSys == NULL )
+	if ( fileSys == OG_NULL )
 		return; //! @todo error
 	fileSys->SetSavePath(path);
 }
@@ -200,7 +200,7 @@ FileSystem::SimpleInit
 ================
 */
 bool FileSystem::SimpleInit( const char *pakExtension, const char *baseDir, const char *basePath, const char *savePath ) {
-	if ( fileSys != NULL )
+	if ( fileSys != OG_NULL )
 		return false; //! @todo error
 
 	fileSys = new FileSystemEx;
@@ -215,7 +215,7 @@ FileSystem::Init
 ================
 */
 bool FileSystem::Init( const char *pakExtension, const char *baseDir ) {
-	if ( FS != NULL || fileSys == NULL )
+	if ( FS != OG_NULL || fileSys == OG_NULL )
 		return false; //! @todo error
 
 	fileSys->Init( pakExtension, baseDir );
@@ -224,7 +224,7 @@ bool FileSystem::Init( const char *pakExtension, const char *baseDir ) {
 	fileSys->AddResourceDir( baseDir, FileSystemEx::PFLIST_BASE );
 	if ( fileSys->pakFiles[FileSystemEx::PFLIST_BASE].IsEmpty() ) {
 		delete fileSys;
-		fileSys = NULL;
+		fileSys = OG_NULL;
 		return false;
 	}
 	fileSys->Start("FileSystemEx");
@@ -239,10 +239,10 @@ FileSystem::Shutdown
 ================
 */
 void FileSystem::Shutdown( void ) {
-	CommonSetFileSystem( NULL );
+	CommonSetFileSystem( OG_NULL );
 	fileSys->Stop();
-	fileSys = NULL;
-	FS = NULL;
+	fileSys = OG_NULL;
+	FS = OG_NULL;
 }
 
 /*
@@ -269,7 +269,7 @@ FileSystem::FindDLL
 ================
 */
 void FileSystem::FindDLL( const char *filename, String &path ) {
-	if ( fileSys == NULL )
+	if ( fileSys == OG_NULL )
 		return; //! @todo error
 	fileSys->FindDLL( filename, path );
 }
@@ -429,7 +429,7 @@ void FileSystemEx::Run( void ) {
 	LoadTrackEvent::ClearAll();
 
 	// This tape will selfdestruct in 0 seconds
-	CommonSetFileSystem( NULL );
+	CommonSetFileSystem( OG_NULL );
 
 	// Remove all resource directories
 	resourceDirs.Clear();
@@ -601,8 +601,8 @@ FileEx *FileSystemEx::OpenLocalFileRead( const char *filename, int *size ) {
 	FILE *file = fopen( filename, "rb" );
 	if ( file ) {
 		FileLocal *fileEx = FileLocal::Create( file );
-		if ( fileEx == NULL )
-			return NULL;
+		if ( fileEx == OG_NULL )
+			return OG_NULL;
 
 		// Move to the end of the file to get the filesize
 		if ( fseek( file, 0, SEEK_END ) == 0 ) {
@@ -617,7 +617,7 @@ FileEx *FileSystemEx::OpenLocalFileRead( const char *filename, int *size ) {
 				int i = fileEx->fullpath.ReverseFind("/");
 				fileEx->filename = fileEx->fullpath.c_str() + ((i == -1) ? 0 : i+1);
 
-				if ( size != NULL )
+				if ( size != OG_NULL )
 					*size = fileEx->size;
 				
 				AddFileEvent( new FileTrackEvent( fileEx, true ) );
@@ -628,7 +628,7 @@ FileEx *FileSystemEx::OpenLocalFileRead( const char *filename, int *size ) {
 		// since the FileLocal Destructor already does that.
 		delete fileEx;
 	}
-	return NULL;
+	return OG_NULL;
 }
 
 /*
@@ -642,11 +642,11 @@ otherwise a new File Object and the filesize
 */
 File *FileSystemEx::OpenRead( const char *filename, bool pure, bool buffered ) {
 	if ( buffered ) {
-		byte *buffer = NULL;
+		byte *buffer = OG_NULL;
 		String pakFileName;
 		int filesize = LoadFile( filename, &buffer, pure, &pakFileName );
-		if ( buffer == NULL )
-			return NULL;
+		if ( buffer == OG_NULL )
+			return OG_NULL;
 		
 		FileBuffered *fileEx = FileBuffered::Create( buffer );
 		fileEx->writeMode = false;
@@ -701,7 +701,7 @@ File *FileSystemEx::OpenRead( const char *filename, bool pure, bool buffered ) {
 				// Search for the file in the pakfile.
 				fileEx = static_cast<FileEx *>( pakFiles[i][j]->OpenFile( filename ) );
 				// Found it!
-				if ( fileEx != NULL )
+				if ( fileEx != OG_NULL )
 					return fileEx;
 			}
 		}
@@ -709,7 +709,7 @@ File *FileSystemEx::OpenRead( const char *filename, bool pure, bool buffered ) {
 
 	if ( *notFoundWarning )
 		User::Error( ERR_FS_FILE_OPENREAD, "Can't open file for reading", filename );
-	return NULL;
+	return OG_NULL;
 }
 
 /*
@@ -725,21 +725,21 @@ File *FileSystemEx::OpenWrite( const char *filename, bool pure ) {
 
 	// If the path doesn't exist and can not be created, fail.
 	if ( !MakePath( filename, false ) )
-		return NULL;
+		return OG_NULL;
 
 	// Try to open it.
 	FILE *file = fopen( filename, "wb" );
 	if ( !file ) {
 		User::Error( ERR_FS_FILE_OPENWRITE, "Can't open file for writing", filename );
-		return NULL;
+		return OG_NULL;
 	}
 
 	FileLocal *fileEx = FileLocal::Create( file );
-	if ( fileEx == NULL )
-		return NULL;
+	if ( fileEx == OG_NULL )
+		return OG_NULL;
 	fileEx->writeMode = true;
 	fileEx->size = 0;
-	fileEx->time = time(NULL);
+	fileEx->time = time(OG_NULL);
 	fileEx->fullpath = filename;
 	fileEx->fullpath.ToForwardSlashes();
 	int i = fileEx->fullpath.ReverseFind("/");
@@ -753,7 +753,7 @@ File *FileSystemEx::OpenWrite( const char *filename, bool pure ) {
 
 /*
 ===========
-FileSystemEx::OpenWrite
+FileSystemEx::OpenAppend
 ===========
 */
 File *FileSystemEx::OpenAppend( const char *filename, bool pure ) {
@@ -765,18 +765,18 @@ File *FileSystemEx::OpenAppend( const char *filename, bool pure ) {
 
 	// If the path doesn't exist and can not be created, fail.
 	if ( !MakePath( filename, false ) )
-		return NULL;
+		return OG_NULL;
 
 	// Try to open it.
 	FILE *file = fopen( filename, "ab" );
 	if ( !file ) {
 		User::Error( ERR_FS_FILE_OPENWRITE, "Can't open file for appending", filename );
-		return NULL;
+		return OG_NULL;
 	}
 
 	FileLocal *fileEx = FileLocal::Create( file );
-	if ( fileEx == NULL )
-		return NULL;
+	if ( fileEx == OG_NULL )
+		return OG_NULL;
 	fileEx->writeMode = true;
 	fileEx->size = 0;
 	fileEx->time = filetime;
@@ -858,7 +858,7 @@ bool FileSystemEx::FileExists( const char *filename, bool pure ) {
 	if ( file )
 		file->Close();
 	*notFoundWarning = true;
-	return file != NULL;
+	return file != OG_NULL;
 }
 
 /*
@@ -874,7 +874,7 @@ bool FileSystemEx::FileExistsInSavePath( const char *filename ) {
 	if ( file )
 		file->Close();
 	*notFoundWarning = true;
-	return file != NULL;
+	return file != OG_NULL;
 }
 
 /*
@@ -918,7 +918,7 @@ Will store the whole buffer into a file
 ============
 */
 bool FileSystemEx::StoreFile( const char *path, byte *buffer, int size, bool pure ) {
-	OG_ASSERT( buffer != NULL && size > 0 );
+	OG_ASSERT( buffer != OG_NULL && size > 0 );
 
 	// Open the file
 	File *file = OpenWrite( path, pure );
@@ -948,12 +948,12 @@ Will load the whole file into a buffer
 ============
 */
 int FileSystemEx::LoadFile( const char *path, byte **buffer, bool pure, String *pakFileName ) {
-	OG_ASSERT( buffer != NULL );
+	OG_ASSERT( buffer != OG_NULL );
 
 	// Open the file
 	File *file = OpenRead( path, pure );
 	if ( !file ) {
-		*buffer = NULL;
+		*buffer = OG_NULL;
 		return -1;
 	}
 
@@ -977,7 +977,7 @@ int FileSystemEx::LoadFile( const char *path, byte **buffer, bool pure, String *
 	}
 	catch( FileReadWriteError &err ) {
 		delete[] *buffer;
-		*buffer = NULL;
+		*buffer = OG_NULL;
 		file->Close();
 		User::Error( ERR_FILE_CORRUPT, Format( "Unknown: $*" ) << err.ToString(), path );
 		return -1;
@@ -1043,7 +1043,7 @@ FileList *FileSystemEx::GetFileList( const char *dir, const char *extension, int
 	// No files found, return
 	if ( fileList->files.IsEmpty() ) {
 		delete fileList;
-		return NULL;
+		return OG_NULL;
 	}
 
 	// If the user does not want the dir he provided inside the filenames, remove it.

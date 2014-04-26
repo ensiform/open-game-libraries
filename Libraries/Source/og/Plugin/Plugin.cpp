@@ -67,7 +67,7 @@ public:
 #endif
 		this->handle = handle;
 		this->filename = filename;
-		pluginExport = NULL;
+		pluginExport = OG_NULL;
 	}
 	PluginExportBase *Connect( void ) {
 #ifdef OG_WIN32
@@ -79,7 +79,7 @@ public:
 			pluginExport = pluginEntry();
 			return pluginExport;
 		}
-		return NULL;
+		return OG_NULL;
 	}
 	void Unload() {
 #ifdef OG_WIN32
@@ -87,7 +87,7 @@ public:
 #elif defined(OG_LINUX)
 		dlclose( handle );
 		const char *err = dlerror();
-		if ( err != NULL ) {
+		if ( err != OG_NULL ) {
 #endif
 			//fixme: better error id
 			User::Error( ERR_SYSTEM_REQUIREMENTS, "Failed to free library", filename.c_str() );
@@ -121,20 +121,20 @@ PluginExportBase *Plugin::Load( const char *filename, PluginImportBase *pluginIm
 #elif defined(OG_LINUX)
 	void *handle = dlopen( filename, RTLD_NOW );
 #endif
-	if ( handle == NULL ) {
-		return NULL;
+	if ( handle == OG_NULL ) {
+		return OG_NULL;
 	}
 	PluginHandle *plugin = new PluginHandle( handle, filename );
 	PluginExportBase *pluginExport = plugin->Connect();
-	if( pluginExport == NULL ) {
+	if( pluginExport == OG_NULL ) {
 		plugin->Unload();
 		// fixme: error message
-		return NULL;
+		return OG_NULL;
 	}
 	if( pluginExport->GetApiVersion() != pluginImport->GetApiVersion() ) {
 		plugin->Unload();
 		// fixme: error message
-		return NULL;
+		return OG_NULL;
 	}
 	pluginExport->OnLoad( pluginImport );
 	loadedPlugins.Append(plugin);

@@ -48,7 +48,7 @@ void Gloot::GetGLVersion( int *major, int *minor, int *rev ) {
 Window *Gloot::NewWindow( const WindowConfig *windowCfg ) {
 	// Need a valid size
 	if( !windowCfg || windowCfg->size != sizeof(WindowConfig) || windowCfg->width <= 0 || windowCfg->height <= 0 )
-		return NULL;
+		return OG_NULL;
 
 	// Ask for a new window
 	WindowEx *wnd = WindowEx::NewWindow( windowCfg );
@@ -56,7 +56,7 @@ Window *Gloot::NewWindow( const WindowConfig *windowCfg ) {
 	// Create GL Context
 	if ( !wnd->IsOpen() || !wnd->CreateContext() ) {
 		delete wnd;
-		return NULL;
+		return OG_NULL;
 	}
 	// Get OpenGL version
 	if ( Mgr.windowList.IsEmpty() && Mgr.GLVersion[0] == -1 ) {
@@ -98,7 +98,7 @@ void Gloot::DeleteWindow( Window *wnd ) {
 
 int Gloot::NumMonitors( void ) { return Mgr.monitorList.Num(); }
 const Monitor *Gloot::GetMonitor( int index ) {
-	return (index < 0 || index >= Mgr.monitorList.Num()) ? NULL : Mgr.monitorList[index];
+	return (index < 0 || index >= Mgr.monitorList.Num()) ? OG_NULL : Mgr.monitorList[index];
 }
 
 const float PI = 3.14159265358979323846f;

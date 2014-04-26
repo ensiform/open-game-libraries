@@ -64,7 +64,7 @@ const int VK_EXTENDED_FLAG = 0x01000000;
 
 LRESULT CALLBACK glootKeyboardHook( int nCode, WPARAM wParam, LPARAM lParam ) {
 	// If not a keyboard event or we don't have an active window, allow it
-	if( !Mgr.disableSysKeys || nCode != HC_ACTION || Mgr.activeWindow == NULL )
+	if( !Mgr.disableSysKeys || nCode != HC_ACTION || Mgr.activeWindow == OG_NULL )
 		return CallNextHookEx( Mgr.keyboardHook, nCode, wParam, lParam );
 
 	// Check if it's a system key
@@ -405,7 +405,7 @@ const char *Gloot::GetKeyString( int key ) {
 	}
 
 	int index = Mgr.keyStringMap.FindByValue( key );
-	return index == -1 ? NULL : Mgr.keyStringMap.GetKey( index ).c_str();
+	return index == -1 ? OG_NULL : Mgr.keyStringMap.GetKey( index ).c_str();
 }
 
 }

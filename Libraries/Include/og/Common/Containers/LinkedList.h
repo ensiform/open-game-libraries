@@ -156,7 +156,7 @@ namespace og {
 		//!
 		//! @return	A reference to the new value
 		// ==============================================================================
-		T &			Alloc( nodeType *baseNode=NULL, bool before=false );
+		T &			Alloc( nodeType *baseNode=OG_NULL, bool before=false );
 
 		// ==============================================================================
 		//! Remove a node

@@ -45,7 +45,7 @@ void WindowEx::Close( void ) {
 	// Revert fullscreen changes and destroy window
 	if ( fsMonitor ) {
 		fsMonitor->Revert();
-		fsMonitor = NULL;
+		fsMonitor = OG_NULL;
 	}
 	Destroy();
 
@@ -64,7 +64,7 @@ bool WindowEx::ExtensionSupported( const char *extension ) const {
 
 	// Check if extension is in the standard OpenGL extensions string
 	const char *extensions = (const char *) glGetString( GL_EXTENSIONS );
-	if( extensions != NULL && StringInExtensionString( extension, extensions ) )
+	if( extensions != OG_NULL && StringInExtensionString( extension, extensions ) )
 		return true;
 
 	// Additional platform specific extension checking (e.g. WGL)

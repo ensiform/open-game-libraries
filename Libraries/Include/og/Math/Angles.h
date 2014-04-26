@@ -70,7 +70,7 @@ namespace og {
 		bool		Cmp( const Angles &ang ) const;
 		bool		Cmp( const Angles &ang, float epsilon ) const;
 
-		void		ToVectors( Vec3 *forward, Vec3 *right = NULL, Vec3 *up = NULL ) const;
+		void		ToVectors( Vec3 *forward, Vec3 *right = OG_NULL, Vec3 *up = OG_NULL ) const;
 		Vec3		ToForward( void ) const;
 		Mat3		ToMat3( void ) const;
 		Quat		ToQuat( void ) const;

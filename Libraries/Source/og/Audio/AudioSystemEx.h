@@ -53,7 +53,7 @@ namespace og {
 	*/
 	class AudioThread : public Thread {
 	public:
-		AudioThread( AudioStream *stream ) : firstAudioSource(NULL), defaultStream(stream) {}
+		AudioThread( AudioStream *stream ) : firstAudioSource(OG_NULL), defaultStream(stream) {}
 
 		void	AddEvent( QueuedEvent *evt ) { eventQueue.Add( evt ); WakeUp(); }
 

@@ -196,7 +196,7 @@ ImageFileJPG::Open
 */
 bool ImageFileJPG::Open( const char *filename ) {
 	isLoaded = false;
-	if ( imageFS == NULL )
+	if ( imageFS == OG_NULL )
 		return false;
 
 	File *file = imageFS->OpenRead( filename, true, true );
@@ -224,7 +224,7 @@ bool ImageFileJPG::Open( const char *filename ) {
 		src->term_source = jpgTermSource;
 		src->file = file;
 		src->bytes_in_buffer = 0;
-		src->next_input_byte = NULL;
+		src->next_input_byte = OG_NULL;
 
 		jpeg_read_header( &cinfo, TRUE );
 
@@ -276,7 +276,7 @@ ImageFileJPG::Save
 ================
 */
 bool ImageFileJPG::Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
-	if ( imageFS == NULL )
+	if ( imageFS == OG_NULL )
 		return false;
 
 	File *file = imageFS->OpenWrite(filename);

@@ -42,7 +42,7 @@ namespace og {
 
 		void		Lock( void ) { modeMutex.lock(); }
 		void		Unlock( void ) { modeMutex.unlock(); }
-		bool		IsReserved( void ) { return fsWindow != NULL; }	// if a window has reserved this monitor for fullscreen mode (also true when the window is iconified)
+		bool		IsReserved( void ) { return fsWindow != OG_NULL; }	// if a window has reserved this monitor for fullscreen mode (also true when the window is iconified)
 
 		int			NumVideoModes( void ) const { return videoModeList.Num(); }
 		const VideoMode *GetVideoMode( int i ) const;

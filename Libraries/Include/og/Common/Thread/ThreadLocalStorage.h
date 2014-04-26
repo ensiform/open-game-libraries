@@ -57,7 +57,7 @@ namespace og {
 		//!
 		//! @return	true if a valid index has been allocated
 		// ==============================================================================
-		bool	IsValid( void ) const { return data != NULL; }
+		bool	IsValid( void ) const { return data != OG_NULL; }
 
 		// ==============================================================================
 		//! Gets the value
@@ -170,11 +170,11 @@ namespace og {
 			OG_ASSERT( index.IsValid() );
 			if ( index.IsValid() ) {
 				TLS_DataEx *data = static_cast<TLS_DataEx *>( index.GetValue() );
-				if ( data == NULL )
+				if ( data == OG_NULL )
 					data = new TLS_DataEx( &index, initialValue );
 				return &data->value;
 			}
-			return NULL;
+			return OG_NULL;
 		}
 
 		// ==============================================================================

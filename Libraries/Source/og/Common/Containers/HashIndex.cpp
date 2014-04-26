@@ -63,8 +63,8 @@ HashIndex::HashIndex( int _hashSize ) {
 	hashSize = _hashSize;
 	mask = hashSize-1;
 	initialized = false;
-	nodeList = NULL;
-	findNode = NULL;
+	nodeList = OG_NULL;
+	findNode = OG_NULL;
 }
 
 /*
@@ -87,7 +87,7 @@ void HashIndex::Init( void ) {
 	memset(nodeList, 0, sizeof(HashIndexNode_s *) * hashSize);
 	initialized = true;
 
-	findNode=NULL;
+	findNode = OG_NULL;
 }
 
 /*
@@ -110,9 +110,9 @@ void HashIndex::Clear( int newHashSize ) {
 			}
 		}
 		delete[] nodeList;
-		nodeList = NULL;
+		nodeList = OG_NULL;
 		allnodes.Clear();
-		findNode = NULL;
+		findNode = OG_NULL;
 
 		initialized = false;
 	}
@@ -148,7 +148,7 @@ void HashIndex::Add( int hash, int index ) {
 	else {
 		node = nodeList[nodeIndex] = new HashIndexNode_s;
 	}
-	node->next = NULL;
+	node->next = OG_NULL;
 	node->index = index;
 	allnodes.Append(node);
 }
@@ -163,7 +163,7 @@ void HashIndex::Remove( int hash, int index ) {
 		return;
 
 	int nodeIndex = (hash & mask);
-	HashIndexNode_s *lastNode = NULL;
+	HashIndexNode_s *lastNode = OG_NULL;
 	HashIndexNode_s *node = nodeList[nodeIndex];
 
 	OG_ASSERT(node); // this must exist

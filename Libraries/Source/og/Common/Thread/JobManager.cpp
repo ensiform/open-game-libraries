@@ -58,7 +58,7 @@ void WorkerThread::Run( void ) {
 					delete job;
 					break;
 			}
-			job = NULL;
+			job = OG_NULL;
 		}
 		manager->WorkerIsDone( this );
 	}
@@ -162,7 +162,7 @@ JobManager::KillAll
 */
 void JobManager::KillAll( void ) {
 	Job *job;
-	while( (job=jobList.Consume()) != NULL ) {
+	while( (job=jobList.Consume()) != OG_NULL ) {
 		if ( job->Cancel() == JOB_DELETE )
 			delete job;
 	}
@@ -177,7 +177,7 @@ void JobManager::TriggerNextJob( bool wakeUp ) {
 	WorkerThread *worker = availableThreads.Consume();
 	if ( worker ) {
 		Job *job = jobList.Consume();
-		if( job == NULL )
+		if( job == OG_NULL )
 			availableThreads.Produce( worker );
 		else {
 			worker->SetJob( job );

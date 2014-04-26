@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 #include <og/Common/Thread/ThreadLocalStorage.h>
 
 namespace og {
-TLS_Index * lastTlsIndex = NULL;
+TLS_Index * lastTlsIndex = OG_NULL;
 
 /*
 ================
@@ -42,7 +42,7 @@ void TLS_AtExit( void ) {
 	if ( lastTlsIndex ) {
 		TLS_Data::Cleanup();
 		delete lastTlsIndex;
-		lastTlsIndex = NULL;
+		lastTlsIndex = OG_NULL;
 	}
 }
 
@@ -58,7 +58,7 @@ void TLS_AtExit( void ) {
 TLS_Data::TLS_Data
 ================
 */
-TLS_Data::TLS_Data( const TLS_Index *index ) : previous(NULL), tlsIndex(index) {
+TLS_Data::TLS_Data( const TLS_Index *index ) : previous(OG_NULL), tlsIndex(index) {
 	tlsIndex->SetValue(this);
 	Register(this);
 }
@@ -69,7 +69,7 @@ TLS_Data::~TLS_Data
 ================
 */
 TLS_Data::~TLS_Data() {
-	tlsIndex->SetValue(NULL);
+	tlsIndex->SetValue(OG_NULL);
 	delete previous;
 }
 
@@ -96,16 +96,16 @@ TLS_Data::Cleanup
 ================
 */
 void TLS_Data::Cleanup( void ) {
-	if ( lastTlsIndex == NULL )
+	if ( lastTlsIndex == OG_NULL )
 		return;
 
 	TLS_Data *lastTLS = static_cast<TLS_Data *>( lastTlsIndex->GetValue() );
-	if ( lastTLS != NULL ) {
+	if ( lastTLS != OG_NULL ) {
 		delete lastTLS;
 #if OG_LINUX
 	#error "SegFault Here - FixMe"
 #endif
-		lastTlsIndex->SetValue( NULL );
+		lastTlsIndex->SetValue( OG_NULL );
 	}
 }
 
@@ -198,7 +198,7 @@ Thread::Start
 bool Thread::Start( const char *_name, bool waitForInit ) {
 	name = _name;
 	if ( !waitForInit ) {
-		thread = ogst::thread( &Thread::RunThread, this, (Condition *)NULL );
+		thread = ogst::thread( &Thread::RunThread, this, (Condition *)OG_NULL );
 		return true;
 	}
 	Condition initCondition;

@@ -68,7 +68,7 @@ CmdSystemEx::AddCmd
 ================
 */
 void CmdSystemEx::AddCmd( const char *cmd, cmdFunc_t func, int flags, const ConUsage *usage, const ConArgComplete *completion ) {
-	if ( cmd == NULL || cmd[0] == '\0' || usage == NULL ) {
+	if ( cmd == OG_NULL || cmd[0] == '\0' || usage == OG_NULL ) {
 		User::Warning("AddCmd called with bad arguments");
 		return;
 	}
@@ -220,7 +220,7 @@ void CmdSystemEx::ExecuteConfig( const char *filename ) {
 	try {
 		const Token *token;
 		const char *p;
-		while ( (token = lexer.ReadToken()) != NULL ) {
+		while ( (token = lexer.ReadToken()) != OG_NULL ) {
 			p = token->GetString();
 			if ( p && *p )
 				ExecuteCmd( p, inEngineStartup );
@@ -373,10 +373,10 @@ CmdSystemEx::ExportToHTML
 ================
 */
 bool CmdSystemEx::ExportToHTML( const char *filename, int flags ) const {
-	if ( FS == NULL )
+	if ( FS == OG_NULL )
 		return false;
 
-	byte *buffer = NULL;
+	byte *buffer = OG_NULL;
 	FS->LoadFile("exportTemplate.html", &buffer);
 	if ( !buffer ) 
 		return false;

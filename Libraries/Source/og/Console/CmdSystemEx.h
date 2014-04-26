@@ -60,7 +60,7 @@ class CmdSystemEx : public CmdSystem {
 public:
 	// ---------------------- Public CmdSystem Interface -------------------
 
-	void	AddCmd( const char *cmd, cmdFunc_t func, int flags, const ConUsage *usage, const ConArgComplete *completion = NULL );
+	void	AddCmd( const char *cmd, cmdFunc_t func, int flags, const ConUsage *usage, const ConArgComplete *completion = OG_NULL );
 	void	RemoveCmd( const char *cmd );
 	void	RemoveCmdsByFlags( int flags );
 

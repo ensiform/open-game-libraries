@@ -36,7 +36,7 @@
 
 namespace og {
 class ImagePreloadJob;
-FileSystemCore *imageFS = NULL;
+FileSystemCore *imageFS = OG_NULL;
 
 typedef byte *( *imageLoadFunc_t )( const char *filename, uInt &width, uInt &height, bool &hasAlpha );
 typedef bool ( *imageSaveFunc_t )( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha );
@@ -54,11 +54,11 @@ int		ImageEx::jpegQuality = 90;
 
 static DictEx<ImageEx> imageList;
 static DictEx<ImageFile *> imageFileTypes;
-static Image *defaultImage = NULL;
+static Image *defaultImage = OG_NULL;
 
 class ImagePreloadTask : public PreloadTask {
 public:
-	ImagePreloadTask( const char *_filename ) : filename(_filename), file(NULL) {}
+	ImagePreloadTask( const char *_filename ) : filename(_filename), file(OG_NULL) {}
 	~ImagePreloadTask() {
 		delete file;
 	}
@@ -69,7 +69,7 @@ public:
 			if ( file->Open( filename.c_str() ) )
 				return true;
 			delete file;
-			file = NULL;
+			file = OG_NULL;
 		}
 		return false;
 	}
@@ -99,8 +99,8 @@ Image::Init
 ================
 */
 bool Image::Init( FileSystemCore *fileSystem, const char *defaultFilename, void *user_glCompressedTexImage2DARB ) {
-	OG_ASSERT( fileSystem != NULL );
-	OG_ASSERT( defaultFilename != NULL );
+	OG_ASSERT( fileSystem != OG_NULL );
+	OG_ASSERT( defaultFilename != OG_NULL );
 
 	imageFS = fileSystem;
 
@@ -124,7 +124,7 @@ bool Image::Init( FileSystemCore *fileSystem, const char *defaultFilename, void 
 	glGetIntegerv( GL_MAX_TEXTURE_SIZE, (GLint *)&ImageEx::maxTextureSize );
 
 	defaultImage = Image::Find( defaultFilename );
-	return defaultImage != NULL;
+	return defaultImage != OG_NULL;
 }
 
 /*
@@ -135,8 +135,8 @@ Image::Shutdown
 void Image::Shutdown( void ) {
 	imageList.Clear();
 	imageFileTypes.Clear();
-	defaultImage = NULL;
-	imageFS = NULL;
+	defaultImage = OG_NULL;
+	imageFS = OG_NULL;
 }
 
 /*
@@ -145,7 +145,7 @@ Image::ReloadImages
 ================
 */
 uInt Image::ReloadImages( bool force, PreloadManager *preloadManager ) {
-	if ( preloadManager == NULL )
+	if ( preloadManager == OG_NULL )
 		Image::SetFilters( ImageEx::minFilter, ImageEx::magFilter );
 
 	uInt numReloads = 0;
@@ -312,7 +312,7 @@ ImageEx::UploadImage
 ================
 */
 bool ImageEx::UploadImage( const char *filename ) {
-	if ( imageFS == NULL )
+	if ( imageFS == OG_NULL )
 		return false;
 
 	fullpath = filename;
@@ -333,7 +333,7 @@ ImageEx::ReloadImage
 ================
 */
 bool ImageEx::ReloadImage( bool force, PreloadManager *preloadManager ) {
-	if ( imageFS == NULL )
+	if ( imageFS == OG_NULL )
 		return false;
 
 	time_t newTime = imageFS->FileTime( fullpath.c_str() );
@@ -345,7 +345,7 @@ bool ImageEx::ReloadImage( bool force, PreloadManager *preloadManager ) {
 		User::Warning( Format("Unknown image type for file '$*'" ) << fullpath );
 		return false;
 	}
-	if ( preloadManager != NULL ) {
+	if ( preloadManager != OG_NULL ) {
 		preloadManager->AddTask( new ImagePreloadTask(fullpath.c_str()) );
 		return true;
 	}

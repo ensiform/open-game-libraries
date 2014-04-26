@@ -117,7 +117,7 @@ namespace og {
 		//!
 		//! @see	ErrorId
 		// ==============================================================================
-		void	Error( ErrorId id, const char *msg, const char *param=NULL );
+		void	Error( ErrorId id, const char *msg, const char *param=OG_NULL );
 
 		// ==============================================================================
 		//! Called whenever a warning should be printed
@@ -239,7 +239,7 @@ namespace og {
 	template<class T>
 	OG_INLINE void SafeDelete( T *&ptr ) {
 		delete ptr;
-		ptr = NULL;
+		ptr = OG_NULL;
 	}
 
 	// ==============================================================================
@@ -250,7 +250,7 @@ namespace og {
 	template<class T>
 	OG_INLINE void SafeDeleteArray( T *&ptr ) {
 		delete[] ptr;
-		ptr = NULL;
+		ptr = OG_NULL;
 	}
 
 //! @}

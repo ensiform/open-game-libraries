@@ -31,7 +31,7 @@
 #include <al/alext.h>
 
 namespace og {
-FileSystemCore *audioFS = NULL;
+FileSystemCore *audioFS = OG_NULL;
 // The object and global pointer
 AudioSystemEx audioSystemObject;
 AudioSystem *AS = &audioSystemObject;
@@ -84,17 +84,17 @@ AudioThread::Run
 ================
 */
 void AudioThread::Run( void ) {
-	AudioSource *source = NULL;
+	AudioSource *source = OG_NULL;
 	uInt alSourceNum;
 	for( int i=0; i<MAX_AUDIOSOURCES; i++ ) {
 		alGenSources( 1, &alSourceNum );
 		if ( CheckAlErrors() == false )
 			break;
 		source = new AudioSource( source, alSourceNum );
-		if ( firstAudioSource == NULL )
+		if ( firstAudioSource == OG_NULL )
 			firstAudioSource = source;
 	}/*
-	if ( firstAudioSource == NULL ) {
+	if ( firstAudioSource == OG_NULL ) {
 		Shutdown();
 		return false;
 	}*/
@@ -103,7 +103,7 @@ void AudioThread::Run( void ) {
 		eventQueue.ProcessAll();
 
 		// update audio sources
-		for( AudioSource *source = firstAudioSource; source != NULL; source = source->next ) {
+		for( AudioSource *source = firstAudioSource; source != OG_NULL; source = source->next ) {
 			if ( source->IsActive() )
 				source->Frame();
 		}
@@ -145,7 +145,7 @@ AudioThread::FindFreeAudioSource
 */
 AudioSource *AudioThread::FindFreeAudioSource( void ) {
 	for( int level=-1; level<MAX_SAFE_LEVELS; level++ ) {
-		for( AudioSource *source = firstAudioSource; source != NULL; source = source->next ) {
+		for( AudioSource *source = firstAudioSource; source != OG_NULL; source = source->next ) {
 			if ( !source->IsActive() || level >= source->safeLevel ) {
 				if ( source->IsActive() )
 					source->Stop();
@@ -153,7 +153,7 @@ AudioSource *AudioThread::FindFreeAudioSource( void ) {
 			}
 		}
 	}
-	return NULL;
+	return OG_NULL;
 }
 
 void AudioThread::PlayStream( AudioSource *src, const char *filename, bool loop ) {
@@ -193,10 +193,10 @@ AudioSystemEx::AudioSystemEx() {
 	windowFocus = true;
 	maxVariations = 0;
 	
-	context = NULL;
-	device = NULL;
+	context = OG_NULL;
+	device = OG_NULL;
 
-	audioThread = NULL;
+	audioThread = OG_NULL;
 }
 
 /*
@@ -205,24 +205,24 @@ AudioSystemEx::Init
 ================
 */
 bool AudioSystemEx::Init( const char *defaultFilename, const char *deviceName ) {
-	if ( audioFS == NULL )
+	if ( audioFS == OG_NULL )
 		return false;
-	if ( audioThread != NULL )
+	if ( audioThread != OG_NULL )
 		return true;
 
-	device = deviceName == NULL ? NULL : alcOpenDevice( deviceName );
-	if ( device == NULL ) {
-		if ( deviceName != NULL )
+	device = deviceName == OG_NULL ? OG_NULL : alcOpenDevice( deviceName );
+	if ( device == OG_NULL ) {
+		if ( deviceName != OG_NULL )
 			User::Warning("Failed to open audio device, trying default.");
-		device = alcOpenDevice( NULL );
-		if ( device == NULL ) {
+		device = alcOpenDevice( OG_NULL );
+		if ( device == OG_NULL ) {
 			User::Error( ERR_AUDIO_INIT, "Failed to open default audio device.");
 			return false;
 		}
 	}
 
-	context = alcCreateContext( device, NULL );
-	if ( context == NULL ) {
+	context = alcCreateContext( device, OG_NULL );
+	if ( context == OG_NULL ) {
 		alcCloseDevice( device );
 		User::Error(ERR_AUDIO_INIT, "Failed to create audio context.");
 		return false;
@@ -236,7 +236,7 @@ bool AudioSystemEx::Init( const char *defaultFilename, const char *deviceName ) 
 	}
 
 	AudioStream *defaultStream = AudioStream::Open( defaultFilename );
-	if ( defaultStream == NULL ) {
+	if ( defaultStream == OG_NULL ) {
 		Shutdown();
 		return false;
 	}
@@ -259,19 +259,19 @@ AudioSystemEx::Shutdown
 void AudioSystemEx::Shutdown( void ) {
 	if ( audioThread ) {
 		audioThread->Stop();
-		audioThread = NULL;
+		audioThread = OG_NULL;
 	}
 
 	audioEmitters.Clear();
 
 	if ( context ) {
-		alcMakeContextCurrent( NULL );
+		alcMakeContextCurrent( OG_NULL );
 		alcDestroyContext( context );
-		context = NULL;
+		context = OG_NULL;
 	}
 	if ( device ) {
 		alcCloseDevice( device );
-		device = NULL;
+		device = OG_NULL;
 	}
 }
 
@@ -349,7 +349,7 @@ AudioSystemEx::FreeEmitter
 ================
 */
 void AudioSystemEx::FreeEmitter( AudioEmitter *emitter ) {
-	OG_ASSERT( emitter != NULL );
+	OG_ASSERT( emitter != OG_NULL );
 	
 	emitterLock.lock();
 	audioEmitters.Remove( static_cast<AudioEmitterEx *>(emitter)->node );
@@ -376,7 +376,7 @@ AudioSystemEx::FreeEffect
 ================
 */
 void AudioSystemEx::FreeEffect( AudioEffect *effect ) {
-	OG_ASSERT( effect != NULL );
+	OG_ASSERT( effect != OG_NULL );
 
 	effectLock.lock();
 	audioEffects.Remove( static_cast<AudioEffectEx *>(effect)->node );
@@ -391,13 +391,13 @@ void AudioSystemEx::FreeEffect( AudioEffect *effect ) {
 ==============================================================================
 */
 bool AudioSystem::GetDeviceList( StringList &deviceList ) {
-	const char *result = NULL;
-	if( alcIsExtensionPresent(NULL, "ALC_ENUMERATE_ALL_EXT") )
-		result = alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER);
-	else if( alcIsExtensionPresent( NULL, "ALC_ENUMERATION_EXT" ) )
-		result = alcGetString(NULL, ALC_DEVICE_SPECIFIER);
+	const char *result = OG_NULL;
+	if( alcIsExtensionPresent(OG_NULL, "ALC_ENUMERATE_ALL_EXT") )
+		result = alcGetString(OG_NULL, ALC_ALL_DEVICES_SPECIFIER);
+	else if( alcIsExtensionPresent( OG_NULL, "ALC_ENUMERATION_EXT" ) )
+		result = alcGetString(OG_NULL, ALC_DEVICE_SPECIFIER);
 
-	if( result == NULL || *result == '\0' )
+	if( result == OG_NULL || *result == '\0' )
 		return false;
 
 	do {
@@ -408,12 +408,12 @@ bool AudioSystem::GetDeviceList( StringList &deviceList ) {
 	return true;
 }
 bool AudioSystem::Init( FileSystemCore *fileSystem, const char *defaultFilename, const char *deviceName ) {
-	OG_ASSERT( fileSystem != NULL );
-	OG_ASSERT( defaultFilename != NULL );
+	OG_ASSERT( fileSystem != OG_NULL );
+	OG_ASSERT( defaultFilename != OG_NULL );
 	audioFS = fileSystem;
 	return audioSystemObject.Init(defaultFilename, deviceName);
 }
-void AudioSystem::Shutdown( void )					{ audioSystemObject.Shutdown(); audioFS = NULL; }
+void AudioSystem::Shutdown( void )					{ audioSystemObject.Shutdown(); audioFS = OG_NULL; }
 void AudioSystem::SetWindowFocus( bool hasFocus )	{ audioSystemObject.windowFocus = hasFocus; }
 
 }

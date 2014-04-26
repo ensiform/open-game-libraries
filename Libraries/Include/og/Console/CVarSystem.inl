@@ -203,10 +203,10 @@ OG_INLINE void CVar::Init( const char *name, const char *defValue, int flags, co
 	data->enumValues = enumValues;
 	
 	// These are not used in the initial state
-	data->strValue = NULL;
+	data->strValue = OG_NULL;
 	data->iValue = 0;
 	data->fValue = 0.0f;
-	data->callback = NULL;
+	data->callback = OG_NULL;
 
 	nextLink = firstLink;
 	firstLink = this;
@@ -219,15 +219,15 @@ CVar::CVar
 */
 OG_INLINE CVar::CVar( const char *name, const char *defValue, int flags, const char *desc, const ConArgComplete *completion ) {
 	OG_ASSERT( !(flags & CVAR_ENUM) );
-	Init( name, defValue, flags, desc, completion, -1.0f, 1.0f, NULL);
+	Init( name, defValue, flags, desc, completion, -1.0f, 1.0f, OG_NULL);
 }
 OG_INLINE CVar::CVar( const char *name, const char *defValue, int flags, const char *desc, float min, float max ) {
 	OG_ASSERT( (flags & CVAR_INTEGER) || (flags & CVAR_FLOAT) );
-	Init( name, defValue, flags, desc, NULL, min, max, NULL);
+	Init( name, defValue, flags, desc, OG_NULL, min, max, OG_NULL);
 }
 OG_INLINE CVar::CVar( const char *name, const char *defValue, int flags, const char *desc, const char **enumValues ) {
 	OG_ASSERT( flags & CVAR_ENUM );
-	Init( name, defValue, flags, desc, NULL, -1.0f, 1.0f, enumValues);
+	Init( name, defValue, flags, desc, OG_NULL, -1.0f, 1.0f, enumValues);
 }
 
 /*
@@ -240,7 +240,7 @@ OG_INLINE void CVar::LinkCVars( void ) {
 		return;
 
 	CVarData *oldData;
-	for ( CVar *cv=firstLink; cv != NULL; cv = cv->nextLink ) {
+	for ( CVar *cv=firstLink; cv != OG_NULL; cv = cv->nextLink ) {
 		// Store pointer to the old data object, so we can free it after linking
 		oldData = cv->data;
 		cvarSystem->LinkCVar( cv );
@@ -259,7 +259,7 @@ OG_INLINE void CVar::UnlinkCVars( void ) {
 	if ( !linkedToEngine )
 		return;
 
-	for ( CVar *cv=firstLink; cv != NULL; cv = cv->nextLink )
+	for ( CVar *cv=firstLink; cv != OG_NULL; cv = cv->nextLink )
 		cvarSystem->UnlinkCVar( cv );
 
 	linkedToEngine = false;

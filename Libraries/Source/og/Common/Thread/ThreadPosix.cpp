@@ -61,9 +61,9 @@ namespace og {
 TLS_Index::TLS_Index
 ================
 */
-TLS_Index::TLS_Index() : data(NULL) {
+TLS_Index::TLS_Index() : data(OG_NULL) {
 	pthread_key_t key;
-	int result = pthread_key_create( &key, NULL );
+	int result = pthread_key_create( &key, OG_NULL );
 	OG_ASSERT( result == 0 );
 
 	if ( result == 0 )
@@ -89,7 +89,7 @@ TLS_Index::GetValue
 ================
 */
 void *TLS_Index::GetValue( void ) const {
-	OG_ASSERT( data != NULL );
+	OG_ASSERT( data != OG_NULL );
 	return pthread_getspecific( *static_cast<pthread_key_t *>(data) );
 }
 
@@ -99,7 +99,7 @@ TLS_Index::SetValue
 ================
 */
 void TLS_Index::SetValue( void *value ) const {
-	OG_ASSERT( data != NULL );
+	OG_ASSERT( data != OG_NULL );
 	pthread_setspecific( *static_cast<pthread_key_t *>(data), data );
 }
 

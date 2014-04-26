@@ -66,7 +66,7 @@ struct mskmesh_t {
 };
 
 bool ReadBonesFromSKP( const char *filename, Model *model ) {
-	if ( modelFS == NULL )
+	if ( modelFS == OG_NULL )
 		return false;
 
 	File *file = modelFS->OpenRead( filename );
@@ -140,18 +140,18 @@ Model::ImportSKM
 ================
 */
 Model *Model::ImportSKM( const char *filename, const char *filenameAnim ) {
-	if ( modelFS == NULL )
-		return NULL;
+	if ( modelFS == OG_NULL )
+		return OG_NULL;
 
 	File *file = modelFS->OpenRead( filename );
 	if( !file )
-		return NULL;
+		return OG_NULL;
 
 	Model *model = new Model(true);
 
 	// Bones are all stored in skp files!
 	if ( !ReadBonesFromSKP( filenameAnim, model ) )
-		return NULL;
+		return OG_NULL;
 
 	try {
 		// Read header
@@ -261,7 +261,7 @@ Model *Model::ImportSKM( const char *filename, const char *filenameAnim ) {
 		file->Close();
 		delete model;
 		User::Error( ERR_FILE_CORRUPT, Format("SKM: $*" ) << err.ToString(), filename );
-		return NULL;
+		return OG_NULL;
 	}
 }
 

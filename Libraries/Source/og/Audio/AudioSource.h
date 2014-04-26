@@ -66,7 +66,7 @@ namespace og {
 		void	Frame( void );
 		void	OnUpdate( const AudioSourceSetup *setup );
 
-		bool	IsActive( void ) const { return emitter != NULL; }
+		bool	IsActive( void ) const { return emitter != OG_NULL; }
 
 		bool	SetEffect( AudioEffectEx *effect );
 

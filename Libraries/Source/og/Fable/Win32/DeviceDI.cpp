@@ -40,7 +40,7 @@ const DWORD AXIS_RY_OFFSET = FIELD_OFFSET(DIJOYSTATE2, lRy);
 
 extern List<Device *> deviceList;
 extern HWND hWndInput;
-IDirectInput8 *directInput = NULL;
+IDirectInput8 *directInput = OG_NULL;
 
 /*
 ================
@@ -68,7 +68,7 @@ BOOL CALLBACK EnumDevices( LPCDIDEVICEINSTANCE devInst, LPVOID pvRef ) {
 		GET_DIDEVICE_TYPE(devInst->dwDevType) == DI8DEVTYPE_FLIGHT)
 	{
 		IDirectInputDevice8 *device;
-		HRESULT hr = directInput->CreateDevice( devInst->guidInstance, &device, NULL );
+		HRESULT hr = directInput->CreateDevice( devInst->guidInstance, &device, OG_NULL );
 		if( FAILED(hr) )
 			return DIENUM_CONTINUE;
 		if ( FAILED( hr = device->SetDataFormat( &c_dfDIJoystick2 ) ) )
@@ -223,7 +223,7 @@ InitDirectInput
 */
 bool InitDirectInput( void ) {
 	if ( !directInput ) {
-		HRESULT hr = DirectInput8Create( GetModuleHandle( NULL ), DIRECTINPUT_VERSION, IID_IDirectInput8, (VOID**)&directInput, NULL );
+		HRESULT hr = DirectInput8Create( GetModuleHandle( OG_NULL ), DIRECTINPUT_VERSION, IID_IDirectInput8, (VOID**)&directInput, OG_NULL );
 		if ( FAILED(hr) )
 			return false;
 
@@ -241,7 +241,7 @@ ShutdownDirectInput
 void ShutdownDirectInput( void ) {
 	if( directInput ) {
 		directInput->Release();
-		directInput = NULL;
+		directInput = OG_NULL;
 	}
 }
 

@@ -32,7 +32,7 @@ freely, subject to the following restrictions:
 
 namespace og {
 
-FileSystemCore *commonFS = NULL;
+FileSystemCore *commonFS = OG_NULL;
 
 Format &operator << ( Format &fmt, const String &value ) {
 	fmt.TryPrint( "%s", value.c_str() );
@@ -45,7 +45,7 @@ void CommonSetFileSystem( FileSystemCore *fileSystem ) {
 
 int StringToWide( const char *in, DynBuffer<wchar_t> &buffer ) {
 	uInt numBytes = String::ByteLength( in ) + 1;
-	uInt size = Max( 1, String::ToWide( in, numBytes, NULL, 0 ) );
+	uInt size = Max( 1, String::ToWide( in, numBytes, OG_NULL, 0 ) );
 	buffer.CheckSize( size );
 	if ( size == 1 )
 		buffer.data[0] = L'\0';

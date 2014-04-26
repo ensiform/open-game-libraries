@@ -84,7 +84,7 @@ void CmdArgs::TokenizeString( const char *str ) {
 	int bufPos = 0;
 	Clear();
 
-	if ( str == NULL || *str == '\0' )
+	if ( str == OG_NULL || *str == '\0' )
 		return;
 
 	char lookForQuote = 0;

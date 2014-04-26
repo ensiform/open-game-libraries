@@ -50,7 +50,7 @@ DeclType::DeclType
 */
 DeclType::DeclType( const char *typeName ) {
 	name = typeName;
-	inheritanceSolved = NULL;
+	inheritanceSolved = OG_NULL;
 }
 
 /*
@@ -70,7 +70,7 @@ void DeclType::SolveInheritance( void ) {
 		inheritancePast.Clear();
 		DoInheritance( i );
 	}
-	inheritanceSolved = NULL;
+	inheritanceSolved = OG_NULL;
 }
 
 /*
@@ -131,7 +131,7 @@ Loads either the binary or the text version, depending on which is newer.
 ================
 */
 bool DeclParser::LoadFile( const char *filename ) {
-	if ( commonFS == NULL )
+	if ( commonFS == OG_NULL )
 		return false;
 	String binFilename(filename);
 	binFilename += ".bin";
@@ -199,7 +199,7 @@ DeclParser::Parse
 ================
 */
 void DeclParser::Parse( Lexer &lexer ) {
-	Dict *resultDict = NULL;
+	Dict *resultDict = OG_NULL;
 
 	bool getKeyValue = false;
 
@@ -208,7 +208,7 @@ void DeclParser::Parse( Lexer &lexer ) {
 	String key, value;
 
 	const char *p;
-	while ( (token = lexer.ReadToken()) != NULL ) {
+	while ( (token = lexer.ReadToken()) != OG_NULL ) {
 		p = token->GetString();
 		if ( p ) {
 			if ( *p == '\0' )
@@ -230,7 +230,7 @@ void DeclParser::Parse( Lexer &lexer ) {
 						resultDict->Clear();
 					}
 				} else {
-					resultDict = NULL;
+					resultDict = OG_NULL;
 					lexer.Warning( Format("Unknown decl Type '$*'") << p );
 				}
 				lexer.ExpectToken("{");
@@ -255,7 +255,7 @@ DeclParser::BinaryFile
 ================
 */
 bool DeclParser::BinaryFile( const char *filename ) {
-	if ( commonFS == NULL )
+	if ( commonFS == OG_NULL )
 		return false;
 	File *file = commonFS->OpenRead( filename );
 	if ( !file )
@@ -313,7 +313,7 @@ DeclParser::MakeBinary
 ================
 */
 bool DeclParser::MakeBinary( const char *filename ) {
-	if ( commonFS == NULL )
+	if ( commonFS == OG_NULL )
 		return false;
 
 	Lexer lexer;
@@ -335,7 +335,7 @@ bool DeclParser::MakeBinary( const char *filename ) {
 
 		String str;
 		const char *p;
-		while ( (token = lexer.ReadToken()) != NULL ) {
+		while ( (token = lexer.ReadToken()) != OG_NULL ) {
 			//! @todo	maybe token should be stored as String, so we don't have to recalc len/bytelen
 			p = token->GetString();
 			if ( p ) {

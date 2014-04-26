@@ -66,7 +66,7 @@ namespace og {
 		//! @param	expected	What was expected
 		//! @param	found		What was found instead
 		// ==============================================================================
-		LexerError( ErrorType type, int line=0, const char *expected=NULL, const char *found=NULL );
+		LexerError( ErrorType type, int line=0, const char *expected=OG_NULL, const char *found=OG_NULL );
 
 		// ==============================================================================
 		//! Get a string representation of the error type

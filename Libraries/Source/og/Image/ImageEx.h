@@ -65,7 +65,7 @@ namespace og {
 		friend class ImagePreloadTask;
 
 		bool	UploadImage( const char *filename );
-		bool	ReloadImage( bool force, PreloadManager *preloadManager=NULL );
+		bool	ReloadImage( bool force, PreloadManager *preloadManager=OG_NULL );
 		
 		static int	GetFileTypeIndex( String &filename );
 

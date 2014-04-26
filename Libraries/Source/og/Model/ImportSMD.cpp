@@ -65,7 +65,7 @@ Model *LoadSMD( const char *filename, ListEx<smdMesh_t> &smdMeshes ) {
 	lexer.SetCommentStrings( "", "", "" );
 
 	if ( !lexer.LoadFile( filename ) )
-		return NULL;
+		return OG_NULL;
 
 	Model *model = new Model(true);
 	try {
@@ -87,7 +87,7 @@ Model *LoadSMD( const char *filename, ListEx<smdMesh_t> &smdMeshes ) {
 		StringList materialNames;
 		String material;
 
-		while ( (token = lexer.ReadToken()) != NULL ) {
+		while ( (token = lexer.ReadToken()) != OG_NULL ) {
 			string = token->GetString();
 			if ( String::Icmp(string, "nodes" ) == 0 ) {
 				do {
@@ -159,7 +159,7 @@ Model *LoadSMD( const char *filename, ListEx<smdMesh_t> &smdMeshes ) {
 						}
 						// Check if the next token changes line
 						line = lexer.GetLine();
-						if ( (token = lexer.ReadToken()) == NULL )
+						if ( (token = lexer.ReadToken()) == OG_NULL )
 							throw LexerError( LexerError::END_OF_FILE );
 						lexer.UnreadToken();
 
@@ -197,7 +197,7 @@ Model *LoadSMD( const char *filename, ListEx<smdMesh_t> &smdMeshes ) {
 		String errStr;
 		err.ToString( errStr );
 		User::Error( ERR_LEXER_FAILURE, errStr.c_str(), filename );
-		return NULL;
+		return OG_NULL;
 	}
 }
 
@@ -210,7 +210,7 @@ Model *Model::ImportSMD( const char *filename ) {
 	ListEx<smdMesh_t> smdMeshes;
 	Model *model = LoadSMD( filename, smdMeshes );
 	if ( !model )
-		return NULL;
+		return OG_NULL;
 	
 	int i, j, k, m;
 

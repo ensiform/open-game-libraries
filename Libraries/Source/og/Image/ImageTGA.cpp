@@ -49,7 +49,7 @@ ImageFileTGA::Open
 */
 bool ImageFileTGA::Open( const char *filename ) {
 	isLoaded = false;
-	if ( imageFS == NULL )
+	if ( imageFS == OG_NULL )
 		return false;
 
 	File *file = imageFS->OpenRead( filename, true, true );
@@ -308,7 +308,7 @@ ImageFileTGA::Save
 ================
 */
 bool ImageFileTGA::Save( const char *filename, byte *data, uInt width, uInt height, bool hasAlpha ) {
-	if ( imageFS == NULL )
+	if ( imageFS == OG_NULL )
 		return false;
 
 	File *file = imageFS->OpenWrite( filename );

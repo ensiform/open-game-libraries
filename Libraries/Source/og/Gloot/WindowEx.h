@@ -54,7 +54,7 @@ namespace og {
 
 		Monitor *	GetMonitor( void ) const;
 		void		SetFullScreen( const VideoMode *mode, Monitor *monitor );
-		bool		GetFullScreen( void ) const { return fsMonitor != NULL; }
+		bool		GetFullScreen( void ) const { return fsMonitor != OG_NULL; }
 
 		void		SetTitle( const char *title );
 		void		SetSize( int w, int h );

@@ -46,8 +46,8 @@ LinkedList::LinkedList
 */
 template<class T>
 OG_INLINE LinkedList<T>::LinkedList( void ) {
-	start		= NULL;
-	end			= NULL;
+	start		= OG_NULL;
+	end			= OG_NULL;
 	num			= 0;
 }
 
@@ -58,8 +58,8 @@ LinkedList::LinkedList
 */
 template<class T>
 OG_INLINE LinkedList<T>::LinkedList( const LinkedList<T> &other ) {
-	start		= NULL;
-	end			= NULL;
+	start		= OG_NULL;
+	end			= OG_NULL;
 	Copy(other);
 }
 
@@ -88,8 +88,8 @@ void LinkedList<T>::Clear( void ) {
 			delete node;
 			node = nextNode;
 		}
-		start = NULL;
-		end = NULL;
+		start = OG_NULL;
+		end = OG_NULL;
 	}
 	num		= 0;
 }
@@ -127,7 +127,7 @@ copy all items from the other list.
 template<class T>
 OG_INLINE void LinkedList<T>::Copy( const LinkedList<T> &other ) {
 	Clear();
-	for( nodeType *node = other.start; node != NULL; node = node->next )
+	for( nodeType *node = other.start; node != OG_NULL; node = node->next )
 		AddToEnd(node->value);
 }
 
@@ -153,7 +153,7 @@ Insert an Item to the start of the list.
 */
 template<class T>
 void LinkedList<T>::AddToStart( const T &value ) {
-	Alloc( NULL, true ) = value;
+	Alloc( OG_NULL, true ) = value;
 }
 
 /*
@@ -202,12 +202,12 @@ Allocate an item at the specified position.
 template<class T>
 T &LinkedList<T>::Alloc( nodeType *baseNode, bool before ) {
 	nodeType *newNode = new nodeType;
-	if ( start == NULL ) {
+	if ( start == OG_NULL ) {
 		start = end = newNode;
-		start->prev = NULL;
-		start->next = NULL;
+		start->prev = OG_NULL;
+		start->next = OG_NULL;
 	} else {
-		if ( baseNode == NULL )
+		if ( baseNode == OG_NULL )
 			baseNode = before ? start : end;
 
 		if ( before ) {
@@ -237,18 +237,18 @@ Removes an item from the list.
 */
 template<class T>
 void LinkedList<T>::Remove( nodeType *node ) {
-	OG_ASSERT( node != NULL );
+	OG_ASSERT( node != OG_NULL );
 
 	if ( node == start ) {
 		if ( node == end )
-			start = end = NULL;
+			start = end = OG_NULL;
 		else {
 			start = node->next;
-			start->prev = NULL;
+			start->prev = OG_NULL;
 		}
 	} else if ( node == end ) {
 		end = node->prev;
-		end->next = NULL;
+		end->next = OG_NULL;
 	} else {
 		node->prev->next = node->next;
 		node->next->prev = node->prev;
@@ -268,12 +268,12 @@ Returns the index of the searched item.
 template<class T>
 Node<T> *LinkedList<T>::Find( const T &value ) const {
 	nodeType *node = start;
-	for( int i=0; node != NULL; i++ ) {
+	for( int i=0; node != OG_NULL; i++ ) {
 		if ( node->value == value )
 			return node;
 		node = node->next;
 	}
-	return NULL;
+	return OG_NULL;
 }
 
 /*
@@ -287,12 +287,12 @@ Returns the index of the searched item.
 template<class T>
 Node<T> *LinkedList<T>::FindByAddress( const T *value ) const {
 	nodeType *node = start;
-	for( int i=0; node != NULL; i++ ) {
+	for( int i=0; node != OG_NULL; i++ ) {
 		if ( &node->value == value )
 			return node;
 		node = node->next;
 	}
-	return NULL;
+	return OG_NULL;
 }
 
 /*
@@ -323,11 +323,11 @@ void LinkedList<T>::Sort( cmpFunc_t compare, bool removeDupes ) {
 	start = list[0];
 	end = list[num-1];
 
-	start->prev = NULL;
-	end->next = NULL;
+	start->prev = OG_NULL;
+	end->next = OG_NULL;
 
 	delete[] list;
-	list = NULL;
+	list = OG_NULL;
 
 	if ( removeDupes ) {
 		for( nodeType *node=start; node->next; node=node->next ) {
@@ -365,11 +365,11 @@ void LinkedList<T>::SortEx( cmpFuncEx_t compare, void *param, bool removeDupes )
 	start = list[0];
 	end = list[num-1];
 
-	start->prev = NULL;
-	end->next = NULL;
+	start->prev = OG_NULL;
+	end->next = OG_NULL;
 
 	delete[] list;
-	list = NULL;
+	list = OG_NULL;
 
 	if ( removeDupes ) {
 		for( nodeType *node=start; node->next; node=node->next ) {

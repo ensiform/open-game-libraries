@@ -106,7 +106,7 @@ Dict::Set
 ================
 */
 void Dict::Set( const char *key, const char *value ) {
-	if ( key == NULL || key[0] == '\0' )
+	if ( key == OG_NULL || key[0] == '\0' )
 		return;
 
 	int i = Find( key );
@@ -141,7 +141,7 @@ Dict::Find
 ================
 */
 int Dict::Find( const char *key ) const {
-	if ( key == NULL || key[0] == '\0' )
+	if ( key == OG_NULL || key[0] == '\0' )
 		return -1;
 
 	int hash = hashIndex.GenerateKey( key, false );
@@ -159,7 +159,7 @@ Dict::MatchPrefix
 ================
 */
 int Dict::MatchPrefix( const char *prefix, int length, int prevMatch ) const {
-	if ( prefix == NULL || prefix[0] == '\0' )
+	if ( prefix == OG_NULL || prefix[0] == '\0' )
 		return -1;
 
 	int num = entries.Num();

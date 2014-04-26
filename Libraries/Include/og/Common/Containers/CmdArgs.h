@@ -45,7 +45,7 @@ namespace og {
 		//!
 		//! @param	str	The string to tokenize
 		// ==============================================================================
-		CmdArgs( const char *str=NULL ) : StringList(16) { if ( str ) TokenizeString( str ); }
+		CmdArgs( const char *str=OG_NULL ) : StringList(16) { if ( str ) TokenizeString( str ); }
 
 		// ==============================================================================
 		//! Get the number of arguments

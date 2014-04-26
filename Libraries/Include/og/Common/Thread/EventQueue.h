@@ -79,7 +79,7 @@ namespace og {
 		// ==============================================================================
 		void ProcessAll( void ) {
 			QueuedEvent *evt;
-			while( (evt=queue.Consume()) != NULL ) {
+			while( (evt=queue.Consume()) != OG_NULL ) {
 				evt->Execute();
 				delete evt;
 			}
@@ -90,7 +90,7 @@ namespace og {
 		// ==============================================================================
 		void DeleteAll( void ) {
 			QueuedEvent *evt;
-			while( (evt=queue.Consume()) != NULL )
+			while( (evt=queue.Consume()) != OG_NULL )
 				delete evt;
 		}
 

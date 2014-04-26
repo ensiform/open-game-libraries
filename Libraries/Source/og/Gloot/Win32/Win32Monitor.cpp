@@ -49,12 +49,12 @@ int CompareVideoModes( const VideoMode &a, const VideoMode &b ) {
 }
 
 MonitorEx::MonitorEx() {
-	hMonitor = NULL;
+	hMonitor = OG_NULL;
 	modified = iconified = false;
-	currentMode = NULL;
+	currentMode = OG_NULL;
 	left = top = width = height = 0;
 
-	fsWindow = NULL;
+	fsWindow = OG_NULL;
 	memset( &monInfo, 0, sizeof(MONITORINFOEX) );
 	monInfo.cbSize = sizeof(MONITORINFOEX);
 }
@@ -105,7 +105,7 @@ bool MonitorEx::SetGamma( float value ) {
 		return false;
 	desiredGamma = value;
 
-	HDC hDC = GetDC(NULL);
+	HDC hDC = GetDC(OG_NULL);
 	WORD ramp[3][256];
 	if ( value == 1.0f ) {
 		for ( int i=0; i<256; i++ )
@@ -116,16 +116,16 @@ bool MonitorEx::SetGamma( float value ) {
 			ramp[0][i] = ramp[1][i] = ramp[2][i] = Clamp( static_cast<int>(pow( i/255.0f, value )*65535 + 0.5), 0, 65535);
 	}
 	bool ret = SetDeviceGammaRamp( hDC, ramp) == TRUE;
-	ReleaseDC( NULL, hDC );
+	ReleaseDC( OG_NULL, hDC );
 	return ret;
 }
 
 void MonitorEx::RestoreGamma( void ) {
 	if ( !Mgr.hasGammaRamp )
 		return;
-	HDC hDC = GetDC(NULL);
+	HDC hDC = GetDC(OG_NULL);
 	SetDeviceGammaRamp( hDC, Mgr.storedGammaRamp );
-	ReleaseDC( NULL, hDC );
+	ReleaseDC( OG_NULL, hDC );
 }
 
 void MonitorEx::SetDefaultMode( WindowEx *window ) {
@@ -134,7 +134,7 @@ void MonitorEx::SetDefaultMode( WindowEx *window ) {
 	else
 		RestoreGamma();
 
-	ChangeDisplaySettingsEx( monInfo.szDevice, NULL, NULL, CDS_FULLSCREEN, NULL );
+	ChangeDisplaySettingsEx( monInfo.szDevice, OG_NULL, OG_NULL, CDS_FULLSCREEN, OG_NULL );
 	modified = false;
 
 	width = userMode.width;
@@ -144,12 +144,12 @@ void MonitorEx::SetDefaultMode( WindowEx *window ) {
 
 bool MonitorEx::SetMode( const VideoMode *newMode, Window *window ) {
 	// do not change, if we are in fullscreen mode, and the new window is not the current fullscreen window
-	if ( fsWindow != NULL && window != NULL && window != fsWindow )
+	if ( fsWindow != OG_NULL && window != OG_NULL && window != fsWindow )
 		return false;
 
 	//! @todo	update window
-	if ( newMode == NULL || newMode->modeId == ENUM_REGISTRY_SETTINGS ) {
-		currentMode = NULL;
+	if ( newMode == OG_NULL || newMode->modeId == ENUM_REGISTRY_SETTINGS ) {
+		currentMode = OG_NULL;
 		SetDefaultMode( static_cast<WindowEx *>(window) );
 		return true;
 	}
@@ -177,11 +177,11 @@ bool MonitorEx::SetMode( const VideoMode *newMode, Window *window ) {
 
 	// If the mode change was not possible, query the current display
 	// settings (we'll use the desktop resolution for fullscreen mode)
-	modified = ChangeDisplaySettingsEx( monInfo.szDevice, &dm, NULL, CDS_FULLSCREEN, NULL ) == DISP_CHANGE_SUCCESSFUL;
+	modified = ChangeDisplaySettingsEx( monInfo.szDevice, &dm, OG_NULL, CDS_FULLSCREEN, OG_NULL ) == DISP_CHANGE_SUCCESSFUL;
 	if( modified )
 		currentMode = newMode;
 	else {
-		currentMode = NULL;
+		currentMode = OG_NULL;
 		EnumDisplaySettings( monInfo.szDevice, ENUM_REGISTRY_SETTINGS, &dm );
 	}
 
@@ -209,7 +209,7 @@ BOOL CALLBACK MonitorEnumProc( HMONITOR hMonitor, HDC /*hdcMonitor*/, LPRECT /*l
 }
 
 bool Platform::InitMonitors( void ) {
-	return EnumDisplayMonitors( NULL, NULL, MonitorEnumProc, 0 ) == TRUE;
+	return EnumDisplayMonitors( OG_NULL, OG_NULL, MonitorEnumProc, 0 ) == TRUE;
 }
 
 }

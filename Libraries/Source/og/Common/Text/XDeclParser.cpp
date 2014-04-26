@@ -50,9 +50,9 @@ XDeclNode::XDeclNode
 */
 XDeclNode::XDeclNode() {
 	numChildren = 0;
-	firstChild = NULL;
-	lastChild = NULL;
-	next = NULL;
+	firstChild = OG_NULL;
+	lastChild = OG_NULL;
+	next = OG_NULL;
 }
 
 /*
@@ -69,7 +69,7 @@ const XDeclNode *XDeclNode::GetFirstChildByName( const char *name ) const {
 			return child;
 		child = child->next;
 	}
-	return NULL;
+	return OG_NULL;
 }
 
 /*
@@ -86,7 +86,7 @@ const XDeclNode *XDeclNode::GetNextByName( void ) const {
 			return sibling;
 		sibling = sibling->next;
 	}
-	return NULL;
+	return OG_NULL;
 }
 
 /*
@@ -105,7 +105,7 @@ Loads either the binary or the text version, depending on which is newer.
 ================
 */
 bool XDeclParser::LoadFile( const char *filename ) {
-	if ( commonFS == NULL )
+	if ( commonFS == OG_NULL )
 		return false;
 
 	String binFilename(filename);
@@ -183,7 +183,7 @@ void XDeclParser::Parse( Lexer &lexer ) {
 	Stack<XDeclNode *> nodeStack;
 
 	const char *p;
-	while ( (token = lexer.ReadToken()) != NULL ) {
+	while ( (token = lexer.ReadToken()) != OG_NULL ) {
 		p = token->GetString();
 		if ( p ) {
 			if ( *p == '\0' )
@@ -211,7 +211,7 @@ void XDeclParser::Parse( Lexer &lexer ) {
 						newNode = allocator.Alloc();
 						newNode->name = name;
 						currentNode->numChildren++;
-						if ( currentNode->firstChild == NULL )
+						if ( currentNode->firstChild == OG_NULL )
 							currentNode->firstChild = newNode;
 						else
 							currentNode->lastChild->next = newNode;
@@ -249,7 +249,7 @@ XDeclParser::BinaryFile
 ================
 */
 bool XDeclParser::BinaryFile( const char *filename ) {
-	if ( commonFS == NULL )
+	if ( commonFS == OG_NULL )
 		return false;
 
 	File *file = commonFS->OpenRead( filename );
@@ -293,7 +293,7 @@ void XDeclParser::ReadNodeAndChildren( XDeclNode *node, File *f ) {
 	node->numChildren = f->ReadUint();
 	for( int i=0; i<node->numChildren; i++ ) {
 		newNode = allocator.Alloc();
-		if ( node->firstChild == NULL )
+		if ( node->firstChild == OG_NULL )
 			node->firstChild = newNode;
 		else
 			node->lastChild->next = newNode;
@@ -311,7 +311,7 @@ XDeclParser::MakeBinary
 ================
 */
 bool XDeclParser::MakeBinary( const char *filename ) {
-	if ( commonFS == NULL )
+	if ( commonFS == OG_NULL )
 		return false;
 
 	XDeclParser parser;

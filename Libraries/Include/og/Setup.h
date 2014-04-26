@@ -169,4 +169,12 @@ in release mode it calls og::User::AssertFailed()
 	#define NULL 0
 #endif
 
+#if _MSC_VER >= 1600
+#define OG_NULL nullptr
+#elif __GNUC__ && (__GNUC__ > 4 || ( __GNUC__ = 4 && __GNUC_MINOR__ >= 6 ) )
+#define OG_NULL nullptr
+#else
+#define OG_NULL NULL
+#endif
+
 #endif

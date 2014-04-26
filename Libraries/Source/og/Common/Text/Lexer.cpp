@@ -49,9 +49,9 @@ LexerError::LexerError
 LexerError::LexerError( ErrorType type, int line, const char *expected, const char *found ) {
 	this->type = type;
 	this->line = line;
-	if ( expected != NULL )
+	if ( expected != OG_NULL )
 		this->expected = expected;
-	if ( found != NULL )
+	if ( found != OG_NULL )
 		this->found = found;
 }
 
@@ -148,7 +148,7 @@ Lexer::Lexer
 */
 Lexer::Lexer( int _flags ) : token(tokenBuffer) {
 	tokenBuffer[0] = '\0';
-	buffer = NULL;
+	buffer = OG_NULL;
 	bufferIsFile = false;
 	flags = _flags;
 	warningTriggered = false;
@@ -172,7 +172,7 @@ Lexer::~Lexer() {
 			delete[] buffer;
 		else {
 			//! @todo	error
-			if ( commonFS != NULL )
+			if ( commonFS != OG_NULL )
 				commonFS->FreeFile(buffer);
 		}
 	}
@@ -333,7 +333,7 @@ const Token *Lexer::ReadToken( void ) {
 	}
 	line = 0;
 
-	return NULL;
+	return OG_NULL;
 }
 
 /*
@@ -445,10 +445,10 @@ Lexer::LoadFile
 ================
 */
 bool Lexer::LoadFile( const char *filename ) {
-	if ( commonFS == NULL )
+	if ( commonFS == OG_NULL )
 		return false;
 
-	buffer = NULL;
+	buffer = OG_NULL;
 	name = filename;
 	bufSize = commonFS->LoadFile( filename, &buffer );
 	if ( bufSize == -1 )

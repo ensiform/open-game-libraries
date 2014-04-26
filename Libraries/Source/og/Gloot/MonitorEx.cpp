@@ -55,12 +55,12 @@ void MonitorEx::OnUnIconify( void ) {
 
 void MonitorEx::Revert( void ) {
 	if ( modified && !iconified )
-		SetDefaultMode( NULL );
+		SetDefaultMode( OG_NULL );
 
 	modified = false;
 	iconified = false;
-	fsWindow = NULL;
-	currentMode = NULL;
+	fsWindow = OG_NULL;
+	currentMode = OG_NULL;
 }
 
 const VideoMode *MonitorEx::GetClosestVideoMode( int w, int h, int bpp, int rate ) {
@@ -75,7 +75,7 @@ const VideoMode *MonitorEx::GetClosestVideoMode( int w, int h, int bpp, int rate
 	// Find best match
 	int bestmatch = 0x7fffffff;
 	int bestrr = 0x7fffffff;
-	const VideoMode *bestmode = NULL;
+	const VideoMode *bestmode = OG_NULL;
 
 	int max = videoModeList.Num();
 	for( int i=0; i<max; i++ ) {
