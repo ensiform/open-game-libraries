@@ -97,7 +97,7 @@ namespace og {
 		// ==============================================================================
 		void	Wait( int ms ) {
 #if OG_HAVE_STD_THREAD
-			condition.wait_for(mutex, ms);
+			condition.wait_for(mutex, std::chrono::milliseconds(ms));
 #else
 			// Crazy boost guys don't seem to like simple 'wait for x ms' type functions.
 			int secs = 0;
