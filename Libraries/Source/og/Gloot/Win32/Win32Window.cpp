@@ -481,20 +481,20 @@ void WindowEx::RefreshWindowParams( void ) {
 		Mgr.wglGetPixelFormatAttribivARB( hDC, PixelFormat, 0, numValues, attribs, values);
 
 		// "Standard" window parameters
-		windowConfig.rgbaBits[0]		= values[1];
-		windowConfig.rgbaBits[1]		= values[2];
-		windowConfig.rgbaBits[2]		= values[3];
-		windowConfig.rgbaBits[3]		= values[4];
-		windowConfig.depthBits			= values[5];
-		windowConfig.stencilBits		= values[6];
-		windowConfig.rgbaAccumBits[0]	= values[7];
-		windowConfig.rgbaAccumBits[1]	= values[8]; 
-		windowConfig.rgbaAccumBits[2]	= values[9];
-		windowConfig.rgbaAccumBits[3]	= values[10];
-		windowConfig.auxBuffers		= values[11];
-		windowConfig.multiSamples	= Mgr.supportsMultiSampling ? values[12] : 0;
+		windowConfig.rgbaBits[0]		= values[0];
+		windowConfig.rgbaBits[1]		= values[1];
+		windowConfig.rgbaBits[2]		= values[2];
+		windowConfig.rgbaBits[3]		= values[3];
+		windowConfig.depthBits			= values[4];
+		windowConfig.stencilBits		= values[5];
+		windowConfig.rgbaAccumBits[0]	= values[6];
+		windowConfig.rgbaAccumBits[1]	= values[7]; 
+		windowConfig.rgbaAccumBits[2]	= values[8];
+		windowConfig.rgbaAccumBits[3]	= values[9];
+		windowConfig.auxBuffers			= values[10];
+		windowConfig.multiSamples		= Mgr.supportsMultiSampling ? values[11] : 0;
 		
-		if ( values[13] != 0 )
+		if ( values[12] != 0 )
 			windowConfig.flags |= WF_STEREO;
 		else if ( windowConfig.flags & WF_STEREO )
 			windowConfig.flags &= ~WF_STEREO;
